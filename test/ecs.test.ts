@@ -81,3 +81,4 @@ describe(createECS, () => {
       expect(ecs.get(admins)).toEqual([])
     })
   })
+})
