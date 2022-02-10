@@ -109,7 +109,7 @@ export function createECS<T extends IEntity>(): ECS<T> {
   }
 
   function get(archetype: Archetype<T>) {
-    return archetypes.get(archetype)
+    return archetypes.get(archetype)!
   }
 
   /**
@@ -179,14 +179,14 @@ export function createECS<T extends IEntity>(): ECS<T> {
       /* If the entity is in this index but no longer matches, remove it. */
       if (pos >= 0 && (removeOnly || !isArchetype)) {
         entities.splice(pos, 1)
-        listeners.archetypeChanged.get(archetype).invoke()
+        listeners.archetypeChanged.get(archetype)?.invoke()
         continue
       }
 
       /* If the entity is not in this index but matches the archetype, add it. */
       if (pos < 0 && !removeOnly && isArchetype) {
         entities.push(entity)
-        listeners.archetypeChanged.get(archetype).invoke()
+        listeners.archetypeChanged.get(archetype)?.invoke()
         continue
       }
     }

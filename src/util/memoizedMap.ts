@@ -1,5 +1,5 @@
 export function memoizedMap<T>() {
-  const map = {}
+  const map: Record<any, any> = {}
 
   function fetch(key: any, defaultFun?: () => T): T {
     const memoKey = JSON.stringify(key)
