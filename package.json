@@ -15,10 +15,10 @@
     "hooks"
   ],
   "sideEffects": false,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "**"
@@ -26,8 +26,8 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "dev": "yarn clean && rollup -c -w",
-    "build": "yarn clean && rollup -c",
+    "dev": "yarn clean && tsc --watch",
+    "build": "yarn clean && tsc",
     "test": "jest",
     "docs": "typedoc src/index.ts"
   },
