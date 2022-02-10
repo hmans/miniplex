@@ -15,7 +15,7 @@
     "hooks"
   ],
   "sideEffects": false,
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "dist/index.esm.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
