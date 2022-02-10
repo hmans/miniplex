@@ -1,0 +1,98 @@
+import { createECS, IEntity } from "../src/ecs"
+
+/* hmecs supports entity type checking. \o/ */
+type OldTestEntity = {
+  foo?: string
+  bar?: string
+  shared?: boolean
+} & IEntity
+
+type TestEntity = {
+  name?: string
+  age?: number
+  admin?: boolean
+} & IEntity
+
+describe(createECS, () => {
+  describe("addEntity", () => {
+    it("queues an entity to be added to the entity pool", () => {
+      const ecs = createECS<TestEntity>()
+      const entity = ecs.addEntity({ name: "Alice" })
+      expect(ecs.entities).not.toContain(entity)
+      ecs.flush()
+      expect(ecs.entities).toContain(entity)
+    })
+
+    it("immediately assigns an ID", () => {
+      const ecs = createECS<TestEntity>()
+      const entity = ecs.addEntity({ name: "Alice" })
+      expect(entity.id).toEqual(1)
+
+      /* Flushing won't change the ID */
+      ecs.flush()
+      expect(entity.id).toEqual(1)
+    })
+
+    it("assigns an automatically incrementing ID", () => {
+      const ecs = createECS<TestEntity>()
+      ecs.addEntity({ name: "Alice" })
+      const entity = ecs.addEntity({ name: "Bob" })
+      expect(entity.id).toEqual(2)
+    })
+
+    it("accepts an object that will become the entity", () => {
+      const ecs = createECS<TestEntity>()
+      const entity: TestEntity = { name: "Alice " }
+      const returnedEntity = ecs.addEntity(entity)
+      expect(returnedEntity).toBe(entity)
+    })
+  })
+
+  it("works", () => {
+    const ecs = createECS<OldTestEntity>()
+
+    const foo = {
+      shared: true,
+      foo: "foo"
+    }
+
+    const bar = {
+      shared: true,
+      bar: "bar"
+    }
+
+    /* We're adding one entity before archetypes are created... */
+    ecs.addEntity(foo)
+
+    const withFoo = ecs.archetype("foo")
+    const withBar = ecs.archetype("bar")
+    const withShared = ecs.archetype("shared")
+
+    /* ...and one after. */
+    ecs.addEntity(bar)
+
+    /* Flush all queues */
+    ecs.flush()
+
+    expect(ecs.get(withFoo))
+    expect(ecs.get(withFoo)).toEqual([foo])
+    expect(ecs.get(withBar)).toEqual([bar])
+    expect(ecs.get(withShared)).toEqual([foo, bar])
+
+    /* Update an empty (but queued) */
+    ecs.removeComponent(foo, "shared")
+
+    /* The entity should still be in the index... */
+    expect(ecs.get(withShared)).toEqual([foo, bar])
+
+    /* ...until we flush the command queue. */
+    ecs.flush()
+    expect(ecs.get(withShared)).toEqual([bar])
+
+    /* Now do the same for removing an entity. */
+    ecs.removeEntity(foo)
+    expect(ecs.get(withFoo)).toEqual([foo])
+    ecs.flush()
+    expect(ecs.get(withFoo)).toEqual([])
+  })
+})
