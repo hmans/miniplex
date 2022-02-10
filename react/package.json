@@ -1,0 +1,6 @@
+{
+  "name": "hmecs/react",
+  "private": true,
+  "main": "../dist/react.js",
+  "module": "../dist/react.esm.js"
+}
