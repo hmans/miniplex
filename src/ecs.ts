@@ -126,7 +126,10 @@ export function createECS<T extends IEntity>(): ECS<T> {
     },
 
     removeEntity: (entity: T) => {
-      indexEntity(entity, true)
+      /* Remove entity from all indices */
+      removeEntityFromAllIndices(entity)
+
+      /* Remove it from our global list of entities */
       const pos = entities.indexOf(entity, 0)
       entities.splice(pos, 1)
     },
@@ -169,26 +172,33 @@ export function createECS<T extends IEntity>(): ECS<T> {
     queue.flush()
   }
 
-  function indexEntity(entity: T, removeOnly = false) {
-    for (const [archetype, entities] of archetypes.entries()) {
+  function indexEntity(entity: T) {
+    for (const [archetype, index] of archetypes.entries()) {
       /* Current position in index */
-      const pos = entities.indexOf(entity, 0)
+      const pos = index.indexOf(entity, 0)
 
       const isArchetype = entityIsArchetype(entity, archetype)
 
       /* If the entity is in this index but no longer matches, remove it. */
-      if (pos >= 0 && (removeOnly || !isArchetype)) {
-        entities.splice(pos, 1)
+      if (pos >= 0 && !isArchetype) {
+        index.splice(pos, 1)
         listeners.archetypeChanged.get(archetype)?.invoke()
         continue
       }
 
       /* If the entity is not in this index but matches the archetype, add it. */
-      if (pos < 0 && !removeOnly && isArchetype) {
-        entities.push(entity)
+      if (pos < 0 && isArchetype) {
+        index.push(entity)
         listeners.archetypeChanged.get(archetype)?.invoke()
         continue
       }
+    }
+  }
+
+  function removeEntityFromAllIndices(entity: T) {
+    for (const [archetype, index] of archetypes.entries()) {
+      const pos = index.indexOf(entity, 0)
+      if (pos >= 0) index.splice(pos, 1)
     }
   }
 
