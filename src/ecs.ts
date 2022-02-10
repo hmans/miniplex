@@ -120,7 +120,7 @@ export function createECS<T extends IEntity>(): ECS<T> {
   const immediately = {
     addEntity: (entity: T) => {
       entities.push(entity)
-      indexEntity(entity)
+      indexEntityWithNewComponents(entity, Object.keys(entity) as ComponentName<T>[])
 
       return entity
     },
@@ -136,12 +136,12 @@ export function createECS<T extends IEntity>(): ECS<T> {
 
     addComponent: (entity: T, change: Partial<T>) => {
       Object.assign(entity, change)
-      indexEntity(entity)
+      indexEntityWithNewComponents(entity, Object.keys(entity) as ComponentName<T>[])
     },
 
-    removeComponent: (entity: T, ...names: ComponentName<T>[]) => {
-      names.forEach((name) => delete entity[name])
-      indexEntity(entity)
+    removeComponent: (entity: T, ...components: ComponentName<T>[]) => {
+      components.forEach((name) => delete entity[name])
+      indexEntityWithRemovedComponents(entity, components)
     }
   }
 
@@ -172,25 +172,31 @@ export function createECS<T extends IEntity>(): ECS<T> {
     queue.flush()
   }
 
-  function indexEntity(entity: T) {
+  function indexEntityWithNewComponents(entity: T, addedComponents: ComponentName<T>[]) {
+    /* When one or more components are added to an entity, it can only be _added_ to indices;
+       and only those indices that are interested in any of the added components. Let's go! */
+
     for (const [archetype, index] of archetypes.entries()) {
-      /* Current position in index */
-      const pos = index.indexOf(entity, 0)
-
-      const isArchetype = entityIsArchetype(entity, archetype)
-
-      /* If the entity is in this index but no longer matches, remove it. */
-      if (pos >= 0 && !isArchetype) {
-        index.splice(pos, 1)
-        listeners.archetypeChanged.get(archetype)?.invoke()
-        continue
+      /* If this archetype is interested in any of the new components, logic dictates
+         that this entity can't possibly already be listed, and only then may we be
+         interested in adding it. */
+      if (archetype.some((indexedComponent) => addedComponents.includes(indexedComponent))) {
+        /* Now we know the index is potentially interested in this entity, so let's check! */
+        if (entityIsArchetype(entity, archetype)) index.push(entity)
       }
+    }
+  }
 
-      /* If the entity is not in this index but matches the archetype, add it. */
-      if (pos < 0 && isArchetype) {
-        index.push(entity)
-        listeners.archetypeChanged.get(archetype)?.invoke()
-        continue
+  function indexEntityWithRemovedComponents(entity: T, removedComponents: ComponentName<T>[]) {
+    /* When a component is removed from an entity, logic dictates that the only archetype
+       indices that are potentially affected are those interested in any of the removed
+       component names, so we only need to check those. */
+
+    for (const [archetype, index] of archetypes.entries()) {
+      if (archetype.some((indexedComponent) => removedComponents.includes(indexedComponent))) {
+        /* By this point the entity _must_ already be in this index, so let's check if
+           it still matches the archetype, and remove it if it doesn't. */
+        if (!entityIsArchetype(entity, archetype)) index.splice(index.indexOf(entity), 1)
       }
     }
   }

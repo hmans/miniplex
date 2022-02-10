@@ -36,7 +36,7 @@ describe(createECS, () => {
 
     it("accepts an object that will become the entity", () => {
       const ecs = createECS<Entity>()
-      const entity: Entity = { name: "Alice " }
+      const entity: Entity = { name: "Alice" }
       const returnedEntity = ecs.addEntity(entity)
       expect(returnedEntity).toBe(entity)
     })
