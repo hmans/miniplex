@@ -1,0 +1,5 @@
+{
+  "name": "hmecs/react",
+  "private": true,
+  "main": "../dist/react/index.js"
+}
