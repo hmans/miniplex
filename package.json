@@ -42,6 +42,7 @@
     "docs": "typedoc src/index.ts"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@types/jest": "^27.4.0",
     "@types/react": "^17.0.0",

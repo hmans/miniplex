@@ -1,9 +1,5 @@
-/**
- * @jest-environment jsdom
- */
-
-import { fireEvent, render } from "@testing-library/react"
-import { StrictMode } from "react"
+import "@testing-library/jest-dom"
+import { render, screen } from "@testing-library/react"
 import { makeECS } from "../src/react"
 
 describe("makeECS", () => {
@@ -13,28 +9,35 @@ describe("makeECS", () => {
   })
 
   describe("useArchetype", () => {
-    it("returns a list of entities matching the specified archetype", async () => {
+    const setup = () => {
       const ecs = makeECS()
       ecs.immediately.addEntity({ name: "Alice" })
+      ecs.immediately.addEntity({ name: "Bob" })
+
+      return { ecs }
+    }
+
+    it("returns a list of entities matching the specified archetype", async () => {
+      const { ecs } = setup()
 
       const Users = () => {
         const entities = ecs.useArchetype("name")
+
         return (
           <ul>
-            {entities.map((entity) => (
-              <li>{entity.name}</li>
+            {entities.map(({ id, name }) => (
+              <li key={id} data-testid={`user-${id}`}>
+                {name}
+              </li>
             ))}
           </ul>
         )
       }
 
-      const page = render(
-        <StrictMode>
-          <Users />
-        </StrictMode>
-      )
+      render(<Users />)
 
-      await page.findByText("Alice")
+      expect(screen.getByTestId("user-1")).toHaveTextContent("Alice")
+      expect(screen.getByTestId("user-2")).toHaveTextContent("Bob")
     })
 
     it("automatically rerenders the component when the list of entities changes", () => {})
