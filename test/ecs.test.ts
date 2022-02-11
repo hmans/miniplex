@@ -63,13 +63,13 @@ describe(createECS, () => {
 
     it("maintain indices of entities that have a specific set of components", () => {
       const { ecs, alice } = setup()
-      const admins = ecs.archetype("admin")
+      const admins = ecs.createArchetype("admin")
       expect(ecs.get(admins)).toEqual([alice])
     })
 
     it("when a component is added to an entity, archetype indices are automatically updated", () => {
       const { ecs, alice, bob } = setup()
-      const admins = ecs.archetype("admin")
+      const admins = ecs.createArchetype("admin")
       expect(ecs.get(admins)).toEqual([alice])
       ecs.immediately.addComponent(bob, "admin", true)
       expect(ecs.get(admins)).toEqual([alice, bob])
@@ -77,7 +77,7 @@ describe(createECS, () => {
 
     it("when a component is removed from an entity, archetype indices are automatically updated", () => {
       const { ecs, alice } = setup()
-      const admins = ecs.archetype("admin")
+      const admins = ecs.createArchetype("admin")
       expect(ecs.get(admins)).toEqual([alice])
       ecs.immediately.removeComponent(alice, "admin")
       expect(ecs.get(admins)).toEqual([])
@@ -85,10 +85,27 @@ describe(createECS, () => {
 
     it("when an entity is removed, archetype indices are automatically updated", () => {
       const { ecs, alice } = setup()
-      const admins = ecs.archetype("admin")
+      const admins = ecs.createArchetype("admin")
       expect(ecs.get(admins)).toEqual([alice])
       ecs.immediately.removeEntity(alice)
       expect(ecs.get(admins)).toEqual([])
+    })
+
+    describe(".getWith", () => {
+      it("can be used just with component names", () => {
+        const { ecs, alice } = setup()
+        expect(ecs.getWith("admin")).toEqual([alice])
+        ecs.immediately.removeEntity(alice)
+        expect(ecs.getWith("admin")).toEqual([])
+      })
+
+      it("will reuse existing archetypes when the component names match", () => {
+        const { ecs, alice } = setup()
+        const one = ecs.getWith("admin")
+        ecs.immediately.removeEntity(alice)
+        const two = ecs.getWith("admin")
+        expect(one).toBe(two)
+      })
     })
   })
 })

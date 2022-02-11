@@ -52,8 +52,9 @@ type Listeners<T> = {
 export type ECS<T extends IEntity> = {
   entities: T[]
   immediately: ImmediateAPI<T>
-  archetype: (...components: ComponentName<T>[]) => Archetype<T>
+  createArchetype: (...components: ComponentName<T>[]) => Archetype<T>
   get: (archetype: Archetype<T>) => T[]
+  getWith: (...components: ComponentName<T>[]) => T[]
   flush: () => void
 } & ImmediateAPI<T> &
   Listeners<T>
@@ -86,7 +87,7 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
    */
   const memoizedArchetypes = memoizedMap<Archetype<T>>()
 
-  function archetype(...components: ComponentName<T>[]): Archetype<T> {
+  function createArchetype(...components: ComponentName<T>[]): Archetype<T> {
     const normalized = components.sort()
 
     /* Note: we're only memoizing to make sure that we're always using the same object
@@ -112,6 +113,11 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
 
   function get(archetype: Archetype<T>) {
     return archetypes.get(archetype)!
+  }
+
+  /* ecs.get.with("foo", "bar") */
+  function getWith(...components: ComponentName<T>[]) {
+    return get(createArchetype(...components))
   }
 
   /**
@@ -218,8 +224,9 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
   return {
     entities,
     listeners,
-    archetype,
+    createArchetype,
     get,
+    getWith,
     addEntity,
     removeEntity,
     addComponent,

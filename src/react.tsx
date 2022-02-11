@@ -10,7 +10,7 @@ export function makeECS<T extends IEntity = UntypedEntity>(): ReactECS<T> {
 
   function useArchetype(...names: ComponentName<T>[]) {
     const rerender = useRerender()
-    const archetype = ecs.archetype(...names)
+    const archetype = ecs.createArchetype(...names)
 
     useEffect(() => {
       ecs.listeners.archetypeChanged.get(archetype)!.on(rerender)
