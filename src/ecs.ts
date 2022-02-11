@@ -14,6 +14,8 @@ export interface IEntity {
   id?: number
 }
 
+export type UntypedEntity = { [components: string]: ComponentData } & IEntity
+
 /**
  * Component names are just strings/object property names.
  */
@@ -56,7 +58,7 @@ export type ECS<T extends IEntity> = {
 } & ImmediateAPI<T> &
   Listeners<T>
 
-export function createECS<T extends IEntity>(): ECS<T> {
+export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
   /**
    * An array holding all entities known to this world.
    */

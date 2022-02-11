@@ -1,11 +1,11 @@
 import { useEffect } from "react"
-import { ECS } from "."
+import { ECS, UntypedEntity } from "."
 import { ComponentName, createECS, IEntity } from "./ecs"
 import { useRerender } from "./util/useRerender"
 
 type ReactECS<T extends IEntity> = ECS<T> & { useArchetype: (...names: ComponentName<T>[]) => T[] }
 
-export function makeECS<T extends IEntity>(): ReactECS<T> {
+export function makeECS<T extends IEntity = UntypedEntity>(): ReactECS<T> {
   const ecs = createECS<T>()
 
   function useArchetype(...names: ComponentName<T>[]) {
