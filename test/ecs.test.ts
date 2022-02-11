@@ -42,6 +42,16 @@ describe(createECS, () => {
     })
   })
 
+  describe("immediately", () => {
+    describe("addEntity", () => {
+      it("assigns an ID to the entity", () => {
+        const ecs = createECS<Entity>()
+        const entity = ecs.immediately.addEntity({ name: "Alice" })
+        expect(entity.id).toEqual(1)
+      })
+    })
+  })
+
   describe("archetypes", () => {
     const setup = () => {
       const ecs = createECS<Entity>()

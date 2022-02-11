@@ -121,6 +121,7 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
    */
   const immediately = {
     addEntity: (entity: T) => {
+      if (!("id" in entity)) entity.id = nextId()
       entities.push(entity)
       indexEntityWithNewComponents(entity, Object.keys(entity) as ComponentName<T>[])
 
@@ -147,13 +148,8 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
     }
   }
 
-  function addIdToEntity(entity: T) {
+  function addEntity(entity: T) {
     if (!("id" in entity)) entity.id = nextId()
-    return entity
-  }
-
-  function addEntity(input: T) {
-    const entity = addIdToEntity(input)
     queue.add(() => immediately.addEntity(entity))
     return entity
   }
