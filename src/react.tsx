@@ -1,22 +1,15 @@
-import { createContext, FC, useContext, useEffect, useState } from "react"
-import { ComponentName, createECS, ECS, IEntity } from "./ecs"
+import { useEffect } from "react"
+import { ECS } from "."
+import { ComponentName, createECS, IEntity } from "./ecs"
 import { useRerender } from "./util/useRerender"
 
-export function makeECS<T extends IEntity>() {
-  const context = createContext<ECS<T>>(null!)
+type ReactECS<T extends IEntity> = ECS<T> & { useArchetype: (...names: ComponentName<T>[]) => T[] }
 
-  const ECSProvider: FC = ({ children }) => {
-    const [ecs] = useState(() => createECS<T>())
-    return <context.Provider value={ecs}>{children}</context.Provider>
-  }
-
-  function useECS() {
-    return useContext(context)
-  }
+export function makeECS<T extends IEntity>(): ReactECS<T> {
+  const ecs = createECS<T>()
 
   function useArchetype(...names: ComponentName<T>[]) {
     const rerender = useRerender()
-    const ecs = useECS()
     const archetype = ecs.archetype(...names)
 
     useEffect(() => {
@@ -27,5 +20,5 @@ export function makeECS<T extends IEntity>() {
     return ecs.get(archetype)
   }
 
-  return { ECSProvider, useECS, useArchetype }
+  return { ...ecs, useArchetype }
 }
