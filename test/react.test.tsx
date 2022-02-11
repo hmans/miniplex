@@ -1,17 +1,20 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import { act } from "react-dom/test-utils"
-import { makeECS } from "../src/react"
+import { IEntity } from "../src"
+import { createReactECS } from "../src/react"
 
-describe("makeECS", () => {
+type Entity = { name: string } & IEntity
+
+describe("createReactECS", () => {
   it("returns a useArchetype function", () => {
-    const ecs = makeECS()
+    const ecs = createReactECS<Entity>()
     expect(ecs).toHaveProperty("useArchetype")
   })
 
   describe("useArchetype", () => {
     const setup = (fun?: Function) => {
-      const ecs = makeECS()
+      const ecs = createReactECS<Entity>()
       ecs.immediately.addEntity({ name: "Alice" })
       ecs.immediately.addEntity({ name: "Bob" })
 

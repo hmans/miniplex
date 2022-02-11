@@ -1,11 +1,11 @@
-import { useEffect } from "react"
-import { ECS, UntypedEntity } from "."
+import { createContext, FC, useContext, useEffect, useState } from "react"
+import { UntypedEntity } from "."
 import { ComponentName, createECS, IEntity } from "./ecs"
 import { useRerender } from "./util/useRerender"
 
-type ReactECS<T extends IEntity> = ECS<T> & { useArchetype: (...names: ComponentName<T>[]) => T[] }
+export type ReactECS = ReturnType<typeof createReactECS>
 
-export function makeECS<T extends IEntity = UntypedEntity>(): ReactECS<T> {
+export function createReactECS<T extends IEntity = UntypedEntity>() {
   const ecs = createECS<T>()
 
   function useArchetype(...names: ComponentName<T>[]) {
@@ -20,5 +20,29 @@ export function makeECS<T extends IEntity = UntypedEntity>(): ReactECS<T> {
     return ecs.get(archetype)
   }
 
-  return { ...ecs, useArchetype }
+  const EntityContext = createContext<T>(null!)
+
+  const Entity: FC = ({ children }) => {
+    const [entity] = useState<T>(() => ({} as T))
+
+    useEffect(() => {
+      ecs.addEntity(entity)
+      return () => ecs.removeEntity(entity)
+    }, [entity])
+
+    return <EntityContext.Provider value={entity}>{children}</EntityContext.Provider>
+  }
+
+  function Component<K extends keyof T>({ name, data }: { name: K; data: T[K] }) {
+    const entity = useContext(EntityContext)
+
+    useEffect(() => {
+      ecs.addComponent(entity, name, data)
+      return () => ecs.removeComponent(entity, name)
+    }, [entity, name, data])
+
+    return null
+  }
+
+  return { ...ecs, useArchetype, Entity, Component }
 }
