@@ -134,7 +134,9 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
 
       /* Remove it from our global list of entities */
       const pos = entities.indexOf(entity, 0)
-      entities.splice(pos, 1)
+
+      entities[pos] = entities[entities.length - 1]
+      entities.pop()
     },
 
     addComponent: (entity: T, change: Partial<T>) => {
@@ -198,7 +200,9 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
         /* By this point the entity _must_ already be in this index, so let's check if
            it still matches the archetype, and remove it if it doesn't. */
         if (!entityIsArchetype(entity, archetype)) {
-          index.splice(index.indexOf(entity), 1)
+          index[index.indexOf(entity)] = index[index.length - 1]
+          index.pop()
+
           listeners.archetypeChanged.get(archetype)!.invoke()
         }
       }
@@ -209,7 +213,9 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
     for (const [archetype, index] of archetypes.entries()) {
       const pos = index.indexOf(entity, 0)
       if (pos >= 0) {
-        index.splice(pos, 1)
+        index[pos] = index[index.length - 1]
+        index.pop()
+
         listeners.archetypeChanged.get(archetype)!.invoke()
       }
     }
