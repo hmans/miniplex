@@ -1,0 +1,6 @@
+{
+  "internal": true,
+  "main": "../dist/react.js",
+  "module": "../dist/react.js",
+  "types": "../dist/react.d.ts"
+}
