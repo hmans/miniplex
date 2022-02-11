@@ -71,7 +71,7 @@ describe(createECS, () => {
       const { ecs, alice, bob } = setup()
       const admins = ecs.archetype("admin")
       expect(ecs.get(admins)).toEqual([alice])
-      ecs.immediately.addComponent(bob, { admin: true })
+      ecs.immediately.addComponent(bob, "admin", true)
       expect(ecs.get(admins)).toEqual([alice, bob])
     })
 

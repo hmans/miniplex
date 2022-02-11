@@ -39,7 +39,7 @@ export type ArchetypeIndex<T extends IEntity> = Map<Archetype<T>, T[]>
 type ImmediateAPI<T> = {
   addEntity: (entity: T) => T
   removeEntity: (entity: T) => void
-  addComponent: (entity: T, change: Partial<T>) => void
+  addComponent: <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => void
   removeComponent: (entity: T, ...names: ComponentName<T>[]) => void
 }
 
@@ -137,9 +137,9 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
       entities.splice(pos, 1)
     },
 
-    addComponent: (entity: T, change: Partial<T>) => {
-      Object.assign(entity, change)
-      indexEntityWithNewComponents(entity, Object.keys(entity) as ComponentName<T>[])
+    addComponent: <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => {
+      entity[name] = data
+      indexEntityWithNewComponents(entity, [name])
     },
 
     removeComponent: (entity: T, ...components: ComponentName<T>[]) => {
@@ -158,8 +158,8 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
     queue.add(() => immediately.removeEntity(entity))
   }
 
-  function addComponent(entity: T, change: Partial<T>) {
-    queue.add(() => immediately.addComponent(entity, change))
+  function addComponent<U extends ComponentName<T>>(entity: T, name: U, data: T[U]) {
+    queue.add(() => immediately.addComponent(entity, name, data))
   }
 
   function removeComponent(entity: T, ...names: ComponentName<T>[]) {
