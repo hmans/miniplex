@@ -180,7 +180,10 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
          interested in adding it. */
       if (archetype.some((indexedComponent) => addedComponents.includes(indexedComponent))) {
         /* Now we know the index is potentially interested in this entity, so let's check! */
-        if (entityIsArchetype(entity, archetype)) index.push(entity)
+        if (entityIsArchetype(entity, archetype)) {
+          index.push(entity)
+          listeners.archetypeChanged.get(archetype)!.invoke()
+        }
       }
     }
   }
@@ -194,7 +197,10 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
       if (archetype.some((indexedComponent) => removedComponents.includes(indexedComponent))) {
         /* By this point the entity _must_ already be in this index, so let's check if
            it still matches the archetype, and remove it if it doesn't. */
-        if (!entityIsArchetype(entity, archetype)) index.splice(index.indexOf(entity), 1)
+        if (!entityIsArchetype(entity, archetype)) {
+          index.splice(index.indexOf(entity), 1)
+          listeners.archetypeChanged.get(archetype)!.invoke()
+        }
       }
     }
   }
@@ -202,7 +208,10 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
   function removeEntityFromAllIndices(entity: T) {
     for (const [archetype, index] of archetypes.entries()) {
       const pos = index.indexOf(entity, 0)
-      if (pos >= 0) index.splice(pos, 1)
+      if (pos >= 0) {
+        index.splice(pos, 1)
+        listeners.archetypeChanged.get(archetype)!.invoke()
+      }
     }
   }
 
