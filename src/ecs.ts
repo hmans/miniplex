@@ -138,6 +138,9 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
       /* Remove entity from all indices */
       removeEntityFromAllIndices(entity)
 
+      /* Remove its id component */
+      delete entity.id
+
       /* Remove it from our global list of entities */
       const pos = entities.indexOf(entity, 0)
       entities.splice(pos, 1)
