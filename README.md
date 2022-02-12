@@ -2,6 +2,12 @@
 
 A joyfully minimal riff on ECS with a focus on Developer Experience.
 
+# 🚨 WORK IN PROGRESS 🚨
+
+Everythig you're seeing here is probably going to change quite a lot in the near future. I've added some preliminary documentation to convey an idea of how this thing ticks, but please don't build anything with it right now that you can't risk to have to rewrite a couple of days later. :-P
+
+Questions? Find me on [Twitter](https://twitter.com/hmans) or the [Poimandres Discord](https://discord.gg/aAYjm2p7c7).
+
 ### tl;dr
 
 **Optional, but recommended:** Define a type (or interface) that describes your entities:
