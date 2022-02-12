@@ -16,6 +16,14 @@ Questions? Find me on [Twitter](https://twitter.com/hmans) or the [Poimandres Di
 - Designed to be used as a utiliy ECS implementation for libraries (but it can also power your project.)
 - Actually pretty great performance!
 
+### Main differences from other ECS implementations
+
+- Entities are just normal **JavaScript objects**.
+- Components are just **properties on those objects**.
+- Component data can be **anything** you need, from primitive values to class instances.
+- You can query the world by **archetype** (ie. components present on entities.)
+- Everything is referenced by object identity, not numerical IDs. However, entities do automatically get a **built-in `id` component** with an auto-incrementing numerical ID; this is mostly a convenience for situations where you _need_ to provide a unique scalar reference (eg. as the `key` prop when rendering a list of React components.)
+
 ### Usage tl;dr
 
 **Optional, but recommended:** Define a type (or interface) that describes your entities:
