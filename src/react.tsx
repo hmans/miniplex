@@ -1,13 +1,15 @@
 import { createContext, FC, useContext, useEffect, useState } from "react"
-import { UntypedEntity } from "."
+import { ECS, UntypedEntity } from "."
 import { ComponentName, createECS, IEntity } from "./ecs"
 import { useRerender } from "./util/useRerender"
 
-export type ReactECS = ReturnType<typeof createReactECS>
-
-export function createReactECS<T extends IEntity = UntypedEntity>() {
-  const ecs = createECS<T>()
-
+/**
+ * Create various React-specific hooks and components for your
+ * Miniplex ECS instance.
+ *
+ * @param ecs An instance of a Miniplex ECS to use.
+ */
+export function createReactIntegration<T extends IEntity = UntypedEntity>(ecs: ECS<T>) {
   function useArchetype(...names: ComponentName<T>[]) {
     const rerender = useRerender()
     const archetype = ecs.createArchetype(...names)
