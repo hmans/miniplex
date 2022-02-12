@@ -44,7 +44,28 @@ export type Archetype<T extends IEntity> = ComponentName<T>[]
  */
 export type ArchetypeIndex<T extends IEntity> = Map<Archetype<T>, T[]>
 
-export type ECS = ReturnType<typeof createECS>
+type ImmediateAPI<T> = {
+  addEntity: (entity: T) => T
+  removeEntity: (entity: T) => void
+  addComponent: <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => void
+  removeComponent: (entity: T, ...names: ComponentName<T>[]) => void
+}
+
+type Listeners<T> = {
+  listeners: {
+    archetypeChanged: Map<Archetype<T>, ListenerRegistry>
+  }
+}
+
+export type ECS<T extends IEntity> = {
+  entities: T[]
+  immediately: ImmediateAPI<T>
+  createArchetype: (...components: ComponentName<T>[]) => Archetype<T>
+  get: (archetype: Archetype<T>) => T[]
+  getWith: (...components: ComponentName<T>[]) => T[]
+  flush: () => void
+} & ImmediateAPI<T> &
+  Listeners<T>
 
 /**
  * Create an ECS instance.
