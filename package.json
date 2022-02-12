@@ -46,8 +46,9 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "dev": "yarn clean && tsc --watch",
-    "build": "yarn clean && tsc",
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "release": "yarn clean && yarn build && yarn publish",
     "test": "jest",
     "docs": "typedoc src/index.ts"
   },
