@@ -14,6 +14,10 @@ export interface IEntity {
   id?: number
 }
 
+/**
+ * For situations where no entity type argument is passed to createECS, we'll
+ * default to an untyped entity type that can hold any component.
+ */
 export type UntypedEntity = { [components: string]: ComponentData } & IEntity
 
 /**
@@ -34,32 +38,18 @@ export type ComponentData = any
  */
 export type Archetype<T extends IEntity> = ComponentName<T>[]
 
+/**
+ * An archetype index represents a mapping between archetypes to simple lists
+ * of entities (of this archetype.)
+ */
 export type ArchetypeIndex<T extends IEntity> = Map<Archetype<T>, T[]>
 
-type ImmediateAPI<T> = {
-  addEntity: (entity: T) => T
-  removeEntity: (entity: T) => void
-  addComponent: <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => void
-  removeComponent: (entity: T, ...names: ComponentName<T>[]) => void
-}
+export type ECS = ReturnType<typeof createECS>
 
-type Listeners<T> = {
-  listeners: {
-    archetypeChanged: Map<Archetype<T>, ListenerRegistry>
-  }
-}
-
-export type ECS<T extends IEntity> = {
-  entities: T[]
-  immediately: ImmediateAPI<T>
-  createArchetype: (...components: ComponentName<T>[]) => Archetype<T>
-  get: (archetype: Archetype<T>) => T[]
-  getWith: (...components: ComponentName<T>[]) => T[]
-  flush: () => void
-} & ImmediateAPI<T> &
-  Listeners<T>
-
-export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
+/**
+ * Create an ECS instance.
+ */
+export function createECS<T extends IEntity = UntypedEntity>() {
   /**
    * An array holding all entities known to this world.
    */
@@ -115,7 +105,6 @@ export function createECS<T extends IEntity = UntypedEntity>(): ECS<T> {
     return archetypes.get(archetype)!
   }
 
-  /* ecs.get.with("foo", "bar") */
   function getWith(...components: ComponentName<T>[]) {
     return get(createArchetype(...components))
   }
