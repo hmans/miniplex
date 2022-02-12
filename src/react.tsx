@@ -1,6 +1,6 @@
 import { createContext, FC, useContext, useEffect, useState } from "react"
 import { ECS, UntypedEntity } from "."
-import { ComponentName, createECS, IEntity } from "./ecs"
+import { ComponentName, IEntity } from "./ecs"
 import { useRerender } from "./util/useRerender"
 
 /**

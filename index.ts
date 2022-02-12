@@ -1,1 +1,0 @@
-export { createECS } from "./ecs"

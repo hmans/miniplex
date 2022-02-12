@@ -1,4 +1,4 @@
-import { createECS, IEntity } from "../src/ecs"
+import { createWorld, IEntity } from "../src/ecs"
 
 /* hmecs supports entity type checking. \o/ */
 type Entity = {
@@ -7,10 +7,10 @@ type Entity = {
   admin?: boolean
 } & IEntity
 
-describe(createECS, () => {
+describe(createWorld, () => {
   describe("addEntity", () => {
     it("queues an entity to be added to the entity pool", () => {
-      const ecs = createECS<Entity>()
+      const ecs = createWorld<Entity>()
       const entity = ecs.addEntity({ name: "Alice" })
       expect(ecs.entities).not.toContain(entity)
       ecs.flush()
@@ -18,7 +18,7 @@ describe(createECS, () => {
     })
 
     it("does not yet assign an ID", () => {
-      const ecs = createECS<Entity>()
+      const ecs = createWorld<Entity>()
       const entity = ecs.addEntity({ name: "Alice" })
       expect(entity.id).toBeUndefined()
 
@@ -28,7 +28,7 @@ describe(createECS, () => {
     })
 
     it("accepts an object that will become the entity", () => {
-      const ecs = createECS<Entity>()
+      const ecs = createWorld<Entity>()
       const entity: Entity = { name: "Alice" }
       const returnedEntity = ecs.addEntity(entity)
       expect(returnedEntity).toBe(entity)
@@ -38,13 +38,13 @@ describe(createECS, () => {
   describe("immediately", () => {
     describe("addEntity", () => {
       it("assigns an ID to the entity", () => {
-        const ecs = createECS<Entity>()
+        const ecs = createWorld<Entity>()
         const entity = ecs.immediately.addEntity({ name: "Alice" })
         expect(entity.id).toEqual(1)
       })
 
       it("assigns an automatically incrementing ID", () => {
-        const ecs = createECS<Entity>()
+        const ecs = createWorld<Entity>()
         ecs.immediately.addEntity({ name: "Alice" })
         const entity = ecs.immediately.addEntity({ name: "Bob" })
         expect(entity.id).toEqual(2)
@@ -54,7 +54,7 @@ describe(createECS, () => {
 
   describe("archetypes", () => {
     const setup = () => {
-      const ecs = createECS<Entity>()
+      const ecs = createWorld<Entity>()
       const alice = ecs.immediately.addEntity({ name: "Alice", admin: true })
       const bob = ecs.immediately.addEntity({ name: "Bob" })
 

@@ -1,21 +1,21 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import { act } from "react-dom/test-utils"
-import { createECS, IEntity } from "../src"
+import { createWorld, IEntity } from "../src"
 import { createReactIntegration } from "../src/react"
 
 type Entity = { name: string } & IEntity
 
 describe("createReactECS", () => {
   it("returns a useArchetype function", () => {
-    const ecs = createECS<Entity>()
+    const ecs = createWorld<Entity>()
     const react = createReactIntegration(ecs)
     expect(react).toHaveProperty("useArchetype")
   })
 
   describe("useArchetype", () => {
     const setup = (fun?: Function) => {
-      const ecs = createECS<Entity>()
+      const ecs = createWorld<Entity>()
       const { useArchetype } = createReactIntegration(ecs)
 
       ecs.immediately.addEntity({ name: "Alice" })

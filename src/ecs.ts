@@ -70,7 +70,7 @@ export type ECS<T extends IEntity> = {
 /**
  * Create an ECS instance.
  */
-export function createECS<T extends IEntity = UntypedEntity>() {
+export function createWorld<T extends IEntity = UntypedEntity>() {
   /**
    * An array holding all entities known to this world.
    */
