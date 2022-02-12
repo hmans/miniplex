@@ -30,7 +30,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "dev": "yarn clean && tsc --watch",
-    "build": "yarn clean && tsc --build --verbose",
+    "build": "yarn clean && tsc",
     "test": "jest",
     "docs": "typedoc src/index.ts"
   },
