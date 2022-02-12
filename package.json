@@ -32,10 +32,7 @@
     }
   },
   "typesVersions": {
-    ".": {
-      ".": [
-        "dist/index.d.ts"
-      ],
+    "*": {
       "react": [
         "./dist/react.d.ts"
       ]
