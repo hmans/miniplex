@@ -116,8 +116,16 @@ export function createECS<T extends IEntity = UntypedEntity>() {
    */
   const immediately = {
     addEntity: (entity: T) => {
-      if (!("id" in entity)) entity.id = nextId()
+      /* If there already is an ID, raise an error. */
+      if ("id" in entity) throw "Attempted to add an entity that aleady had an 'id' component."
+
+      /* Assign an ID */
+      entity.id = nextId()
+
+      /* Store the entity... */
       entities.push(entity)
+
+      /* ...and add it to relevant indices. */
       indexEntityWithNewComponents(entity, Object.keys(entity) as ComponentName<T>[])
 
       return entity
@@ -147,7 +155,6 @@ export function createECS<T extends IEntity = UntypedEntity>() {
   }
 
   function addEntity(entity: T) {
-    if (!("id" in entity)) entity.id = nextId()
     queue.add(() => immediately.addEntity(entity))
     return entity
   }

@@ -17,21 +17,14 @@ describe(createECS, () => {
       expect(ecs.entities).toContain(entity)
     })
 
-    it("immediately assigns an ID", () => {
+    it("does not yet assign an ID", () => {
       const ecs = createECS<Entity>()
       const entity = ecs.addEntity({ name: "Alice" })
-      expect(entity.id).toEqual(1)
+      expect(entity.id).toBeUndefined()
 
       /* Flushing won't change the ID */
       ecs.flush()
       expect(entity.id).toEqual(1)
-    })
-
-    it("assigns an automatically incrementing ID", () => {
-      const ecs = createECS<Entity>()
-      ecs.addEntity({ name: "Alice" })
-      const entity = ecs.addEntity({ name: "Bob" })
-      expect(entity.id).toEqual(2)
     })
 
     it("accepts an object that will become the entity", () => {
@@ -48,6 +41,13 @@ describe(createECS, () => {
         const ecs = createECS<Entity>()
         const entity = ecs.immediately.addEntity({ name: "Alice" })
         expect(entity.id).toEqual(1)
+      })
+
+      it("assigns an automatically incrementing ID", () => {
+        const ecs = createECS<Entity>()
+        ecs.immediately.addEntity({ name: "Alice" })
+        const entity = ecs.immediately.addEntity({ name: "Bob" })
+        expect(entity.id).toEqual(2)
       })
     })
   })
