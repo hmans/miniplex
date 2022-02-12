@@ -24,10 +24,12 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
 
   const EntityContext = createContext<T>(null!)
 
-  const Entity: FC = ({ children }) => {
-    const [entity] = useState<T>(() => ({} as T))
+  const Entity: FC<{ entity?: T }> = ({ entity: existingEntity, children }) => {
+    const [entity] = useState<T>(() => existingEntity ?? ({} as T))
 
     useEffect(() => {
+      if (existingEntity) return
+
       world.addEntity(entity)
       return () => world.removeEntity(entity)
     }, [entity])
