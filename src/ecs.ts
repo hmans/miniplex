@@ -64,13 +64,14 @@ export type World<T extends IEntity> = {
   get: (archetype: Archetype<T>) => T[]
   getWith: (...components: ComponentName<T>[]) => T[]
   flush: () => void
+  clear: () => void
 } & ImmediateAPI<T> &
   Listeners<T>
 
 /**
  * Create an ECS instance.
  */
-export function createWorld<T extends IEntity = UntypedEntity>() {
+export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
   /**
    * An array holding all entities known to this world.
    */
@@ -241,6 +242,20 @@ export function createWorld<T extends IEntity = UntypedEntity>() {
     }
   }
 
+  function clear() {
+    /* Remove all entities */
+    entities.length = 0
+
+    /* Remove all archetype indices */
+    archetypes.clear()
+
+    /* Remove all listeners */
+    listeners.archetypeChanged.clear()
+
+    /* Clear queue */
+    queue.clear()
+  }
+
   return {
     entities,
     listeners,
@@ -252,6 +267,7 @@ export function createWorld<T extends IEntity = UntypedEntity>() {
     addComponent,
     removeComponent,
     immediately,
-    flush
+    flush,
+    clear
   }
 }

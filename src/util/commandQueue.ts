@@ -10,5 +10,9 @@ export function commandQueue<T extends Function = Function>() {
     queue.length = 0
   }
 
-  return { add, flush }
+  function clear() {
+    queue.length = 0
+  }
+
+  return { add, flush, clear }
 }
