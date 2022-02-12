@@ -32,8 +32,8 @@
     }
   },
   "typesVersions": {
-    "*": {
-      "*": [
+    ".": {
+      ".": [
         "dist/index.d.ts"
       ],
       "react": [
