@@ -6,7 +6,7 @@ import { createReactIntegration } from "../src/react"
 
 type Entity = { name: string } & IEntity
 
-describe("createReactECS", () => {
+describe("createReactIntegration", () => {
   it("returns a useArchetype function", () => {
     const ecs = createWorld<Entity>()
     const react = createReactIntegration(ecs)
