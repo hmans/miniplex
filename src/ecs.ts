@@ -57,7 +57,7 @@ type Listeners<T> = {
   }
 }
 
-export type ECS<T extends IEntity> = {
+export type World<T extends IEntity> = {
   entities: T[]
   immediately: ImmediateAPI<T>
   createArchetype: (...components: ComponentName<T>[]) => Archetype<T>

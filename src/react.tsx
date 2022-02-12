@@ -1,5 +1,5 @@
 import { createContext, FC, useContext, useEffect, useState } from "react"
-import { ECS, UntypedEntity } from "."
+import { World, UntypedEntity } from "."
 import { ComponentName, IEntity } from "./ecs"
 import { useRerender } from "./util/useRerender"
 
@@ -7,19 +7,19 @@ import { useRerender } from "./util/useRerender"
  * Create various React-specific hooks and components for your
  * Miniplex ECS instance.
  *
- * @param ecs An instance of a Miniplex ECS to use.
+ * @param world An instance of a Miniplex ECS to use.
  */
-export function createReactIntegration<T extends IEntity = UntypedEntity>(ecs: ECS<T>) {
+export function createReactIntegration<T extends IEntity = UntypedEntity>(world: World<T>) {
   function useArchetype(...names: ComponentName<T>[]) {
     const rerender = useRerender()
-    const archetype = ecs.createArchetype(...names)
+    const archetype = world.createArchetype(...names)
 
     useEffect(() => {
-      ecs.listeners.archetypeChanged.get(archetype)!.on(rerender)
-      return () => ecs.listeners.archetypeChanged.get(archetype)!.off(rerender)
-    }, [ecs])
+      world.listeners.archetypeChanged.get(archetype)!.on(rerender)
+      return () => world.listeners.archetypeChanged.get(archetype)!.off(rerender)
+    }, [world])
 
-    return ecs.get(archetype)
+    return world.get(archetype)
   }
 
   const EntityContext = createContext<T>(null!)
@@ -28,8 +28,8 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(ecs: E
     const [entity] = useState<T>(() => ({} as T))
 
     useEffect(() => {
-      ecs.addEntity(entity)
-      return () => ecs.removeEntity(entity)
+      world.addEntity(entity)
+      return () => world.removeEntity(entity)
     }, [entity])
 
     return <EntityContext.Provider value={entity}>{children}</EntityContext.Provider>
@@ -39,8 +39,8 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(ecs: E
     const entity = useContext(EntityContext)
 
     useEffect(() => {
-      ecs.addComponent(entity, name, data)
-      return () => ecs.removeComponent(entity, name)
+      world.addComponent(entity, name, data)
+      return () => world.removeComponent(entity, name)
     }, [entity, name, data])
 
     return null
