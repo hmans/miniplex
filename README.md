@@ -79,10 +79,10 @@ function movementSystem(world) {
 
 ### React
 
-You can use Miniplex without React, but it also provides some code to make it super-fun to use in React projects. All React-specific code is in the `react` module, which you would currently import like this:
+You can use Miniplex without React, but it also provides some code to make it super-fun to use in React projects. All React-specific code is in the `miniplex/react` module:
 
 ```ts
-import { createReactIntegration } from "miniplex/dist/react"
+import { createReactIntegration } from "miniplex/react"
 ```
 
 Now you can pass your existing Miniplex world to this function to get a set of React hooks and components _specific to your world_ (this allows you to easily use multiple Miniplex worlds in parallel, without React contexts tripping over each other):
