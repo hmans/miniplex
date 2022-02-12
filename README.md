@@ -8,7 +8,15 @@ Everything you're seeing here is likely going to change quite a lot in the near 
 
 Questions? Find me on [Twitter](https://twitter.com/hmans) or the [Poimandres Discord](https://discord.gg/aAYjm2p7c7).
 
-### tl;dr
+### Headline Features
+
+- An absolute, utter, non-negotiable, unbreakable focus on **developer experience**.
+- Tiny (~1 KB) and zero dependencies.
+- You can use it outside of React, but it comes with great React glue.
+- Designed to be used as a utiliy ECS implementation for libraries (but it can also power your project.)
+- Actually pretty great performance!
+
+### Usage tl;dr
 
 **Optional, but recommended:** Define a type (or interface) that describes your entities:
 
