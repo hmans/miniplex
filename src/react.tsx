@@ -46,5 +46,5 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(ecs: E
     return null
   }
 
-  return { ...ecs, useArchetype, Entity, Component }
+  return { useArchetype, Entity, Component }
 }
