@@ -13,7 +13,7 @@ type Entity = {
 } & IEntity
 ```
 
-Create a world:
+Create a world (when you provide a type like here, every interaction with the world will provide full type hints):
 
 ```ts
 const world = createWorld<Entity>()
@@ -54,6 +54,52 @@ function movementSystem(world) {
   }
 }
 ```
+
+### React
+
+You can use Miniplex without React, but it also provides some code to make it super-fun to use in React projects. All React-specific code is in the `react` module, which you would currently import like this:
+
+```ts
+import { createReactIntegration } from "../src/react"
+```
+
+Now you can pass your existing Miniplex world to this function to get a set of React hooks and components _specific to your world_ (this allows you to easily use multiple Miniplex worlds in parallel, without React contexts tripping over each other):
+
+```ts
+const { Entity, Component, useArchetype } = createReactIntegration(world)
+```
+
+The `useArchetype` hook lets you get the entities of the specified archetype (similar to the `world.get` above) from within a React component. Most importantly, this hook will make the component _rerender_ if entities are added to or removed from the archetype. This is useful for implementing systems as React components, or writing React components that render entities:
+
+```ts
+const MovementSystem = () => {
+  const entities = useArchetype(movingEntities)
+
+  useFrame(() => {
+    for (const { position, velocity } of entities) {
+      position.x += velocity.x
+      position.y += velocity.y
+      position.z += velocity.z
+    }
+  })
+
+  return null
+}
+```
+
+`createReactIntegration` also provides `Entity` and `Component` React components that you can use to declaratively create (or add components to) entities:
+
+```jsx
+const Car = () => (
+  <Entity>
+    <Component name="position" data="{ x: 0, y: 0, z: 0 }" />
+    <Component name="position" data="{ x: 10, y: 0, z: 0 }" />
+    <Component name="sprite" data="/images/car.png" />
+  <Entity>
+)
+```
+
+**Note:** all of the above is still very much in flux. Please expect things to break. A lot. Like, really.
 
 ### TODO
 
