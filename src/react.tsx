@@ -30,8 +30,8 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
     useEffect(() => {
       if (existingEntity) return
 
-      world.addEntity(entity)
-      return () => world.removeEntity(entity)
+      world.immediately.addEntity(entity)
+      return () => world.immediately.removeEntity(entity)
     }, [entity])
 
     return <EntityContext.Provider value={entity}>{children}</EntityContext.Provider>
@@ -45,8 +45,8 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
     const entity = useEntity()
 
     useEffect(() => {
-      world.addComponent(entity, name, data)
-      return () => world.removeComponent(entity, name)
+      world.immediately.addComponent(entity, name, data)
+      return () => world.immediately.removeComponent(entity, name)
     }, [entity, name, data])
 
     return null
