@@ -212,7 +212,7 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
          interested in adding it. */
       if (archetype.some((indexedComponent) => addedComponents.includes(indexedComponent))) {
         /* Now we know the index is potentially interested in this entity, so let's check! */
-        if (entityIsArchetype(entity, archetype)) {
+        if (entityIsArchetype(entity, archetype) && !index.includes(entity)) {
           index.push(entity)
           listeners.archetypeChanged.get(archetype)!.invoke()
         }
