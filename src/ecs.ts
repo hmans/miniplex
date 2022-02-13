@@ -62,6 +62,7 @@ export type World<T extends IEntity> = {
   immediately: ImmediateAPI<T>
   createArchetype: (...components: ComponentName<T>[]) => Archetype<T>
   get: (archetype: Archetype<T>) => T[]
+  getOne: (archetype: Archetype<T>) => T | undefined
   getWith: (...components: ComponentName<T>[]) => T[]
   flush: () => void
   clear: () => void
@@ -125,6 +126,10 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
 
   function get(archetype: Archetype<T>) {
     return archetypes.get(archetype)!
+  }
+
+  function getOne(archetype: Archetype<T>) {
+    return archetypes.get(archetype)![0]
   }
 
   function getWith(...components: ComponentName<T>[]) {
@@ -261,6 +266,7 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
     listeners,
     createArchetype,
     get,
+    getOne,
     getWith,
     addEntity,
     removeEntity,
