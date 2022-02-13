@@ -17,7 +17,7 @@
     "hooks"
   ],
   "sideEffects": false,
-  "version": "0.3.6",
+  "version": "0.3.7",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -48,7 +48,7 @@
     "clean": "rimraf dist",
     "dev": "tsc --watch",
     "build": "tsc",
-    "release": "yarn clean && yarn build && yarn publish",
+    "release": "yarn test && yarn clean && yarn build && yarn publish",
     "test": "jest",
     "docs": "typedoc src/index.ts"
   },
