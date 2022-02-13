@@ -37,8 +37,12 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
     return <EntityContext.Provider value={entity}>{children}</EntityContext.Provider>
   }
 
+  function useEntity() {
+    return useContext(EntityContext)
+  }
+
   function Component<K extends keyof T>({ name, data }: { name: K; data: T[K] }) {
-    const entity = useContext(EntityContext)
+    const entity = useEntity()
 
     useEffect(() => {
       world.addComponent(entity, name, data)
@@ -48,5 +52,5 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
     return null
   }
 
-  return { useArchetype, Entity, Component }
+  return { useArchetype, useEntity, Entity, Component }
 }
