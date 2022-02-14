@@ -227,10 +227,11 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
 
     for (const [archetype, index] of archetypes.entries()) {
       if (archetype.some((indexedComponent) => removedComponents.includes(indexedComponent))) {
-        /* By this point the entity _must_ already be in this index, so let's check if
+        /* By this point the entity may already be in this index, so let's check if
            it still matches the archetype, and remove it if it doesn't. */
-        if (!entityIsArchetype(entity, archetype)) {
-          index.splice(index.indexOf(entity, 0), 1)
+        const pos = index.indexOf(entity, 0)
+        if (pos >= 0 && !entityIsArchetype(entity, archetype)) {
+          index.splice(pos, 1)
           listeners.archetypeChanged.get(archetype)!.invoke()
         }
       }
