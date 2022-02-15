@@ -8,14 +8,14 @@ import { memoizedMap } from "./util/memoizedMap"
  * A base interface for entities, which are just normal JavaScript objects with
  * any number of properties, each of which represents a single component. When
  * using hmecs, it is recommended to create your own type representing your
- * game's entities, and pass that to `createECS` for full typing support.
+ * game's entities, and pass that to `createWorld` for full typing support.
  */
 export interface IEntity {
   id?: number
 }
 
 /**
- * For situations where no entity type argument is passed to createECS, we'll
+ * For situations where no entity type argument is passed to createWorld, we'll
  * default to an untyped entity type that can hold any component.
  */
 export type UntypedEntity = { [components: string]: ComponentData } & IEntity
@@ -31,7 +31,7 @@ export type ComponentName<T extends IEntity> = keyof T
 export type ComponentData = any
 
 /**
- * hmecs lets you define archetypes of entities. For each archetype,
+ * miniplex lets you define archetypes of entities. For each archetype,
  * it will automatically create an index; entities matching this archetype
  * will automatically be added to the index, entities no longer matching
  * the archetype will automatically be removed.
@@ -74,7 +74,7 @@ export type World<T extends IEntity> = {
 } & Listeners<T>
 
 /**
- * Create an ECS instance.
+ * Create an ECS world.
  */
 export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
   /**
@@ -113,8 +113,6 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
 
     /* Create an index if we need to. */
     if (!archetypes.has(archetype)) {
-      // console.debug("[hmecs] Creating archetype index for:", archetype)
-
       /* create an index, and index existing entities */
       archetypes.set(
         archetype,
@@ -156,6 +154,7 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
         /* By this point the entity may already be in this index, so let's check if
            it still matches the archetype, and remove it if it doesn't. */
         const pos = index.indexOf(entity, 0)
+
         if (pos >= 0 && !entityIsArchetype(entity, archetype)) {
           index.splice(pos, 1)
           listeners.archetypeChanged.get(archetype)!.invoke()
@@ -167,6 +166,7 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
   function removeEntityFromAllIndices(entity: T) {
     for (const [archetype, index] of archetypes.entries()) {
       const pos = index.indexOf(entity, 0)
+
       if (pos >= 0) {
         index.splice(pos, 1)
         listeners.archetypeChanged.get(archetype)!.invoke()
