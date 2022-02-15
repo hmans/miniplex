@@ -8,6 +8,30 @@ type Entity = {
 } & IEntity
 
 describe(createWorld, () => {
+  describe("createArchetype", () => {
+    it("for two equal archetypes, returns the same archetypes objects", () => {
+      const world = createWorld<Entity>()
+      const one = world.createArchetype({ all: ["name", "age"], none: ["admin"] })
+      const two = world.createArchetype({ all: ["name", "age"], none: ["admin"] })
+      const three = world.createArchetype(one)
+      expect(one).toBe(two)
+      expect(one).toBe(three)
+    })
+
+    it("it normalizes archetypes", () => {
+      const world = createWorld<Entity>()
+      const one = world.createArchetype({ all: ["name", "age"], none: ["admin"] })
+      const two = world.createArchetype({ none: ["admin", undefined], all: ["age", "name"] })
+      expect(one).toBe(two)
+    })
+
+    it("it accepts a list of component names", () => {
+      const world = createWorld<Entity>()
+      const archetype = world.createArchetype("name")
+      expect(archetype).toEqual({ all: ["name"] })
+    })
+  })
+
   describe("addEntity", () => {
     it("accepts an object that will become the entity", () => {
       const ecs = createWorld<Entity>()

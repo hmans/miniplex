@@ -36,11 +36,16 @@ export type ComponentData = any
  * will automatically be added to the index, entities no longer matching
  * the archetype will automatically be removed.
  */
-export type Archetype<T extends IEntity> = ComponentName<T>[]
+export type Archetype<T extends IEntity> = {
+  all?: ComponentName<T>[]
+  any?: ComponentName<T>[]
+  none?: ComponentName<T>[]
+}
 
 /**
  * An archetype index represents a mapping between archetypes to simple lists
- * of entities (of this archetype.)
+ * of entities (of this archetype.) It uses the archetypes' object identities
+ * as keys.
  */
 export type ArchetypeIndex<T extends IEntity> = Map<Archetype<T>, T[]>
 
@@ -57,6 +62,8 @@ type Listeners<T> = {
   }
 }
 
+type ArchetypeOrComponentList<T> = ComponentName<T>[] | [Partial<Archetype<T>>]
+
 export type World<T extends IEntity> = {
   entities: T[]
   addEntity: FunctionWithQueuedVariant<(entity: T) => T, T>
@@ -65,9 +72,9 @@ export type World<T extends IEntity> = {
     <U extends keyof T>(entity: T, name: U, data: T[U]) => void
   >
   removeComponent: FunctionWithQueuedVariant<(entity: T, ...names: ComponentName<T>[]) => void>
-  createArchetype: (...components: ComponentName<T>[]) => Archetype<T>
-  get: (archetype: Archetype<T>) => T[]
-  getOne: (archetype: Archetype<T>) => T | undefined
+  createArchetype: (...input: ArchetypeOrComponentList<T>) => Archetype<T>
+  get: (...input: ArchetypeOrComponentList<T>) => T[]
+  getOne: (...input: ArchetypeOrComponentList<T>) => T | undefined
   flushQueue: () => void
   clear: () => void
 } & Listeners<T>
@@ -103,12 +110,30 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
    */
   const memoizedArchetypes = memoizedMap<Archetype<T>>()
 
-  function createArchetype(...components: ComponentName<T>[]): Archetype<T> {
-    const normalized = components.sort()
+  const normalizeComponentList = (names: ComponentName<T>[]) =>
+    names?.filter((n) => typeof n === "string" && n !== "").sort()
 
-    /* Note: we're only memoizing to make sure that we're always using the same object
-       for any combinations of component names that are equal. */
-    const archetype = memoizedArchetypes.fetch(normalized, () => normalized)
+  /**
+   * Normalize an archetype by sorting the component names it references.
+   */
+  const normalizeArchetype = (archetype: Partial<Archetype<T>>): Archetype<T> => ({
+    all: archetype.all ? normalizeComponentList(archetype.all) : undefined,
+    any: archetype.any ? normalizeComponentList(archetype.any) : undefined,
+    none: archetype.none ? normalizeComponentList(archetype.none) : undefined
+  })
+
+  const memoizeArchetype = (archetype: Archetype<T>): Archetype<T> =>
+    memoizedArchetypes.fetch(archetype, () => archetype)
+
+  function createArchetype(...input: ArchetypeOrComponentList<T>): Archetype<T> {
+    /* Normalize and memoize archetype */
+    const archetype = memoizeArchetype(
+      normalizeArchetype(
+        typeof input[0] === "string"
+          ? { all: input as ComponentName<T>[] }
+          : (input[0] as Partial<Archetype<T>>)
+      )
+    )
 
     /* Create an index if we need to. */
     if (!archetypes.has(archetype)) {
@@ -133,7 +158,13 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
       /* If this archetype is interested in any of the new components, logic dictates
          that this entity can't possibly already be listed, and only then may we be
          interested in adding it. */
-      if (archetype.some((indexedComponent) => addedComponents.includes(indexedComponent))) {
+
+      const { all, any, none } = archetype
+
+      const interested =
+        all && all.some((indexedComponent) => addedComponents.includes(indexedComponent))
+
+      if (interested) {
         /* Now we know the index is potentially interested in this entity, so let's check! */
         if (entityIsArchetype(entity, archetype) && !index.includes(entity)) {
           index.push(entity)
@@ -149,7 +180,12 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
        component names, so we only need to check those. */
 
     for (const [archetype, index] of archetypes.entries()) {
-      if (archetype.some((indexedComponent) => removedComponents.includes(indexedComponent))) {
+      const { all, any, none } = archetype
+
+      const interested =
+        all && all.some((indexedComponent) => removedComponents.includes(indexedComponent))
+
+      if (interested) {
         /* By this point the entity may already be in this index, so let's check if
            it still matches the archetype, and remove it if it doesn't. */
         const pos = index.indexOf(entity, 0)
@@ -173,12 +209,12 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
     }
   }
 
-  function get(archetype: Archetype<T>) {
-    return archetypes.get(archetype)!
+  function get(...input: ArchetypeOrComponentList<T>) {
+    return archetypes.get(createArchetype(...input))!
   }
 
-  function getOne(archetype: Archetype<T>) {
-    return archetypes.get(archetype)![0]
+  function getOne(...input: ArchetypeOrComponentList<T>) {
+    return get(...input)[0]
   }
 
   const addEntity = (entity: T) => {
