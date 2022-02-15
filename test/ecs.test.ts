@@ -76,19 +76,31 @@ describe(createWorld, () => {
     })
 
     it("when a component is removed from an entity, archetype indices are automatically updated", () => {
-      const { ecs, alice } = setup()
-      const admins = ecs.createArchetype("admin")
-      expect(ecs.get(admins)).toEqual([alice])
+      const { ecs, alice, bob } = setup()
+      const withAdmin = ecs.createArchetype("admin")
+      const withName = ecs.createArchetype("name")
+
+      expect(ecs.get(withAdmin)).toEqual([alice])
+      expect(ecs.get(withName)).toEqual([alice, bob])
+
       ecs.immediately.removeComponent(alice, "admin")
-      expect(ecs.get(admins)).toEqual([])
+
+      expect(ecs.get(withAdmin)).toEqual([])
+      expect(ecs.get(withName)).toEqual([alice, bob])
     })
 
     it("when an entity is removed, archetype indices are automatically updated", () => {
-      const { ecs, alice } = setup()
-      const admins = ecs.createArchetype("admin")
-      expect(ecs.get(admins)).toEqual([alice])
+      const { ecs, alice, bob } = setup()
+      const withAdmin = ecs.createArchetype("admin")
+      const withName = ecs.createArchetype("name")
+
+      expect(ecs.get(withAdmin)).toEqual([alice])
+      expect(ecs.get(withName)).toEqual([alice, bob])
+
       ecs.immediately.removeEntity(alice)
-      expect(ecs.get(admins)).toEqual([])
+
+      expect(ecs.get(withAdmin)).toEqual([])
+      expect(ecs.get(withName)).toEqual([bob])
     })
 
     describe(".getWith", () => {
