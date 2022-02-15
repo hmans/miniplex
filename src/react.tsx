@@ -23,8 +23,8 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
     /* If the entity was freshly created, manage its presence in the ECS world. */
     useEffect(() => {
       if (existingEntity) return
-      world.immediately.addEntity(entity)
-      return () => world.immediately.removeEntity(entity)
+      world.addEntity(entity)
+      return () => world.removeEntity(entity)
     }, [entity])
 
     /* Provide a context with the entity so <Component> components can be wired up. */
@@ -45,8 +45,8 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
     const entity = useEntity()
 
     useEffect(() => {
-      world.immediately.addComponent(entity, name, data)
-      return () => world.immediately.removeComponent(entity, name)
+      world.addComponent(entity, name, data)
+      return () => world.removeComponent(entity, name)
     }, [entity, name, data])
 
     return null

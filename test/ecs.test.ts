@@ -9,45 +9,51 @@ type Entity = {
 
 describe(createWorld, () => {
   describe("addEntity", () => {
-    it("queues an entity to be added to the entity pool", () => {
-      const ecs = createWorld<Entity>()
-      const entity = ecs.addEntity({ name: "Alice" })
-      expect(ecs.entities).not.toContain(entity)
-      ecs.flush()
-      expect(ecs.entities).toContain(entity)
-    })
-
-    it("does not yet assign an ID", () => {
-      const ecs = createWorld<Entity>()
-      const entity = ecs.addEntity({ name: "Alice" })
-      expect(entity.id).toBeUndefined()
-
-      /* Flushing won't change the ID */
-      ecs.flush()
-      expect(entity.id).toEqual(1)
-    })
-
     it("accepts an object that will become the entity", () => {
       const ecs = createWorld<Entity>()
       const entity: Entity = { name: "Alice" }
       const returnedEntity = ecs.addEntity(entity)
       expect(returnedEntity).toBe(entity)
     })
-  })
 
-  describe("immediately", () => {
-    describe("addEntity", () => {
-      it("assigns an ID to the entity", () => {
+    it("immediately adds the entity to the pool", () => {
+      const ecs = createWorld<Entity>()
+      expect(ecs.entities).toEqual([])
+      const entity = ecs.addEntity({ name: "Alice" })
+      expect(ecs.entities).toEqual([entity])
+    })
+
+    it("assigns an ID to the entity", () => {
+      const ecs = createWorld<Entity>()
+      const entity = ecs.addEntity({ name: "Alice" })
+      expect(entity.id).toEqual(1)
+    })
+
+    it("assigns automatically incrementing IDs", () => {
+      const ecs = createWorld<Entity>()
+      ecs.addEntity({ name: "Alice" })
+      const entity = ecs.addEntity({ name: "Bob" })
+      expect(entity.id).toEqual(2)
+    })
+
+    describe(".queued", () => {
+      it("queues an entity to be added to the entity pool", () => {
         const ecs = createWorld<Entity>()
-        const entity = ecs.immediately.addEntity({ name: "Alice" })
-        expect(entity.id).toEqual(1)
+        const entity = ecs.addEntity.queued({ name: "Alice" })
+
+        expect(ecs.entities).not.toContain(entity)
+        ecs.flushQueue()
+        expect(ecs.entities).toContain(entity)
       })
 
-      it("assigns an automatically incrementing ID", () => {
+      it("does not yet assign an ID", () => {
         const ecs = createWorld<Entity>()
-        ecs.immediately.addEntity({ name: "Alice" })
-        const entity = ecs.immediately.addEntity({ name: "Bob" })
-        expect(entity.id).toEqual(2)
+        const entity = ecs.addEntity.queued({ name: "Alice" })
+        expect(entity.id).toBeUndefined()
+
+        /* Flushing won't change the ID */
+        ecs.flushQueue()
+        expect(entity.id).toEqual(1)
       })
     })
   })
@@ -55,8 +61,8 @@ describe(createWorld, () => {
   describe("archetypes", () => {
     const setup = () => {
       const ecs = createWorld<Entity>()
-      const alice = ecs.immediately.addEntity({ name: "Alice", admin: true })
-      const bob = ecs.immediately.addEntity({ name: "Bob" })
+      const alice = ecs.addEntity({ name: "Alice", admin: true })
+      const bob = ecs.addEntity({ name: "Bob" })
 
       return { ecs, alice, bob }
     }
@@ -71,7 +77,7 @@ describe(createWorld, () => {
       const { ecs, alice, bob } = setup()
       const admins = ecs.createArchetype("admin")
       expect(ecs.get(admins)).toEqual([alice])
-      ecs.immediately.addComponent(bob, "admin", true)
+      ecs.addComponent(bob, "admin", true)
       expect(ecs.get(admins)).toEqual([alice, bob])
     })
 
@@ -83,7 +89,7 @@ describe(createWorld, () => {
       expect(ecs.get(withAdmin)).toEqual([alice])
       expect(ecs.get(withName)).toEqual([alice, bob])
 
-      ecs.immediately.removeComponent(alice, "admin")
+      ecs.removeComponent(alice, "admin")
 
       expect(ecs.get(withAdmin)).toEqual([])
       expect(ecs.get(withName)).toEqual([alice, bob])
@@ -97,7 +103,7 @@ describe(createWorld, () => {
       expect(ecs.get(withAdmin)).toEqual([alice])
       expect(ecs.get(withName)).toEqual([alice, bob])
 
-      ecs.immediately.removeEntity(alice)
+      ecs.removeEntity(alice)
 
       expect(ecs.get(withAdmin)).toEqual([])
       expect(ecs.get(withName)).toEqual([bob])
@@ -107,14 +113,14 @@ describe(createWorld, () => {
       it("can be used just with component names", () => {
         const { ecs, alice } = setup()
         expect(ecs.getWith("admin")).toEqual([alice])
-        ecs.immediately.removeEntity(alice)
+        ecs.removeEntity(alice)
         expect(ecs.getWith("admin")).toEqual([])
       })
 
       it("will reuse existing archetypes when the component names match", () => {
         const { ecs, alice } = setup()
         const one = ecs.getWith("admin")
-        ecs.immediately.removeEntity(alice)
+        ecs.removeEntity(alice)
         const two = ecs.getWith("admin")
         expect(one).toBe(two)
       })

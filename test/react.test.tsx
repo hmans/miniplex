@@ -18,8 +18,8 @@ describe("createReactIntegration", () => {
       const ecs = createWorld<Entity>()
       const { useArchetype } = createReactIntegration(ecs)
 
-      ecs.immediately.addEntity({ name: "Alice" })
-      ecs.immediately.addEntity({ name: "Bob" })
+      ecs.addEntity({ name: "Alice" })
+      ecs.addEntity({ name: "Bob" })
 
       const Users = () => {
         const entities = useArchetype("name")
@@ -54,7 +54,7 @@ describe("createReactIntegration", () => {
       const { ecs, Users } = setup(() => renderCount++)
 
       /* queue a new entity to be added */
-      ecs.addEntity({ name: "Charles" })
+      ecs.addEntity.queued({ name: "Charles" })
 
       /* Render the component. At this point, Charles has not been added to the page. */
       render(<Users />)
@@ -62,7 +62,7 @@ describe("createReactIntegration", () => {
       expect(renderCount).toEqual(1)
 
       /* Now flush the ECS queue. The component should now rerender. */
-      act(() => ecs.flush())
+      act(() => ecs.flushQueue())
       expect(renderCount).toEqual(2)
       expect(screen.queryByText("Charles")).toBeInTheDocument()
     })

@@ -53,12 +53,6 @@ Add a component to the entity:
 world.addComponent(entity, "velocity", { x: 10, y: 0, z: 0 })
 ```
 
-Miniplex queues commands like these, so don't forget to flush the queue to actually execute them:
-
-```ts
-world.flush()
-```
-
 Create an archetype:
 
 ```ts
@@ -75,6 +69,20 @@ function movementSystem(world) {
     position.z += velocity.z
   }
 }
+```
+
+### Queued Commands
+
+All functions that modify the world (`addEntity`, `removeEntity`, `addComponent` and `removeComponent`) also provide a `queued` version that will not perform the action immediately, but instead put it into a queue:
+
+```ts
+world.removeEntity.queued(bullet)
+```
+
+The queue can be executed and flushed through `flushQueue`:
+
+```ts
+world.flushQueue()
 ```
 
 ### React

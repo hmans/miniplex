@@ -44,11 +44,11 @@ export type Archetype<T extends IEntity> = ComponentName<T>[]
  */
 export type ArchetypeIndex<T extends IEntity> = Map<Archetype<T>, T[]>
 
-type ImmediateAPI<T> = {
-  addEntity: (entity: T) => T
-  removeEntity: (entity: T) => void
-  addComponent: <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => void
-  removeComponent: (entity: T, ...names: ComponentName<T>[]) => void
+type FunctionWithQueuedVariant<
+  ImmediateFunction extends { (...args: any[]): any },
+  QueuedReturnType = void
+> = ImmediateFunction & {
+  queued: (...args: Parameters<ImmediateFunction>) => QueuedReturnType
 }
 
 type Listeners<T> = {
@@ -59,15 +59,19 @@ type Listeners<T> = {
 
 export type World<T extends IEntity> = {
   entities: T[]
-  immediately: ImmediateAPI<T>
+  addEntity: FunctionWithQueuedVariant<(entity: T) => T, T>
+  removeEntity: FunctionWithQueuedVariant<(entity: T) => void>
+  addComponent: FunctionWithQueuedVariant<
+    <U extends keyof T>(entity: T, name: U, data: T[U]) => void
+  >
+  removeComponent: FunctionWithQueuedVariant<(entity: T, ...names: ComponentName<T>[]) => void>
   createArchetype: (...components: ComponentName<T>[]) => Archetype<T>
   get: (archetype: Archetype<T>) => T[]
   getOne: (archetype: Archetype<T>) => T | undefined
   getWith: (...components: ComponentName<T>[]) => T[]
-  flush: () => void
+  flushQueue: () => void
   clear: () => void
-} & ImmediateAPI<T> &
-  Listeners<T>
+} & Listeners<T>
 
 /**
  * Create an ECS instance.
@@ -92,7 +96,7 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
   /**
    * A useful queue of commands to run.
    */
-  const queue = commandQueue()
+  const queuedCommands = commandQueue()
 
   /**
    * A memoization cache for archetypes to help with maintaining
@@ -122,84 +126,6 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
     }
 
     return archetype
-  }
-
-  function get(archetype: Archetype<T>) {
-    return archetypes.get(archetype)!
-  }
-
-  function getOne(archetype: Archetype<T>) {
-    return archetypes.get(archetype)![0]
-  }
-
-  function getWith(...components: ComponentName<T>[]) {
-    return get(createArchetype(...components))
-  }
-
-  /**
-   * A bag of functions that will immediately mutate the ECS world.
-   * In most situations, you will probably want to call their
-   * non-immediate counterparts.
-   */
-  const immediately = {
-    addEntity: (entity: T) => {
-      /* If there already is an ID, raise an error. */
-      if ("id" in entity) throw "Attempted to add an entity that aleady had an 'id' component."
-
-      /* Assign an ID */
-      entity.id = nextId()
-
-      /* Store the entity... */
-      entities.push(entity)
-
-      /* ...and add it to relevant indices. */
-      indexEntityWithNewComponents(entity, Object.keys(entity) as ComponentName<T>[])
-
-      return entity
-    },
-
-    removeEntity: (entity: T) => {
-      /* Remove entity from all indices */
-      removeEntityFromAllIndices(entity)
-
-      /* Remove its id component */
-      delete entity.id
-
-      /* Remove it from our global list of entities */
-      const pos = entities.indexOf(entity, 0)
-      entities.splice(pos, 1)
-    },
-
-    addComponent: <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => {
-      entity[name] = data
-      indexEntityWithNewComponents(entity, [name])
-    },
-
-    removeComponent: (entity: T, ...components: ComponentName<T>[]) => {
-      components.forEach((name) => delete entity[name])
-      indexEntityWithRemovedComponents(entity, components)
-    }
-  }
-
-  function addEntity(entity: T) {
-    queue.add(() => immediately.addEntity(entity))
-    return entity
-  }
-
-  function removeEntity(entity: T) {
-    queue.add(() => immediately.removeEntity(entity))
-  }
-
-  function addComponent<U extends ComponentName<T>>(entity: T, name: U, data: T[U]) {
-    queue.add(() => immediately.addComponent(entity, name, data))
-  }
-
-  function removeComponent(entity: T, ...names: ComponentName<T>[]) {
-    queue.add(() => immediately.removeComponent(entity, ...names))
-  }
-
-  function flush() {
-    queue.flush()
   }
 
   function indexEntityWithNewComponents(entity: T, addedComponents: ComponentName<T>[]) {
@@ -248,6 +174,78 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
     }
   }
 
+  function get(archetype: Archetype<T>) {
+    return archetypes.get(archetype)!
+  }
+
+  function getOne(archetype: Archetype<T>) {
+    return archetypes.get(archetype)![0]
+  }
+
+  function getWith(...components: ComponentName<T>[]) {
+    return get(createArchetype(...components))
+  }
+
+  const addEntity = (entity: T) => {
+    /* If there already is an ID, raise an error. */
+    if ("id" in entity) throw "Attempted to add an entity that aleady had an 'id' component."
+
+    /* Assign an ID */
+    entity.id = nextId()
+
+    /* Store the entity... */
+    entities.push(entity)
+
+    /* ...and add it to relevant indices. */
+    indexEntityWithNewComponents(entity, Object.keys(entity) as ComponentName<T>[])
+
+    return entity
+  }
+
+  const removeEntity = (entity: T) => {
+    /* Remove entity from all indices */
+    removeEntityFromAllIndices(entity)
+
+    /* Remove its id component */
+    delete entity.id
+
+    /* Remove it from our global list of entities */
+    const pos = entities.indexOf(entity, 0)
+    entities.splice(pos, 1)
+  }
+
+  const addComponent = <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => {
+    entity[name] = data
+    indexEntityWithNewComponents(entity, [name])
+  }
+
+  const removeComponent = (entity: T, ...components: ComponentName<T>[]) => {
+    components.forEach((name) => delete entity[name])
+    indexEntityWithRemovedComponents(entity, components)
+  }
+
+  /* Queued versions of mutation functions */
+
+  addEntity.queued = (entity: T) => {
+    queuedCommands.add(() => addEntity(entity))
+    return entity
+  }
+
+  removeEntity.queued = (entity: T) => {
+    queuedCommands.add(() => removeEntity(entity))
+  }
+
+  addComponent.queued = <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => {
+    queuedCommands.add(() => addComponent(entity, name, data))
+  }
+
+  removeComponent.queued = (entity: T, ...names: ComponentName<T>[]) => {
+    queuedCommands.add(() => removeComponent(entity, ...names))
+  }
+
+  /**
+   * Clear the entire world by discarding all entities and indices.
+   */
   function clear() {
     /* Remove all entities */
     entities.length = 0
@@ -259,7 +257,7 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
     listeners.archetypeChanged.clear()
 
     /* Clear queue */
-    queue.clear()
+    queuedCommands.clear()
   }
 
   return {
@@ -273,8 +271,7 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
     removeEntity,
     addComponent,
     removeComponent,
-    immediately,
-    flush,
+    flushQueue: queuedCommands.flush,
     clear
   }
 }
