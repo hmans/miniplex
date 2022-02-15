@@ -108,22 +108,5 @@ describe(createWorld, () => {
       expect(ecs.get(withAdmin)).toEqual([])
       expect(ecs.get(withName)).toEqual([bob])
     })
-
-    describe(".getWith", () => {
-      it("can be used just with component names", () => {
-        const { ecs, alice } = setup()
-        expect(ecs.getWith("admin")).toEqual([alice])
-        ecs.removeEntity(alice)
-        expect(ecs.getWith("admin")).toEqual([])
-      })
-
-      it("will reuse existing archetypes when the component names match", () => {
-        const { ecs, alice } = setup()
-        const one = ecs.getWith("admin")
-        ecs.removeEntity(alice)
-        const two = ecs.getWith("admin")
-        expect(one).toBe(two)
-      })
-    })
   })
 })

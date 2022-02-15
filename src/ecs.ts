@@ -68,7 +68,6 @@ export type World<T extends IEntity> = {
   createArchetype: (...components: ComponentName<T>[]) => Archetype<T>
   get: (archetype: Archetype<T>) => T[]
   getOne: (archetype: Archetype<T>) => T | undefined
-  getWith: (...components: ComponentName<T>[]) => T[]
   flushQueue: () => void
   clear: () => void
 } & Listeners<T>
@@ -182,10 +181,6 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
     return archetypes.get(archetype)![0]
   }
 
-  function getWith(...components: ComponentName<T>[]) {
-    return get(createArchetype(...components))
-  }
-
   const addEntity = (entity: T) => {
     /* If there already is an ID, raise an error. */
     if ("id" in entity) throw "Attempted to add an entity that aleady had an 'id' component."
@@ -266,7 +261,6 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
     createArchetype,
     get,
     getOne,
-    getWith,
     addEntity,
     removeEntity,
     addComponent,
