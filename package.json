@@ -50,6 +50,7 @@
     "build": "tsc",
     "release": "yarn test && yarn clean && yarn build && yarn publish",
     "test": "jest",
+    "ci": "yarn build && yarn test",
     "docs": "typedoc src/index.ts"
   },
   "devDependencies": {
