@@ -150,50 +150,19 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
     return archetype
   }
 
-  function indexEntityWithNewComponents(entity: T, addedComponents: ComponentName<T>[]) {
-    /* When one or more components are added to an entity, it can only be _added_ to indices;
-       and only those indices that are interested in any of the added components. Let's go! */
-
+  function indexEntity(entity: T) {
+    /* We're going to loop through all known archetypes, check if the entity matches,
+       and then remove/add it accordingly. */
     for (const [archetype, index] of archetypes.entries()) {
-      /* If this archetype is interested in any of the new components, logic dictates
-         that this entity can't possibly already be listed, and only then may we be
-         interested in adding it. */
+      const isArchetype = entityIsArchetype(entity, archetype)
+      const pos = index.indexOf(entity, 0)
 
-      const { all, any, none } = archetype
-
-      const interested =
-        all && all.some((indexedComponent) => addedComponents.includes(indexedComponent))
-
-      if (interested) {
-        /* Now we know the index is potentially interested in this entity, so let's check! */
-        if (entityIsArchetype(entity, archetype) && !index.includes(entity)) {
-          index.push(entity)
-          listeners.archetypeChanged.get(archetype)!.invoke()
-        }
-      }
-    }
-  }
-
-  function indexEntityWithRemovedComponents(entity: T, removedComponents: ComponentName<T>[]) {
-    /* When a component is removed from an entity, logic dictates that the only archetype
-       indices that are potentially affected are those interested in any of the removed
-       component names, so we only need to check those. */
-
-    for (const [archetype, index] of archetypes.entries()) {
-      const { all, any, none } = archetype
-
-      const interested =
-        all && all.some((indexedComponent) => removedComponents.includes(indexedComponent))
-
-      if (interested) {
-        /* By this point the entity may already be in this index, so let's check if
-           it still matches the archetype, and remove it if it doesn't. */
-        const pos = index.indexOf(entity, 0)
-
-        if (pos >= 0 && !entityIsArchetype(entity, archetype)) {
-          index.splice(pos, 1)
-          listeners.archetypeChanged.get(archetype)!.invoke()
-        }
+      if (isArchetype && pos < 0) {
+        index.push(entity)
+        listeners.archetypeChanged.get(archetype)!.invoke()
+      } else if (!isArchetype && pos >= 0) {
+        index.splice(pos, 1)
+        listeners.archetypeChanged.get(archetype)!.invoke()
       }
     }
   }
@@ -228,7 +197,7 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
     entities.push(entity)
 
     /* ...and add it to relevant indices. */
-    indexEntityWithNewComponents(entity, Object.keys(entity) as ComponentName<T>[])
+    indexEntity(entity)
 
     return entity
   }
@@ -247,12 +216,12 @@ export function createWorld<T extends IEntity = UntypedEntity>(): World<T> {
 
   const addComponent = <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => {
     entity[name] = data
-    indexEntityWithNewComponents(entity, [name])
+    indexEntity(entity)
   }
 
   const removeComponent = (entity: T, ...components: ComponentName<T>[]) => {
     components.forEach((name) => delete entity[name])
-    indexEntityWithRemovedComponents(entity, components)
+    indexEntity(entity)
   }
 
   /* Queued versions of mutation functions */
