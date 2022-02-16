@@ -132,5 +132,30 @@ describe(createWorld, () => {
       expect(ecs.get(withAdmin)).toEqual([])
       expect(ecs.get(withName)).toEqual([bob])
     })
+
+    it("archetypes support 'all' to index entities that have all of the specified components", () => {
+      const { ecs, alice, bob } = setup()
+      const archetype = ecs.createArchetype({ all: ["name", "admin"] })
+      expect(ecs.get(archetype)).toEqual([alice])
+    })
+
+    it("archetypes support 'any' to index entities that have one or more of the specified components", () => {
+      const { ecs, alice, bob } = setup()
+      const charlie = ecs.addEntity({ age: 123 })
+      const archetype = ecs.createArchetype({ any: ["name", "age"] })
+      expect(ecs.get(archetype)).toEqual([alice, bob, charlie])
+    })
+
+    it("archetypes support 'none' to index entities that have none of the specified components", () => {
+      const { ecs, bob } = setup()
+      const archetype = ecs.createArchetype({ none: ["admin"] })
+      expect(ecs.get(archetype)).toEqual([bob])
+    })
+
+    it("all, any, none can be combined", () => {
+      const { ecs, bob } = setup()
+      const archetype = ecs.createArchetype({ all: ["name"], none: ["admin"] })
+      expect(ecs.get(archetype)).toEqual([bob])
+    })
   })
 })
