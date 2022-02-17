@@ -38,7 +38,7 @@ type Entity = {
 Create a world (when you provide a type like here, every interaction with the world will provide full type hints):
 
 ```ts
-const world = createWorld<Entity>()
+const world = new World<Entity>()
 ```
 
 Add an entity:
@@ -63,7 +63,7 @@ Implement a system (in Miniplex, systems are just normal functions that operate 
 
 ```ts
 function movementSystem(world) {
-  for (const { position, velocity } of world.get(movingEntities)) {
+  for (const { position, velocity } of movingEntities.entities) {
     position.x += velocity.x
     position.y += velocity.y
     position.z += velocity.z

@@ -1,4 +1,4 @@
-export class ListenerRegistry<T extends Function = Function> {
+export class ListenerRegistry<T extends (...args: any[]) => any = (...args: any[]) => any> {
   private listeners = new Set<T>()
 
   on(listener: T) {
@@ -9,7 +9,7 @@ export class ListenerRegistry<T extends Function = Function> {
     this.listeners.delete(listener)
   }
 
-  invoke() {
-    this.listeners.forEach((l) => l())
+  invoke(...args: Parameters<T>) {
+    this.listeners.forEach((l) => l(...args))
   }
 }

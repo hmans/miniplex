@@ -1,7 +1,8 @@
-import { IEntity, Archetype } from "../ecs"
+import { ArchetypeQuery } from "../Archetype"
+import { IEntity } from "../World"
 
-export const entityIsArchetype = <T extends IEntity>(entity: T, archetype: Archetype<T>) => {
-  const { all, any, none } = archetype
+export const entityIsArchetype = <T extends IEntity>(entity: T, query: ArchetypeQuery<T>) => {
+  const { all, any, none } = query
 
   const result =
     (!none || !none.some((name) => name in entity)) &&

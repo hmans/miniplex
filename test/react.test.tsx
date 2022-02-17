@@ -1,25 +1,25 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import { act } from "react-dom/test-utils"
-import { createWorld, IEntity } from "../src"
+import { IEntity, World } from "../src"
 import { createReactIntegration } from "../src/react"
 
 type Entity = { name: string } & IEntity
 
 describe("createReactIntegration", () => {
   it("returns a useArchetype function", () => {
-    const ecs = createWorld<Entity>()
-    const react = createReactIntegration(ecs)
+    const world = new World<Entity>()
+    const react = createReactIntegration(world)
     expect(react).toHaveProperty("useArchetype")
   })
 
   describe("useArchetype", () => {
     const setup = (fun?: Function) => {
-      const ecs = createWorld<Entity>()
-      const { useArchetype } = createReactIntegration(ecs)
+      const world = new World<Entity>()
+      const { useArchetype } = createReactIntegration(world)
 
-      ecs.addEntity({ name: "Alice" })
-      ecs.addEntity({ name: "Bob" })
+      world.addEntity({ name: "Alice" })
+      world.addEntity({ name: "Bob" })
 
       const Users = () => {
         const entities = useArchetype("name")
@@ -37,7 +37,7 @@ describe("createReactIntegration", () => {
         )
       }
 
-      return { ecs, Users }
+      return { world, Users }
     }
 
     it("returns a list of entities matching the specified archetype", async () => {
@@ -51,10 +51,10 @@ describe("createReactIntegration", () => {
 
     it("re-renders the component when the archetype index updates", async () => {
       let renderCount = 0
-      const { ecs, Users } = setup(() => renderCount++)
+      const { world, Users } = setup(() => renderCount++)
 
       /* queue a new entity to be added */
-      ecs.addEntity.queued({ name: "Charles" })
+      world.queue.addEntity({ name: "Charles" })
 
       /* Render the component. At this point, Charles has not been added to the page. */
       render(<Users />)
@@ -62,7 +62,7 @@ describe("createReactIntegration", () => {
       expect(renderCount).toEqual(1)
 
       /* Now flush the ECS queue. The component should now rerender. */
-      act(() => ecs.flushQueue())
+      act(() => world.queue.flush())
       expect(renderCount).toEqual(2)
       expect(screen.queryByText("Charles")).toBeInTheDocument()
     })

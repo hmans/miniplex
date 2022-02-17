@@ -1,7 +1,7 @@
 import { createContext, FC, useContext, useEffect, useState } from "react"
-import { World, UntypedEntity } from "."
-import { ComponentName, IEntity } from "./ecs"
+import { ArchetypeQueryOrComponentList, UntypedEntity, World } from "."
 import { useRerender } from "./util/useRerender"
+import { IEntity } from "./World"
 
 /**
  * Create various React-specific hooks and components for your
@@ -56,16 +56,21 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
    * Return the entities of the specified archetype and subscribe this component
    * to it, making it re-render when entities are added to or removed from it.
    */
-  function useArchetype(...names: ComponentName<T>[]) {
+  function useArchetype(...query: ArchetypeQueryOrComponentList<T>) {
     const rerender = useRerender()
-    const archetype = world.createArchetype(...names)
+    const archetype = world.createArchetype(...query)
 
     useEffect(() => {
-      world.listeners.archetypeChanged.get(archetype)!.on(rerender)
-      return () => world.listeners.archetypeChanged.get(archetype)!.off(rerender)
+      archetype.onEntityAdded.on(rerender)
+      archetype.onEntityRemoved.on(rerender)
+
+      return () => {
+        archetype.onEntityAdded.off(rerender)
+        archetype.onEntityRemoved.off(rerender)
+      }
     }, [world, archetype])
 
-    return world.get(archetype)
+    return archetype.entities
   }
 
   return { useArchetype, useEntity, Entity, Component }
