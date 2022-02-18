@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 
 export function useRerender() {
   const [_, setVersion] = useState(0)
-  return () => {
+  return useCallback(() => {
     setVersion((v) => v + 1)
-  }
+  }, [])
 }
