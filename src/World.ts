@@ -60,7 +60,8 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   private indexEntity(entity: T) {
-    for (const archetype of this.archetypes.values()) archetype.indexEntity(entity)
+    if (this.entities.includes(entity))
+      for (const archetype of this.archetypes.values()) archetype.indexEntity(entity)
   }
 
   /* MUTATION FUNCTIONS */
