@@ -86,7 +86,7 @@ export class World<T extends IEntity = UntypedEntity> {
     const pos = this.entities.indexOf(entity, 0)
 
     /* Sanity check */
-    if (pos < 0) throw "Tried to remove an unknown entity from this world."
+    if (pos < 0) return
 
     /* Remove it from our global list of entities */
     this.entities.splice(pos, 1)
