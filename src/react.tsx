@@ -58,7 +58,7 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
    */
   function useArchetype(...query: ArchetypeQueryOrComponentList<T>) {
     const rerender = useRerender()
-    const archetype = world.createArchetype(...query)
+    const [archetype] = useState(() => world.createArchetype(...query))
 
     useEffect(() => {
       archetype.onEntityAdded.on(rerender)
