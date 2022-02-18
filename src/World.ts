@@ -65,7 +65,7 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  public addEntity = (entity: T) => {
+  public addEntity = (entity: T = {} as T) => {
     /* If there already is an ID, raise an error. */
     if ("id" in entity) throw "Attempted to add an entity that aleady had an 'id' component."
 
