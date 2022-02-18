@@ -64,11 +64,15 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
       archetype.onEntityAdded.on(rerender)
       archetype.onEntityRemoved.on(rerender)
 
+      /* We need to rerender at least once, because other effects might have set up
+         new entities before we had a chance to register our listeners. */
+      rerender()
+
       return () => {
         archetype.onEntityAdded.off(rerender)
         archetype.onEntityRemoved.off(rerender)
       }
-    }, [world, archetype])
+    }, [])
 
     return archetype.entities
   }
