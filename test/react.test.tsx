@@ -59,11 +59,11 @@ describe("createReactIntegration", () => {
       /* Render the component. At this point, Charles has not been added to the page. */
       render(<Users />)
       expect(screen.queryByText("Charles")).not.toBeInTheDocument()
-      expect(renderCount).toEqual(1)
+      expect(renderCount).toEqual(2)
 
       /* Now flush the ECS queue. The component should now rerender. */
       act(() => world.queue.flush())
-      expect(renderCount).toEqual(2)
+      expect(renderCount).toEqual(3)
       expect(screen.queryByText("Charles")).toBeInTheDocument()
     })
 
