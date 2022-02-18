@@ -54,7 +54,7 @@ describe("createReactIntegration", () => {
       const { world, Users } = setup(() => renderCount++)
 
       /* queue a new entity to be added */
-      world.queue.addEntity({ name: "Charles" })
+      const charles = world.queue.addEntity({ name: "Charles" })
 
       /* Render the component. At this point, Charles has not been added to the page. */
       render(<Users />)
@@ -65,6 +65,12 @@ describe("createReactIntegration", () => {
       act(() => world.queue.flush())
       expect(renderCount).toEqual(3)
       expect(screen.queryByText("Charles")).toBeInTheDocument()
+
+      /* Now remove the entity again and check if the page rerenders. */
+      world.queue.removeEntity(charles)
+      act(() => world.queue.flush())
+      expect(screen.queryByText("Charles")).not.toBeInTheDocument()
+      expect(renderCount).toEqual(4)
     })
 
     it("automatically rerenders the component when the list of entities changes", () => {})

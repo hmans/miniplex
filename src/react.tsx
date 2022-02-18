@@ -72,7 +72,7 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
         archetype.onEntityAdded.off(rerender)
         archetype.onEntityRemoved.off(rerender)
       }
-    }, [])
+    }, [archetype])
 
     return archetype.entities
   }

@@ -82,15 +82,15 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   public removeEntity = (entity: T) => {
+    /* Remove it from our global list of entities */
+    const pos = this.entities.indexOf(entity, 0)
+    this.entities.splice(pos, 1)
+
     /* Remove entity from all archetypes */
     for (const archetype of this.archetypes.values()) archetype.removeEntity(entity)
 
     /* Remove its id component */
     delete entity.id
-
-    /* Remove it from our global list of entities */
-    const pos = this.entities.indexOf(entity, 0)
-    this.entities.splice(pos, 1)
   }
 
   public addComponent = <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => {

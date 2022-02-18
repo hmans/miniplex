@@ -34,7 +34,7 @@ export class Archetype<T extends IEntity> {
   }
 
   public removeEntity(entity: T) {
-    const pos = this.entities.indexOf(entity)
+    const pos = this.entities.indexOf(entity, 0)
     if (pos >= 0) {
       this.entities.splice(pos, 1)
       this.onEntityRemoved.invoke(entity)
