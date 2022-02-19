@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useEffect, useState } from "react"
+import { createContext, FC, useContext, useEffect, useLayoutEffect, useState } from "react"
 import { ArchetypeQueryOrComponentList, UntypedEntity, World } from "."
 import { useRerender } from "./util/useRerender"
 import { IEntity } from "./World"
@@ -18,12 +18,11 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
    */
   const Entity: FC<{ entity?: T }> = ({ entity: existingEntity, children }) => {
     /* Reuse the specified entity or create a new one */
-    const [entity] = useState<T>(() => existingEntity ?? ({} as T))
+    const [entity] = useState<T>(() => existingEntity ?? world.createEntity({} as T))
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
     useEffect(() => {
       if (existingEntity) return
-      world.createEntity(entity)
       return () => world.destroyEntity(entity)
     }, [entity])
 
@@ -46,7 +45,13 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
 
     useEffect(() => {
       world.addComponent(entity, name, data)
-      return () => world.removeComponent(entity, name)
+
+      return () => {
+        /* The entity might already have been destroyed, so let's check. */
+        if ("id" in entity) {
+          world.removeComponent(entity, name)
+        }
+      }
     }, [entity, name, data])
 
     return null
