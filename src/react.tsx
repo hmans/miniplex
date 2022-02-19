@@ -18,7 +18,7 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
    */
   const Entity: FC<{ entity?: T }> = ({ entity: existingEntity, children }) => {
     /* Reuse the specified entity or create a new one */
-    const [entity] = useState<T>(() => existingEntity ?? world.createEntity({} as T))
+    const [entity] = useState<T>(() => existingEntity ?? world.createEntity())
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
     useEffect(() => {
