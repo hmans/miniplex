@@ -108,6 +108,41 @@ describe("World", () => {
     })
   })
 
+  describe("removeComponent", () => {
+    it("removes a component from an entity", () => {
+      const world = new World<GameObject>()
+      const entity = world.addEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
+      world.removeComponent(entity, "velocity")
+      expect(entity.velocity).toBeUndefined()
+    })
+
+    it("removes entities from relevant archetypes", () => {
+      const world = new World<GameObject>()
+      const withVelocity = world.createArchetype("velocity")
+      const entity = world.addEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
+      expect(withVelocity.entities).toContain(entity)
+      world.removeComponent(entity, "velocity")
+      expect(withVelocity.entities).not.toContain(entity)
+    })
+
+    it("raises an error when the specified component is not present on the entity", () => {
+      const world = new World<GameObject>()
+      const entity = world.addEntity({ position: { x: 0, y: 0 } })
+      expect(() => {
+        world.removeComponent(entity, "velocity")
+      }).toThrow()
+    })
+
+    it("raises an error when the specified entity is not managed by this world", () => {
+      const world = new World<GameObject>()
+      const otherWorld = new World<GameObject>()
+      const entity = otherWorld.addEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
+      expect(() => {
+        world.removeComponent(entity, "velocity")
+      }).toThrow()
+    })
+  })
+
   describe("createArchetype", () => {
     it("for two equal archetypes, returns the same archetypes objects", () => {
       const world = new World<Entity>()

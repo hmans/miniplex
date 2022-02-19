@@ -107,7 +107,7 @@ export class World<T extends IEntity = UntypedEntity> {
 
     /* TODO: checking entity ownership like this is likely to slow us down quite a lot, so eventually we'll want something smarter here. */
     if (!this.entities.includes(entity)) {
-      throw `Tried to aadd component "${name}" to an entity that is not managed by this world.`
+      throw `Tried to add component "${name}" to an entity that is not managed by this world.`
     }
 
     /* Add the component */
@@ -118,7 +118,19 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   public removeComponent = (entity: T, ...components: ComponentName<T>[]) => {
-    components.forEach((name) => delete entity[name])
+    /* TODO: checking entity ownership like this is likely to slow us down quite a lot, so eventually we'll want something smarter here. */
+    if (!this.entities.includes(entity)) {
+      throw `Tried to remove ${components} from an entity that is not managed by this world.`
+    }
+
+    for (const name of components) {
+      if (!(name in entity)) {
+        throw `Tried to remove component "${name} from an entity that doesn't have it.`
+      }
+
+      delete entity[name]
+    }
+
     this.indexEntity(entity)
   }
 
