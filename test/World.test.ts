@@ -73,6 +73,39 @@ describe("World", () => {
     })
   })
 
+  describe("removeEntity", () => {
+    it("removes an entity from the world", () => {
+      const world = new World<GameObject>()
+      const entity = world.addEntity({ position: { x: 0, y: 0 } })
+
+      expect(world.entities).toContain(entity)
+      world.removeEntity(entity)
+      expect(world.entities).not.toContain(entity)
+    })
+
+    it("no-ops when trying to remove an entity that is not managed by this world", () => {
+      const world = new World<GameObject>()
+      const otherWorld = new World<GameObject>()
+      const entity = otherWorld.addEntity({ position: { x: 0, y: 0 } })
+
+      expect(world.entities).not.toContain(entity)
+      expect(() => {
+        world.removeEntity(entity)
+      }).not.toThrow()
+      expect(world.entities).not.toContain(entity)
+    })
+
+    it("removes the entity from all archetypes", () => {
+      const world = new World<GameObject>()
+      const withVelocity = world.createArchetype("velocity")
+      const entity = world.addEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
+
+      expect(withVelocity.entities).toContain(entity)
+      world.removeEntity(entity)
+      expect(withVelocity.entities).not.toContain(entity)
+    })
+  })
+
   describe("addComponent", () => {
     it("adds a component to an entity", () => {
       const world = new World<GameObject>()
@@ -90,7 +123,7 @@ describe("World", () => {
       expect(withVelocity.entities).toContain(entity)
     })
 
-    it("raises an error when the specified component is already present on the entity", () => {
+    it("throws when the specified component is already present on the entity", () => {
       const world = new World<GameObject>()
       const entity = world.addEntity({ position: { x: 0, y: 0 } })
       expect(() => {
@@ -98,7 +131,7 @@ describe("World", () => {
       }).toThrow()
     })
 
-    it("raises an error when the specified entity is not managed by this world", () => {
+    it("throws when the specified entity is not managed by this world", () => {
       const world = new World<GameObject>()
       const otherWorld = new World<GameObject>()
       const entity = otherWorld.addEntity({ position: { x: 0, y: 0 } })
@@ -125,7 +158,7 @@ describe("World", () => {
       expect(withVelocity.entities).not.toContain(entity)
     })
 
-    it("raises an error when the specified component is not present on the entity", () => {
+    it("throws when the specified component is not present on the entity", () => {
       const world = new World<GameObject>()
       const entity = world.addEntity({ position: { x: 0, y: 0 } })
       expect(() => {
@@ -133,7 +166,7 @@ describe("World", () => {
       }).toThrow()
     })
 
-    it("raises an error when the specified entity is not managed by this world", () => {
+    it("throws when the specified entity is not managed by this world", () => {
       const world = new World<GameObject>()
       const otherWorld = new World<GameObject>()
       const entity = otherWorld.addEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
