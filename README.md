@@ -10,7 +10,7 @@ If you're hearing about this approach for the first time, it may sound counter-i
 
 > An ECS library can essentially thought of as an API for performing a loop over a homogeneous set of entities, filtering them by some condition, and pulling out a subset of the data associated with each entity. The goal of the library is to provide a usable API for this, and to do it as fast as possible.
 
-### Headline Features
+## Headline Features
 
 - A very strong focus on **developer experience**.
 - **Tiny package size** and **zero dependencies**.
@@ -18,25 +18,25 @@ If you're hearing about this approach for the first time, it may sound counter-i
 - Can power your entire project or just parts of it.
 - Written in TypeScript, with full type checking for your entities.
 
-### Main differences from other ECS implementations
+## Main differences from other ECS implementations
 
 If you've used other Entity Component System implementations before, here's how Miniplex is probably different from them:
 
-#### Entities are just normal JavaScript objects
+### Entities are just normal JavaScript objects
 
 Components are just **properties on those objects**. Component data can be **anything** you need, from primitive values to entire class instances, or even [reactive stores](https://github.com/hmans/statery). Miniplex puts developer experience first, and the most important way it does this is by making its usage feel as natural as possible in a JavaScript setting.
 
 Miniplex does not expect you to programmatically declare component types before using them, but if you're using TypeScript, it will provide full edit- and compile-time type safety to your entities and components if you need it.
 
-#### Miniplex does not have a built-in notion of systems
+### Miniplex does not have a built-in notion of systems
 
 Unlike most other ECS implementations, Miniplex does not have any built-in notion of systems, and does not perform any of its own scheduling. This is by design; your project will likely already have an opinion on how to schedule code execution, and instead of providing its own and potentially conflicting setup, Miniplex will neatly snuggle into the one you already have. Systems can be simple functions that operate on a Miniplex world, and their execution is left up to you.
 
-#### Archetypal Queries
+### Archetypal Queries
 
 Entity queries are performed through **archetypes**. Miniplex allows you to do "simple complex queries" that should cover most, if not all, use cases, without going overboard with query language DSLs.
 
-#### Focus on Object Identities over numerical IDs
+### Focus on Object Identities over numerical IDs
 
 Most interactions with Miniplex are using **object identity** to identify entities or archetypes (instead of numerical IDs). However, entities do automatically get a **built-in `id` component** with an auto-incrementing numerical ID once they're added to the world; this is mostly meant as a convenience for situations where you _need_ to provide a unique scalar reference (eg. as the `key` prop when rendering a list of entities as React components.)
 
