@@ -54,7 +54,11 @@ type Entity = {
 } & IEntity
 ```
 
-Create a world (when you provide a type like here, every interaction with the world will provide full type hints):
+### Creating a World
+
+Miniplex manages entities in worlds, which acts as a container for entities as well as an API for interacting with them.
+
+**Note for TypeScript users:** When you provide a type like we do here, every interaction with the world will provide full type hints:
 
 ```ts
 import { World } from "miniplex"
@@ -62,13 +66,17 @@ import { World } from "miniplex"
 const world = new World<Entity>()
 ```
 
-The main interactions with this world consist of adding and removing entities, and adding or removing components from these entities.
+### Creating Entities
 
-Let's add an entity. Note how we're immediately giving it a `position` component:
+The main interactions with this world consist of creaating and destroying entities, and adding or removing components from these entities.
+
+Let's create an entity. Note how we're immediately giving it a `position` component:
 
 ```ts
 const entity = world.addEntity({ position: { x: 0, y: 0, z: 0 } })
 ```
+
+### Adding Components
 
 Now let's add a `velocity` component to the entity:
 
@@ -76,15 +84,21 @@ Now let's add a `velocity` component to the entity:
 world.addComponent(entity, "velocity", { x: 10, y: 0, z: 0 })
 ```
 
-We're going to write some code that moves entities according to their velocity. You will typically implement this as something called a **system**, which, with Miniplex, are typically just normal functions that fetch the entities they are interested in, and then perform some operation on them.
+### Querying Entities
 
-Create an archetype:
+We're going to write some code that moves entities according to their velocity. You will typically implement this as something called a **system**, which, in Miniplex, are typically just normal functions that fetch the entities they are interested in, and then perform some operation on them.
+
+Fetching only the entities that a system is interested in is the most important part in all this, and it is done through something called **archetypes** that can be thought of as similar to a database index.
+
+Since we're going to move entities, we're interested in entities that have both the `position` and `velocity` components, so let's create an archetype for that:
 
 ```ts
 const movingEntities = world.createArchetype("position", "velocity")
 ```
 
-Implement a system (in Miniplex, systems are just normal functions that operate on the world, and leaves it up to you to run them):
+### Implementing Systems
+
+Now we can implement our system, which is really just a function -- or any other piece of code -- that uses the archetype to fetch the associated entities and then iterates over them:
 
 ```ts
 function movementSystem(world) {
