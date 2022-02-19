@@ -66,7 +66,7 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  public addEntity = (entity: T = {} as T) => {
+  public createEntity = (entity: T = {} as T) => {
     /* If there already is an ID, raise an error. */
     if ("id" in entity) throw "Attempted to add an entity that aleady had an 'id' component."
 
@@ -82,7 +82,7 @@ export class World<T extends IEntity = UntypedEntity> {
     return entity
   }
 
-  public removeEntity = (entity: T) => {
+  public destroyEntity = (entity: T) => {
     const pos = this.entities.indexOf(entity, 0)
 
     /* Sanity check */
@@ -142,13 +142,13 @@ export class World<T extends IEntity = UntypedEntity> {
   private queuedCommands = commandQueue()
 
   public queue = {
-    addEntity: (entity: T) => {
-      this.queuedCommands.add(() => this.addEntity(entity))
+    createEntity: (entity: T) => {
+      this.queuedCommands.add(() => this.createEntity(entity))
       return entity
     },
 
-    removeEntity: (entity: T) => {
-      this.queuedCommands.add(() => this.removeEntity(entity))
+    destroyEntity: (entity: T) => {
+      this.queuedCommands.add(() => this.destroyEntity(entity))
     },
 
     addComponent: <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => {

@@ -23,38 +23,38 @@ describe("World", () => {
     expect(world).toBeInstanceOf(World)
   })
 
-  describe("addEntity", () => {
+  describe("createEntity", () => {
     it("accepts an object that will become the entity", () => {
       const world = new World<Entity>()
       const entity: Entity = { name: "Alice" }
-      const returnedEntity = world.addEntity(entity)
+      const returnedEntity = world.createEntity(entity)
       expect(returnedEntity).toBe(entity)
     })
 
     it("immediately adds the entity to the pool", () => {
       const world = new World<Entity>()
       expect(world.entities).toEqual([])
-      const entity = world.addEntity({ name: "Alice" })
+      const entity = world.createEntity({ name: "Alice" })
       expect(world.entities).toEqual([entity])
     })
 
     it("assigns an ID to the entity", () => {
       const world = new World<Entity>()
-      const entity = world.addEntity({ name: "Alice" })
+      const entity = world.createEntity({ name: "Alice" })
       expect(entity.id).toEqual(1)
     })
 
     it("assigns automatically incrementing IDs", () => {
       const world = new World<Entity>()
-      world.addEntity({ name: "Alice" })
-      const entity = world.addEntity({ name: "Bob" })
+      world.createEntity({ name: "Alice" })
+      const entity = world.createEntity({ name: "Bob" })
       expect(entity.id).toEqual(2)
     })
 
     describe(".queued", () => {
       it("queues an entity to be added to the entity pool", () => {
         const world = new World<Entity>()
-        const entity = world.queue.addEntity({ name: "Alice" })
+        const entity = world.queue.createEntity({ name: "Alice" })
 
         expect(world.entities).not.toContain(entity)
         world.queue.flush()
@@ -63,7 +63,7 @@ describe("World", () => {
 
       it("does not yet assign an ID", () => {
         const world = new World<Entity>()
-        const entity = world.queue.addEntity({ name: "Alice" })
+        const entity = world.queue.createEntity({ name: "Alice" })
         expect(entity.id).toBeUndefined()
 
         /* Flushing won't change the ID */
@@ -73,24 +73,24 @@ describe("World", () => {
     })
   })
 
-  describe("removeEntity", () => {
+  describe("destroyEntity", () => {
     it("removes an entity from the world", () => {
       const world = new World<GameObject>()
-      const entity = world.addEntity({ position: { x: 0, y: 0 } })
+      const entity = world.createEntity({ position: { x: 0, y: 0 } })
 
       expect(world.entities).toContain(entity)
-      world.removeEntity(entity)
+      world.destroyEntity(entity)
       expect(world.entities).not.toContain(entity)
     })
 
     it("no-ops when trying to remove an entity that is not managed by this world", () => {
       const world = new World<GameObject>()
       const otherWorld = new World<GameObject>()
-      const entity = otherWorld.addEntity({ position: { x: 0, y: 0 } })
+      const entity = otherWorld.createEntity({ position: { x: 0, y: 0 } })
 
       expect(world.entities).not.toContain(entity)
       expect(() => {
-        world.removeEntity(entity)
+        world.destroyEntity(entity)
       }).not.toThrow()
       expect(world.entities).not.toContain(entity)
     })
@@ -98,10 +98,10 @@ describe("World", () => {
     it("removes the entity from all archetypes", () => {
       const world = new World<GameObject>()
       const withVelocity = world.createArchetype("velocity")
-      const entity = world.addEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
+      const entity = world.createEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
 
       expect(withVelocity.entities).toContain(entity)
-      world.removeEntity(entity)
+      world.destroyEntity(entity)
       expect(withVelocity.entities).not.toContain(entity)
     })
   })
@@ -109,7 +109,7 @@ describe("World", () => {
   describe("addComponent", () => {
     it("adds a component to an entity", () => {
       const world = new World<GameObject>()
-      const entity = world.addEntity({ position: { x: 0, y: 0 } })
+      const entity = world.createEntity({ position: { x: 0, y: 0 } })
       world.addComponent(entity, "velocity", { x: 1, y: 2 })
       expect(entity.velocity).toEqual({ x: 1, y: 2 })
     })
@@ -117,7 +117,7 @@ describe("World", () => {
     it("adds entities to relevant archetypes", () => {
       const world = new World<GameObject>()
       const withVelocity = world.createArchetype("velocity")
-      const entity = world.addEntity({ position: { x: 0, y: 0 } })
+      const entity = world.createEntity({ position: { x: 0, y: 0 } })
       expect(withVelocity.entities).not.toContain(entity)
       world.addComponent(entity, "velocity", { x: 1, y: 2 })
       expect(withVelocity.entities).toContain(entity)
@@ -125,7 +125,7 @@ describe("World", () => {
 
     it("throws when the specified component is already present on the entity", () => {
       const world = new World<GameObject>()
-      const entity = world.addEntity({ position: { x: 0, y: 0 } })
+      const entity = world.createEntity({ position: { x: 0, y: 0 } })
       expect(() => {
         world.addComponent(entity, "position", { x: 0, y: 0 })
       }).toThrow()
@@ -134,7 +134,7 @@ describe("World", () => {
     it("throws when the specified entity is not managed by this world", () => {
       const world = new World<GameObject>()
       const otherWorld = new World<GameObject>()
-      const entity = otherWorld.addEntity({ position: { x: 0, y: 0 } })
+      const entity = otherWorld.createEntity({ position: { x: 0, y: 0 } })
       expect(() => {
         world.addComponent(entity, "velocity", { x: 1, y: 2 })
       }).toThrow()
@@ -144,7 +144,7 @@ describe("World", () => {
   describe("removeComponent", () => {
     it("removes a component from an entity", () => {
       const world = new World<GameObject>()
-      const entity = world.addEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
+      const entity = world.createEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
       world.removeComponent(entity, "velocity")
       expect(entity.velocity).toBeUndefined()
     })
@@ -152,7 +152,7 @@ describe("World", () => {
     it("removes entities from relevant archetypes", () => {
       const world = new World<GameObject>()
       const withVelocity = world.createArchetype("velocity")
-      const entity = world.addEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
+      const entity = world.createEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
       expect(withVelocity.entities).toContain(entity)
       world.removeComponent(entity, "velocity")
       expect(withVelocity.entities).not.toContain(entity)
@@ -160,7 +160,7 @@ describe("World", () => {
 
     it("throws when the specified component is not present on the entity", () => {
       const world = new World<GameObject>()
-      const entity = world.addEntity({ position: { x: 0, y: 0 } })
+      const entity = world.createEntity({ position: { x: 0, y: 0 } })
       expect(() => {
         world.removeComponent(entity, "velocity")
       }).toThrow()
@@ -169,7 +169,7 @@ describe("World", () => {
     it("throws when the specified entity is not managed by this world", () => {
       const world = new World<GameObject>()
       const otherWorld = new World<GameObject>()
-      const entity = otherWorld.addEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
+      const entity = otherWorld.createEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
       expect(() => {
         world.removeComponent(entity, "velocity")
       }).toThrow()
@@ -201,8 +201,8 @@ describe("World", () => {
   describe("archetypes", () => {
     const setup = () => {
       const world = new World<Entity>()
-      const alice = world.addEntity({ name: "Alice", admin: true })
-      const bob = world.addEntity({ name: "Bob" })
+      const alice = world.createEntity({ name: "Alice", admin: true })
+      const bob = world.createEntity({ name: "Bob" })
 
       return { world, alice, bob }
     }
@@ -243,7 +243,7 @@ describe("World", () => {
       expect(withAdmin.entities).toEqual([alice])
       expect(withName.entities).toEqual([alice, bob])
 
-      world.removeEntity(alice)
+      world.destroyEntity(alice)
 
       expect(withAdmin.entities).toEqual([])
       expect(withName.entities).toEqual([bob])
@@ -257,7 +257,7 @@ describe("World", () => {
 
     it("archetypes support 'any' to index entities that have one or more of the specified components", () => {
       const { world, alice, bob } = setup()
-      const charlie = world.addEntity({ age: 123 })
+      const charlie = world.createEntity({ age: 123 })
       const archetype = world.createArchetype({ any: ["name", "age"] })
       expect(archetype.entities).toEqual([alice, bob, charlie])
     })

@@ -18,8 +18,8 @@ describe("createReactIntegration", () => {
       const world = new World<Entity>()
       const { useArchetype } = createReactIntegration(world)
 
-      world.addEntity({ name: "Alice" })
-      world.addEntity({ name: "Bob" })
+      world.createEntity({ name: "Alice" })
+      world.createEntity({ name: "Bob" })
 
       const Users = () => {
         const entities = useArchetype("name")
@@ -54,7 +54,7 @@ describe("createReactIntegration", () => {
       const { world, Users } = setup(() => renderCount++)
 
       /* queue a new entity to be added */
-      const charles = world.queue.addEntity({ name: "Charles" })
+      const charles = world.queue.createEntity({ name: "Charles" })
 
       /* Render the component. At this point, Charles has not been added to the page. */
       render(<Users />)
@@ -67,7 +67,7 @@ describe("createReactIntegration", () => {
       expect(screen.queryByText("Charles")).toBeInTheDocument()
 
       /* Now remove the entity again and check if the page rerenders. */
-      world.queue.removeEntity(charles)
+      world.queue.destroyEntity(charles)
       act(() => world.queue.flush())
       expect(screen.queryByText("Charles")).not.toBeInTheDocument()
       expect(renderCount).toEqual(4)
