@@ -101,9 +101,19 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   public addComponent = <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => {
-    if (name in entity) throw `Tried to add component "${name} to an entity that already has it.`
+    if (name in entity) {
+      throw `Tried to add component "${name} to an entity that already has it.`
+    }
 
+    /* TODO: checking entity ownership like this is likely to slow us down quite a lot, so eventually we'll want something smarter here. */
+    if (!this.entities.includes(entity)) {
+      throw `Tried to aadd component "${name}" to an entity that is not managed by this world.`
+    }
+
+    /* Add the component */
     entity[name] = data
+
+    /* Trigger a reindexing of the entity */
     this.indexEntity(entity)
   }
 

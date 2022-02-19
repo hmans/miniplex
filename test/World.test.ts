@@ -97,6 +97,15 @@ describe("World", () => {
         world.addComponent(entity, "position", { x: 0, y: 0 })
       }).toThrow()
     })
+
+    it("raises an error when the specified entity is not managed by this world", () => {
+      const world = new World<GameObject>()
+      const otherWorld = new World<GameObject>()
+      const entity = otherWorld.addEntity({ position: { x: 0, y: 0 } })
+      expect(() => {
+        world.addComponent(entity, "velocity", { x: 1, y: 2 })
+      }).toThrow()
+    })
   })
 
   describe("createArchetype", () => {
@@ -137,10 +146,10 @@ describe("World", () => {
     })
 
     it("when a component is added to an entity, archetype indices are automatically updated", () => {
-      const { world: ecs, alice, bob } = setup()
-      const admins = ecs.createArchetype("admin")
+      const { world, alice, bob } = setup()
+      const admins = world.createArchetype("admin")
       expect(admins.entities).toEqual([alice])
-      ecs.addComponent(bob, "admin", true)
+      world.addComponent(bob, "admin", true)
       expect(admins.entities).toEqual([alice, bob])
     })
 
