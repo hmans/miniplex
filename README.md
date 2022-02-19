@@ -1,3 +1,7 @@
+[![Version](https://img.shields.io/npm/v/miniplex)](https://www.npmjs.com/package/miniplex)
+[![Downloads](https://img.shields.io/npm/dt/miniplex.svg)](https://www.npmjs.com/package/miniplex)
+[![Bundle Size](https://img.shields.io/bundlephobia/min/miniplex?label=bundle%20size)](https://bundlephobia.com/result?p=miniplex)
+
 # Miniplex
 
 ## Introduction
