@@ -138,9 +138,9 @@ world.queue.flush()
 
 **Note:** Please remember that flushing the queue is left to you. You might, for example, do this in your game's main loop, after all systems have finished executing.
 
-### React
+## Usage with React
 
-You can use Miniplex without React, but it also provides some code to make it super-fun to use in React projects. All React-specific code is in the `miniplex/react` module:
+Even though Miniplex can be used without React (it is entirely framework agnostic), it does ship with some useful React glue, available in the `miniplex/react` module.
 
 ```ts
 import { createReactIntegration } from "miniplex/react"
