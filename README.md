@@ -73,7 +73,7 @@ The main interactions with this world consist of creaating and destroying entiti
 Let's create an entity. Note how we're immediately giving it a `position` component:
 
 ```ts
-const entity = world.addEntity({ position: { x: 0, y: 0, z: 0 } })
+const entity = world.createEntity({ position: { x: 0, y: 0, z: 0 } })
 ```
 
 ### Adding Components
@@ -110,19 +110,33 @@ function movementSystem(world) {
 }
 ```
 
+**Note:** Since entities are just plain JavaScript objects, they can easily be destructured into their components, like we're doing above.
+
+### Destroying Entities
+
+At some point we may want to remove an entity from the world (for example, an enemy spaceship that got destroyed by the player):
+
+```ts
+world.destroyEntity(entity)
+```
+
+This will immediately remove the entity from the Miniplex world and all associated archetypes.
+
 ### Queued Commands
 
-All functions that modify the world (`addEntity`, `removeEntity`, `addComponent` and `removeComponent`) also provide a `queued` version that will not perform the action immediately, but instead put it into a queue:
+All functions that modify the world (`createEntity`, `destroyEntity`, `addComponent` and `removeComponent`) also provide an alternative function that will not perform the action immediately, but instead put it into a queue:
 
 ```ts
-world.removeEntity.queued(bullet)
+world.queue.destroyEntity(bullet)
 ```
 
-The queue can be executed and flushed through `flushQueue`:
+Once you're ready to execute the queued operations, you can flush the queue likes this:
 
 ```ts
-world.flushQueue()
+world.queue.flush()
 ```
+
+**Note:** Please remember that flushing the queue is left to you. You might, for example, do this in your game's main loop, after all systems have finished executing.
 
 ### React
 
@@ -169,6 +183,65 @@ const Car = () => (
 ```
 
 **Note:** all of the above is still very much in flux. Please expect things to break. A lot. Like, really.
+
+## Performance Hints
+
+### Use for instead of forEach
+
+You might be tempted to use `forEach` in your system implementations, like this:
+
+```ts
+function movementSystem(world) {
+  movingEntities.entities.forEach(({ position, velocity }) => {
+    position.x += velocity.x
+    position.y += velocity.y
+    position.z += velocity.z
+  })
+}
+```
+
+This might incur a modest, but noticeable performance penalty, since you would be calling and returning from a function for every entity in the archetype. It is typically recommended to use either a `for/of` loop:
+
+```ts
+function movementSystem(world) {
+  for (const { position, velocity } of movingEntities.entities) {
+    position.x += velocity.x
+    position.y += velocity.y
+    position.z += velocity.z
+  }
+}
+```
+
+Or a classic `for` loop:
+
+```ts
+function movementSystem(world) {
+  for (let i = 0; i < movingEntities.entities.length; i++) {
+    const { position, velocity } = movingEntities.entities[i]
+    position.x += velocity.x
+    position.y += velocity.y
+    position.z += velocity.z
+  }
+}
+```
+
+If your system code will under some circumstances immediately remove entities, you might even want to go the safest route of iterating through the collection in reversed order:
+
+```ts
+const withHealth = world.createArchetype("health")
+
+function healthSystem(world) {
+  /* Note how we're going through the list in reverse order: */
+  for (let i = withHealth.entities.length; i >= 0; i--) {
+    const entity = withHealth.entities[i]
+
+    /* If health is depleted, destroy the entity */
+    if (entity.health <= 0) {
+      world.destroyEntity(entity)
+    }
+  }
+}
+```
 
 ## Questions?
 
