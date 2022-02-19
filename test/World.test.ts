@@ -24,6 +24,12 @@ describe("World", () => {
   })
 
   describe("createEntity", () => {
+    it("creates a new entity", () => {
+      const world = new World<Entity>()
+      const entity = world.createEntity()
+      expect(entity.id).not.toBeUndefined()
+    })
+
     it("accepts an object that will become the entity", () => {
       const world = new World<Entity>()
       const entity: Entity = { name: "Alice" }
