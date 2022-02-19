@@ -101,6 +101,8 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   public addComponent = <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => {
+    if (name in entity) throw `Tried to add component "${name} to an entity that already has it.`
+
     entity[name] = data
     this.indexEntity(entity)
   }

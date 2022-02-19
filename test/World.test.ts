@@ -7,6 +7,16 @@ type Entity = {
   admin?: boolean
 } & IEntity
 
+type Vector2 = {
+  x: number
+  y: number
+}
+
+type GameObject = {
+  position: Vector2
+  velocity?: Vector2
+} & IEntity
+
 describe("World", () => {
   it("can be instantiated as a class", () => {
     const world = new World<Entity>()
@@ -60,6 +70,32 @@ describe("World", () => {
         world.queue.flush()
         expect(entity.id).toEqual(1)
       })
+    })
+  })
+
+  describe("addComponent", () => {
+    it("adds a component to an entity", () => {
+      const world = new World<GameObject>()
+      const entity = world.addEntity({ position: { x: 0, y: 0 } })
+      world.addComponent(entity, "velocity", { x: 1, y: 2 })
+      expect(entity.velocity).toEqual({ x: 1, y: 2 })
+    })
+
+    it("adds entities to relevant archetypes", () => {
+      const world = new World<GameObject>()
+      const withVelocity = world.createArchetype("velocity")
+      const entity = world.addEntity({ position: { x: 0, y: 0 } })
+      expect(withVelocity.entities).not.toContain(entity)
+      world.addComponent(entity, "velocity", { x: 1, y: 2 })
+      expect(withVelocity.entities).toContain(entity)
+    })
+
+    it("raises an error when the specified component is already present on the entity", () => {
+      const world = new World<GameObject>()
+      const entity = world.addEntity({ position: { x: 0, y: 0 } })
+      expect(() => {
+        world.addComponent(entity, "position", { x: 0, y: 0 })
+      }).toThrow()
     })
   })
 
