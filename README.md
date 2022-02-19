@@ -243,6 +243,38 @@ function healthSystem(world) {
 }
 ```
 
+### Reuse archetypes where possible
+
+`createArchetype` aims to be idempotent and reuse existing archetypes for the same categories of entities, so you will never risk accidentally creating too many archetype indices. It is, however, a relatively heavyweight function, and you are advised to, whereever possible, reuse previously created archetype objects.
+
+For example, creating your archetypes within a system function like this will work, but unneccessarily create additional overhead, and is thus not recommended:
+
+```ts
+function healthSystem(world) {
+  const movingEntities = world.createArchetype("position", "velocity")
+
+  for (const { position, velocity } of movingEntities.entities) {
+    position.x += velocity.x
+    position.y += velocity.y
+    position.z += velocity.z
+  }
+}
+```
+
+Instead, create the archetype outside of your system:
+
+```ts
+const movingEntities = world.createArchetype("position", "velocity")
+
+function healthSystem(world) {
+  for (const { position, velocity } of movingEntities.entities) {
+    position.x += velocity.x
+    position.y += velocity.y
+    position.z += velocity.z
+  }
+}
+```
+
 ## Questions?
 
 Find me on [Twitter](https://twitter.com/hmans) or the [Poimandres Discord](https://discord.gg/aAYjm2p7c7).
