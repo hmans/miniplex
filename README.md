@@ -48,7 +48,9 @@ Most interactions with Miniplex are using **object identity** to identify entiti
 
 Miniplex can be used in any JavaScript or TypeScript project, regardless of which extra frameworks you might be using. Some optional React glue is provided, but let's talk about framework-less usage first.
 
-**Optional, but recommended:** Define a type that describes your entities:
+### Typing your Entities (optional)
+
+If you're using TypeScript, you can define a type that describes your entities:
 
 ```ts
 type Entity = {
@@ -72,7 +74,7 @@ const world = new World<Entity>()
 
 ### Creating Entities
 
-The main interactions with this world consist of creaating and destroying entities, and adding or removing components from these entities.
+The main interactions with this world consist of creating and destroying entities, and adding or removing components from these entities.
 
 Let's create an entity. Note how we're immediately giving it a `position` component:
 
