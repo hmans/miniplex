@@ -148,6 +148,8 @@ world.queue.flush()
 
 ## Usage with React
 
+**🚨 Warning: the React glue provided by this package is still incomplete and should be considered unstable. (It works, but there will be breaking changes!)**
+
 Even though Miniplex can be used without React (it is entirely framework agnostic), it does ship with some useful React glue, available in the `miniplex/react` module.
 
 ```ts
@@ -160,7 +162,7 @@ Now you can pass your existing Miniplex world to this function to get a set of R
 const { Entity, Component, useArchetype } = createReactIntegration(world)
 ```
 
-The `useArchetype` hook lets you get the entities of the specified archetype (similar to the `world.get` above) from within a React component. Most importantly, this hook will make the component _rerender_ if entities are added to or removed from the archetype. This is useful for implementing systems as React components, or writing React components that render entities:
+The `useArchetype` hook lets you get the entities of the specified archetype (similar to the `world.get` above) from within a React component. Most importantly, this hook will make the component _re-render_ every time entities are added to or removed from the archetype. This is useful for implementing systems as React components, or writing React components that render entities:
 
 ```ts
 const MovementSystem = () => {
@@ -189,8 +191,6 @@ const Car = () => (
   <Entity>
 )
 ```
-
-**Note:** all of the above is still very much in flux. Please expect things to break. A lot. Like, really.
 
 ## Performance Hints
 
