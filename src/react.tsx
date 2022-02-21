@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useEffect, useLayoutEffect, useState } from "react"
+import { createContext, FC, useContext, useEffect, useRef } from "react"
 import { ArchetypeQueryOrComponentList, UntypedEntity, World } from "."
 import { useRerender } from "./util/useRerender"
 import { IEntity } from "./World"
@@ -18,7 +18,7 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
    */
   const Entity: FC<{ entity?: T }> = ({ entity: existingEntity, children }) => {
     /* Reuse the specified entity or create a new one */
-    const [entity] = useState<T>(() => existingEntity ?? world.createEntity())
+    const entity = useConstant<T>(() => existingEntity ?? world.createEntity())
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
     useEffect(() => {
@@ -63,7 +63,7 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
    */
   function useArchetype(...query: ArchetypeQueryOrComponentList<T>) {
     const rerender = useRerender()
-    const [archetype] = useState(() => world.createArchetype(...query))
+    const archetype = useConstant(() => world.createArchetype(...query))
 
     useEffect(() => {
       archetype.onEntityAdded.on(rerender)
@@ -83,4 +83,14 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
   }
 
   return { useArchetype, useEntity, Entity, Component }
+}
+
+function useConstant<T>(fn: () => T): T {
+  const ref = useRef<{ v: T }>()
+
+  if (!ref.current) {
+    ref.current = { v: fn() }
+  }
+
+  return ref.current.v
 }
