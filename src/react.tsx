@@ -1,5 +1,6 @@
-import { createContext, FC, useContext, useEffect, useRef } from "react"
+import { createContext, FC, useContext, useEffect } from "react"
 import { ArchetypeQueryOrComponentList, UntypedEntity, World } from "."
+import { useConstant } from "./util/useConstant"
 import { useRerender } from "./util/useRerender"
 import { IEntity } from "./World"
 
@@ -83,14 +84,4 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
   }
 
   return { useArchetype, useEntity, Entity, Component }
-}
-
-function useConstant<T>(fn: () => T): T {
-  const ref = useRef<{ v: T }>()
-
-  if (!ref.current) {
-    ref.current = { v: fn() }
-  }
-
-  return ref.current.v
 }
