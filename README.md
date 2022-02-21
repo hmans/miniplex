@@ -4,6 +4,8 @@
 
 # Miniplex
 
+**🚨 WORK IN PROGRESS!** Miniplex is mostly feature complete, but parts of the API are still being fine-tuned. Feel free to poke around, but please be ready for breaking changes!
+
 ## Introduction
 
 **Miniplex is an entity management system for games and similarly demanding applications.** Instead of creating separate buckets for different types of entities (eg. asteroids, enemies, pickups, the player, etc.), you throw all of them into a single store, describe their properties through components, and then write code that performs updates on entities of specific types.
