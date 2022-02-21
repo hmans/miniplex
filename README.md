@@ -19,7 +19,7 @@ If you're hearing about this approach for the first time, it may sound counter-i
 ## Headline Features
 
 - A very strong focus on **developer experience**.
-- **Tiny package size** and **zero dependencies**.
+- **[Tiny package size](https://bundlephobia.com/package/miniplex)** and **zero dependencies**.
 - Use it with or without React.
 - Can power your entire project or just parts of it.
 - Written in TypeScript, with full type checking for your entities.
