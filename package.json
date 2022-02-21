@@ -5,7 +5,7 @@
     "email": "hendrik@mans.de",
     "url": "https://hendrik.mans.de"
   },
-  "description": "Joyfully minimal ECS with a focus on Developer Experience.",
+  "description": "A developer-friendly entity management system for games and similarly demanding applications, based on ECS architecture.",
   "homepage": "https://github.com/hmans/miniplex",
   "keywords": [
     "gamedev",
