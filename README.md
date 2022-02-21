@@ -18,29 +18,31 @@ If you're hearing about this approach for the first time, it may sound counter-i
 
 ## Headline Features
 
-- A very strong focus on **developer experience**.
-- **[Tiny package size](https://bundlephobia.com/package/miniplex)** and **zero dependencies**.
-- Use it with or without React.
+- A very strong focus on **developer experience**. Miniplex aims to be the most convenient to use ECS implementation while still providing great performance.
+- **[Tiny package size](https://bundlephobia.com/package/miniplex)** and **zero dependencies**. (Yay!)
+- **Comes with React glue**, but works with any framework, and of course vanilla JavScript.
 - Can power your entire project or just parts of it.
-- Written in TypeScript, with full type checking for your entities.
+- Written in **TypeScript**, with full type checking for your entities.
 
 ## Main differences from other ECS implementations
 
-If you've used other Entity Component System implementations before, here's how Miniplex is probably different from them:
+If you've used other Entity Component System implementations before, here's how Miniplex is different from some of them:
 
 ### Entities are just normal JavaScript objects
 
-Components are just **properties on those objects**. Component data can be **anything** you need, from primitive values to entire class instances, or even [reactive stores](https://github.com/hmans/statery). Miniplex puts developer experience first, and the most important way it does this is by making its usage feel as natural as possible in a JavaScript setting.
+Entities are just **plain JavaScript objects**, and components are just **properties on those objects**. Component data can be **anything** you need, from primitive values to entire class instances, or even [reactive stores](https://github.com/hmans/statery). Miniplex aims to put developer experience first, and the most important way it does this is by making its usage feel as natural as possible in a JavaScript setting.
 
-Miniplex does not expect you to programmatically declare component types before using them, but if you're using TypeScript, it will provide full edit- and compile-time type safety to your entities and components if you need it.
+Miniplex does not expect you to programmatically declare component types before using them, but if you're using TypeScript, you can provide a type describing your entities and Miniplex will provide full edit- and compile-time type hints and safety.
 
 ### Miniplex does not have a built-in notion of systems
 
-Unlike most other ECS implementations, Miniplex does not have any built-in notion of systems, and does not perform any of its own scheduling. This is by design; your project will likely already have an opinion on how to schedule code execution, and instead of providing its own and potentially conflicting setup, Miniplex will neatly snuggle into the one you already have. Systems can be simple functions that operate on a Miniplex world, and their execution is left up to you.
+Unlike most other ECS implementations, Miniplex does not have any built-in notion of systems, and does not perform any of its own scheduling. This is by design; your project will likely already have an opinion on how to schedule code execution, and instead of providing its own and potentially conflicting setup, Miniplex will neatly snuggle into the one you already have.
+
+Systems are extremely straight-forward: just write simple functions that operate on the Miniplex world, and run them in whatever fashion fits best to your project (`setInterval`, `requestAnimationFrame`, `useFrame`, your custom ticker implementation, and so on.)
 
 ### Archetypal Queries
 
-Entity queries are performed through **archetypes**. Miniplex allows you to do "simple complex queries" that should cover most, if not all, use cases, without going overboard with query language DSLs.
+Entity queries are performed through **archetypes**. Miniplex allows you to do "simple complex queries" that should cover most use cases, without going overboard with query language DSLs.
 
 ### Focus on Object Identities over numerical IDs
 
@@ -48,7 +50,7 @@ Most interactions with Miniplex are using **object identity** to identify entiti
 
 ## Basic Usage
 
-Miniplex can be used in any JavaScript or TypeScript project, regardless of which extra frameworks you might be using. Some optional React glue is provided, but let's talk about framework-less usage first.
+Miniplex can be used in any JavaScript or TypeScript project, regardless of which extra frameworks you might be using. Some React glue is provided out of the box, but let's talk about framework-less usage first.
 
 ### Typing your Entities (optional)
 
@@ -64,7 +66,7 @@ type Entity = {
 
 ### Creating a World
 
-Miniplex manages entities in worlds, which acts as a container for entities as well as an API for interacting with them.
+Miniplex manages entities in worlds, which act as a containers for entities as well as an API for interacting with them. You can have one big world in your project, or several smaller worlds handling separate concerns.
 
 **Note for TypeScript users:** When you provide a type like we do here, every interaction with the world will provide full type hints:
 
@@ -76,7 +78,7 @@ const world = new World<Entity>()
 
 ### Creating Entities
 
-The main interactions with this world consist of creating and destroying entities, and adding or removing components from these entities.
+The main interactions with a Miniplex world are creating and destroying entities, and adding or removing components from these entities.
 
 Let's create an entity. Note how we're immediately giving it a `position` component:
 
@@ -92,11 +94,13 @@ Now let's add a `velocity` component to the entity:
 world.addComponent(entity, "velocity", { x: 10, y: 0, z: 0 })
 ```
 
+Now the entity has two components: `position` and `velocity`.
+
 ### Querying Entities
 
 We're going to write some code that moves entities according to their velocity. You will typically implement this as something called a **system**, which, in Miniplex, are typically just normal functions that fetch the entities they are interested in, and then perform some operation on them.
 
-Fetching only the entities that a system is interested in is the most important part in all this, and it is done through something called **archetypes** that can be thought of as similar to a database index.
+Fetching only the entities that a system is interested in is the most important part in all this, and it is done through something called **archetypes** that can be thought of as something akin to database indices.
 
 Since we're going to move entities, we're interested in entities that have both the `position` and `velocity` components, so let's create an archetype for that:
 
@@ -253,7 +257,7 @@ function healthSystem(world) {
 
 ### Reuse archetypes where possible
 
-`createArchetype` aims to be idempotent and reuse existing archetypes for the same categories of entities, so you will never risk accidentally creating too many archetype indices. It is, however, a relatively heavyweight function, and you are advised to, whereever possible, reuse previously created archetype objects.
+`createArchetype` aims to be idempotent and reuse existing archetypes for the same categories of entities, so you will never risk accidentally creating multiple indices of the same archetypes. It is, however, a comparatively heavyweight function, and you are advised to, whereever possible, reuse previously created archetype objects.
 
 For example, creating your archetypes within a system function like this will work, but unneccessarily create additional overhead, and is thus not recommended:
 
