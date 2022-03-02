@@ -13,6 +13,11 @@ describe("createReactIntegration", () => {
     expect(react).toHaveProperty("useArchetype")
   })
 
+  describe("Entity", () => {
+    it.todo("creates an entity")
+    it.todo("accepts a ref and sets it to the created entity")
+  })
+
   describe("useArchetype", () => {
     const setup = (fun?: Function) => {
       const world = new World<Entity>()
