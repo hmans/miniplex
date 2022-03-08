@@ -80,7 +80,7 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
       }
     }, [archetype])
 
-    return archetype.entities
+    return archetype
   }
 
   return { useArchetype, useEntity, Entity, Component }

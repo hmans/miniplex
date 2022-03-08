@@ -27,7 +27,7 @@ describe("createReactIntegration", () => {
       world.createEntity({ name: "Bob" })
 
       const Users = () => {
-        const entities = useArchetype("name")
+        const { entities } = useArchetype("name")
 
         fun?.()
 
