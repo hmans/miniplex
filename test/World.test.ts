@@ -103,7 +103,7 @@ describe("World", () => {
 
     it("removes the entity from all archetypes", () => {
       const world = new World<GameObject>()
-      const withVelocity = world.createArchetype("velocity")
+      const withVelocity = world.archetype("velocity")
       const entity = world.createEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
 
       expect(withVelocity.entities).toContain(entity)
@@ -122,7 +122,7 @@ describe("World", () => {
 
     it("adds entities to relevant archetypes", () => {
       const world = new World<GameObject>()
-      const withVelocity = world.createArchetype("velocity")
+      const withVelocity = world.archetype("velocity")
       const entity = world.createEntity({ position: { x: 0, y: 0 } })
       expect(withVelocity.entities).not.toContain(entity)
       world.addComponent(entity, "velocity", { x: 1, y: 2 })
@@ -157,7 +157,7 @@ describe("World", () => {
 
     it("removes entities from relevant archetypes", () => {
       const world = new World<GameObject>()
-      const withVelocity = world.createArchetype("velocity")
+      const withVelocity = world.archetype("velocity")
       const entity = world.createEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
       expect(withVelocity.entities).toContain(entity)
       world.removeComponent(entity, "velocity")
@@ -185,21 +185,21 @@ describe("World", () => {
   describe("createArchetype", () => {
     it("for two equal archetypes, returns the same archetypes objects", () => {
       const world = new World<Entity>()
-      const one = world.createArchetype({ all: ["name", "age"], none: ["admin"] })
-      const two = world.createArchetype({ all: ["name", "age"], none: ["admin"] })
+      const one = world.archetype({ all: ["name", "age"], none: ["admin"] })
+      const two = world.archetype({ all: ["name", "age"], none: ["admin"] })
       expect(one).toBe(two)
     })
 
     it("it normalizes archetypes", () => {
       const world = new World<Entity>()
-      const one = world.createArchetype({ all: ["name", "age"], none: ["admin"] })
-      const two = world.createArchetype({ none: ["admin", undefined], all: ["age", "name"] })
+      const one = world.archetype({ all: ["name", "age"], none: ["admin"] })
+      const two = world.archetype({ none: ["admin", undefined], all: ["age", "name"] })
       expect(one).toBe(two)
     })
 
     it("it accepts a list of component names", () => {
       const world = new World<Entity>()
-      const archetype = world.createArchetype("name")
+      const archetype = world.archetype("name")
       expect(archetype.query).toEqual({ all: ["name"] })
     })
   })
@@ -215,13 +215,13 @@ describe("World", () => {
 
     it("maintain indices of entities that have a specific set of components", () => {
       const { world, alice } = setup()
-      const admins = world.createArchetype("admin")
+      const admins = world.archetype("admin")
       expect(admins.entities).toEqual([alice])
     })
 
     it("when a component is added to an entity, archetype indices are automatically updated", () => {
       const { world, alice, bob } = setup()
-      const admins = world.createArchetype("admin")
+      const admins = world.archetype("admin")
       expect(admins.entities).toEqual([alice])
       world.addComponent(bob, "admin", true)
       expect(admins.entities).toEqual([alice, bob])
@@ -229,8 +229,8 @@ describe("World", () => {
 
     it("when a component is removed from an entity, archetype indices are automatically updated", () => {
       const { world: ecs, alice, bob } = setup()
-      const withAdmin = ecs.createArchetype("admin")
-      const withName = ecs.createArchetype("name")
+      const withAdmin = ecs.archetype("admin")
+      const withName = ecs.archetype("name")
 
       expect(withAdmin.entities).toEqual([alice])
       expect(withName.entities).toEqual([alice, bob])
@@ -243,8 +243,8 @@ describe("World", () => {
 
     it("when an entity is removed, archetype indices are automatically updated", () => {
       const { world, alice, bob } = setup()
-      const withAdmin = world.createArchetype({ all: ["admin"] })
-      const withName = world.createArchetype({ all: ["name"] })
+      const withAdmin = world.archetype({ all: ["admin"] })
+      const withName = world.archetype({ all: ["name"] })
 
       expect(withAdmin.entities).toEqual([alice])
       expect(withName.entities).toEqual([alice, bob])
@@ -257,26 +257,26 @@ describe("World", () => {
 
     it("archetypes support 'all' to index entities that have all of the specified components", () => {
       const { world, alice, bob } = setup()
-      const archetype = world.createArchetype({ all: ["name", "admin"] })
+      const archetype = world.archetype({ all: ["name", "admin"] })
       expect(archetype.entities).toEqual([alice])
     })
 
     it("archetypes support 'any' to index entities that have one or more of the specified components", () => {
       const { world, alice, bob } = setup()
       const charlie = world.createEntity({ age: 123 })
-      const archetype = world.createArchetype({ any: ["name", "age"] })
+      const archetype = world.archetype({ any: ["name", "age"] })
       expect(archetype.entities).toEqual([alice, bob, charlie])
     })
 
     it("archetypes support 'none' to index entities that have none of the specified components", () => {
       const { world, bob } = setup()
-      const archetype = world.createArchetype({ none: ["admin"] })
+      const archetype = world.archetype({ none: ["admin"] })
       expect(archetype.entities).toEqual([bob])
     })
 
     it("all, any, none can be combined", () => {
       const { world, bob } = setup()
-      const archetype = world.createArchetype({ all: ["name"], none: ["admin"] })
+      const archetype = world.archetype({ all: ["name"], none: ["admin"] })
       expect(archetype.entities).toEqual([bob])
     })
   })

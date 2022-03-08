@@ -41,7 +41,7 @@ export class World<T extends IEntity = UntypedEntity> {
   /** A list of known archetypes. */
   private archetypes: Map<string, Archetype<T>> = new Map()
 
-  public createArchetype(...query: ArchetypeQueryOrComponentList<T>): Archetype<T> {
+  public archetype(...query: ArchetypeQueryOrComponentList<T>): Archetype<T> {
     const normalizedQuery = normalizeArchetype(
       typeof query[0] === "string"
         ? ({ all: query } as ArchetypeQuery<T>)
