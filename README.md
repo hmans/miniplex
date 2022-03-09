@@ -107,7 +107,7 @@ Fetching only the entities that a system is interested in is the most important 
 Since we're going to move entities, we're interested in entities that have both the `position` and `velocity` components, so let's create an archetype for that:
 
 ```ts
-const movingEntities = world.createArchetype("position", "velocity")
+const movingEntities = world.archetype("position", "velocity")
 ```
 
 ### Implementing Systems
@@ -172,7 +172,7 @@ The `useArchetype` hook lets you get the entities of the specified archetype (si
 
 ```ts
 const MovementSystem = () => {
-  const entities = useArchetype(movingEntities)
+  const { entities } = useArchetype(movingEntities)
 
   useFrame(() => {
     for (const { position, velocity } of entities) {
@@ -242,7 +242,7 @@ function movementSystem(world) {
 If your system code will under some circumstances immediately remove entities, you might even want to go the safest route of iterating through the collection in reversed order:
 
 ```ts
-const withHealth = world.createArchetype("health")
+const withHealth = world.archetype("health")
 
 function healthSystem(world) {
   /* Note how we're going through the list in reverse order: */
@@ -259,13 +259,13 @@ function healthSystem(world) {
 
 ### Reuse archetypes where possible
 
-`createArchetype` aims to be idempotent and reuse existing archetypes for the same categories of entities, so you will never risk accidentally creating multiple indices of the same archetypes. It is, however, a comparatively heavyweight function, and you are advised to, whereever possible, reuse previously created archetype objects.
+The `archetype` function aims to be idempotent and will reuse existing archetypes for the same categories of entities, so you will never risk accidentally creating multiple indices of the same archetypes. It is, however, a comparatively heavyweight function, and you are advised to, wherever possible, reuse previously created archetypes.
 
-For example, creating your archetypes within a system function like this will work, but unneccessarily create additional overhead, and is thus not recommended:
+For example, creating your archetypes within a system function like this will work, but unnecessarily create additional overhead, and is thus not recommended:
 
 ```ts
 function healthSystem(world) {
-  const movingEntities = world.createArchetype("position", "velocity")
+  const movingEntities = world.archetype("position", "velocity")
 
   for (const { position, velocity } of movingEntities.entities) {
     position.x += velocity.x
@@ -278,7 +278,7 @@ function healthSystem(world) {
 Instead, create the archetype outside of your system:
 
 ```ts
-const movingEntities = world.createArchetype("position", "velocity")
+const movingEntities = world.archetype("position", "velocity")
 
 function healthSystem(world) {
   for (const { position, velocity } of movingEntities.entities) {

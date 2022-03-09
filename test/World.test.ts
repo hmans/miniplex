@@ -182,7 +182,7 @@ describe("World", () => {
     })
   })
 
-  describe("createArchetype", () => {
+  describe("archetype", () => {
     it("for two equal archetypes, returns the same archetypes objects", () => {
       const world = new World<Entity>()
       const one = world.archetype({ all: ["name", "age"], none: ["admin"] })
