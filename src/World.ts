@@ -29,6 +29,13 @@ export type ComponentName<T extends IEntity> = keyof T
  */
 export type ComponentData = any
 
+/**
+ * A tag is just an "empty" component. For convenience and nicer type support, we're
+ * providing a Tag type and constant, both of which are simply equal to `true`.
+ */
+export const Tag = true
+export type Tag = true
+
 export type ArchetypeQueryOrComponentList<T> = ComponentName<T>[] | [ArchetypeQuery<T>]
 
 export class World<T extends IEntity = UntypedEntity> {

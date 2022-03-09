@@ -159,16 +159,22 @@ world.queue.flush()
 Even though Miniplex can be used without React (it is entirely framework agnostic), it does ship with some useful React glue, available in the `miniplex/react` module.
 
 ```ts
-import { createReactIntegration } from "miniplex/react"
+import { createECS } from "miniplex/react"
 ```
 
-Now you can pass your existing Miniplex world to this function to get a set of React hooks and components _specific to your world_ (this allows you to easily use multiple Miniplex worlds in parallel, without React contexts tripping over each other):
+This will create an object containing a newly created Miniplex world as well as a collection of useful React components and hooks. It is recommended that you invoke this function from a module in your application that exports the generated object, and then have the rest of your project import that module.
 
 ```ts
-const { Entity, Component, useArchetype } = createReactIntegration(world)
+export default createECS()
 ```
 
-The `useArchetype` hook lets you get the entities of the specified archetype (similar to the `world.get` above) from within a React component. Most importantly, this hook will make the component _re-render_ every time entities are added to or removed from the archetype. This is useful for implementing systems as React components, or writing React components that render entities:
+### world
+
+`createECS` returns a `world` property containing the actual ECS world. You can interact with it like you would usually do to imperatively create, modify and destroy entities (see the chapters above.)
+
+### useArchetype
+
+The `useArchetype` hook lets you get the entities of the specified archetype (similar to the `world.get` above) from within a React component. More importantly, this hook will make the component _re-render_ every time entities are added to or removed from the archetype. This is useful for implementing systems as React components, or writing React components that render entities:
 
 ```ts
 const MovementSystem = () => {
@@ -186,7 +192,7 @@ const MovementSystem = () => {
 }
 ```
 
-`createReactIntegration` also provides `Entity` and `Component` React components that you can use to declaratively create (or add components to) entities:
+`createECS` also provides `Entity` and `Component` React components that you can use to declaratively create (or add components to) entities:
 
 ```jsx
 const Car = () => (

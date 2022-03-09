@@ -2,3 +2,4 @@
 **/*.log
 /dist/
 /docs/
+/.vscode/

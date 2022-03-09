@@ -1,25 +1,21 @@
-import { createContext, FC, useContext, useEffect } from "react"
-import { ArchetypeQueryOrComponentList, UntypedEntity, World } from "."
-import { useConstant } from "./util/useConstant"
+import { createContext, FC, useContext, useEffect, memo } from "react"
+import { ArchetypeQueryOrComponentList, UntypedEntity, World, Tag } from "."
+import { useData } from "./util/useData"
 import { useRerender } from "./util/useRerender"
 import { IEntity } from "./World"
 
-/**
- * Create various React-specific hooks and components for your
- * Miniplex ECS instance.
- *
- * @param world An instance of a Miniplex ECS to use.
- */
-export function createReactIntegration<T extends IEntity = UntypedEntity>(world: World<T>) {
-  const EntityContext = createContext<T>(null!)
+export function createECS<TEntity extends IEntity = UntypedEntity>() {
+  const world = new World<TEntity>()
+
+  const EntityContext = createContext<TEntity>(null!)
 
   /**
    * A React component to either create a new entity, or represent an existing entity so
    * it can be enhanced with additional components (see the <Component> component.)
    */
-  const Entity: FC<{ entity?: T }> = ({ entity: existingEntity, children }) => {
+  const Entity: FC<{ entity?: TEntity }> = ({ entity: existingEntity, children }) => {
     /* Reuse the specified entity or create a new one */
-    const entity = useConstant<T>(() => existingEntity ?? world.createEntity())
+    const entity = useData<TEntity>(() => existingEntity ?? world.createEntity())
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
     useEffect(() => {
@@ -28,7 +24,68 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
     }, [entity])
 
     /* Provide a context with the entity so <Component> components can be wired up. */
-    return <EntityContext.Provider value={entity}>{children}</EntityContext.Provider>
+    return (
+      <EntityContext.Provider value={entity}>
+        {typeof children === "function" ? children(entity) : children}
+      </EntityContext.Provider>
+    )
+  }
+
+  const MemoizedEntity: FC<{ entity: TEntity }> = memo(
+    ({ entity, children }) => (
+      <Entity entity={entity} key={entity.id}>
+        {typeof children === "function" ? children(entity) : children}
+      </Entity>
+    ),
+    (a, b) => a.entity === b.entity
+  )
+
+  const Entities: FC<{ entities: TEntity[]; memoize?: boolean }> = ({
+    entities,
+    memoize = false,
+    children
+  }) => {
+    const Klass = memoize ? MemoizedEntity : Entity
+
+    return (
+      <>
+        {entities.map((entity) => (
+          <Klass entity={entity} key={entity.id} children={children} />
+        ))}
+      </>
+    )
+  }
+
+  const Collection: FC<{
+    initial?: number
+    tag: keyof TEntity
+    memoize?: boolean
+  }> = ({ initial = 0, memoize = false, tag, children }) => {
+    const { entities } = useArchetype(tag)
+
+    useEffect(() => {
+      const ents = []
+
+      /* When firing up, create the requested number of entities. */
+      for (let i = 0; i < initial; i++) {
+        const entity = world.createEntity()
+        world.addComponent(entity, tag, Tag as any) /* oh no */
+        ents.push(entity)
+      }
+
+      /* When shutting down, purge all the entities we have created. */
+      return () => {
+        for (const entity of entities) {
+          world.destroyEntity(entity)
+        }
+      }
+    }, [tag, initial])
+
+    return (
+      <Entities entities={entities} memoize={memoize}>
+        {children}
+      </Entities>
+    )
   }
 
   /**
@@ -39,9 +96,9 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
   }
 
   /**
-   * Declarative declare a component on an entity.
+   * Declaratively add a component to an entity.
    */
-  function Component<K extends keyof T>({ name, data }: { name: K; data: T[K] }) {
+  function Component<K extends keyof TEntity>({ name, data }: { name: K; data: TEntity[K] }) {
     const entity = useEntity()
 
     useEffect(() => {
@@ -62,9 +119,9 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
    * Return the entities of the specified archetype and subscribe this component
    * to it, making it re-render when entities are added to or removed from it.
    */
-  function useArchetype(...query: ArchetypeQueryOrComponentList<T>) {
+  function useArchetype(...query: ArchetypeQueryOrComponentList<TEntity>) {
     const rerender = useRerender()
-    const archetype = useConstant(() => world.archetype(...query))
+    const archetype = useData(() => world.archetype(...query))
 
     useEffect(() => {
       archetype.onEntityAdded.on(rerender)
@@ -83,5 +140,14 @@ export function createReactIntegration<T extends IEntity = UntypedEntity>(world:
     return archetype
   }
 
-  return { useArchetype, useEntity, Entity, Component }
+  return {
+    world,
+    useArchetype,
+    useEntity,
+    Entity,
+    Component,
+    MemoizedEntity,
+    Entities,
+    Collection
+  }
 }
