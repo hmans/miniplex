@@ -109,7 +109,7 @@ export class World<T extends IEntity = UntypedEntity> {
 
   public addComponent = <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => {
     if (name in entity) {
-      throw `Tried to add component "${name} to an entity that already has it.`
+      throw `Tried to add component "${name}" to an entity that already has it.`
     }
 
     /* TODO: checking entity ownership like this is likely to slow us down quite a lot, so eventually we'll want something smarter here. */
