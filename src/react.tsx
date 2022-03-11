@@ -112,35 +112,29 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   /**
    * Declaratively add a component to an entity.
    */
-  function Component<K extends keyof TEntity>({
-    name,
-    data,
-    children
-  }: {
-    name: K
-    data?: TEntity[K]
-    children?: ReactElement
-  }) {
+  function Component<K extends keyof TEntity>(
+    props: { name: K } & ({ data: TEntity[K] } | { children: ReactElement })
+  ) {
     const entity = useEntity()
-    const ref = useRef()
+    const ref = useRef<TEntity[K]>()
 
     /* Warn the user that passing multiple children is not allowed. */
-    if (Array.isArray(children)) {
+    if ("children" in props && Array.isArray(props.children)) {
       throw new Error("<Component> will only accept a single React child.")
     }
 
     useEffect(() => {
-      world.addComponent(entity, name, (data || ref.current) as TEntity[K])
+      world.addComponent(entity, props.name, "data" in props ? props.data : ref.current!)
 
       return () => {
         /* The entity might already have been destroyed, so let's check. */
         if ("id" in entity) {
-          world.removeComponent(entity, name)
+          world.removeComponent(entity, props.name)
         }
       }
-    }, [entity, name, data])
+    }, [entity, props.name, "data" in props && props.data])
 
-    return <>{children && cloneElement(children, { ref })}</>
+    return <>{"children" in props && cloneElement(props.children, { ref })}</>
   }
 
   /**
