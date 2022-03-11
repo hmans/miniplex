@@ -24,7 +24,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
    * it can be enhanced with additional components (see the <Component> component.)
    */
   const Entity: FC<{
-    children: ReactNode | ((entity: TEntity) => JSX.Element)
+    children?: ReactNode | ((entity: TEntity) => JSX.Element)
     entity?: TEntity
   }> = ({ entity: existingEntity, children }) => {
     /* Reuse the specified entity or create a new one */
