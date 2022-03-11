@@ -1,4 +1,4 @@
-import {
+import React, {
   createContext,
   FC,
   useContext,
@@ -113,7 +113,10 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
    * Declaratively add a component to an entity.
    */
   function Component<K extends keyof TEntity>(
-    props: { name: K } & ({ data: TEntity[K] } | { children: ReactElement })
+    props: { name: K } & (
+      | { data: TEntity[K] }
+      | { children: ReactElement | ((entity: TEntity) => ReactElement) }
+    )
   ) {
     const entity = useEntity()
     const ref = useRef<TEntity[K]>()
@@ -134,7 +137,15 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
       }
     }, [entity, props.name, "data" in props && props.data])
 
-    return <>{"children" in props && cloneElement(props.children, { ref })}</>
+    return (
+      <>
+        {"children" in props &&
+          cloneElement(
+            typeof props.children === "function" ? props.children(entity) : props.children,
+            { ref }
+          )}
+      </>
+    )
   }
 
   /**

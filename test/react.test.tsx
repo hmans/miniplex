@@ -46,6 +46,20 @@ describe("createECS", () => {
       expect(alice.label).toBeInstanceOf(HTMLParagraphElement)
       expect(alice.label.textContent).toEqual("Hello")
     })
+
+    it("when passed a React child, it is also possible to pass a render function", () => {
+      const { world, Entity, Component } = createECS<Entity & { label?: HTMLElement }>()
+      const alice = world.createEntity({ name: "Alice" })
+
+      render(
+        <Entity entity={alice}>
+          <Component name="label">{(entity) => <p>{entity.name}</p>}</Component>
+        </Entity>
+      )
+
+      expect(alice.label).toBeInstanceOf(HTMLParagraphElement)
+      expect(alice.label.textContent).toEqual("Alice")
+    })
   })
 
   describe("useArchetype", () => {
