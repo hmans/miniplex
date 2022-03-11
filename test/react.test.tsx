@@ -141,7 +141,9 @@ describe("createECS", () => {
       expect(screen.getByTestId("user-1")).toHaveTextContent("Alice")
       expect(screen.getByTestId("user-2")).toHaveTextContent("Bob")
 
-      world.createEntity({ name: "Charlie" })
+      act(() => {
+        world.createEntity({ name: "Charlie" })
+      })
 
       expect(screen.getByTestId("user-3")).toHaveTextContent("Charlie")
     })
@@ -172,12 +174,13 @@ describe("createECS", () => {
       expect(alice.renderCount).toEqual(1)
       expect(bob.renderCount).toEqual(1)
 
-      const charlie = world.createEntity({ name: "Charlie", renderCount: 0 })
+      act(() => {
+        world.createEntity({ name: "Charlie", renderCount: 0 })
+      })
 
       expect(screen.getByTestId("user-3")).toHaveTextContent("Charlie")
       expect(alice.renderCount).toEqual(1)
       expect(bob.renderCount).toEqual(1)
-      expect(charlie.renderCount).toEqual(1)
     })
   })
 })
