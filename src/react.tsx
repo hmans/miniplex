@@ -1,4 +1,14 @@
-import { createContext, FC, useContext, useEffect, memo, ReactNode } from "react"
+import {
+  createContext,
+  FC,
+  useContext,
+  useEffect,
+  memo,
+  ReactNode,
+  cloneElement,
+  ReactElement,
+  useRef
+} from "react"
 import { ArchetypeQueryOrComponentList, UntypedEntity, World, Tag } from "."
 import { useData } from "./util/useData"
 import { useRerender } from "./util/useRerender"
@@ -102,11 +112,25 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   /**
    * Declaratively add a component to an entity.
    */
-  function Component<K extends keyof TEntity>({ name, data }: { name: K; data: TEntity[K] }) {
+  function Component<K extends keyof TEntity>({
+    name,
+    data,
+    children
+  }: {
+    name: K
+    data?: TEntity[K]
+    children?: ReactElement
+  }) {
     const entity = useEntity()
+    const ref = useRef()
+
+    /* Warn the user that passing multiple children is not allowed. */
+    if (Array.isArray(children)) {
+      throw new Error("<Component> will only accept a single React child.")
+    }
 
     useEffect(() => {
-      world.addComponent(entity, name, data)
+      world.addComponent(entity, name, (data || ref.current) as TEntity[K])
 
       return () => {
         /* The entity might already have been destroyed, so let's check. */
@@ -116,7 +140,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
       }
     }, [entity, name, data])
 
-    return null
+    return <>{children && cloneElement(children, { ref })}</>
   }
 
   /**
