@@ -78,4 +78,106 @@ describe("createECS", () => {
 
     it("automatically rerenders the component when the list of entities changes", () => {})
   })
+
+  describe("<Entities>", () => {
+    it("accepts a collection of entities as a prop and renders them", () => {
+      const { world, Entities } = createECS<Entity>()
+
+      world.createEntity({ name: "Alice" })
+      world.createEntity({ name: "Bob" })
+
+      render(
+        <Entities entities={world.entities}>
+          {({ id, name }) => (
+            <p key={id} data-testid={`user-${id}`}>
+              {name}
+            </p>
+          )}
+        </Entities>
+      )
+
+      expect(screen.getByTestId("user-1")).toHaveTextContent("Alice")
+      expect(screen.getByTestId("user-2")).toHaveTextContent("Bob")
+    })
+  })
+
+  describe("<Collection>", () => {
+    it("renders entities of a specific tag", () => {
+      const { world, Collection } = createECS<Entity>()
+
+      world.createEntity({ name: "Alice" })
+      world.createEntity({ name: "Bob" })
+
+      render(
+        <Collection tag="name">
+          {({ id, name }) => (
+            <p key={id} data-testid={`user-${id}`}>
+              {name}
+            </p>
+          )}
+        </Collection>
+      )
+
+      expect(screen.getByTestId("user-1")).toHaveTextContent("Alice")
+      expect(screen.getByTestId("user-2")).toHaveTextContent("Bob")
+    })
+
+    it("automatically rerenders when an entity is added to the collection", () => {
+      const { world, Collection } = createECS<Entity>()
+
+      world.createEntity({ name: "Alice" })
+      world.createEntity({ name: "Bob" })
+
+      render(
+        <Collection tag="name">
+          {({ id, name }) => (
+            <p key={id} data-testid={`user-${id}`}>
+              {name}
+            </p>
+          )}
+        </Collection>
+      )
+
+      expect(screen.getByTestId("user-1")).toHaveTextContent("Alice")
+      expect(screen.getByTestId("user-2")).toHaveTextContent("Bob")
+
+      world.createEntity({ name: "Charlie" })
+
+      expect(screen.getByTestId("user-3")).toHaveTextContent("Charlie")
+    })
+
+    it("optionally memoizes entity components so they don't always rerender", () => {
+      const { world, Collection } = createECS<Entity & { renderCount: number }>()
+
+      const alice = world.createEntity({ name: "Alice", renderCount: 0 })
+      const bob = world.createEntity({ name: "Bob", renderCount: 0 })
+
+      render(
+        <Collection tag="name" memoize>
+          {(entity) => {
+            entity.renderCount++
+
+            return (
+              <p key={entity.id} data-testid={`user-${entity.id}`}>
+                {entity.name}
+              </p>
+            )
+          }}
+        </Collection>
+      )
+
+      expect(screen.getByTestId("user-1")).toHaveTextContent("Alice")
+      expect(screen.getByTestId("user-2")).toHaveTextContent("Bob")
+
+      expect(alice.renderCount).toEqual(1)
+      expect(bob.renderCount).toEqual(1)
+
+      const charlie = world.createEntity({ name: "Charlie", renderCount: 0 })
+
+      expect(screen.getByTestId("user-3")).toHaveTextContent("Charlie")
+      expect(alice.renderCount).toEqual(1)
+      expect(bob.renderCount).toEqual(1)
+      expect(charlie.renderCount).toEqual(1)
+    })
+  })
 })
