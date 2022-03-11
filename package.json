@@ -17,7 +17,7 @@
     "hooks"
   ],
   "sideEffects": false,
-  "version": "0.6.1",
+  "version": "0.6.2",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
