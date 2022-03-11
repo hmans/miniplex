@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useEffect, memo } from "react"
+import { createContext, FC, useContext, useEffect, memo, ReactNode } from "react"
 import { ArchetypeQueryOrComponentList, UntypedEntity, World, Tag } from "."
 import { useData } from "./util/useData"
 import { useRerender } from "./util/useRerender"
@@ -13,7 +13,10 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
    * A React component to either create a new entity, or represent an existing entity so
    * it can be enhanced with additional components (see the <Component> component.)
    */
-  const Entity: FC<{ entity?: TEntity }> = ({ entity: existingEntity, children }) => {
+  const Entity: FC<{
+    children: ReactNode | ((entity: TEntity) => JSX.Element)
+    entity?: TEntity
+  }> = ({ entity: existingEntity, children }) => {
     /* Reuse the specified entity or create a new one */
     const entity = useData<TEntity>(() => existingEntity ?? world.createEntity())
 
@@ -40,11 +43,11 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     (a, b) => a.entity === b.entity
   )
 
-  const Entities: FC<{ entities: TEntity[]; memoize?: boolean }> = ({
-    entities,
-    memoize = false,
-    children
-  }) => {
+  const Entities: FC<{
+    children: ReactNode | ((entity: TEntity) => JSX.Element)
+    entities: TEntity[]
+    memoize?: boolean
+  }> = ({ entities, memoize = false, children }) => {
     const Klass = memoize ? MemoizedEntity : Entity
 
     return (
@@ -57,6 +60,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   }
 
   const Collection: FC<{
+    children: ReactNode | ((entity: TEntity) => JSX.Element)
     initial?: number
     tag: keyof TEntity
     memoize?: boolean
