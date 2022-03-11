@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import { act } from "react-dom/test-utils"
-import { IEntity } from "../src"
+import { IEntity, Tag } from "../src"
 import { createECS } from "../src/react"
 
 type Entity = { name: string } & IEntity
@@ -15,6 +15,37 @@ describe("createECS", () => {
   describe("Entity", () => {
     it.todo("creates an entity")
     it.todo("accepts a ref and sets it to the created entity")
+  })
+
+  describe("Component", () => {
+    it("adds a component to an entity", () => {
+      const { world, Entity, Component } = createECS<Entity & { admin?: Tag }>()
+      const alice = world.createEntity({ name: "Alice" })
+
+      render(
+        <Entity entity={alice}>
+          <Component name="admin" data={true} />
+        </Entity>
+      )
+
+      expect(alice.admin).toEqual(true)
+    })
+
+    it("it accepts a single React child to set as the entity's data", () => {
+      const { world, Entity, Component } = createECS<Entity & { label?: HTMLElement }>()
+      const alice = world.createEntity({ name: "Alice" })
+
+      render(
+        <Entity entity={alice}>
+          <Component name="label">
+            <p>Hello</p>
+          </Component>
+        </Entity>
+      )
+
+      expect(alice.label).toBeInstanceOf(HTMLParagraphElement)
+      expect(alice.label.textContent).toEqual("Hello")
+    })
   })
 
   describe("useArchetype", () => {
