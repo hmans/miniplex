@@ -1,4 +1,5 @@
-import { Archetype, ArchetypeQuery } from "./Archetype"
+import { Query } from "."
+import { Archetype } from "./Archetype"
 import { commandQueue } from "./util/commandQueue"
 import { idGenerator } from "./util/idGenerator"
 import normalizeArchetype from "./util/normalizeArchetype"
@@ -36,8 +37,6 @@ export type ComponentData = any
 export const Tag = true
 export type Tag = true
 
-export type ArchetypeQueryOrComponentList<T> = ComponentName<T>[] | [ArchetypeQuery<T>]
-
 export class World<T extends IEntity = UntypedEntity> {
   /** An array holding all entities known to this world. */
   public entities = new Array<T>()
@@ -48,22 +47,20 @@ export class World<T extends IEntity = UntypedEntity> {
   /** A list of known archetypes. */
   private archetypes: Map<string, Archetype<T>> = new Map()
 
-  public archetype(...query: ArchetypeQueryOrComponentList<T>): Archetype<T> {
-    const normalizedQuery = normalizeArchetype(
-      typeof query[0] === "string"
-        ? ({ all: query } as ArchetypeQuery<T>)
-        : (query[0] as ArchetypeQuery<T>)
-    )
+  public archetype<TQuery extends Query<T>>(...query: TQuery): Archetype<T, TQuery> {
+    const normalizedQuery = normalizeArchetype(query)
 
     /* We may already have an archetype representing the same query */
     const stringifiedQuery = JSON.stringify(normalizedQuery)
-    if (this.archetypes.has(stringifiedQuery)) return this.archetypes.get(stringifiedQuery)!
+    if (this.archetypes.has(stringifiedQuery))
+      return this.archetypes.get(stringifiedQuery) as Archetype<T, TQuery>
 
     /* Once we reach this point, we need to create a new archetype. */
-    const archetype = new Archetype(normalizedQuery)
+    const archetype = new Archetype<T>(normalizedQuery)
     this.archetypes.set(stringifiedQuery, archetype)
     for (const entity of this.entities) archetype.indexEntity(entity)
-    return archetype
+
+    return archetype as Archetype<T, TQuery>
   }
 
   private indexEntity(entity: T) {

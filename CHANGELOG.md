@@ -1,14 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- **Breaking Change:** Removed the (experimental) complex query syntax for the time being to simplify things. Will re-add a better implementation once the need for it is actually proven.
+
+- **New:** Entities returned by archetypes are now properly typed to represent the required presence of the queried components. (Example: if your archetype contains the `velocity` component, the entities retrieved through `archetype.entities` will be typed to always have `velocity` present, because otherwise they wouldn't be part of this archetype.)
+
 ## 0.6.0 - 2022-03-09
 
-### Breaking Changes
+- **Breaking Change:** `world.createArchetype` is now just `world.archetype`. Its signature remains the same.
+- **Breaking Change:** `useArchetype` (from the React module) now returns the full archetype object (similar to `world.archetype`), and not just its entities.
+- **Breaking Change:** `createReactIntegration` has been changed to `createECS`. Instead of accepting an existing ECS world as an argument, it will create a world and return it as part of its return value.
 
-- `world.createArchetype` is now just `world.archetype`. Its signature remains the same.
-- React: `useArchetype` (from the React module) now returns the full archetype object (similar to `world.archetype`), and not just its entities.
-- React: `createReactIntegration` has been changed to `createECS`. Instead of accepting an existing ECS world as an argument, it will create a world and return it as part of its return value.
-
-### New
-
-- React: The React glue provided by `createECS` now also provides a couple of experimental React components: `<MemoizedEntity>`, `<Entities>` and `<Collection>`. Documentation will follow once these stabilize.
-- React: The `<Component>` React component will now optionally accept a single React child whose ref will be assigned to the component's data.
+- **New:** React: The React glue provided by `createECS` now also provides a couple of experimental React components: `<MemoizedEntity>`, `<Entities>` and `<Collection>`. Documentation will follow once these stabilize.
+- **New:** React: The `<Component>` React component will now optionally accept a single React child whose ref will be assigned to the component's data.

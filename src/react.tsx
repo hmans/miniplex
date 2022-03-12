@@ -9,7 +9,7 @@ import React, {
   ReactElement,
   useRef
 } from "react"
-import { ArchetypeQueryOrComponentList, UntypedEntity, World, Tag } from "."
+import { UntypedEntity, World, Tag, Query } from "."
 import { useData } from "./util/useData"
 import { useRerender } from "./util/useRerender"
 import { IEntity } from "./World"
@@ -152,7 +152,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
    * Return the entities of the specified archetype and subscribe this component
    * to it, making it re-render when entities are added to or removed from it.
    */
-  function useArchetype(...query: ArchetypeQueryOrComponentList<TEntity>) {
+  function useArchetype(...query: Query<TEntity>) {
     const rerender = useRerender()
     const archetype = useData(() => world.archetype(...query))
 

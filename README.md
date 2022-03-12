@@ -44,7 +44,7 @@ Systems are extremely straight-forward: just write simple functions that operate
 
 ### Archetypal Queries
 
-Entity queries are performed through **archetypes**. Miniplex allows you to do "simple complex queries" that should cover most use cases, without going overboard with query language DSLs.
+Entity queries are performed through **archetypes**, with archetypes representing a subset of your world's entities that have a specific set of components. More complex querying capabilities may be added at a later date.
 
 ### Focus on Object Identities over numerical IDs
 
