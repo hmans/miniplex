@@ -17,7 +17,7 @@
     "hooks"
   ],
   "sideEffects": false,
-  "version": "0.7.0",
+  "version": "0.7.1",
   "main": "dist/miniplex.cjs.js",
   "module": "dist/miniplex.esm.js",
   "types": "dist/miniplex.cjs.d.ts",
