@@ -18,43 +18,36 @@
   ],
   "sideEffects": false,
   "version": "0.7.0",
-  "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "type": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./react": {
-      "type": "./dist/react.d.ts",
-      "import": "./dist/react.js"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "react": [
-        "./dist/react.d.ts"
-      ]
-    }
+  "main": "dist/miniplex.cjs.js",
+  "module": "dist/miniplex.esm.js",
+  "types": "dist/miniplex.cjs.d.ts",
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "react.tsx"
+    ]
   },
   "files": [
     "dist/**",
+    "react/**",
     "LICENSE",
     "README.md"
   ],
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "dev": "tsc --watch",
-    "build": "tsc",
-    "release": "yarn test && yarn clean && yarn build && yarn publish",
+    "dev": "preconstruct watch",
+    "build": "preconstruct build",
+    "release": "yarn ci && yarn publish",
     "test": "jest",
-    "ci": "yarn build && yarn test",
+    "ci": "yarn clean & yarn build && yarn test",
     "docs": "typedoc src/index.ts"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
+    "@preconstruct/cli": "^2.1.5",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@types/jest": "^27.4.0",
@@ -71,5 +64,18 @@
   },
   "peerDependencies": {
     "react": ">=16.8"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react",
+      [
+        "@babel/preset-typescript",
+        {
+          "isTSX": true,
+          "allExtensions": true
+        }
+      ]
+    ]
   }
 }
