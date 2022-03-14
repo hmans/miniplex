@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- **Change:** Miniplex now uses preconstruct for building ESM and CSJ bundles of the library.
+
 ## 0.7.0
 
 - **Breaking Change:** Removed the (experimental) complex query syntax for the time being to simplify things. Will re-add a better implementation once the need for it is actually proven.
