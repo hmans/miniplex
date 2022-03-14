@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.7.1
 
 - **Change:** Miniplex now uses preconstruct for building ESM and CSJ bundles of the library.
 
