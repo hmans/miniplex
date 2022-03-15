@@ -7,7 +7,8 @@ import React, {
   ReactNode,
   cloneElement,
   ReactElement,
-  useRef
+  useRef,
+  useLayoutEffect
 } from "react"
 import { UntypedEntity, World, Tag, Query } from "."
 import { useData } from "./util/useData"
@@ -119,15 +120,15 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     )
   ) {
     const entity = useEntity()
-    const ref = useRef<TEntity[K]>()
+    const ref = useRef<TEntity[K]>(null!)
 
     /* Warn the user that passing multiple children is not allowed. */
     if ("children" in props && Array.isArray(props.children)) {
       throw new Error("<Component> will only accept a single React child.")
     }
 
-    useEffect(() => {
-      world.addComponent(entity, props.name, "data" in props ? props.data : ref.current!)
+    useLayoutEffect(() => {
+      world.addComponent(entity, props.name, "data" in props ? props.data : ref.current)
 
       return () => {
         /* The entity might already have been destroyed, so let's check. */
