@@ -32,7 +32,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     const entity = useData<TEntity>(() => existingEntity ?? world.createEntity())
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
-    useEffect(() => {
+    useLayoutEffect(() => {
       if (existingEntity) return
       return () => world.destroyEntity(entity)
     }, [entity])
@@ -78,7 +78,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   }> = ({ initial = 0, memoize = false, tag, children }) => {
     const { entities } = useArchetype(tag)
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       const ents = []
 
       /* When firing up, create the requested number of entities. */
@@ -157,7 +157,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     const rerender = useRerender()
     const archetype = useData(() => world.archetype(...query))
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       archetype.onEntityAdded.on(rerender)
       archetype.onEntityRemoved.on(rerender)
 
