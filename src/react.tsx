@@ -10,7 +10,7 @@ import React, {
   useRef,
   useLayoutEffect
 } from "react"
-import { UntypedEntity, World, Tag, Query } from "."
+import { UntypedEntity, World, Tag, Query, QueriedEntity } from "."
 import { useData } from "./util/useData"
 import { useRerender } from "./util/useRerender"
 import { IEntity } from "./World"
@@ -70,12 +70,17 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     )
   }
 
-  const Collection: FC<{
-    children: ReactNode | ((entity: TEntity) => JSX.Element)
+  function Collection<TTag extends keyof TEntity>({
+    initial = 0,
+    memoize = false,
+    tag,
+    children
+  }: {
+    children: ReactNode | ((entity: QueriedEntity<TEntity, [TTag]>) => JSX.Element)
     initial?: number
-    tag: keyof TEntity
+    tag: TTag
     memoize?: boolean
-  }> = ({ initial = 0, memoize = false, tag, children }) => {
+  }) {
     const { entities } = useArchetype(tag)
 
     useLayoutEffect(() => {
