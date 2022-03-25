@@ -11,7 +11,7 @@ import React, {
   useLayoutEffect
 } from "react"
 import { UntypedEntity, World, Tag, Query, QueriedEntity } from "."
-import { useData } from "./util/useData"
+import { useConst } from "./util/useConst"
 import { useRerender } from "./util/useRerender"
 import { IEntity } from "./World"
 
@@ -29,7 +29,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     entity?: TEntity
   }> = ({ entity: existingEntity, children }) => {
     /* Reuse the specified entity or create a new one */
-    const entity = useData<TEntity>(() => existingEntity ?? world.createEntity())
+    const entity = useConst<TEntity>(() => existingEntity ?? world.createEntity())
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
     useLayoutEffect(() => {
@@ -157,7 +157,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
    */
   function useArchetype(...query: Query<TEntity>) {
     const rerender = useRerender()
-    const archetype = useData(() => world.archetype(...query))
+    const archetype = useConst(() => world.archetype(...query))
 
     useLayoutEffect(() => {
       archetype.onEntityAdded.on(rerender)

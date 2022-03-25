@@ -1,6 +1,6 @@
 import { useRef } from "react"
 
-export function useData<T>(fn: () => T): T {
+export function useConst<T>(fn: () => T): T {
   const ref = useRef<T>()
 
   if (!ref.current) {
