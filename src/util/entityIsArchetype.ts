@@ -1,4 +1,4 @@
-import { Query } from ".."
+import { Query } from "../Archetype"
 import { IEntity } from "../World"
 
 export function entityIsArchetype<T extends IEntity>(entity: T, query: Query<T>) {
