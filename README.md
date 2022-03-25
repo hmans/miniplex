@@ -4,15 +4,13 @@
 
 # Miniplex
 
-**🚨 WORK IN PROGRESS!** Miniplex is mostly feature complete, but parts of the API are still being fine-tuned. Feel free to poke around, but please be ready for breaking changes!
-
 ## Introduction
 
 **Miniplex is an entity management system for games and similarly demanding applications.** Instead of creating separate buckets for different types of entities (eg. asteroids, enemies, pickups, the player, etc.), you throw all of them into a single store, describe their properties through components, and then write code that performs updates on entities of specific types.
 
 If you're familiar with Entity Component System architecture, this will sound familiar to you -- and rightfully so, for Miniplex is, first and foremost, a very straight-forward ECS implementation.
 
-If you're hearing about this approach for the first time, it may sound counter-intuitive -- but once you dive into it, you will understand how it can help you decouple concerns and keep your codebase well-structured and maintainable. [This post](https://community.amethyst.rs/t/archetypal-vs-grouped-ecs-architectures-my-take/1344) has a nice summary:
+If you're hearing about this approach for the first time, maybe it will sound a little counter-intuitive -- but once you dive into it, you will understand how it can help you decouple concerns and keep your codebase well-structured and maintainable. [This post](https://community.amethyst.rs/t/archetypal-vs-grouped-ecs-architectures-my-take/1344) has a nice summary:
 
 > An ECS library can essentially thought of as an API for performing a loop over a homogeneous set of entities, filtering them by some condition, and pulling out a subset of the data associated with each entity. The goal of the library is to provide a usable API for this, and to do it as fast as possible.
 
@@ -22,13 +20,13 @@ For a more in-depth explanation, please also see Sander Mertens' wonderful [Enti
 
 - A very strong focus on **developer experience**. Miniplex aims to be the most convenient to use ECS implementation while still providing great performance.
 - **[Tiny package size](https://bundlephobia.com/package/miniplex)** and **zero dependencies**. (Yay!)
-- **Comes with React glue**, but works with any framework, and of course vanilla JavScript.
+- React glue available through [miniplex-react](https://github.com/hmans/miniplex-react).
 - Can power your entire project or just parts of it.
 - Written in **TypeScript**, with full type checking for your entities.
 
-## Main differences from other ECS implementations
+## Main differences from other ECS libraries
 
-If you've used other Entity Component System implementations before, here's how Miniplex is different from some of them:
+If you've used other Entity Component System libraries before, here's how Miniplex is different from some of them:
 
 ### Entities are just normal JavaScript objects
 
@@ -38,7 +36,7 @@ Miniplex does not expect you to programmatically declare component types before 
 
 ### Miniplex does not have a built-in notion of systems
 
-Unlike most other ECS implementations, Miniplex does not have any built-in notion of systems, and does not perform any of its own scheduling. This is by design; your project will likely already have an opinion on how to schedule code execution, and instead of providing its own and potentially conflicting setup, Miniplex will neatly snuggle into the one you already have.
+Unlike the majority of ECS libraries, Miniplex does not have any built-in notion of systems, and does not perform any of its own scheduling. This is by design; your project will likely already have an opinion on how to schedule code execution, and instead of providing its own and potentially conflicting setup, Miniplex will neatly snuggle into the one you already have.
 
 Systems are extremely straight-forward: just write simple functions that operate on the Miniplex world, and run them in whatever fashion fits best to your project (`setInterval`, `requestAnimationFrame`, `useFrame`, your custom ticker implementation, and so on.)
 
@@ -52,28 +50,30 @@ Most interactions with Miniplex are using **object identity** to identify entiti
 
 ## Basic Usage
 
-Miniplex can be used in any JavaScript or TypeScript project, regardless of which extra frameworks you might be using. Some React glue is provided out of the box, but let's talk about framework-less usage first.
-
-### Typing your Entities (optional)
-
-If you're using TypeScript, you can define a type that describes your entities:
-
-```ts
-type Entity = {
-  position: { x: number; y: number; z: number }
-  velocity?: { x: number; y: number; z: number }
-  health?: number
-} & IEntity
-```
+Miniplex can be used in any JavaScript or TypeScript project, regardless of which extra frameworks you might be using. Integrations with frameworks like React are provided as separate packages, so here we will only talk about framework-less usage.
 
 ### Creating a World
 
 Miniplex manages entities in worlds, which act as a containers for entities as well as an API for interacting with them. You can have one big world in your project, or several smaller worlds handling separate concerns.
 
-**Note for TypeScript users:** When you provide a type like we do here, every interaction with the world will provide full type hints:
+```ts
+import { World } from "miniplex"
+
+const world = new World()
+```
+
+### Typing your Entities (optional)
+
+If you're using TypeScript, you can define a type that describes your entities and provide it to the `World` constructor to get full type support in all interactions with it:
 
 ```ts
 import { World } from "miniplex"
+
+type Entity = {
+  position: { x: number; y: number; z: number }
+  velocity?: { x: number; y: number; z: number }
+  health?: number
+} & IEntity
 
 const world = new World<Entity>()
 ```
@@ -88,15 +88,17 @@ Let's create an entity. Note how we're immediately giving it a `position` compon
 const entity = world.createEntity({ position: { x: 0, y: 0, z: 0 } })
 ```
 
+The returned object will be a normal JavaScript object that equals the object passed to `createEntity`, but with an additional `id` property containing a unique numerical identifier.
+
 ### Adding Components
 
-Now let's add a `velocity` component to the entity:
+Now let's add a `velocity` component to the entity. Note that we're passing the entity itself, not just its identifier:
 
 ```ts
 world.addComponent(entity, "velocity", { x: 10, y: 0, z: 0 })
 ```
 
-Now the entity has two components: `position` and `velocity`.
+Now the entity has three components: `id`, `position` and `velocity`.
 
 ### Querying Entities
 
@@ -150,11 +152,11 @@ Once you're ready to execute the queued operations, you can flush the queue like
 world.queue.flush()
 ```
 
-**Note:** Please remember that flushing the queue is left to you. You might, for example, do this in your game's main loop, after all systems have finished executing.
+**Note:** Please remember that the queue is not flushed automatically, and doing this is left to you. You might, for example, do this in your game's main loop, after all systems have finished executing.
 
 ## Performance Hints
 
-### Use for instead of forEach
+### Prefer `for` over `forEach`
 
 You might be tempted to use `forEach` in your system implementations, like this:
 
@@ -168,7 +170,7 @@ function movementSystem(world) {
 }
 ```
 
-This might incur a modest, but noticeable performance penalty, since you would be calling and returning from a function for every entity in the archetype. It is typically recommended to use either a `for/of` loop:
+This will incur a modest, but noticeable performance penalty, since you would be calling and returning from a function for every entity in the archetype. It is typically recommended to use either a `for/of` loop:
 
 ```ts
 function movementSystem(world) {
@@ -184,7 +186,9 @@ Or a classic `for` loop:
 
 ```ts
 function movementSystem(world) {
-  for (let i = 0; i < movingEntities.entities.length; i++) {
+  const len = movingEntities.entities.length
+
+  for (let i = 0; i < len; i++) {
     const { position, velocity } = movingEntities.entities[i]
     position.x += velocity.x
     position.y += velocity.y
@@ -199,8 +203,10 @@ If your system code will under some circumstances immediately remove entities, y
 const withHealth = world.archetype("health")
 
 function healthSystem(world) {
+  const len = withHealth.entities.length
+
   /* Note how we're going through the list in reverse order: */
-  for (let i = withHealth.entities.length; i >= 0; i--) {
+  for (let i = len; i >= 0; i--) {
     const entity = withHealth.entities[i]
 
     /* If health is depleted, destroy the entity */
@@ -213,7 +219,7 @@ function healthSystem(world) {
 
 ### Reuse archetypes where possible
 
-The `archetype` function aims to be idempotent and will reuse existing archetypes for the same categories of entities, so you will never risk accidentally creating multiple indices of the same archetypes. It is, however, a comparatively heavyweight function, and you are advised to, wherever possible, reuse previously created archetypes.
+The `archetype` function aims to be idempotent and will reuse existing archetypes for the same queries passed to it, so you will never risk accidentally creating multiple indices of the same archetypes. It is, however, a comparatively heavyweight function, and you are advised to, wherever possible, reuse previously created archetypes.
 
 For example, creating your archetypes within a system function like this will work, but unnecessarily create additional overhead, and is thus not recommended:
 
