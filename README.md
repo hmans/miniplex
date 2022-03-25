@@ -6,8 +6,8 @@
 
 ## Ecosystem
 
-- Framework integrations:
-  - [miniplex-react](https://github.com/hmans/miniplex-react)
+- [miniplex](https://github.com/hmans/miniplex)
+- [miniplex-react](https://github.com/hmans/miniplex-react)
 
 ## Introduction
 
