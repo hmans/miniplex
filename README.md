@@ -4,6 +4,11 @@
 
 # Miniplex
 
+## Ecosystem
+
+- Framework integrations:
+  - [miniplex-react](https://github.com/hmans/miniplex-react)
+
 ## Introduction
 
 **Miniplex is an entity management system for games and similarly demanding applications.** Instead of creating separate buckets for different types of entities (eg. asteroids, enemies, pickups, the player, etc.), you throw all of them into a single store, describe their properties through components, and then write code that performs updates on entities of specific types.
