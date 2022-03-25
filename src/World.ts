@@ -2,6 +2,7 @@ import { Archetype, Query } from "./Archetype"
 import { commandQueue } from "./util/commandQueue"
 import { idGenerator } from "./util/idGenerator"
 import normalizeArchetype from "./util/normalizeArchetype"
+import { WithRequiredKeys } from "./util/types"
 
 /**
  * A base interface for entities, which are just normal JavaScript objects with
@@ -28,6 +29,15 @@ export type ComponentName<T extends IEntity> = keyof T
  * The data of a component can be literally anything. Good times!
  */
 export type ComponentData = any
+
+/**
+ * Utility type that represents an Entity that is guaranteed to have the specified
+ * component(s) available.
+ */
+export type EntityWith<
+  TEntity extends IEntity,
+  TComponents extends ComponentName<TEntity>
+> = WithRequiredKeys<TEntity, TComponents> & TEntity
 
 /**
  * A tag is just an "empty" component. For convenience and nicer type support, we're

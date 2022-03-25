@@ -10,7 +10,7 @@ import React, {
   useRef,
   useLayoutEffect
 } from "react"
-import { UntypedEntity, World, Tag, Query, QueriedEntity } from "."
+import { UntypedEntity, World, Tag, Query, EntityWith } from "."
 import { useConst } from "./util/useConst"
 import { useRerender } from "./util/useRerender"
 import { IEntity } from "./World"
@@ -76,7 +76,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     tag,
     children
   }: {
-    children: ReactNode | ((entity: QueriedEntity<TEntity, [TTag]>) => JSX.Element)
+    children: ReactNode | ((entity: EntityWith<TEntity, TTag>) => JSX.Element)
     initial?: number
     tag: TTag
     memoize?: boolean

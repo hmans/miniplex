@@ -1,21 +1,15 @@
 import { entityIsArchetype } from "./util/entityIsArchetype"
 import { ListenerRegistry } from "./util/ListenerRegistry"
-import { WithRequiredKeys } from "./util/types"
-import { ComponentName, IEntity } from "./World"
+import { ComponentName, EntityWith, IEntity } from "./World"
 
 /**
- * A query consists of a list of component names on an entity.
+ * A query is an array of component names.
  */
 export type Query<T extends IEntity> = ComponentName<T>[]
 
-export type QueriedEntity<
-  TEntity extends IEntity,
-  TQuery extends Query<TEntity>
-> = WithRequiredKeys<TEntity, TQuery[number]> & TEntity
-
 export class Archetype<TEntity extends IEntity, TQuery extends Query<TEntity> = Query<TEntity>> {
   /** A list of entities belonging to this archetype. */
-  public entities = new Array<QueriedEntity<TEntity, TQuery>>()
+  public entities = new Array<EntityWith<TEntity, TQuery[number]>>()
 
   /** Listeners on this event are invoked when an entity is added to this archetype's index. */
   public onEntityAdded = new ListenerRegistry<(entity: TEntity) => void>()

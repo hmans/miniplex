@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+- **Breaking Change:** the `QueriedEntity` type has been replaced with the simpler `EntityWith` type.
+
 ## 0.7.1
 
 - **Change:** Miniplex now uses preconstruct for building ESM and CSJ bundles of the library.
