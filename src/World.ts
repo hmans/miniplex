@@ -1,14 +1,13 @@
-import { Query } from "."
-import { Archetype } from "./Archetype"
+import { Archetype, Query } from "./Archetype"
 import { commandQueue } from "./util/commandQueue"
 import { idGenerator } from "./util/idGenerator"
 import normalizeArchetype from "./util/normalizeArchetype"
 
 /**
  * A base interface for entities, which are just normal JavaScript objects with
- * any number of properties, each of which represents a single component. When
- * using hmecs, it is recommended to create your own type representing your
- * game's entities, and pass that to `createWorld` for full typing support.
+ * any number of properties, each of which represents a single component. Miniplex
+ * automatically adds an `id` component to entities, which is why entity types
+ * must always implement IEntity.
  */
 export interface IEntity {
   id?: number
@@ -45,34 +44,51 @@ export class World<T extends IEntity = UntypedEntity> {
   private nextId = idGenerator(1)
 
   /** A list of known archetypes. */
-  private archetypes: Map<string, Archetype<T>> = new Map()
+  private archetypes = new Map<string, Archetype<T>>()
 
   public archetype<TQuery extends Query<T>>(...query: TQuery): Archetype<T, TQuery> {
     const normalizedQuery = normalizeArchetype(query)
+    const stringifiedQuery = JSON.stringify(normalizedQuery)
 
     /* We may already have an archetype representing the same query */
-    const stringifiedQuery = JSON.stringify(normalizedQuery)
-    if (this.archetypes.has(stringifiedQuery))
+    if (this.archetypes.has(stringifiedQuery)) {
       return this.archetypes.get(stringifiedQuery) as Archetype<T, TQuery>
+    }
 
-    /* Once we reach this point, we need to create a new archetype. */
+    /* Once we reach this point, we need to create a new archetype... */
     const archetype = new Archetype<T>(normalizedQuery)
     this.archetypes.set(stringifiedQuery, archetype)
-    for (const entity of this.entities) archetype.indexEntity(entity)
+
+    /* ...and refresh the indexing of all our entities. */
+    for (const entity of this.entities) {
+      archetype.indexEntity(entity)
+    }
 
     return archetype as Archetype<T, TQuery>
   }
 
   private indexEntity(entity: T) {
-    if (this.entities.includes(entity))
-      for (const archetype of this.archetypes.values()) archetype.indexEntity(entity)
+    /*
+    We absolutely never want to add entities to our indices that are not actually
+    part of this world, so let's do a sanity check. Doing this may be kind of costly,
+    so...:
+
+    TODO: benchmark & optimize :)
+    */
+    if (!this.entities.includes(entity)) return
+
+    for (const archetype of this.archetypes.values()) {
+      archetype.indexEntity(entity)
+    }
   }
 
   /* MUTATION FUNCTIONS */
 
   public createEntity = (entity: T = {} as T) => {
     /* If there already is an ID, raise an error. */
-    if ("id" in entity) throw "Attempted to add an entity that aleady had an 'id' component."
+    if ("id" in entity) {
+      throw "Attempted to add an entity that aleady had an 'id' component."
+    }
 
     /* Assign an ID */
     entity.id = this.nextId()
