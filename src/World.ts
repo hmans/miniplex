@@ -1,7 +1,7 @@
 import { Archetype, Query } from "./Archetype"
 import { commandQueue } from "./util/commandQueue"
 import { idGenerator } from "./util/idGenerator"
-import normalizeArchetype from "./util/normalizeArchetype"
+import { normalizeQuery } from "./util/normalizeQuery"
 import { WithRequiredKeys } from "./util/types"
 
 /**
@@ -57,7 +57,7 @@ export class World<T extends IEntity = UntypedEntity> {
   private archetypes = new Map<string, Archetype<T>>()
 
   public archetype<TQuery extends Query<T>>(...query: TQuery): Archetype<T, TQuery> {
-    const normalizedQuery = normalizeArchetype(query)
+    const normalizedQuery = normalizeQuery(query)
     const stringifiedQuery = JSON.stringify(normalizedQuery)
 
     /* We may already have an archetype representing the same query */
