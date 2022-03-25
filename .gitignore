@@ -1,6 +1,5 @@
 /node_modules/
 **/*.log
 /dist/
-/react/dist/
 /docs/
 /.vscode/

@@ -3,6 +3,7 @@
 ## 0.8.0
 
 - **Breaking Change:** the `QueriedEntity` type has been replaced with the simpler `EntityWith` type.
+- **Breaking Change:** all the React glue has been moved to the new `miniplex-react` package.
 
 ## 0.7.1
 
