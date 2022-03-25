@@ -87,10 +87,10 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
       /* When firing up, create the requested number of entities. */
       for (let i = 0; i < initial; i++) {
         const entity = world.createEntity()
-        world.addComponent(entity, tag, Tag as any) /* oh no */
+        world.addComponent(entity, tag, Tag as any)
       }
 
-      /* When shutting down, purge all the entities we have created. */
+      /* When shutting down, purge all entities in this collection. */
       return () => {
         for (const entity of entities) {
           world.destroyEntity(entity)
