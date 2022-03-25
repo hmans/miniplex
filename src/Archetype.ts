@@ -3,6 +3,9 @@ import { ListenerRegistry } from "./util/ListenerRegistry"
 import { WithRequiredKeys } from "./util/types"
 import { ComponentName, IEntity } from "./World"
 
+/**
+ * A query consists of a list of component names on an entity.
+ */
 export type Query<T extends IEntity> = ComponentName<T>[]
 
 export type QueriedEntity<
