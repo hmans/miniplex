@@ -84,13 +84,10 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     const { entities } = useArchetype(tag)
 
     useLayoutEffect(() => {
-      const ents = []
-
       /* When firing up, create the requested number of entities. */
       for (let i = 0; i < initial; i++) {
         const entity = world.createEntity()
         world.addComponent(entity, tag, Tag as any) /* oh no */
-        ents.push(entity)
       }
 
       /* When shutting down, purge all the entities we have created. */
