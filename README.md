@@ -24,7 +24,7 @@ For a more in-depth explanation, please also see Sander Mertens' wonderful [Enti
 ## Headline Features
 
 - A very strong focus on **developer experience**. Miniplex aims to be the most convenient to use ECS implementation while still providing great performance.
-- **[Tiny package size](https://bundlephobia.com/package/miniplex)** and **zero dependencies**. (Yay!)
+- **[Tiny package size](https://bundlephobia.com/package/miniplex)** and **minimal dependencies**.
 - React glue available through [miniplex-react](https://github.com/hmans/miniplex-react).
 - Can power your entire project or just parts of it.
 - Written in **TypeScript**, with full type checking for your entities.

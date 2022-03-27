@@ -1,5 +1,5 @@
+import { Signal } from "@hmans/signal"
 import { entityIsArchetype } from "./util/entityIsArchetype"
-import { ListenerRegistry } from "./util/ListenerRegistry"
 import { ComponentName, EntityWith, IEntity } from "./World"
 
 /**
@@ -12,10 +12,10 @@ export class Archetype<TEntity extends IEntity, TQuery extends Query<TEntity> = 
   public entities = new Array<EntityWith<TEntity, TQuery[number]>>()
 
   /** Listeners on this event are invoked when an entity is added to this archetype's index. */
-  public onEntityAdded = new ListenerRegistry<(entity: TEntity) => void>()
+  public onEntityAdded = Signal<TEntity>()
 
   /** Listeners on this event are invoked when an entity is removed from this archetype's index. */
-  public onEntityRemoved = new ListenerRegistry<(entity: TEntity) => void>()
+  public onEntityRemoved = Signal<TEntity>()
 
   constructor(public query: TQuery) {}
 
@@ -25,10 +25,10 @@ export class Archetype<TEntity extends IEntity, TQuery extends Query<TEntity> = 
 
     if (isArchetype && pos < 0) {
       this.entities.push(entity as any)
-      this.onEntityAdded.invoke(entity)
+      this.onEntityAdded.emit(entity)
     } else if (!isArchetype && pos >= 0) {
       this.entities.splice(pos, 1)
-      this.onEntityRemoved.invoke(entity)
+      this.onEntityRemoved.emit(entity)
     }
   }
 
@@ -36,7 +36,7 @@ export class Archetype<TEntity extends IEntity, TQuery extends Query<TEntity> = 
     const pos = this.entities.indexOf(entity as any, 0)
     if (pos >= 0) {
       this.entities.splice(pos, 1)
-      this.onEntityRemoved.invoke(entity)
+      this.onEntityRemoved.emit(entity)
     }
   }
 }
