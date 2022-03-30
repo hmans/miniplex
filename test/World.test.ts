@@ -15,6 +15,7 @@ type Vector2 = {
 type GameObject = {
   position: Vector2
   velocity?: Vector2
+  health?: { max: number; current: number }
 } & IEntity
 
 describe("World", () => {
@@ -109,6 +110,47 @@ describe("World", () => {
       expect(withVelocity.entities).toContain(entity)
       world.destroyEntity(entity)
       expect(withVelocity.entities).not.toContain(entity)
+    })
+  })
+
+  describe("addComponents", () => {
+    const position = (x: number = 0, y: number = 0) => ({ position: { x, y } })
+    const velocity = (x: number = 0, y: number = 0) => ({ velocity: { x, y } })
+    const health = (amount: number) => ({ health: { max: amount, current: amount } })
+
+    it("adds a component expressed as a partial entity", () => {
+      const world = new World<GameObject>()
+      const entity = world.createEntity()
+
+      world.addComponents(entity, position(1, 2))
+
+      expect(entity.position).toEqual({ x: 1, y: 2 })
+    })
+
+    it("adds multiple components expressed within the same partial entity", () => {
+      const world = new World<GameObject>()
+      const entity = world.createEntity()
+
+      world.addComponents(entity, { ...position(1, 2), ...health(100) })
+
+      expect(entity).toEqual({
+        id: 1,
+        position: { x: 1, y: 2 },
+        health: { max: 100, current: 100 }
+      })
+    })
+
+    it("adds multiple components expressed as multiple partial entitie", () => {
+      const world = new World<GameObject>()
+      const entity = world.createEntity()
+
+      world.addComponents(entity, position(1, 2), health(100))
+
+      expect(entity).toEqual({
+        id: 1,
+        position: { x: 1, y: 2 },
+        health: { max: 100, current: 100 }
+      })
     })
   })
 

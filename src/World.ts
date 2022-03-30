@@ -130,6 +130,14 @@ export class World<T extends IEntity = UntypedEntity> {
     delete entity.id
   }
 
+  public addComponents = (entity: T, ...partials: Partial<T>[]) => {
+    for (const partial of partials) {
+      for (const name in partial) {
+        this.addComponent(entity, name, partial[name]!)
+      }
+    }
+  }
+
   public addComponent = <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => {
     if (name in entity) {
       throw `Tried to add component "${name}" to an entity that already has it.`
