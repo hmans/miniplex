@@ -113,7 +113,7 @@ describe("World", () => {
     })
   })
 
-  describe("addComponents", () => {
+  describe("addComponent", () => {
     const position = (x: number = 0, y: number = 0) => ({ position: { x, y } })
     const velocity = (x: number = 0, y: number = 0) => ({ velocity: { x, y } })
     const health = (amount: number) => ({ health: { max: amount, current: amount } })
@@ -122,7 +122,7 @@ describe("World", () => {
       const world = new World<GameObject>()
       const entity = world.createEntity()
 
-      world.addComponents(entity, position(1, 2))
+      world.addComponent(entity, position(1, 2))
 
       expect(entity.position).toEqual({ x: 1, y: 2 })
     })
@@ -131,7 +131,7 @@ describe("World", () => {
       const world = new World<GameObject>()
       const entity = world.createEntity()
 
-      world.addComponents(entity, { ...position(1, 2), ...health(100) })
+      world.addComponent(entity, { ...position(1, 2), ...health(100) })
 
       expect(entity).toEqual({
         id: 1,
@@ -144,7 +144,7 @@ describe("World", () => {
       const world = new World<GameObject>()
       const entity = world.createEntity()
 
-      world.addComponents(entity, position(1, 2), health(100))
+      world.addComponent(entity, position(1, 2), health(100))
 
       expect(entity).toEqual({
         id: 1,
@@ -152,39 +152,25 @@ describe("World", () => {
         health: { max: 100, current: 100 }
       })
     })
-  })
-
-  describe("addComponent", () => {
-    it("adds a component to an entity", () => {
-      const world = new World<GameObject>()
-      const entity = world.createEntity({ position: { x: 0, y: 0 } })
-      world.addComponent(entity, "velocity", { x: 1, y: 2 })
-      expect(entity.velocity).toEqual({ x: 1, y: 2 })
-    })
 
     it("adds entities to relevant archetypes", () => {
       const world = new World<GameObject>()
       const withVelocity = world.archetype("velocity")
-      const entity = world.createEntity({ position: { x: 0, y: 0 } })
-      expect(withVelocity.entities).not.toContain(entity)
-      world.addComponent(entity, "velocity", { x: 1, y: 2 })
-      expect(withVelocity.entities).toContain(entity)
-    })
 
-    it("throws when the specified component is already present on the entity", () => {
-      const world = new World<GameObject>()
-      const entity = world.createEntity({ position: { x: 0, y: 0 } })
-      expect(() => {
-        world.addComponent(entity, "position", { x: 0, y: 0 })
-      }).toThrow()
+      const entity = world.createEntity({ ...position() })
+      expect(withVelocity.entities).not.toContain(entity)
+
+      world.addComponent(entity, velocity())
+      expect(withVelocity.entities).toContain(entity)
     })
 
     it("throws when the specified entity is not managed by this world", () => {
       const world = new World<GameObject>()
       const otherWorld = new World<GameObject>()
       const entity = otherWorld.createEntity({ position: { x: 0, y: 0 } })
+
       expect(() => {
-        world.addComponent(entity, "velocity", { x: 1, y: 2 })
+        world.addComponent(entity, velocity())
       }).toThrow()
     })
   })
@@ -265,7 +251,7 @@ describe("World", () => {
       const { world, alice, bob } = setup()
       const admins = world.archetype("admin")
       expect(admins.entities).toEqual([alice])
-      world.addComponent(bob, "admin", true)
+      world.addComponent(bob, { admin: true })
       expect(admins.entities).toEqual([alice, bob])
     })
 

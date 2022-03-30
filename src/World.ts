@@ -130,26 +130,17 @@ export class World<T extends IEntity = UntypedEntity> {
     delete entity.id
   }
 
-  public addComponents = (entity: T, ...partials: Partial<T>[]) => {
-    for (const partial of partials) {
-      for (const name in partial) {
-        this.addComponent(entity, name, partial[name]!)
-      }
-    }
-  }
-
-  public addComponent = <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => {
-    if (name in entity) {
-      throw `Tried to add component "${name}" to an entity that already has it.`
-    }
-
+  public addComponent = (entity: T, ...partials: Partial<T>[]) => {
     /* TODO: checking entity ownership like this is likely to slow us down quite a lot, so eventually we'll want something smarter here. */
     if (!this.entities.includes(entity)) {
       throw `Tried to add component "${name}" to an entity that is not managed by this world.`
     }
 
-    /* Add the component */
-    entity[name] = data
+    for (const partial of partials) {
+      for (const name in partial) {
+        entity[name] = partial[name]!
+      }
+    }
 
     /* Trigger a reindexing of the entity */
     this.indexEntity(entity)
@@ -189,8 +180,8 @@ export class World<T extends IEntity = UntypedEntity> {
       this.queuedCommands.add(() => this.destroyEntity(entity))
     },
 
-    addComponent: <U extends ComponentName<T>>(entity: T, name: U, data: T[U]) => {
-      this.queuedCommands.add(() => this.addComponent(entity, name, data))
+    addComponent: (entity: T, ...partials: Partial<T>[]) => {
+      this.queuedCommands.add(() => this.addComponent(entity, ...partials))
     },
 
     removeComponent: (entity: T, ...names: ComponentName<T>[]) => {
