@@ -173,6 +173,15 @@ describe("World", () => {
         world.addComponent(entity, velocity())
       }).toThrow()
     })
+
+    it("throws when the component already exists on the entity", () => {
+      const world = new World<GameObject>()
+      const entity = world.createEntity(position())
+
+      expect(() => {
+        world.addComponent(entity, position())
+      }).toThrow()
+    })
   })
 
   describe("removeComponent", () => {

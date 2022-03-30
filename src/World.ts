@@ -138,6 +138,11 @@ export class World<T extends IEntity = UntypedEntity> {
 
     for (const partial of partials) {
       for (const name in partial) {
+        if (name in entity) {
+          throw new Error(`Component "${name}" is already present in entity. Aborting!`)
+        }
+
+        /* Set entity */
         entity[name] = partial[name]!
       }
     }
