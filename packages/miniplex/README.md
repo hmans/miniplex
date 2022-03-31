@@ -7,8 +7,8 @@
 
 ## Ecosystem
 
-- [miniplex](https://github.com/hmans/miniplex)
-- [miniplex-react](https://github.com/hmans/miniplex-react)
+- [miniplex](https://www.npmjs.com/package/miniplex)
+- [miniplex-react](https://www.npmjs.com/package/miniplex-react)
 
 ## Introduction
 
@@ -26,7 +26,7 @@ For a more in-depth explanation, please also see Sander Mertens' wonderful [Enti
 
 - A very strong focus on **developer experience**. Miniplex aims to be the most convenient to use ECS implementation while still providing great performance.
 - **[Tiny package size](https://bundlephobia.com/package/miniplex)** and **minimal dependencies**.
-- React glue available through [miniplex-react](https://github.com/hmans/miniplex-react).
+- React glue available through [miniplex-react](https://www.npmjs.com/package/miniplex-react).
 - Can power your entire project or just parts of it.
 - Written in **TypeScript**, with full type checking for your entities.
 
