@@ -11,13 +11,22 @@ import React, {
   forwardRef,
   useImperativeHandle
 } from "react"
-import { UntypedEntity, IEntity, World, Tag, Query, EntityWith } from "miniplex"
+import {
+  UntypedEntity,
+  IEntity,
+  World,
+  Tag,
+  Query,
+  EntityWith,
+  MiniplexComponent,
+  RegisteredEntity
+} from "miniplex"
 import { useConst, useRerender } from "@hmans/react-toolbox"
 
 export function createECS<TEntity extends IEntity = UntypedEntity>() {
   const world = new World<TEntity>()
 
-  const EntityContext = createContext<TEntity>(null!)
+  const EntityContext = createContext<RegisteredEntity<TEntity>>(null!)
 
   /**
    * A React component to either create a new entity, or represent an existing entity so
@@ -27,11 +36,11 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     TEntity,
     {
       children?: ReactNode | ((entity: TEntity) => JSX.Element)
-      entity?: TEntity
+      entity?: RegisteredEntity<TEntity>
     }
   >(({ entity: existingEntity, children }, ref) => {
     /* Reuse the specified entity or create a new one */
-    const entity = useConst<TEntity>(
+    const entity = useConst<RegisteredEntity<TEntity>>(
       () => existingEntity ?? world.createEntity()
     )
 
@@ -52,9 +61,9 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     )
   })
 
-  const MemoizedEntity: FC<{ entity: TEntity }> = memo(
+  const MemoizedEntity: FC<{ entity: RegisteredEntity<TEntity> }> = memo(
     ({ entity, children }) => (
-      <Entity entity={entity} key={entity.id}>
+      <Entity entity={entity} key={entity.miniplex.id}>
         {typeof children === "function" ? children(entity) : children}
       </Entity>
     ),
@@ -62,13 +71,17 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   )
 
   const Entities: FC<{
-    children: ReactNode | ((entity: TEntity) => JSX.Element)
-    entities: TEntity[]
+    children: ReactNode | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
+    entities: RegisteredEntity<TEntity>[]
   }> = ({ entities, children }) => {
     return (
       <>
         {entities.map((entity) => (
-          <MemoizedEntity entity={entity} key={entity.id} children={children} />
+          <MemoizedEntity
+            entity={entity}
+            key={entity.miniplex.id}
+            children={children}
+          />
         ))}
       </>
     )
@@ -79,7 +92,9 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     tag,
     children
   }: {
-    children: ReactNode | ((entity: EntityWith<TEntity, TTag>) => JSX.Element)
+    children:
+      | ReactNode
+      | ((entity: EntityWith<RegisteredEntity<TEntity>, TTag>) => JSX.Element)
     initial?: number
     tag: TTag
   }) {
@@ -121,7 +136,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   }: {
     name: K
     data?: V
-    children: ReactElement | ((entity: TEntity) => ReactElement)
+    children?: ReactElement | ((entity: TEntity) => ReactElement)
   }) {
     const entity = useEntity()
     const ref = useRef<TEntity[K]>(null!)

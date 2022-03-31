@@ -5,20 +5,32 @@ import { normalizeQuery } from "./util/normalizeQuery"
 import { WithRequiredKeys } from "./util/types"
 
 /**
- * A base interface for entities, which are just normal JavaScript objects with
- * any number of properties, each of which represents a single component. Miniplex
- * automatically adds an `id` component to entities, which is why entity types
- * must always implement IEntity.
+ * Entities in Miniplex are just plain old Javascript objects. We are assuming
+ * map-like objects that use string-based properties to identify individual components.
  */
 export interface IEntity {
-  id?: number
+  [key: string]: ComponentData
 }
+
+/**
+ * Miniplex uses an internal component that it will automatically add to all created
+ * entities.
+ */
+export type MiniplexComponent<T> = {
+  miniplex: {
+    id: number
+    world: World<T>
+    archetypes: Archetype<T>[]
+  }
+}
+
+export type RegisteredEntity<T extends IEntity> = T & MiniplexComponent<T>
 
 /**
  * For situations where no entity type argument is passed to createWorld, we'll
  * default to an untyped entity type that can hold any component.
  */
-export type UntypedEntity = { [components: string]: ComponentData } & IEntity
+export type UntypedEntity = { [components: string]: ComponentData }
 
 /**
  * Component names are just strings/object property names.
@@ -48,7 +60,7 @@ export type Tag = true
 
 export class World<T extends IEntity = UntypedEntity> {
   /** An array holding all entities known to this world. */
-  public entities = new Array<T>()
+  public entities = new Array<RegisteredEntity<T>>()
 
   /** An ID generator we use for assigning IDs to newly added entities. */
   private nextId = idGenerator(1)
@@ -79,15 +91,12 @@ export class World<T extends IEntity = UntypedEntity> {
     return archetype as Archetype<T, TQuery>
   }
 
-  private indexEntity(entity: T) {
+  private indexEntity(entity: RegisteredEntity<T>) {
     /*
     We absolutely never want to add entities to our indices that are not actually
-    part of this world, so let's do a sanity check. Doing this may be kind of costly,
-    so...:
-
-    TODO: benchmark & optimize :)
+    part of this world, so let's do a sanity check.
     */
-    if (!this.entities.includes(entity)) return
+    if (entity.miniplex.world !== this) return
 
     for (const archetype of this.archetypes.values()) {
       archetype.indexEntity(entity)
@@ -96,14 +105,20 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  public createEntity = (entity: T = {} as T) => {
-    /* If there already is an ID, raise an error. */
-    if ("id" in entity) {
-      throw "Attempted to add an entity that aleady had an 'id' component."
+  public createEntity = (partial: T = {} as T): RegisteredEntity<T> => {
+    /* If there already is a miniplex component on this, bail */
+    if ("miniplex" in partial) {
+      throw "Attempted to add an entity that aleady has a `miniplex` comonent."
     }
 
+    const entity = partial as RegisteredEntity<T>
+
     /* Assign an ID */
-    entity.id = this.nextId()
+    entity.miniplex = {
+      id: this.nextId(),
+      world: this,
+      archetypes: []
+    }
 
     /* Store the entity... */
     this.entities.push(entity)
@@ -115,7 +130,7 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   public destroyEntity = (entity: T) => {
-    const pos = this.entities.indexOf(entity, 0)
+    const pos = this.entities.indexOf(entity as RegisteredEntity<T>, 0)
 
     /* Sanity check */
     if (pos < 0) return
@@ -128,14 +143,17 @@ export class World<T extends IEntity = UntypedEntity> {
       archetype.removeEntity(entity)
     }
 
-    /* Remove its id component */
-    delete entity.id
+    /* Remove its miniplex component */
+    delete entity.miniplex
   }
 
-  public addComponent = (entity: T, ...partials: Partial<T>[]) => {
-    /* TODO: checking entity ownership like this is likely to slow us down quite a lot, so eventually we'll want something smarter here. */
-    if (!this.entities.includes(entity)) {
-      throw `Tried to add component "${name}" to an entity that is not managed by this world.`
+  public addComponent = (
+    entity: RegisteredEntity<T>,
+    ...partials: Partial<T>[]
+  ) => {
+    /* Sanity check */
+    if (entity.miniplex.world !== this) {
+      throw `Tried to add components to an entity that is not managed by this world.`
     }
 
     for (const partial of partials) {
@@ -155,9 +173,11 @@ export class World<T extends IEntity = UntypedEntity> {
     this.indexEntity(entity)
   }
 
-  public removeComponent = (entity: T, ...components: ComponentName<T>[]) => {
-    /* TODO: checking entity ownership like this is likely to slow us down quite a lot, so eventually we'll want something smarter here. */
-    if (!this.entities.includes(entity)) {
+  public removeComponent = (
+    entity: RegisteredEntity<T>,
+    ...components: ComponentName<T>[]
+  ) => {
+    if (entity.miniplex.world !== this) {
       throw `Tried to remove ${components} from an entity that is not managed by this world.`
     }
 
@@ -180,20 +200,23 @@ export class World<T extends IEntity = UntypedEntity> {
   private queuedCommands = commandQueue()
 
   public queue = {
-    createEntity: (entity: T) => {
+    createEntity: (entity: T): T & Partial<MiniplexComponent<T>> => {
       this.queuedCommands.add(() => this.createEntity(entity))
       return entity
     },
 
-    destroyEntity: (entity: T) => {
+    destroyEntity: (entity: RegisteredEntity<T>) => {
       this.queuedCommands.add(() => this.destroyEntity(entity))
     },
 
-    addComponent: (entity: T, ...partials: Partial<T>[]) => {
+    addComponent: (entity: RegisteredEntity<T>, ...partials: Partial<T>[]) => {
       this.queuedCommands.add(() => this.addComponent(entity, ...partials))
     },
 
-    removeComponent: (entity: T, ...names: ComponentName<T>[]) => {
+    removeComponent: (
+      entity: RegisteredEntity<T>,
+      ...names: ComponentName<T>[]
+    ) => {
       this.queuedCommands.add(() => this.removeComponent(entity, ...names))
     },
 
