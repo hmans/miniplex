@@ -101,7 +101,7 @@ The returned object will be a normal JavaScript object that equals the object pa
 Now let's add a `velocity` component to the entity. Note that we're passing the entity itself, not just its identifier:
 
 ```ts
-world.addComponent(entity, "velocity", { x: 10, y: 0, z: 0 })
+world.addComponent(entity, { velocity: { x: 10, y: 0, z: 0 } })
 ```
 
 Now the entity has three components: `id`, `position` and `velocity`.
