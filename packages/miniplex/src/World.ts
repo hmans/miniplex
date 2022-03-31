@@ -139,8 +139,8 @@ export class World<T extends IEntity = UntypedEntity> {
       archetype.removeEntity(entity)
     }
 
-    /* Remove its id component */
-    delete entity.id
+    /* Remove its miniplex component */
+    delete entity.miniplex
   }
 
   public addComponent = (
