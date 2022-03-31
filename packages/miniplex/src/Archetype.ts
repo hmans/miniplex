@@ -26,15 +26,27 @@ export class Archetype<
   constructor(public query: TQuery) {}
 
   public indexEntity(entity: RegisteredEntity<TEntity>) {
-    const isArchetype = entityIsArchetype(entity, this.query)
-    const pos = this.entities.indexOf(entity as any, 0)
+    /* If the entity is of the archetype, it should be indexed by us. */
+    const shouldBeIndexed = entityIsArchetype(entity, this.query)
 
-    if (isArchetype && pos < 0) {
+    /* The entity might already be indexed by us, so let's check. */
+    const isIndexed = entity.miniplex.archetypes.includes(this)
+
+    /* If the entity should be indexed, but isn't, add it. */
+    if (shouldBeIndexed && !isIndexed) {
+      entity.miniplex.archetypes.push(this)
       this.entities.push(entity as any)
       this.onEntityAdded.emit(entity)
-    } else if (!isArchetype && pos >= 0) {
-      this.entities.splice(pos, 1)
+      return
+    }
+
+    /* If the entity should not be indexed, but is, let's remove it. */
+    if (!shouldBeIndexed && isIndexed) {
+      this.entities.splice(this.entities.indexOf(entity as any, 0), 1)
       this.onEntityRemoved.emit(entity)
+      const apos = entity.miniplex.archetypes.indexOf(this, 0)
+      entity.miniplex.archetypes.splice(apos, 1)
+      return
     }
   }
 
