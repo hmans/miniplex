@@ -6,7 +6,7 @@
     "url": "https://hendrik.mans.de"
   },
   "description": "React glue for Miniplex.",
-  "homepage": "https://github.com/hmans/miniplex-react",
+  "homepage": "https://github.com/hmans/miniplex",
   "keywords": [
     "gamedev",
     "ecs",
