@@ -4,11 +4,19 @@ import { idGenerator } from "./util/idGenerator"
 import { normalizeQuery } from "./util/normalizeQuery"
 import { WithRequiredKeys } from "./util/types"
 
+/**
+ * Entities in Miniplex are just plain old Javascript objects. We are assuming
+ * map-like objects that use string-based properties to identify individual components.
+ */
 export interface IEntity {
-  [key: string]: any
+  [key: string]: ComponentData
 }
 
-type MiniplexComponent = {
+/**
+ * Miniplex uses an internal component that it will automatically add to all created
+ * entities.
+ */
+export type MiniplexComponent = {
   id: number
 }
 
