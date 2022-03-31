@@ -212,8 +212,8 @@ function healthSystem(world) {
   const len = withHealth.entities.length
 
   /* Note how we're going through the list in reverse order: */
-  for (let i = len; i >= 0; i--) {
-    const entity = withHealth.entities[i]
+  for (let i = len; i > 0; i--) {
+    const entity = withHealth.entities[i - 1]
 
     /* If health is depleted, destroy the entity */
     if (entity.health <= 0) {

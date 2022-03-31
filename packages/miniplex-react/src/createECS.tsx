@@ -110,8 +110,8 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
       /* When shutting down, purge all entities in this collection. */
       return () => {
         const len = entities.length
-        for (let i = len - 1; i >= 0; i--) {
-          world.destroyEntity(entities[i])
+        for (let i = len; i > 0; i--) {
+          world.destroyEntity(entities[i - 1])
         }
       }
     }, [tag, initial])
