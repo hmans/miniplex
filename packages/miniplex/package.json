@@ -48,13 +48,13 @@
     "typedoc": "^0.22.13",
     "typescript": "^4.6.2"
   },
+  "dependencies": {
+    "@hmans/signal": "^0.1.7"
+  },
   "babel": {
     "presets": [
       "@babel/preset-env",
       "@babel/preset-typescript"
     ]
-  },
-  "dependencies": {
-    "@hmans/signal": "^0.1.7"
   }
 }
