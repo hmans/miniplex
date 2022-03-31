@@ -79,7 +79,7 @@ type Entity = {
   position: { x: number; y: number; z: number }
   velocity?: { x: number; y: number; z: number }
   health?: number
-} & IEntity
+}
 
 const world = new World<Entity>()
 ```
@@ -94,8 +94,6 @@ Let's create an entity. Note how we're immediately giving it a `position` compon
 const entity = world.createEntity({ position: { x: 0, y: 0, z: 0 } })
 ```
 
-The returned object will be a normal JavaScript object that equals the object passed to `createEntity`, but with an additional `id` property containing a unique numerical identifier.
-
 ### Adding Components
 
 Now let's add a `velocity` component to the entity. Note that we're passing the entity itself, not just its identifier:
@@ -104,7 +102,9 @@ Now let's add a `velocity` component to the entity. Note that we're passing the 
 world.addComponent(entity, { velocity: { x: 10, y: 0, z: 0 } })
 ```
 
-Now the entity has three components: `id`, `position` and `velocity`.
+Now the entity has three components: `position`, `velocity`, and `miniplex`.
+
+**Note on the `miniplex` component:** Every entity that is created by your Miniplex world will automatically receive a `miniplex` component. This component contains some data that is mostly used internally: `entity.miniplex.id` is an auto-generated numerical ID (purely for convenience), `entity.miniplex.world` is a reference to the world, and `entity.miniplex.archetypes` is a list of references to archetypes that are currently storing the entity. You are advised to not mutate these properties, but in some advanced usage patterns they can be very useful.
 
 ### Querying Entities
 
