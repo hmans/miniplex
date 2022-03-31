@@ -45,10 +45,16 @@ describe("World", () => {
       expect(world.entities).toEqual([entity])
     })
 
-    it("assigns an ID to the entity", () => {
+    it("assigns an ID to the entity's miniplex component", () => {
       const world = new World<Entity>()
       const entity = world.createEntity({ name: "Alice" })
       expect(entity.miniplex.id).toEqual(1)
+    })
+
+    it("assigns a reference to the world to the entity's miniplex component", () => {
+      const world = new World<Entity>()
+      const entity = world.createEntity({ name: "Alice" })
+      expect(entity.miniplex.world).toEqual(world)
     })
 
     it("assigns automatically incrementing IDs", () => {
@@ -139,7 +145,7 @@ describe("World", () => {
       world.addComponent(entity, { ...position(1, 2), ...health(100) })
 
       expect(entity).toEqual({
-        miniplex: { id: 1 },
+        miniplex: { id: 1, world },
         position: { x: 1, y: 2 },
         health: { max: 100, current: 100 }
       })
@@ -152,7 +158,7 @@ describe("World", () => {
       world.addComponent(entity, position(1, 2), health(100))
 
       expect(entity).toEqual({
-        miniplex: { id: 1 },
+        miniplex: { id: 1, world },
         position: { x: 1, y: 2 },
         health: { max: 100, current: 100 }
       })

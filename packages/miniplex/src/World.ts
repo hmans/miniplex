@@ -16,9 +16,10 @@ export interface IEntity {
  * Miniplex uses an internal component that it will automatically add to all created
  * entities.
  */
-export type MiniplexComponent = {
+export type MiniplexComponent<T> = {
   miniplex: {
     id: number
+    world: World<T>
   }
 }
 
@@ -104,18 +105,19 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  public createEntity = (partial: T = {} as T): T & MiniplexComponent => {
+  public createEntity = (partial: T = {} as T): T & MiniplexComponent<T> => {
     /* TODO: remove/change this */
     /* If there already is an ID, raise an error. */
     // if ("id" in entity) {
     //   throw "Attempted to add an entity that aleady had an 'id' component."
     // }
 
-    const entity = partial as T & MiniplexComponent
+    const entity = partial as T & MiniplexComponent<T>
 
     /* Assign an ID */
     entity.miniplex = {
-      id: this.nextId()
+      id: this.nextId(),
+      world: this
     }
 
     /* Store the entity... */
@@ -193,7 +195,7 @@ export class World<T extends IEntity = UntypedEntity> {
   private queuedCommands = commandQueue()
 
   public queue = {
-    createEntity: (entity: T): T & Partial<MiniplexComponent> => {
+    createEntity: (entity: T): T & Partial<MiniplexComponent<T>> => {
       this.queuedCommands.add(() => this.createEntity(entity))
       return entity
     },
