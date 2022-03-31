@@ -4,21 +4,19 @@ import { idGenerator } from "./util/idGenerator"
 import { normalizeQuery } from "./util/normalizeQuery"
 import { WithRequiredKeys } from "./util/types"
 
-/**
- * A base interface for entities, which are just normal JavaScript objects with
- * any number of properties, each of which represents a single component. Miniplex
- * automatically adds an `id` component to entities, which is why entity types
- * must always implement IEntity.
- */
 export interface IEntity {
-  id?: number
+  [key: string]: any
+}
+
+type MiniplexComponent = {
+  id: number
 }
 
 /**
  * For situations where no entity type argument is passed to createWorld, we'll
  * default to an untyped entity type that can hold any component.
  */
-export type UntypedEntity = { [components: string]: ComponentData } & IEntity
+export type UntypedEntity = { [components: string]: ComponentData }
 
 /**
  * Component names are just strings/object property names.
@@ -96,11 +94,14 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  public createEntity = (entity: T = {} as T) => {
+  public createEntity = (partial: T = {} as T): T & MiniplexComponent => {
+    /* TODO: remove/change this */
     /* If there already is an ID, raise an error. */
-    if ("id" in entity) {
-      throw "Attempted to add an entity that aleady had an 'id' component."
-    }
+    // if ("id" in entity) {
+    //   throw "Attempted to add an entity that aleady had an 'id' component."
+    // }
+
+    const entity = partial as T & MiniplexComponent
 
     /* Assign an ID */
     entity.id = this.nextId()

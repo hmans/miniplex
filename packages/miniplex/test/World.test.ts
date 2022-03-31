@@ -28,12 +28,12 @@ describe("World", () => {
     it("creates a new entity", () => {
       const world = new World<Entity>()
       const entity = world.createEntity()
-      expect(entity.id).not.toBeUndefined()
+      expect(entity.miniplex.id).not.toBeUndefined()
     })
 
     it("accepts an object that will become the entity", () => {
       const world = new World<Entity>()
-      const entity: Entity = { name: "Alice" }
+      const entity: Partial<Entity> = { name: "Alice" }
       const returnedEntity = world.createEntity(entity)
       expect(returnedEntity).toBe(entity)
     })
@@ -105,7 +105,10 @@ describe("World", () => {
     it("removes the entity from all archetypes", () => {
       const world = new World<GameObject>()
       const withVelocity = world.archetype("velocity")
-      const entity = world.createEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
+      const entity = world.createEntity({
+        position: { x: 0, y: 0 },
+        velocity: { x: 1, y: 2 }
+      })
 
       expect(withVelocity.entities).toContain(entity)
       world.destroyEntity(entity)
@@ -116,7 +119,9 @@ describe("World", () => {
   describe("addComponent", () => {
     const position = (x: number = 0, y: number = 0) => ({ position: { x, y } })
     const velocity = (x: number = 0, y: number = 0) => ({ velocity: { x, y } })
-    const health = (amount: number) => ({ health: { max: amount, current: amount } })
+    const health = (amount: number) => ({
+      health: { max: amount, current: amount }
+    })
 
     it("adds a component expressed as a partial entity", () => {
       const world = new World<GameObject>()
@@ -187,7 +192,10 @@ describe("World", () => {
   describe("removeComponent", () => {
     it("removes a component from an entity", () => {
       const world = new World<GameObject>()
-      const entity = world.createEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
+      const entity = world.createEntity({
+        position: { x: 0, y: 0 },
+        velocity: { x: 1, y: 2 }
+      })
       world.removeComponent(entity, "velocity")
       expect(entity.velocity).toBeUndefined()
     })
@@ -195,7 +203,10 @@ describe("World", () => {
     it("removes entities from relevant archetypes", () => {
       const world = new World<GameObject>()
       const withVelocity = world.archetype("velocity")
-      const entity = world.createEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
+      const entity = world.createEntity({
+        position: { x: 0, y: 0 },
+        velocity: { x: 1, y: 2 }
+      })
       expect(withVelocity.entities).toContain(entity)
       world.removeComponent(entity, "velocity")
       expect(withVelocity.entities).not.toContain(entity)
@@ -212,7 +223,10 @@ describe("World", () => {
     it("throws when the specified entity is not managed by this world", () => {
       const world = new World<GameObject>()
       const otherWorld = new World<GameObject>()
-      const entity = otherWorld.createEntity({ position: { x: 0, y: 0 }, velocity: { x: 1, y: 2 } })
+      const entity = otherWorld.createEntity({
+        position: { x: 0, y: 0 },
+        velocity: { x: 1, y: 2 }
+      })
       expect(() => {
         world.removeComponent(entity, "velocity")
       }).toThrow()
