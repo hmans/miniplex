@@ -23,6 +23,8 @@ export type MiniplexComponent<T> = {
   }
 }
 
+export type RegisteredEntity<T extends IEntity> = T & MiniplexComponent<T>
+
 /**
  * For situations where no entity type argument is passed to createWorld, we'll
  * default to an untyped entity type that can hold any component.
@@ -57,7 +59,7 @@ export type Tag = true
 
 export class World<T extends IEntity = UntypedEntity> {
   /** An array holding all entities known to this world. */
-  public entities = new Array<T>()
+  public entities = new Array<RegisteredEntity<T>>()
 
   /** An ID generator we use for assigning IDs to newly added entities. */
   private nextId = idGenerator(1)
@@ -88,7 +90,7 @@ export class World<T extends IEntity = UntypedEntity> {
     return archetype as Archetype<T, TQuery>
   }
 
-  private indexEntity(entity: T & MiniplexComponent<T>) {
+  private indexEntity(entity: RegisteredEntity<T>) {
     /*
     We absolutely never want to add entities to our indices that are not actually
     part of this world, so let's do a sanity check.
@@ -102,13 +104,13 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  public createEntity = (partial: T = {} as T): T & MiniplexComponent<T> => {
+  public createEntity = (partial: T = {} as T): RegisteredEntity<T> => {
     /* If there already is a miniplex component on this, bail */
     if ("miniplex" in partial) {
       throw "Attempted to add an entity that aleady has a `miniplex` comonent."
     }
 
-    const entity = partial as T & MiniplexComponent<T>
+    const entity = partial as RegisteredEntity<T>
 
     /* Assign an ID */
     entity.miniplex = {
@@ -126,7 +128,7 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   public destroyEntity = (entity: T) => {
-    const pos = this.entities.indexOf(entity, 0)
+    const pos = this.entities.indexOf(entity as RegisteredEntity<T>, 0)
 
     /* Sanity check */
     if (pos < 0) return
@@ -144,7 +146,7 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   public addComponent = (
-    entity: T & MiniplexComponent<T>,
+    entity: RegisteredEntity<T>,
     ...partials: Partial<T>[]
   ) => {
     /* Sanity check */
@@ -170,7 +172,7 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   public removeComponent = (
-    entity: T & MiniplexComponent<T>,
+    entity: RegisteredEntity<T>,
     ...components: ComponentName<T>[]
   ) => {
     if (entity.miniplex.world !== this) {
@@ -201,19 +203,16 @@ export class World<T extends IEntity = UntypedEntity> {
       return entity
     },
 
-    destroyEntity: (entity: T) => {
+    destroyEntity: (entity: RegisteredEntity<T>) => {
       this.queuedCommands.add(() => this.destroyEntity(entity))
     },
 
-    addComponent: (
-      entity: T & MiniplexComponent<T>,
-      ...partials: Partial<T>[]
-    ) => {
+    addComponent: (entity: RegisteredEntity<T>, ...partials: Partial<T>[]) => {
       this.queuedCommands.add(() => this.addComponent(entity, ...partials))
     },
 
     removeComponent: (
-      entity: T & MiniplexComponent<T>,
+      entity: RegisteredEntity<T>,
       ...names: ComponentName<T>[]
     ) => {
       this.queuedCommands.add(() => this.removeComponent(entity, ...names))

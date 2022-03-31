@@ -1,10 +1,10 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import { act } from "react-dom/test-utils"
-import { IEntity, Tag } from "miniplex"
+import { Tag } from "miniplex"
 import { createECS } from "../src/createECS"
 
-type Entity = { name: string } & IEntity
+type Entity = { name: string }
 
 describe("createECS", () => {
   it("returns a useArchetype function", () => {
@@ -73,7 +73,7 @@ describe("createECS", () => {
       )
 
       expect(alice.label).toBeInstanceOf(HTMLParagraphElement)
-      expect(alice.label.textContent).toEqual("Hello")
+      expect(alice.label?.textContent).toEqual("Hello")
     })
 
     it("when passed a React child, it is also possible to pass a render function", () => {
@@ -89,7 +89,7 @@ describe("createECS", () => {
       )
 
       expect(alice.label).toBeInstanceOf(HTMLParagraphElement)
-      expect(alice.label.textContent).toEqual("Alice")
+      expect(alice.label?.textContent).toEqual("Alice")
     })
   })
 
@@ -107,8 +107,8 @@ describe("createECS", () => {
 
         return (
           <ul>
-            {entities.map(({ id, name }) => (
-              <li key={id} data-testid={`user-${id}`}>
+            {entities.map(({ miniplex, name }) => (
+              <li key={miniplex.id} data-testid={`user-${miniplex.id}`}>
                 {name}
               </li>
             ))}
@@ -164,8 +164,8 @@ describe("createECS", () => {
 
       render(
         <Entities entities={world.entities}>
-          {({ id, name }) => (
-            <p key={id} data-testid={`user-${id}`}>
+          {({ miniplex, name }) => (
+            <p key={miniplex.id} data-testid={`user-${miniplex.id}`}>
               {name}
             </p>
           )}
@@ -186,8 +186,8 @@ describe("createECS", () => {
 
       render(
         <Collection tag="name">
-          {({ id, name }) => (
-            <p key={id} data-testid={`user-${id}`}>
+          {({ miniplex, name }) => (
+            <p key={miniplex.id} data-testid={`user-${miniplex.id}`}>
               {name}
             </p>
           )}
@@ -206,8 +206,8 @@ describe("createECS", () => {
 
       render(
         <Collection tag="name">
-          {({ id, name }) => (
-            <p key={id} data-testid={`user-${id}`}>
+          {({ miniplex, name }) => (
+            <p key={miniplex.id} data-testid={`user-${miniplex.id}`}>
               {name}
             </p>
           )}
@@ -238,7 +238,10 @@ describe("createECS", () => {
             entity.renderCount++
 
             return (
-              <p key={entity.id} data-testid={`user-${entity.id}`}>
+              <p
+                key={entity.miniplex.id}
+                data-testid={`user-${entity.miniplex.id}`}
+              >
                 {entity.name}
               </p>
             )

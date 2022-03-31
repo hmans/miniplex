@@ -1,4 +1,5 @@
 import { Signal } from "@hmans/signal"
+import { RegisteredEntity } from "."
 import { entityIsArchetype } from "./util/entityIsArchetype"
 import { ComponentName, EntityWith, IEntity } from "./World"
 
@@ -12,7 +13,9 @@ export class Archetype<
   TQuery extends Query<TEntity> = Query<TEntity>
 > {
   /** A list of entities belonging to this archetype. */
-  public entities = new Array<EntityWith<TEntity, TQuery[number]>>()
+  public entities = new Array<
+    EntityWith<RegisteredEntity<TEntity>, TQuery[number]>
+  >()
 
   /** Listeners on this event are invoked when an entity is added to this archetype's index. */
   public onEntityAdded = Signal<TEntity>()
