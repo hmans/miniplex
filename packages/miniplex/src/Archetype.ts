@@ -18,14 +18,14 @@ export class Archetype<
   >()
 
   /** Listeners on this event are invoked when an entity is added to this archetype's index. */
-  public onEntityAdded = Signal<TEntity>()
+  public onEntityAdded = Signal<RegisteredEntity<TEntity>>()
 
   /** Listeners on this event are invoked when an entity is removed from this archetype's index. */
-  public onEntityRemoved = Signal<TEntity>()
+  public onEntityRemoved = Signal<RegisteredEntity<TEntity>>()
 
   constructor(public query: TQuery) {}
 
-  public indexEntity(entity: TEntity) {
+  public indexEntity(entity: RegisteredEntity<TEntity>) {
     const isArchetype = entityIsArchetype(entity, this.query)
     const pos = this.entities.indexOf(entity as any, 0)
 
@@ -38,7 +38,7 @@ export class Archetype<
     }
   }
 
-  public removeEntity(entity: TEntity) {
+  public removeEntity(entity: RegisteredEntity<TEntity>) {
     const pos = this.entities.indexOf(entity as any, 0)
     if (pos >= 0) {
       this.entities.splice(pos, 1)
