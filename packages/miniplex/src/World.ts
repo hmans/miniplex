@@ -108,7 +108,9 @@ export class World<T extends IEntity = UntypedEntity> {
   public createEntity = (partial: T = {} as T): RegisteredEntity<T> => {
     /* If there already is a miniplex component on this, bail */
     if ("miniplex" in partial) {
-      throw "Attempted to add an entity that aleady has a `miniplex` comonent."
+      throw new Error(
+        "Attempted to add an entity that aleady has a `miniplex` comonent."
+      )
     }
 
     const entity = partial as RegisteredEntity<T>
@@ -129,11 +131,11 @@ export class World<T extends IEntity = UntypedEntity> {
     return entity
   }
 
-  public destroyEntity = (entity: T) => {
-    if (entity.miniplex?.world !== this) return
+  public destroyEntity = (entity: RegisteredEntity<T>) => {
+    if (entity.miniplex.world !== this) return
 
     /* Remove it from our global list of entities */
-    const pos = this.entities.indexOf(entity as RegisteredEntity<T>, 0)
+    const pos = this.entities.indexOf(entity, 0)
     this.entities.splice(pos, 1)
 
     /* Remove entity from all archetypes */
@@ -142,7 +144,7 @@ export class World<T extends IEntity = UntypedEntity> {
     }
 
     /* Remove its miniplex component */
-    delete entity.miniplex
+    delete (entity as T).miniplex
   }
 
   public addComponent = (
