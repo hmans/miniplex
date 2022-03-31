@@ -17,7 +17,9 @@ export interface IEntity {
  * entities.
  */
 export type MiniplexComponent = {
-  id: number
+  miniplex: {
+    id: number
+  }
 }
 
 /**
@@ -112,7 +114,9 @@ export class World<T extends IEntity = UntypedEntity> {
     const entity = partial as T & MiniplexComponent
 
     /* Assign an ID */
-    entity.id = this.nextId()
+    entity.miniplex = {
+      id: this.nextId()
+    }
 
     /* Store the entity... */
     this.entities.push(entity)

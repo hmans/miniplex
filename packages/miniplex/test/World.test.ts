@@ -28,7 +28,7 @@ describe("World", () => {
     it("creates a new entity", () => {
       const world = new World<Entity>()
       const entity = world.createEntity()
-      expect(entity.id).not.toBeUndefined()
+      expect(entity.miniplex.id).not.toBeUndefined()
     })
 
     it("accepts an object that will become the entity", () => {
@@ -48,14 +48,14 @@ describe("World", () => {
     it("assigns an ID to the entity", () => {
       const world = new World<Entity>()
       const entity = world.createEntity({ name: "Alice" })
-      expect(entity.id).toEqual(1)
+      expect(entity.miniplex.id).toEqual(1)
     })
 
     it("assigns automatically incrementing IDs", () => {
       const world = new World<Entity>()
       world.createEntity({ name: "Alice" })
       const entity = world.createEntity({ name: "Bob" })
-      expect(entity.id).toEqual(2)
+      expect(entity.miniplex.id).toEqual(2)
     })
 
     describe(".queued", () => {
@@ -71,11 +71,11 @@ describe("World", () => {
       it("does not yet assign an ID", () => {
         const world = new World<Entity>()
         const entity = world.queue.createEntity({ name: "Alice" })
-        expect(entity.id).toBeUndefined()
+        expect(entity.miniplex).toBeUndefined()
 
         /* Flushing won't change the ID */
         world.queue.flush()
-        expect(entity.id).toEqual(1)
+        expect(entity.miniplex!.id).toEqual(1)
       })
     })
   })
@@ -139,7 +139,7 @@ describe("World", () => {
       world.addComponent(entity, { ...position(1, 2), ...health(100) })
 
       expect(entity).toEqual({
-        id: 1,
+        miniplex: { id: 1 },
         position: { x: 1, y: 2 },
         health: { max: 100, current: 100 }
       })
@@ -152,7 +152,7 @@ describe("World", () => {
       world.addComponent(entity, position(1, 2), health(100))
 
       expect(entity).toEqual({
-        id: 1,
+        miniplex: { id: 1 },
         position: { x: 1, y: 2 },
         health: { max: 100, current: 100 }
       })
