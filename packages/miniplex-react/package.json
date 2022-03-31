@@ -1,0 +1,81 @@
+{
+  "name": "miniplex-react",
+  "author": {
+    "name": "Hendrik Mans",
+    "email": "hendrik@mans.de",
+    "url": "https://hendrik.mans.de"
+  },
+  "description": "React glue for Miniplex.",
+  "homepage": "https://github.com/hmans/miniplex-react",
+  "keywords": [
+    "gamedev",
+    "ecs",
+    "react",
+    "entity-component-system",
+    "state",
+    "state-management",
+    "hooks"
+  ],
+  "sideEffects": false,
+  "version": "0.1.11",
+  "main": "dist/miniplex-react.cjs.js",
+  "module": "dist/miniplex-react.esm.js",
+  "types": "dist/miniplex-react.cjs.d.ts",
+  "files": [
+    "dist/**",
+    "LICENSE",
+    "README.md"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "clean": "rimraf dist",
+    "dev": "preconstruct watch",
+    "build": "preconstruct build",
+    "release": "yarn ci && yarn publish",
+    "test": "jest",
+    "ci": "yarn clean & yarn build && yarn test",
+    "docs": "typedoc src/index.ts"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.8",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
+    "@changesets/cli": "^2.22.0",
+    "@preconstruct/cli": "^2.1.5",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.2",
+    "@types/jest": "^27.4.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.13",
+    "jest": "^27.5.1",
+    "miniplex": "^0.8.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.1.3",
+    "tslib": "^2.0.3",
+    "typedoc": "^0.22.13",
+    "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "@hmans/react-toolbox": "^0.1.4"
+  },
+  "peerDependencies": {
+    "miniplex": ">=0.8.0",
+    "react": ">=16.8"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react",
+      [
+        "@babel/preset-typescript",
+        {
+          "isTSX": true,
+          "allExtensions": true
+        }
+      ]
+    ]
+  }
+}

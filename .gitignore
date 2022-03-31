@@ -1,5 +1,4 @@
-/node_modules/
-**/*.log
-/dist/
-/docs/
 /.vscode/
+**/node_modules/
+**/dist/
+*.log
