@@ -56,7 +56,9 @@ export class World<T extends IEntity = UntypedEntity> {
   /** A list of known archetypes. */
   private archetypes = new Map<string, Archetype<T>>()
 
-  public archetype<TQuery extends Query<T>>(...query: TQuery): Archetype<T, TQuery> {
+  public archetype<TQuery extends Query<T>>(
+    ...query: TQuery
+  ): Archetype<T, TQuery> {
     const normalizedQuery = normalizeQuery(query)
     const stringifiedQuery = JSON.stringify(normalizedQuery)
 
@@ -139,7 +141,9 @@ export class World<T extends IEntity = UntypedEntity> {
     for (const partial of partials) {
       for (const name in partial) {
         if (name in entity) {
-          throw new Error(`Component "${name}" is already present in entity. Aborting!`)
+          throw new Error(
+            `Component "${name}" is already present in entity. Aborting!`
+          )
         }
 
         /* Set entity */
