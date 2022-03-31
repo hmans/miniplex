@@ -7,7 +7,10 @@ import { ComponentName, EntityWith, IEntity } from "./World"
  */
 export type Query<T extends IEntity> = ComponentName<T>[]
 
-export class Archetype<TEntity extends IEntity, TQuery extends Query<TEntity> = Query<TEntity>> {
+export class Archetype<
+  TEntity extends IEntity,
+  TQuery extends Query<TEntity> = Query<TEntity>
+> {
   /** A list of entities belonging to this archetype. */
   public entities = new Array<EntityWith<TEntity, TQuery[number]>>()
 
