@@ -130,16 +130,14 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   public destroyEntity = (entity: T) => {
-    const pos = this.entities.indexOf(entity as RegisteredEntity<T>, 0)
-
-    /* Sanity check */
-    if (pos < 0) return
+    if (entity.miniplex?.world !== this) return
 
     /* Remove it from our global list of entities */
+    const pos = this.entities.indexOf(entity as RegisteredEntity<T>, 0)
     this.entities.splice(pos, 1)
 
     /* Remove entity from all archetypes */
-    for (const archetype of this.archetypes.values()) {
+    for (const archetype of entity.miniplex.archetypes) {
       archetype.removeEntity(entity)
     }
 
