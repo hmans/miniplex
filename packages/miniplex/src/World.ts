@@ -88,15 +88,12 @@ export class World<T extends IEntity = UntypedEntity> {
     return archetype as Archetype<T, TQuery>
   }
 
-  private indexEntity(entity: T) {
+  private indexEntity(entity: T & MiniplexComponent<T>) {
     /*
     We absolutely never want to add entities to our indices that are not actually
-    part of this world, so let's do a sanity check. Doing this may be kind of costly,
-    so...:
-
-    TODO: benchmark & optimize :)
+    part of this world, so let's do a sanity check.
     */
-    if (!this.entities.includes(entity)) return
+    if (entity.miniplex.world !== this) return
 
     for (const archetype of this.archetypes.values()) {
       archetype.indexEntity(entity)
@@ -106,11 +103,10 @@ export class World<T extends IEntity = UntypedEntity> {
   /* MUTATION FUNCTIONS */
 
   public createEntity = (partial: T = {} as T): T & MiniplexComponent<T> => {
-    /* TODO: remove/change this */
-    /* If there already is an ID, raise an error. */
-    // if ("id" in entity) {
-    //   throw "Attempted to add an entity that aleady had an 'id' component."
-    // }
+    /* If there already is a miniplex component on this, bail */
+    if ("miniplex" in partial) {
+      throw "Attempted to add an entity that aleady has a `miniplex` comonent."
+    }
 
     const entity = partial as T & MiniplexComponent<T>
 
@@ -147,10 +143,13 @@ export class World<T extends IEntity = UntypedEntity> {
     delete entity.id
   }
 
-  public addComponent = (entity: T, ...partials: Partial<T>[]) => {
-    /* TODO: checking entity ownership like this is likely to slow us down quite a lot, so eventually we'll want something smarter here. */
-    if (!this.entities.includes(entity)) {
-      throw `Tried to add component "${name}" to an entity that is not managed by this world.`
+  public addComponent = (
+    entity: T & MiniplexComponent<T>,
+    ...partials: Partial<T>[]
+  ) => {
+    /* Sanity check */
+    if (entity.miniplex.world !== this) {
+      throw `Tried to add components to an entity that is not managed by this world.`
     }
 
     for (const partial of partials) {
@@ -170,9 +169,11 @@ export class World<T extends IEntity = UntypedEntity> {
     this.indexEntity(entity)
   }
 
-  public removeComponent = (entity: T, ...components: ComponentName<T>[]) => {
-    /* TODO: checking entity ownership like this is likely to slow us down quite a lot, so eventually we'll want something smarter here. */
-    if (!this.entities.includes(entity)) {
+  public removeComponent = (
+    entity: T & MiniplexComponent<T>,
+    ...components: ComponentName<T>[]
+  ) => {
+    if (entity.miniplex.world !== this) {
       throw `Tried to remove ${components} from an entity that is not managed by this world.`
     }
 
@@ -204,11 +205,17 @@ export class World<T extends IEntity = UntypedEntity> {
       this.queuedCommands.add(() => this.destroyEntity(entity))
     },
 
-    addComponent: (entity: T, ...partials: Partial<T>[]) => {
+    addComponent: (
+      entity: T & MiniplexComponent<T>,
+      ...partials: Partial<T>[]
+    ) => {
       this.queuedCommands.add(() => this.addComponent(entity, ...partials))
     },
 
-    removeComponent: (entity: T, ...names: ComponentName<T>[]) => {
+    removeComponent: (
+      entity: T & MiniplexComponent<T>,
+      ...names: ComponentName<T>[]
+    ) => {
       this.queuedCommands.add(() => this.removeComponent(entity, ...names))
     },
 
