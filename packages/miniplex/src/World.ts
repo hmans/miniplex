@@ -20,6 +20,7 @@ export type MiniplexComponent<T> = {
   miniplex: {
     id: number
     world: World<T>
+    archetypes: Archetype<T>[]
   }
 }
 
@@ -115,7 +116,8 @@ export class World<T extends IEntity = UntypedEntity> {
     /* Assign an ID */
     entity.miniplex = {
       id: this.nextId(),
-      world: this
+      world: this,
+      archetypes: []
     }
 
     /* Store the entity... */

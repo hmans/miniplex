@@ -145,7 +145,7 @@ describe("World", () => {
       world.addComponent(entity, { ...position(1, 2), ...health(100) })
 
       expect(entity).toEqual({
-        miniplex: { id: 1, world },
+        miniplex: { id: 1, world, archetypes: [] },
         position: { x: 1, y: 2 },
         health: { max: 100, current: 100 }
       })
@@ -158,7 +158,7 @@ describe("World", () => {
       world.addComponent(entity, position(1, 2), health(100))
 
       expect(entity).toEqual({
-        miniplex: { id: 1, world },
+        miniplex: { id: 1, world, archetypes: [] },
         position: { x: 1, y: 2 },
         health: { max: 100, current: 100 }
       })
