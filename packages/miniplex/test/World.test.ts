@@ -5,7 +5,7 @@ type Entity = {
   name?: string
   age?: number
   admin?: boolean
-} & IEntity
+}
 
 type Vector2 = {
   x: number
@@ -28,7 +28,7 @@ describe("World", () => {
     it("creates a new entity", () => {
       const world = new World<Entity>()
       const entity = world.createEntity()
-      expect(entity.miniplex.id).not.toBeUndefined()
+      expect(entity.id).not.toBeUndefined()
     })
 
     it("accepts an object that will become the entity", () => {

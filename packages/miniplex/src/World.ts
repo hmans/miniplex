@@ -181,7 +181,7 @@ export class World<T extends IEntity = UntypedEntity> {
   private queuedCommands = commandQueue()
 
   public queue = {
-    createEntity: (entity: T) => {
+    createEntity: (entity: T): T & Partial<MiniplexComponent> => {
       this.queuedCommands.add(() => this.createEntity(entity))
       return entity
     },
