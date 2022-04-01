@@ -166,6 +166,24 @@ world.queue.flush()
 
 `createEntity` and `addComponent` accept plain Javascript objects, opening the door to some nice patterns for making entities and components nicely composable. For example, you could create a set of functions acting as component factories, like this:
 
+```js
+/* Provide a bunch of component factories */
+const position = (x = 0, y = 0) => ({ position: { x, y } })
+const velocity = (x = 0, y = 0) => ({ velocity: { x, y } })
+const health = (initial) => ({ health: { max: initial, current: initial } })
+
+const world = new World()
+
+/* Use these in createEntity */
+const entity = world.createEntity(position(0, 0), velocity(5, 7), health(1000))
+
+/* Use these in addComponent */
+const other = world.createEntity(position(0, 0))
+world.addComponent(other, velocity(-10, 0), health(500))
+```
+
+If you're using Typescript, you may even add some per-component types on top like in the following example:
+
 ```ts
 /* Define component types */
 type Vector2 = { x: number; y: number }
