@@ -17,4 +17,4 @@ const world = new World()
 const entity = world.createEntity(id(), name("Alice"))
 ```
 
-**Note:** Keep in mind that Miniplex doesn't care about entity IDs at all, since all interactions with the world are done through object references. Your project may not need to add IDs to entities at all; if it does, this can now be done using any schema that your project requires (numerical IDs, UUIDs, ...).
+**Note:** Keep in mind that Miniplex doesn't care about entity IDs much, since all interactions with the world are done through object references. Your project may not need to add IDs to entities at all; if it does, this can now be done using any schema that your project requires (numerical IDs, UUIDs, ...).
