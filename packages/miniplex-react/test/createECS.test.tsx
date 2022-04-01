@@ -107,8 +107,8 @@ describe("createECS", () => {
 
         return (
           <ul>
-            {entities.map(({ miniplex, name }) => (
-              <li key={miniplex.id} data-testid={`user-${miniplex.id}`}>
+            {entities.map(({ __miniplex, name }) => (
+              <li key={__miniplex.id} data-testid={`user-${__miniplex.id}`}>
                 {name}
               </li>
             ))}
@@ -164,8 +164,8 @@ describe("createECS", () => {
 
       render(
         <Entities entities={world.entities}>
-          {({ miniplex, name }) => (
-            <p key={miniplex.id} data-testid={`user-${miniplex.id}`}>
+          {({ __miniplex, name }) => (
+            <p key={__miniplex.id} data-testid={`user-${__miniplex.id}`}>
               {name}
             </p>
           )}
@@ -186,8 +186,8 @@ describe("createECS", () => {
 
       render(
         <Collection tag="name">
-          {({ miniplex, name }) => (
-            <p key={miniplex.id} data-testid={`user-${miniplex.id}`}>
+          {({ __miniplex, name }) => (
+            <p key={__miniplex.id} data-testid={`user-${__miniplex.id}`}>
               {name}
             </p>
           )}
@@ -206,8 +206,8 @@ describe("createECS", () => {
 
       render(
         <Collection tag="name">
-          {({ miniplex, name }) => (
-            <p key={miniplex.id} data-testid={`user-${miniplex.id}`}>
+          {({ __miniplex, name }) => (
+            <p key={__miniplex.id} data-testid={`user-${__miniplex.id}`}>
               {name}
             </p>
           )}
@@ -239,8 +239,8 @@ describe("createECS", () => {
 
             return (
               <p
-                key={entity.miniplex.id}
-                data-testid={`user-${entity.miniplex.id}`}
+                key={entity.__miniplex.id}
+                data-testid={`user-${entity.__miniplex.id}`}
               >
                 {entity.name}
               </p>

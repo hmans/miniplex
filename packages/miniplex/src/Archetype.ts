@@ -30,11 +30,11 @@ export class Archetype<
     const shouldBeIndexed = entityIsArchetype(entity, this.query)
 
     /* The entity might already be indexed by us, so let's check. */
-    const isIndexed = entity.miniplex.archetypes.includes(this)
+    const isIndexed = entity.__miniplex.archetypes.includes(this)
 
     /* If the entity should be indexed, but isn't, add it. */
     if (shouldBeIndexed && !isIndexed) {
-      entity.miniplex.archetypes.push(this)
+      entity.__miniplex.archetypes.push(this)
       this.entities.push(entity as any)
       this.onEntityAdded.emit(entity)
       return
@@ -44,8 +44,8 @@ export class Archetype<
     if (!shouldBeIndexed && isIndexed) {
       this.entities.splice(this.entities.indexOf(entity as any, 0), 1)
       this.onEntityRemoved.emit(entity)
-      const apos = entity.miniplex.archetypes.indexOf(this, 0)
-      entity.miniplex.archetypes.splice(apos, 1)
+      const apos = entity.__miniplex.archetypes.indexOf(this, 0)
+      entity.__miniplex.archetypes.splice(apos, 1)
       return
     }
   }

@@ -102,9 +102,9 @@ Now let's add a `velocity` component to the entity. Note that we're passing the 
 world.addComponent(entity, { velocity: { x: 10, y: 0, z: 0 } })
 ```
 
-Now the entity has three components: `position`, `velocity`, and `miniplex`.
+Now the entity has two components: `position` and `velocity`.
 
-**Note on the `miniplex` component:** Every entity that is created by your Miniplex world will automatically receive a `miniplex` component. This component contains some data that is mostly used internally: `entity.miniplex.id` is an auto-generated numerical ID (purely for convenience), `entity.miniplex.world` is a reference to the world, and `entity.miniplex.archetypes` is a list of references to archetypes that are currently storing the entity. You are advised to not mutate these properties, but in some advanced usage patterns they can be very useful.
+**Note:** Once added to the world, entities also automatically receive an internal `__miniplex` component. This component contains data that helps Miniplex track the entity's lifecycle, and optimize a lot of interactions with the world, and you can safely ignore it.
 
 ### Querying Entities
 

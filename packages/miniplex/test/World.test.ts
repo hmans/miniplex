@@ -28,7 +28,7 @@ describe("World", () => {
     it("creates a new entity", () => {
       const world = new World<Entity>()
       const entity = world.createEntity()
-      expect(entity.miniplex.id).not.toBeUndefined()
+      expect(entity.__miniplex.id).not.toBeUndefined()
     })
 
     it("accepts an object that will become the entity", () => {
@@ -48,20 +48,20 @@ describe("World", () => {
     it("assigns an ID to the entity's miniplex component", () => {
       const world = new World<Entity>()
       const entity = world.createEntity({ name: "Alice" })
-      expect(entity.miniplex.id).toEqual(1)
+      expect(entity.__miniplex.id).toEqual(1)
     })
 
     it("assigns a reference to the world to the entity's miniplex component", () => {
       const world = new World<Entity>()
       const entity = world.createEntity({ name: "Alice" })
-      expect(entity.miniplex.world).toEqual(world)
+      expect(entity.__miniplex.world).toEqual(world)
     })
 
     it("assigns automatically incrementing IDs", () => {
       const world = new World<Entity>()
       world.createEntity({ name: "Alice" })
       const entity = world.createEntity({ name: "Bob" })
-      expect(entity.miniplex.id).toEqual(2)
+      expect(entity.__miniplex.id).toEqual(2)
     })
 
     describe(".queued", () => {
@@ -77,11 +77,11 @@ describe("World", () => {
       it("does not yet assign an ID", () => {
         const world = new World<Entity>()
         const entity = world.queue.createEntity({ name: "Alice" })
-        expect(entity.miniplex).toBeUndefined()
+        expect(entity.__miniplex).toBeUndefined()
 
         /* Flushing won't change the ID */
         world.queue.flush()
-        expect(entity.miniplex!.id).toEqual(1)
+        expect(entity.__miniplex!.id).toEqual(1)
       })
     })
   })
@@ -145,7 +145,7 @@ describe("World", () => {
       world.addComponent(entity, { ...position(1, 2), ...health(100) })
 
       expect(entity).toEqual({
-        miniplex: { id: 1, world, archetypes: [] },
+        __miniplex: { id: 1, world, archetypes: [] },
         position: { x: 1, y: 2 },
         health: { max: 100, current: 100 }
       })
@@ -158,7 +158,7 @@ describe("World", () => {
       world.addComponent(entity, position(1, 2), health(100))
 
       expect(entity).toEqual({
-        miniplex: { id: 1, world, archetypes: [] },
+        __miniplex: { id: 1, world, archetypes: [] },
         position: { x: 1, y: 2 },
         health: { max: 100, current: 100 }
       })
