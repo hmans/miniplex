@@ -103,10 +103,10 @@ describe("World", () => {
         expect(world.entities.length).toEqual(1)
       })
 
-      it("does not yet assign the internal component", () => {
+      it("returns nothing", () => {
         const world = new World<Entity>()
-        const entity = world.queue.createEntity({ name: "Alice" })
-        expect(entity.__miniplex).toBeUndefined()
+        const result = world.queue.createEntity({ name: "Alice" })
+        expect(result).toBeUndefined()
       })
     })
   })

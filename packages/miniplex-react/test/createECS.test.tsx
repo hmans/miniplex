@@ -133,7 +133,7 @@ describe("createECS", () => {
       const { world, Users } = setup(() => renderCount++)
 
       /* queue a new entity to be added */
-      const charles = world.queue.createEntity({ name: "Charles" })
+      world.queue.createEntity({ name: "Charles" })
 
       /* Render the component. At this point, Charles has not been added to the page. */
       render(<Users />)
@@ -146,7 +146,7 @@ describe("createECS", () => {
       expect(screen.queryByText("Charles")).toBeInTheDocument()
 
       /* Now remove the entity again and check if the page rerenders. */
-      world.queue.destroyEntity(charles)
+      world.queue.destroyEntity(world.entities[world.entities.length - 1])
       act(() => world.queue.flush())
       expect(screen.queryByText("Charles")).not.toBeInTheDocument()
       expect(renderCount).toEqual(4)

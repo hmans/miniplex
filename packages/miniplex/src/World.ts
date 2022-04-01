@@ -136,7 +136,7 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   public destroyEntity = (entity: RegisteredEntity<T> | T) => {
-    if (entity.__miniplex.world !== this) return
+    if (entity.__miniplex?.world !== this) return
 
     /* Remove it from our global list of entities */
     const pos = this.entities.indexOf(entity as RegisteredEntity<T>, 0)
@@ -204,9 +204,8 @@ export class World<T extends IEntity = UntypedEntity> {
   private queuedCommands = commandQueue()
 
   public queue = {
-    createEntity: (entity: T): T & Partial<MiniplexComponent<T>> => {
+    createEntity: (entity: T) => {
       this.queuedCommands.add(() => this.createEntity(entity))
-      return entity
     },
 
     destroyEntity: (entity: RegisteredEntity<T> | T) => {
