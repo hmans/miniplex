@@ -1,26 +1,26 @@
+import { useConst, useRerender } from "@hmans/react-toolbox"
+import {
+  EntityWith,
+  IEntity,
+  Query,
+  RegisteredEntity,
+  Tag,
+  UntypedEntity,
+  World
+} from "miniplex"
 import React, {
+  cloneElement,
   createContext,
   FC,
-  useContext,
-  memo,
-  ReactNode,
-  cloneElement,
-  ReactElement,
-  useRef,
-  useLayoutEffect,
   forwardRef,
-  useImperativeHandle
+  memo,
+  ReactElement,
+  ReactNode,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useRef
 } from "react"
-import {
-  UntypedEntity,
-  IEntity,
-  World,
-  Tag,
-  Query,
-  EntityWith,
-  RegisteredEntity
-} from "miniplex"
-import { useConst, useRerender } from "@hmans/react-toolbox"
 
 export function createECS<TEntity extends IEntity = UntypedEntity>() {
   const world = new World<TEntity>()
@@ -47,7 +47,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     useImperativeHandle(ref, () => entity)
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
-    useLayoutEffect(() => {
+    useEffect(() => {
       if (existingEntity) return
       return () => world.destroyEntity(entity)
     }, [entity])
@@ -99,7 +99,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   }) {
     const { entities } = useArchetype(tag)
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       /* When firing up, create the requested number of entities. */
       for (let i = 0; i < initial; i++) {
         world.createEntity({ [tag]: Tag } as TEntity)
@@ -143,7 +143,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
       throw new Error("<Component> will only accept a single React child.")
     }
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       world.addComponent(entity, { [name]: data ?? ref.current } as any)
 
       return () => {
@@ -173,7 +173,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     const rerender = useRerender()
     const archetype = useConst(() => world.archetype(...query))
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       archetype.onEntityAdded.add(rerender)
       archetype.onEntityRemoved.add(rerender)
 
