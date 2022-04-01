@@ -193,6 +193,8 @@ const other = world.createEntity(position(0, 0))
 world.addComponent(other, velocity(-10, 0), health(500))
 ```
 
+## Performance Hints
+
 ### Prefer `for` over `forEach`
 
 You might be tempted to use `forEach` in your system implementations, like this:
