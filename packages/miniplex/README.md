@@ -160,7 +160,33 @@ world.queue.flush()
 
 **Note:** Please remember that the queue is not flushed automatically, and doing this is left to you. You might, for example, do this in your game's main loop, after all systems have finished executing.
 
-## Performance Hints
+## Usage Hints
+
+### Consider using Component Factories
+
+`createEntity` and `addComponent` accept plain Javascript objects, opening the door to some nice patterns for making entities and components nicely composable. For example, you could create a set of functions acting as component factories, like this:
+
+```ts
+/* Define component types */
+type Vector2 = { x: number; y: number }
+type PositionComponent = { position: Vector2 }
+type VelocityComponent = { velocity: Vector2 }
+type HealthComponent = { health: { max: number; current: number } }
+
+/* Define an entity type composed of required and optional components */
+type Entity = PositionComponent & Partial<VelocityComponent, HealthComponent>
+
+/* Provide a bunch of component factories */
+const position = (x = 0, y = 0): PositionComponent => ({ position: { x, y } })
+const velocity = (x = 0, y = 0): VelocityComponent => ({ velocity: { x, y } })
+const health = (initial: number): HealthComponent => ({
+  health: { max: initial, current: initial }
+})
+
+const world = new World<Entity>()
+
+const entity = world.createEntity(position(0, 0), velocity(5, 7), health(1000))
+```
 
 ### Prefer `for` over `forEach`
 
