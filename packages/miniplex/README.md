@@ -102,9 +102,9 @@ Now let's add a `velocity` component to the entity. Note that we're passing the 
 world.addComponent(entity, { velocity: { x: 10, y: 0, z: 0 } })
 ```
 
-Now the entity has three components: `position`, `velocity`, and `miniplex`.
+Now the entity has two components: `position` and `velocity`.
 
-**Note on the `miniplex` component:** Every entity that is created by your Miniplex world will automatically receive a `miniplex` component. This component contains some data that is mostly used internally: `entity.miniplex.id` is an auto-generated numerical ID (purely for convenience), `entity.miniplex.world` is a reference to the world, and `entity.miniplex.archetypes` is a list of references to archetypes that are currently storing the entity. You are advised to not mutate these properties, but in some advanced usage patterns they can be very useful.
+**Note:** Once added to the world, entities also automatically receive an internal `__miniplex` component. This component contains data that helps Miniplex track the entity's lifecycle, and optimize a lot of interactions with the world, and you can safely ignore it.
 
 ### Querying Entities
 
@@ -159,6 +159,57 @@ world.queue.flush()
 ```
 
 **Note:** Please remember that the queue is not flushed automatically, and doing this is left to you. You might, for example, do this in your game's main loop, after all systems have finished executing.
+
+## Usage Hints
+
+### Consider using Component Factories
+
+`createEntity` and `addComponent` accept plain Javascript objects, opening the door to some nice patterns for making entities and components nicely composable. For example, you could create a set of functions acting as component factories, like this:
+
+```js
+/* Provide a bunch of component factories */
+const position = (x = 0, y = 0) => ({ position: { x, y } })
+const velocity = (x = 0, y = 0) => ({ velocity: { x, y } })
+const health = (initial) => ({ health: { max: initial, current: initial } })
+
+const world = new World()
+
+/* Use these in createEntity */
+const entity = world.createEntity(position(0, 0), velocity(5, 7), health(1000))
+
+/* Use these in addComponent */
+const other = world.createEntity(position(0, 0))
+world.addComponent(other, velocity(-10, 0), health(500))
+```
+
+If you're using Typescript, you may even add some per-component types on top like in the following example:
+
+```ts
+/* Define component types */
+type Vector2 = { x: number; y: number }
+type PositionComponent = { position: Vector2 }
+type VelocityComponent = { velocity: Vector2 }
+type HealthComponent = { health: { max: number; current: number } }
+
+/* Define an entity type composed of required and optional components */
+type Entity = PositionComponent & Partial<VelocityComponent, HealthComponent>
+
+/* Provide a bunch of component factories */
+const position = (x = 0, y = 0): PositionComponent => ({ position: { x, y } })
+const velocity = (x = 0, y = 0): VelocityComponent => ({ velocity: { x, y } })
+const health = (initial: number): HealthComponent => ({
+  health: { max: initial, current: initial }
+})
+
+const world = new World<Entity>()
+
+/* Use these in createEntity */
+const entity = world.createEntity(position(0, 0), velocity(5, 7), health(1000))
+
+/* Use these in addComponent */
+const other = world.createEntity(position(0, 0))
+world.addComponent(other, velocity(-10, 0), health(500))
+```
 
 ## Performance Hints
 

@@ -18,7 +18,6 @@ import {
   Tag,
   Query,
   EntityWith,
-  MiniplexComponent,
   RegisteredEntity
 } from "miniplex"
 import { useConst, useRerender } from "@hmans/react-toolbox"
@@ -63,7 +62,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
 
   const MemoizedEntity: FC<{ entity: RegisteredEntity<TEntity> }> = memo(
     ({ entity, children }) => (
-      <Entity entity={entity} key={entity.miniplex.id}>
+      <Entity entity={entity} key={entity.__miniplex.id}>
         {typeof children === "function" ? children(entity) : children}
       </Entity>
     ),
@@ -79,7 +78,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
         {entities.map((entity) => (
           <MemoizedEntity
             entity={entity}
-            key={entity.miniplex.id}
+            key={entity.__miniplex.id}
             children={children}
           />
         ))}

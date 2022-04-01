@@ -17,7 +17,7 @@ export interface IEntity {
  * entities.
  */
 export type MiniplexComponent<T> = {
-  miniplex: {
+  __miniplex: {
     id: number
     world: World<T>
     archetypes: Archetype<T>[]
@@ -96,7 +96,7 @@ export class World<T extends IEntity = UntypedEntity> {
     We absolutely never want to add entities to our indices that are not actually
     part of this world, so let's do a sanity check.
     */
-    if (entity.miniplex.world !== this) return
+    if (entity.__miniplex.world !== this) return
 
     for (const archetype of this.archetypes.values()) {
       archetype.indexEntity(entity)
@@ -105,21 +105,25 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  public createEntity = (partial: T = {} as T): RegisteredEntity<T> => {
-    /* If there already is a miniplex component on this, bail */
-    if ("miniplex" in partial) {
-      throw new Error(
-        "Attempted to add an entity that aleady has a `miniplex` comonent."
-      )
-    }
+  public createEntity = <P>(
+    base: T = {} as T,
+    ...extraComponents: Partial<T>[]
+  ): RegisteredEntity<T> => {
+    /* Merge all given partials into a single object. */
+    const mergedExtraComponents = extraComponents.reduce(
+      (acc, partial) => ({ ...acc, ...partial }),
+      {} as T
+    )
 
-    const entity = partial as RegisteredEntity<T>
-
-    /* Assign an ID */
-    entity.miniplex = {
-      id: this.nextId(),
-      world: this,
-      archetypes: []
+    /* Create the entity. */
+    const entity = {
+      ...base,
+      ...mergedExtraComponents,
+      __miniplex: {
+        id: this.nextId(),
+        world: this,
+        archetypes: []
+      }
     }
 
     /* Store the entity... */
@@ -131,20 +135,20 @@ export class World<T extends IEntity = UntypedEntity> {
     return entity
   }
 
-  public destroyEntity = (entity: RegisteredEntity<T>) => {
-    if (entity.miniplex.world !== this) return
+  public destroyEntity = (entity: RegisteredEntity<T> | T) => {
+    if (entity.__miniplex?.world !== this) return
 
     /* Remove it from our global list of entities */
-    const pos = this.entities.indexOf(entity, 0)
+    const pos = this.entities.indexOf(entity as RegisteredEntity<T>, 0)
     this.entities.splice(pos, 1)
 
     /* Remove entity from all archetypes */
-    for (const archetype of entity.miniplex.archetypes) {
+    for (const archetype of entity.__miniplex.archetypes) {
       archetype.removeEntity(entity)
     }
 
     /* Remove its miniplex component */
-    delete (entity as T).miniplex
+    delete (entity as T).__miniplex
   }
 
   public addComponent = (
@@ -152,7 +156,7 @@ export class World<T extends IEntity = UntypedEntity> {
     ...partials: Partial<T>[]
   ) => {
     /* Sanity check */
-    if (entity.miniplex.world !== this) {
+    if (entity.__miniplex.world !== this) {
       throw `Tried to add components to an entity that is not managed by this world.`
     }
 
@@ -177,7 +181,7 @@ export class World<T extends IEntity = UntypedEntity> {
     entity: RegisteredEntity<T>,
     ...components: ComponentName<T>[]
   ) => {
-    if (entity.miniplex.world !== this) {
+    if (entity.__miniplex.world !== this) {
       throw `Tried to remove ${components} from an entity that is not managed by this world.`
     }
 
@@ -200,12 +204,11 @@ export class World<T extends IEntity = UntypedEntity> {
   private queuedCommands = commandQueue()
 
   public queue = {
-    createEntity: (entity: T): T & Partial<MiniplexComponent<T>> => {
+    createEntity: (entity: T) => {
       this.queuedCommands.add(() => this.createEntity(entity))
-      return entity
     },
 
-    destroyEntity: (entity: RegisteredEntity<T>) => {
+    destroyEntity: (entity: RegisteredEntity<T> | T) => {
       this.queuedCommands.add(() => this.destroyEntity(entity))
     },
 
