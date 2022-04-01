@@ -4,24 +4,15 @@
 
 `createEntity` now allows you to pass multiple parameters, each representing a partial entity. This makes the use of component factory functions more convenient. Example:
 
-```ts
-/* Define component types */
-type Vector2 = { x: number; y: number }
-type PositionComponent = { position: Vector2 }
-type VelocityComponent = { velocity: Vector2 }
-type HealthComponent = { health: { max: number; current: number } }
-
-/* Define an entity type composed of required and optional components */
-type Entity = PositionComponent & Partial<VelocityComponent, HealthComponent>
-
+```js
 /* Provide a bunch of component factories */
-const position = (x = 0, y = 0): PositionComponent => ({ position: { x, y } })
-const velocity = (x = 0, y = 0): VelocityComponent => ({ velocity: { x, y } })
-const health = (initial: number): HealthComponent => ({
+const position = (x = 0, y = 0) => ({ position: { x, y } })
+const velocity = (x = 0, y = 0) => ({ velocity: { x, y } })
+const health = (initial) => ({
   health: { max: initial, current: initial }
 })
 
-const world = new World<Entity>()
+const world = new World()
 
 const entity = world.createEntity(position(0, 0), velocity(5, 7), health(1000))
 ```

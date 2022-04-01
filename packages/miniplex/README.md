@@ -185,7 +185,12 @@ const health = (initial: number): HealthComponent => ({
 
 const world = new World<Entity>()
 
+/* Use these in createEntity */
 const entity = world.createEntity(position(0, 0), velocity(5, 7), health(1000))
+
+/* Use these in addComponent */
+const other = world.createEntity(position(0, 0))
+world.addComponent(other, velocity(-10, 0), health(500))
 ```
 
 ### Prefer `for` over `forEach`
