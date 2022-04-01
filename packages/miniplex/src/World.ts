@@ -105,21 +105,25 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  public createEntity = (partial: T = {} as T): RegisteredEntity<T> => {
-    /* If there already is a miniplex component on this, bail */
-    if ("miniplex" in partial) {
-      throw new Error(
-        "Attempted to add an entity that aleady has a `miniplex` comonent."
-      )
-    }
+  public createEntity = (
+    base: T = {} as T,
+    ...extraComponents: Partial<T>[]
+  ): RegisteredEntity<T> => {
+    /* Merge all given partials into a single object. */
+    const mergedExtraComponents = extraComponents.reduce(
+      (acc, partial) => ({ ...acc, ...partial }),
+      {} as T
+    )
 
-    const entity = partial as RegisteredEntity<T>
-
-    /* Assign an ID */
-    entity.__miniplex = {
-      id: this.nextId(),
-      world: this,
-      archetypes: []
+    /* Create the entity. */
+    const entity = {
+      ...base,
+      ...mergedExtraComponents,
+      __miniplex: {
+        id: this.nextId(),
+        world: this,
+        archetypes: []
+      }
     }
 
     /* Store the entity... */

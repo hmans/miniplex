@@ -1,4 +1,4 @@
-import { World, IEntity } from "../src/World"
+import { World } from "../src/World"
 
 /* hmecs supports entity type checking. \o/ */
 type Entity = {
@@ -16,7 +16,7 @@ type GameObject = {
   position: Vector2
   velocity?: Vector2
   health?: { max: number; current: number }
-} & IEntity
+}
 
 describe("World", () => {
   it("can be instantiated as a class", () => {
@@ -31,11 +31,40 @@ describe("World", () => {
       expect(entity.__miniplex.id).not.toBeUndefined()
     })
 
-    it("accepts an object that will become the entity", () => {
+    it("accepts a partial entity", () => {
+      const world = new World<Entity>()
+      const entity = world.createEntity({ name: "Alice" })
+      expect(entity).toMatchObject({ name: "Alice" })
+    })
+
+    it("returns a new object", () => {
       const world = new World<Entity>()
       const entity: Partial<Entity> = { name: "Alice" }
       const returnedEntity = world.createEntity(entity)
-      expect(returnedEntity).toBe(entity)
+      expect(returnedEntity).not.toBe(entity)
+    })
+
+    it("accepts multiple partial entities that are merged into the same entity object", () => {
+      const world = new World<Entity>()
+      const entity = world.createEntity({ name: "Alice" }, { admin: true })
+      expect(entity).toMatchObject({
+        name: "Alice",
+        admin: true
+      })
+    })
+
+    it("allows for use of component factories", () => {
+      const world = new World<GameObject>()
+
+      const position = (x = 0, y = 0) => ({ position: { x, y } })
+      const velocity = (x = 0, y = 0) => ({ velocity: { x, y } })
+
+      const entity = world.createEntity(position(0, 0), velocity(5, 7))
+
+      expect(entity).toMatchObject({
+        position: { x: 0, y: 0 },
+        velocity: { x: 5, y: 7 }
+      })
     })
 
     it("immediately adds the entity to the pool", () => {
@@ -69,19 +98,15 @@ describe("World", () => {
         const world = new World<Entity>()
         const entity = world.queue.createEntity({ name: "Alice" })
 
-        expect(world.entities).not.toContain(entity)
+        expect(world.entities.length).toEqual(0)
         world.queue.flush()
-        expect(world.entities).toContain(entity)
+        expect(world.entities.length).toEqual(1)
       })
 
-      it("does not yet assign an ID", () => {
+      it("does not yet assign the internal component", () => {
         const world = new World<Entity>()
         const entity = world.queue.createEntity({ name: "Alice" })
         expect(entity.__miniplex).toBeUndefined()
-
-        /* Flushing won't change the ID */
-        world.queue.flush()
-        expect(entity.__miniplex!.id).toEqual(1)
       })
     })
   })

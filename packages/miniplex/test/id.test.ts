@@ -49,7 +49,7 @@ describe("adding IDs to entities", () => {
     })
 
     const world = new World<EntityWithNumericalId>()
-    const entity = world.createEntity({ ...id(), ...name("Alice") })
+    const entity = world.createEntity(id(), name("Alice"))
 
     expect(entity.id).toEqual(1)
   })
