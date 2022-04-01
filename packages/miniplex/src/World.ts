@@ -105,7 +105,7 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  public createEntity = (
+  public createEntity = <P>(
     base: T = {} as T,
     ...extraComponents: Partial<T>[]
   ): RegisteredEntity<T> => {
