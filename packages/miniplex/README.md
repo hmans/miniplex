@@ -6,8 +6,8 @@
 
 ## Ecosystem
 
-- [miniplex](https://www.npmjs.com/package/miniplex) [![Version](https://img.shields.io/npm/v/miniplex)](https://www.npmjs.com/package/miniplex)
-- [miniplex-react](https://www.npmjs.com/package/miniplex-react) [![Version](https://img.shields.io/npm/v/miniplex-react)](https://www.npmjs.com/package/miniplex-react)
+- [![Version](https://img.shields.io/npm/v/miniplex)](https://www.npmjs.com/package/miniplex) [miniplex](https://github.com/hmans/miniplex/tree/main/packages/miniplex)
+- [![Version](https://img.shields.io/npm/v/miniplex-react)](https://www.npmjs.com/package/miniplex-react) [miniplex-react](https://github.com/hmans/miniplex/tree/main/packages/miniplex-react)
 
 ## Introduction
 
