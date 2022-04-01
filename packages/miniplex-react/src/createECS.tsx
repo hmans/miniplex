@@ -102,14 +102,12 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     useLayoutEffect(() => {
       /* When firing up, create the requested number of entities. */
       for (let i = 0; i < initial; i++) {
-        const entity = world.createEntity()
-        world.addComponent(entity, { [tag]: Tag } as any)
+        world.createEntity({ [tag]: Tag } as TEntity)
       }
 
       /* When shutting down, purge all entities in this collection. */
       return () => {
-        const len = entities.length
-        for (let i = len; i > 0; i--) {
+        for (let i = entities.length; i > 0; i--) {
           world.destroyEntity(entities[i - 1])
         }
       }
