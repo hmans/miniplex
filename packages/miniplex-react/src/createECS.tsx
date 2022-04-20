@@ -60,7 +60,10 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     )
   })
 
-  const MemoizedEntity: FC<{ entity: RegisteredEntity<TEntity> }> = memo(
+  const MemoizedEntity: FC<{
+    children?: ReactNode | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
+    entity: RegisteredEntity<TEntity>
+  }> = memo(
     ({ entity, children }) => (
       <Entity entity={entity} key={entity.__miniplex.id}>
         {typeof children === "function" ? children(entity) : children}
@@ -113,7 +116,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
       }
     }, [tag, initial])
 
-    return <Entities entities={entities}>{children}</Entities>
+    return <Entities entities={entities}>{children as any}</Entities>
   }
 
   /**
@@ -147,10 +150,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
       world.addComponent(entity, { [name]: data ?? ref.current } as any)
 
       return () => {
-        /* The entity might already have been destroyed, so let's check. */
-        if ("id" in entity) {
-          world.removeComponent(entity, name)
-        }
+        world.removeComponent(entity, name)
       }
     }, [entity, name, data])
 
