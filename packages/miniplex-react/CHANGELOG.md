@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.2
+
+### Patch Changes
+
+- 48e785d: Fix sanity check in `<Component>`
+
 ## 0.2.1
 
 ### Patch Changes
