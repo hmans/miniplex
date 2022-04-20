@@ -181,7 +181,7 @@ export class World<T extends IEntity = UntypedEntity> {
     entity: RegisteredEntity<T>,
     ...components: ComponentName<T>[]
   ) => {
-    if (entity.__miniplex.world !== this) {
+    if (entity.__miniplex?.world !== this) {
       throw `Tried to remove ${components} from an entity that is not managed by this world.`
     }
 
