@@ -150,7 +150,9 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
       world.addComponent(entity, { [name]: data ?? ref.current } as any)
 
       return () => {
-        world.removeComponent(entity, name)
+        if ("__miniplex" in entity) {
+          world.removeComponent(entity, name)
+        }
       }
     }, [entity, name, data])
 
