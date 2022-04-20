@@ -1,5 +1,11 @@
 # miniplex
 
+## 0.9.1
+
+### Patch Changes
+
+- 48e785d: Fix sanity check in `removeComponent`
+
 ## 0.9.0
 
 ### Minor Changes
