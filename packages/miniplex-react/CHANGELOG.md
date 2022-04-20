@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.3
+
+### Patch Changes
+
+- c23681c: More tweaks to the sanity checks
+
 ## 0.2.2
 
 ### Patch Changes
