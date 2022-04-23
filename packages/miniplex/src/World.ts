@@ -156,7 +156,7 @@ export class World<T extends IEntity = UntypedEntity> {
     ...partials: Partial<T>[]
   ) => {
     /* Sanity check */
-    if (entity.__miniplex.world !== this) {
+    if (entity.__miniplex?.world !== this) {
       throw `Tried to add components to an entity that is not managed by this world.`
     }
 
