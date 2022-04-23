@@ -1,5 +1,11 @@
 # miniplex
 
+## 0.9.2
+
+### Patch Changes
+
+- 92cf103: Safer sanity check in `addComponent`
+
 ## 0.9.1
 
 ### Patch Changes
