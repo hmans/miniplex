@@ -62,7 +62,7 @@
     "@hmans/react-toolbox": "^0.1.4"
   },
   "peerDependencies": {
-    "miniplex": ">=0.8.1",
+    "miniplex": ">=0.9.0",
     "react": ">=16.8"
   },
   "babel": {
