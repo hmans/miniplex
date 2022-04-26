@@ -17,7 +17,7 @@
     "hooks"
   ],
   "sideEffects": false,
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "dist/miniplex-react.cjs.js",
   "module": "dist/miniplex-react.esm.js",
   "types": "dist/miniplex-react.cjs.d.ts",

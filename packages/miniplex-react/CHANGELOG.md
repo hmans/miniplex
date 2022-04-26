@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.4
+
+### Patch Changes
+
+- 68cff32: Fix React 18 Strict Mode compatibility in `<Component>`.
+
 ## 0.2.3
 
 ### Patch Changes
