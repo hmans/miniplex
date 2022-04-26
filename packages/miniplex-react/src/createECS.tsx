@@ -19,7 +19,8 @@ import React, {
   useContext,
   useEffect,
   useImperativeHandle,
-  useRef
+  useRef,
+  useState
 } from "react"
 
 export function createECS<TEntity extends IEntity = UntypedEntity>() {
@@ -38,25 +39,29 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
       entity?: RegisteredEntity<TEntity>
     }
   >(({ entity: existingEntity, children }, ref) => {
-    /* Reuse the specified entity or create a new one */
-    const entity = useConst<RegisteredEntity<TEntity>>(
-      () => existingEntity ?? world.createEntity()
-    )
+    const [entity, setEntity] = useState<RegisteredEntity<TEntity>>(null!)
 
     /* Apply ref */
     useImperativeHandle(ref, () => entity)
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
     useEffect(() => {
-      if (existingEntity) return
-      return () => world.destroyEntity(entity)
-    }, [entity])
+      const entity = existingEntity ?? world.createEntity()
+      setEntity(entity)
+
+      return () => {
+        if (!existingEntity) world.destroyEntity(entity)
+        setEntity(null!)
+      }
+    }, [])
 
     /* Provide a context with the entity so <Component> components can be wired up. */
     return (
-      <EntityContext.Provider value={entity}>
-        {typeof children === "function" ? children(entity) : children}
-      </EntityContext.Provider>
+      entity && (
+        <EntityContext.Provider value={entity}>
+          {typeof children === "function" ? children(entity) : children}
+        </EntityContext.Provider>
+      )
     )
   })
 
