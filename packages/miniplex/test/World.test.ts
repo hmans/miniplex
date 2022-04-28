@@ -37,11 +37,11 @@ describe("World", () => {
       expect(entity).toMatchObject({ name: "Alice" })
     })
 
-    it("returns a new object", () => {
+    it("mutates and returns the same new object", () => {
       const world = new World<Entity>()
       const entity: Partial<Entity> = { name: "Alice" }
       const returnedEntity = world.createEntity(entity)
-      expect(returnedEntity).not.toBe(entity)
+      expect(returnedEntity).toBe(entity)
     })
 
     it("accepts multiple partial entities that are merged into the same entity object", () => {
