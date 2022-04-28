@@ -165,23 +165,16 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     )
   }
 
-  function useEntity(entityFn: () => TEntity) {
-    const entity = useConst<TEntity>(entityFn)
-
-    useEffect(() => {
-      const registeredEntity = world.createEntity(entity)
-      return () => world.destroyEntity(registeredEntity)
-    }, [])
-
-    return entity
-  }
-
-  function useEntities(count: number, entityFn: () => TEntity) {
+  /**
+   * Create a number of entities, defined through an optional entity factory,
+   * and add/remove them to/from the world on mount/unmount.
+   */
+  function useEntities(count: number, entityFactory?: () => TEntity) {
     /* Create entity objects */
     const entities = useConst(() => {
       const entities = []
       for (let i = 0; i < count; i++) {
-        entities.push(entityFn())
+        entities.push(entityFactory?.())
       }
       return entities
     })
@@ -200,6 +193,13 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     })
 
     return entities
+  }
+
+  /**
+   * Return a single entity and automatically add/remove it to/from the world.
+   */
+  function useEntity(entityFn?: () => TEntity) {
+    return useEntities(1, entityFn)[0]
   }
 
   /**
