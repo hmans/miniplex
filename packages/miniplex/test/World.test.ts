@@ -145,6 +145,14 @@ describe("World", () => {
       world.destroyEntity(entity)
       expect(withVelocity.entities).not.toContain(entity)
     })
+
+    it("removes the internal Miniplex component", () => {
+      const world = new World<GameObject>()
+      const entity = world.createEntity({ position: { x: 0, y: 0 } })
+      expect(entity).toHaveProperty("__miniplex")
+      world.destroyEntity(entity)
+      expect(entity).not.toHaveProperty("__miniplex")
+    })
   })
 
   describe("addComponent", () => {

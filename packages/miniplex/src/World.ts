@@ -117,6 +117,11 @@ export class World<T extends IEntity = UntypedEntity> {
     return entity as RegisteredEntity<T>
   }
 
+  private unregisterEntity = (entity: RegisteredEntity<T>) => {
+    delete (entity as T).__miniplex
+    return entity as T
+  }
+
   public createEntity = <P>(
     entity: T = {} as T,
     ...extraComponents: Partial<T>[]
@@ -138,7 +143,7 @@ export class World<T extends IEntity = UntypedEntity> {
     return registeredEntity
   }
 
-  public destroyEntity = (entity: RegisteredEntity<T> | T) => {
+  public destroyEntity = (entity: RegisteredEntity<T>) => {
     if (entity.__miniplex?.world !== this) return
 
     /* Remove it from our global list of entities */
@@ -151,7 +156,7 @@ export class World<T extends IEntity = UntypedEntity> {
     }
 
     /* Remove its miniplex component */
-    delete (entity as T).__miniplex
+    this.unregisterEntity(entity)
   }
 
   public addComponent = (
