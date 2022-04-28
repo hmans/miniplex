@@ -176,6 +176,32 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     return entity
   }
 
+  function useEntities(count: number, entityFn: () => TEntity) {
+    /* Create entity objects */
+    const entities = useConst(() => {
+      const entities = []
+      for (let i = 0; i < count; i++) {
+        entities.push(entityFn())
+      }
+      return entities
+    })
+
+    /* Create/Destroy entities */
+    useEffect(() => {
+      for (const entity of entities) {
+        world.createEntity(entity)
+      }
+
+      return () => {
+        for (const entity of entities) {
+          world.destroyEntity(entity as RegisteredEntity<TEntity>)
+        }
+      }
+    })
+
+    return entities
+  }
+
   /**
    * Return the entities of the specified archetype and subscribe this component
    * to it, making it re-render when entities are added to or removed from it.
@@ -205,6 +231,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     world,
     useArchetype,
     useEntity,
+    useEntities,
     Entity,
     Component,
     MemoizedEntity,
