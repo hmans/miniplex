@@ -125,13 +125,6 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   }
 
   /**
-   * Return the current entity context.
-   */
-  function useEntity() {
-    return useContext(EntityContext)
-  }
-
-  /**
    * Declaratively add a component to an entity.
    */
   function Component<K extends keyof TEntity, V = TEntity[K]>({
@@ -143,7 +136,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     data?: V
     children?: ReactElement | ((entity: TEntity) => ReactElement)
   }) {
-    const entity = useEntity()
+    const entity = useContext(EntityContext)
     const ref = useRef<TEntity[K]>(null!)
 
     /* Warn the user that passing multiple children is not allowed. */
@@ -170,6 +163,17 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
           )}
       </>
     )
+  }
+
+  function useEntity(entityFn: () => TEntity) {
+    const entity = useConst<TEntity>(entityFn)
+
+    useEffect(() => {
+      const registeredEntity = world.createEntity(entity)
+      return () => world.destroyEntity(registeredEntity)
+    }, [])
+
+    return entity
   }
 
   /**
