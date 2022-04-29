@@ -1,8 +1,9 @@
 import { Archetype, Query } from "./Archetype"
 import { commandQueue } from "./util/commandQueue"
-import { idGenerator } from "./util/idGenerator"
 import { normalizeQuery } from "./util/normalizeQuery"
 import { WithRequiredKeys } from "./util/types"
+
+export type EntityId = number
 
 /**
  * Entities in Miniplex are just plain old Javascript objects. We are assuming
@@ -18,7 +19,7 @@ export interface IEntity {
  */
 export type MiniplexComponent<T> = {
   __miniplex: {
-    id: number
+    id: EntityId
     world: World<T>
     archetypes: Archetype<T>[]
   }
@@ -60,10 +61,7 @@ export type Tag = true
 
 export class World<T extends IEntity = UntypedEntity> {
   /** An array holding all entities known to this world. */
-  public entities = new Array<RegisteredEntity<T>>()
-
-  /** An ID generator we use for assigning IDs to newly added entities. */
-  private nextId = idGenerator(1)
+  public entities = new Array<RegisteredEntity<T> | null>()
 
   /** A list of known archetypes. */
   private archetypes = new Map<string, Archetype<T>>()
@@ -85,7 +83,7 @@ export class World<T extends IEntity = UntypedEntity> {
 
     /* ...and refresh the indexing of all our entities. */
     for (const entity of this.entities) {
-      archetype.indexEntity(entity)
+      if (entity) archetype.indexEntity(entity)
     }
 
     return archetype as Archetype<T, TQuery>
@@ -105,18 +103,6 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  private registerEntity = (entity: T) => {
-    Object.assign(entity, {
-      __miniplex: {
-        id: this.nextId(),
-        world: this,
-        archetypes: []
-      }
-    })
-
-    return entity as RegisteredEntity<T>
-  }
-
   private unregisterEntity = (entity: RegisteredEntity<T>) => {
     delete (entity as T).__miniplex
     return entity as T
@@ -132,7 +118,13 @@ export class World<T extends IEntity = UntypedEntity> {
     }
 
     /* Mix in internal component into entity. */
-    const registeredEntity = this.registerEntity(entity)
+    const registeredEntity = Object.assign(entity, {
+      __miniplex: {
+        id: this.entities.length,
+        world: this,
+        archetypes: []
+      }
+    })
 
     /* Store the entity... */
     this.entities.push(registeredEntity)
@@ -147,8 +139,7 @@ export class World<T extends IEntity = UntypedEntity> {
     if (entity.__miniplex?.world !== this) return
 
     /* Remove it from our global list of entities */
-    const pos = this.entities.indexOf(entity as RegisteredEntity<T>, 0)
-    this.entities.splice(pos, 1)
+    this.entities[entity.__miniplex.id] = null
 
     /* Remove entity from all archetypes */
     for (const archetype of entity.__miniplex.archetypes) {
@@ -217,7 +208,9 @@ export class World<T extends IEntity = UntypedEntity> {
     },
 
     destroyEntity: (entity: RegisteredEntity<T> | T) => {
-      this.queuedCommands.add(() => this.destroyEntity(entity))
+      this.queuedCommands.add(() =>
+        this.destroyEntity(entity as RegisteredEntity<T>)
+      )
     },
 
     addComponent: (entity: RegisteredEntity<T>, ...partials: Partial<T>[]) => {

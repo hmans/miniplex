@@ -124,8 +124,8 @@ describe("createECS", () => {
 
       render(<Users />)
 
-      expect(screen.getByTestId("user-1")).toHaveTextContent("Alice")
-      expect(screen.getByTestId("user-2")).toHaveTextContent("Bob")
+      expect(screen.getByTestId("user-0")).toHaveTextContent("Alice")
+      expect(screen.getByTestId("user-1")).toHaveTextContent("Bob")
     })
 
     it("re-renders the component when the archetype index updates", async () => {
@@ -146,7 +146,7 @@ describe("createECS", () => {
       expect(screen.queryByText("Charles")).toBeInTheDocument()
 
       /* Now remove the entity again and check if the page rerenders. */
-      world.queue.destroyEntity(world.entities[world.entities.length - 1])
+      world.queue.destroyEntity(world.entities[world.entities.length - 1]!)
       act(() => world.queue.flush())
       expect(screen.queryByText("Charles")).not.toBeInTheDocument()
       expect(renderCount).toEqual(4)
@@ -172,8 +172,8 @@ describe("createECS", () => {
         </Entities>
       )
 
-      expect(screen.getByTestId("user-1")).toHaveTextContent("Alice")
-      expect(screen.getByTestId("user-2")).toHaveTextContent("Bob")
+      expect(screen.getByTestId("user-0")).toHaveTextContent("Alice")
+      expect(screen.getByTestId("user-1")).toHaveTextContent("Bob")
     })
   })
 
@@ -194,8 +194,8 @@ describe("createECS", () => {
         </Collection>
       )
 
-      expect(screen.getByTestId("user-1")).toHaveTextContent("Alice")
-      expect(screen.getByTestId("user-2")).toHaveTextContent("Bob")
+      expect(screen.getByTestId("user-0")).toHaveTextContent("Alice")
+      expect(screen.getByTestId("user-1")).toHaveTextContent("Bob")
     })
 
     it("automatically rerenders when an entity is added to the collection", () => {
@@ -214,14 +214,14 @@ describe("createECS", () => {
         </Collection>
       )
 
-      expect(screen.getByTestId("user-1")).toHaveTextContent("Alice")
-      expect(screen.getByTestId("user-2")).toHaveTextContent("Bob")
+      expect(screen.getByTestId("user-0")).toHaveTextContent("Alice")
+      expect(screen.getByTestId("user-1")).toHaveTextContent("Bob")
 
       act(() => {
         world.createEntity({ name: "Charlie" })
       })
 
-      expect(screen.getByTestId("user-3")).toHaveTextContent("Charlie")
+      expect(screen.getByTestId("user-2")).toHaveTextContent("Charlie")
     })
 
     it(" memoizes entity components so they don't always rerender", () => {
@@ -249,8 +249,8 @@ describe("createECS", () => {
         </Collection>
       )
 
-      expect(screen.getByTestId("user-1")).toHaveTextContent("Alice")
-      expect(screen.getByTestId("user-2")).toHaveTextContent("Bob")
+      expect(screen.getByTestId("user-0")).toHaveTextContent("Alice")
+      expect(screen.getByTestId("user-1")).toHaveTextContent("Bob")
 
       expect(alice.renderCount).toEqual(1)
       expect(bob.renderCount).toEqual(1)
@@ -259,7 +259,7 @@ describe("createECS", () => {
         world.createEntity({ name: "Charlie", renderCount: 0 })
       })
 
-      expect(screen.getByTestId("user-3")).toHaveTextContent("Charlie")
+      expect(screen.getByTestId("user-2")).toHaveTextContent("Charlie")
       expect(alice.renderCount).toEqual(1)
       expect(bob.renderCount).toEqual(1)
     })
