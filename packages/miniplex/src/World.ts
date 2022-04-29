@@ -105,37 +105,45 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  public createEntity = <P>(
-    base: T = {} as T,
-    ...extraComponents: Partial<T>[]
-  ): RegisteredEntity<T> => {
-    /* Merge all given partials into a single object. */
-    const mergedExtraComponents = extraComponents.reduce(
-      (acc, partial) => ({ ...acc, ...partial }),
-      {} as T
-    )
-
-    /* Create the entity. */
-    const entity = {
-      ...base,
-      ...mergedExtraComponents,
+  private registerEntity = (entity: T) => {
+    Object.assign(entity, {
       __miniplex: {
         id: this.nextId(),
         world: this,
         archetypes: []
       }
-    }
+    })
 
-    /* Store the entity... */
-    this.entities.push(entity)
-
-    /* ...and add it to relevant indices. */
-    this.indexEntity(entity)
-
-    return entity
+    return entity as RegisteredEntity<T>
   }
 
-  public destroyEntity = (entity: RegisteredEntity<T> | T) => {
+  private unregisterEntity = (entity: RegisteredEntity<T>) => {
+    delete (entity as T).__miniplex
+    return entity as T
+  }
+
+  public createEntity = <P>(
+    entity: T = {} as T,
+    ...extraComponents: Partial<T>[]
+  ): RegisteredEntity<T> => {
+    /* Mix in extra components into entity. */
+    for (const extra of extraComponents) {
+      Object.assign(entity, extra)
+    }
+
+    /* Mix in internal component into entity. */
+    const registeredEntity = this.registerEntity(entity)
+
+    /* Store the entity... */
+    this.entities.push(registeredEntity)
+
+    /* ...and add it to relevant indices. */
+    this.indexEntity(registeredEntity)
+
+    return registeredEntity
+  }
+
+  public destroyEntity = (entity: RegisteredEntity<T>) => {
     if (entity.__miniplex?.world !== this) return
 
     /* Remove it from our global list of entities */
@@ -148,7 +156,7 @@ export class World<T extends IEntity = UntypedEntity> {
     }
 
     /* Remove its miniplex component */
-    delete (entity as T).__miniplex
+    this.unregisterEntity(entity)
   }
 
   public addComponent = (

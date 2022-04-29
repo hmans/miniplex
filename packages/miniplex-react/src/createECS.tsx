@@ -125,13 +125,6 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   }
 
   /**
-   * Return the current entity context.
-   */
-  function useEntity() {
-    return useContext(EntityContext)
-  }
-
-  /**
    * Declaratively add a component to an entity.
    */
   function Component<K extends keyof TEntity, V = TEntity[K]>({
@@ -143,7 +136,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     data?: V
     children?: ReactElement | ((entity: TEntity) => ReactElement)
   }) {
-    const entity = useEntity()
+    const entity = useContext(EntityContext)
     const ref = useRef<TEntity[K]>(null!)
 
     /* Warn the user that passing multiple children is not allowed. */
@@ -170,6 +163,43 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
           )}
       </>
     )
+  }
+
+  /**
+   * Create a number of entities, defined through an optional entity factory,
+   * and add/remove them to/from the world on mount/unmount.
+   */
+  function useEntities(count: number, entityFactory?: () => TEntity) {
+    /* Create entity objects */
+    const entities = useConst(() => {
+      const entities = []
+      for (let i = 0; i < count; i++) {
+        entities.push(entityFactory?.())
+      }
+      return entities
+    })
+
+    /* Create/Destroy entities */
+    useEffect(() => {
+      for (const entity of entities) {
+        world.createEntity(entity)
+      }
+
+      return () => {
+        for (const entity of entities) {
+          world.destroyEntity(entity as RegisteredEntity<TEntity>)
+        }
+      }
+    })
+
+    return entities
+  }
+
+  /**
+   * Return a single entity and automatically add/remove it to/from the world.
+   */
+  function useEntity(entityFn?: () => TEntity) {
+    return useEntities(1, entityFn)[0]
   }
 
   /**
@@ -201,6 +231,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     world,
     useArchetype,
     useEntity,
+    useEntities,
     Entity,
     Component,
     MemoizedEntity,

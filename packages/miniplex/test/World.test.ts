@@ -37,11 +37,11 @@ describe("World", () => {
       expect(entity).toMatchObject({ name: "Alice" })
     })
 
-    it("returns a new object", () => {
+    it("mutates and returns the same new object", () => {
       const world = new World<Entity>()
       const entity: Partial<Entity> = { name: "Alice" }
       const returnedEntity = world.createEntity(entity)
-      expect(returnedEntity).not.toBe(entity)
+      expect(returnedEntity).toBe(entity)
     })
 
     it("accepts multiple partial entities that are merged into the same entity object", () => {
@@ -144,6 +144,14 @@ describe("World", () => {
       expect(withVelocity.entities).toContain(entity)
       world.destroyEntity(entity)
       expect(withVelocity.entities).not.toContain(entity)
+    })
+
+    it("removes the internal Miniplex component", () => {
+      const world = new World<GameObject>()
+      const entity = world.createEntity({ position: { x: 0, y: 0 } })
+      expect(entity).toHaveProperty("__miniplex")
+      world.destroyEntity(entity)
+      expect(entity).not.toHaveProperty("__miniplex")
     })
   })
 
