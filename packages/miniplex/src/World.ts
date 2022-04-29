@@ -219,7 +219,9 @@ export class World<T extends IEntity = UntypedEntity> {
     },
 
     destroyEntity: (entity: RegisteredEntity<T> | T) => {
-      this.queuedCommands.add(() => this.destroyEntity(entity))
+      this.queuedCommands.add(() =>
+        this.destroyEntity(entity as RegisteredEntity<T>)
+      )
     },
 
     addComponent: (entity: RegisteredEntity<T>, ...partials: Partial<T>[]) => {
