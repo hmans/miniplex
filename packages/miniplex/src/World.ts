@@ -105,23 +105,6 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  private registerEntity = (entity: T) => {
-    Object.assign(entity, {
-      __miniplex: {
-        id: this.nextId(),
-        world: this,
-        archetypes: []
-      }
-    })
-
-    return entity as RegisteredEntity<T>
-  }
-
-  private unregisterEntity = (entity: RegisteredEntity<T>) => {
-    delete (entity as T).__miniplex
-    return entity as T
-  }
-
   public createEntity = <P>(
     entity: T = {} as T,
     ...extraComponents: Partial<T>[]
@@ -132,7 +115,13 @@ export class World<T extends IEntity = UntypedEntity> {
     }
 
     /* Mix in internal component into entity. */
-    const registeredEntity = this.registerEntity(entity)
+    const registeredEntity = Object.assign(entity, {
+      __miniplex: {
+        id: this.nextId(),
+        world: this,
+        archetypes: []
+      }
+    })
 
     /* Store the entity... */
     this.entities.push(registeredEntity)
@@ -156,7 +145,7 @@ export class World<T extends IEntity = UntypedEntity> {
     }
 
     /* Remove its miniplex component */
-    this.unregisterEntity(entity)
+    delete (entity as T).__miniplex
   }
 
   public addComponent = (
