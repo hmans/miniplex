@@ -174,11 +174,13 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
    */
   function useEntities(count: number, entityFactory?: () => TEntity) {
     /* Create entity objects */
-    const entities = useConst(() => {
+    const entities = useConst<TEntity[]>(() => {
       const entities = []
+
       for (let i = 0; i < count; i++) {
-        entities.push(entityFactory?.())
+        entities.push(entityFactory ? entityFactory() : ({} as TEntity))
       }
+
       return entities
     })
 
