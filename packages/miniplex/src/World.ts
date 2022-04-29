@@ -61,7 +61,7 @@ export type Tag = true
 
 export class World<T extends IEntity = UntypedEntity> {
   /** An array holding all entities known to this world. */
-  public entities = new Array<RegisteredEntity<T>>()
+  public entities = new Array<RegisteredEntity<T> | null>()
 
   /** A list of known archetypes. */
   private archetypes = new Map<string, Archetype<T>>()
@@ -83,7 +83,7 @@ export class World<T extends IEntity = UntypedEntity> {
 
     /* ...and refresh the indexing of all our entities. */
     for (const entity of this.entities) {
-      archetype.indexEntity(entity)
+      if (entity) archetype.indexEntity(entity)
     }
 
     return archetype as Archetype<T, TQuery>
@@ -120,7 +120,7 @@ export class World<T extends IEntity = UntypedEntity> {
     /* Mix in internal component into entity. */
     const registeredEntity = Object.assign(entity, {
       __miniplex: {
-        id: this.entities.length + 1,
+        id: this.entities.length,
         world: this,
         archetypes: []
       }
@@ -139,8 +139,7 @@ export class World<T extends IEntity = UntypedEntity> {
     if (entity.__miniplex?.world !== this) return
 
     /* Remove it from our global list of entities */
-    const pos = this.entities.indexOf(entity as RegisteredEntity<T>, 0)
-    this.entities.splice(pos, 1)
+    this.entities[entity.__miniplex.id] = null
 
     /* Remove entity from all archetypes */
     for (const archetype of entity.__miniplex.archetypes) {

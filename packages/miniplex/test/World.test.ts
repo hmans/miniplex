@@ -77,7 +77,13 @@ describe("World", () => {
     it("assigns an ID to the entity's miniplex component", () => {
       const world = new World<Entity>()
       const entity = world.createEntity({ name: "Alice" })
-      expect(entity.__miniplex.id).toEqual(1)
+      expect(entity.__miniplex.id).toEqual(0)
+    })
+
+    it("uses the entity's array index as its ID", () => {
+      const world = new World<Entity>()
+      const entity = world.createEntity({ name: "Alice" })
+      expect(entity.__miniplex.id).toEqual(world.entities.indexOf(entity, 0))
     })
 
     it("assigns a reference to the world to the entity's miniplex component", () => {
@@ -90,7 +96,7 @@ describe("World", () => {
       const world = new World<Entity>()
       world.createEntity({ name: "Alice" })
       const entity = world.createEntity({ name: "Bob" })
-      expect(entity.__miniplex.id).toEqual(2)
+      expect(entity.__miniplex.id).toEqual(1)
     })
 
     describe(".queued", () => {
@@ -178,7 +184,7 @@ describe("World", () => {
       world.addComponent(entity, { ...position(1, 2), ...health(100) })
 
       expect(entity).toEqual({
-        __miniplex: { id: 1, world, archetypes: [] },
+        __miniplex: { id: 0, world, archetypes: [] },
         position: { x: 1, y: 2 },
         health: { max: 100, current: 100 }
       })
@@ -191,7 +197,7 @@ describe("World", () => {
       world.addComponent(entity, position(1, 2), health(100))
 
       expect(entity).toEqual({
-        __miniplex: { id: 1, world, archetypes: [] },
+        __miniplex: { id: 0, world, archetypes: [] },
         position: { x: 1, y: 2 },
         health: { max: 100, current: 100 }
       })
