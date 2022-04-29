@@ -3,7 +3,7 @@ import { commandQueue } from "./util/commandQueue"
 import { normalizeQuery } from "./util/normalizeQuery"
 import { WithRequiredKeys } from "./util/types"
 
-export type EntityID = number
+export type EntityId = number
 
 /**
  * Entities in Miniplex are just plain old Javascript objects. We are assuming
@@ -93,7 +93,7 @@ export class World<T extends IEntity = UntypedEntity> {
     }
   }
 
-  public getEntity(id: EntityID) {
+  public getEntity(id: EntityId) {
     /* Try and get the entity from our list of entities. */
     const entity = this.entities[id]
 
@@ -139,7 +139,7 @@ export class World<T extends IEntity = UntypedEntity> {
     return this.entities.length - 1
   }
 
-  public destroyEntity = (id: EntityID) => {
+  public destroyEntity = (id: EntityId) => {
     const entity = this.getEntity(id)
 
     /* Null the entity. */
@@ -154,7 +154,7 @@ export class World<T extends IEntity = UntypedEntity> {
     delete (entity as T).__miniplex
   }
 
-  public addComponent = (id: EntityID, ...partials: Partial<T>[]) => {
+  public addComponent = (id: EntityId, ...partials: Partial<T>[]) => {
     const entity = this.getEntity(id)
 
     for (const partial of partials) {
@@ -175,7 +175,7 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   public removeComponent = (
-    id: EntityID,
+    id: EntityId,
     ...components: ComponentName<T>[]
   ) => {
     const entity = this.getEntity(id)
@@ -203,15 +203,15 @@ export class World<T extends IEntity = UntypedEntity> {
       this.queuedCommands.add(() => this.createEntity(entity))
     },
 
-    destroyEntity: (id: EntityID) => {
+    destroyEntity: (id: EntityId) => {
       this.queuedCommands.add(() => this.destroyEntity(id))
     },
 
-    addComponent: (id: EntityID, ...partials: Partial<T>[]) => {
+    addComponent: (id: EntityId, ...partials: Partial<T>[]) => {
       this.queuedCommands.add(() => this.addComponent(id, ...partials))
     },
 
-    removeComponent: (id: EntityID, ...names: ComponentName<T>[]) => {
+    removeComponent: (id: EntityId, ...names: ComponentName<T>[]) => {
       this.queuedCommands.add(() => this.removeComponent(id, ...names))
     },
 
