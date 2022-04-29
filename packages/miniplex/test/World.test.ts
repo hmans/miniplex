@@ -117,6 +117,20 @@ describe("World", () => {
     })
   })
 
+  describe("getEntity", () => {
+    it("returns the entity with the specified ID", () => {
+      const world = new World<GameObject>()
+      const entity = world.createEntity()
+
+      expect(world.getEntity(entity.__miniplex.id)).toBe(entity)
+    })
+
+    it("throws an error when no entity could be found for the ID", () => {
+      const world = new World<GameObject>()
+      expect(() => world.getEntity(-1)).toThrowError()
+    })
+  })
+
   describe("destroyEntity", () => {
     it("removes an entity from the world", () => {
       const world = new World<GameObject>()

@@ -101,6 +101,23 @@ export class World<T extends IEntity = UntypedEntity> {
     }
   }
 
+  /* RETRIEVAL */
+
+  /**
+   * Retrieve the entity identified by the specified ID. If for some reason this
+   * entity does not exist, an error is thrown.
+   *
+   * @param id ID of the entity to retrieve
+   * @returns The entity with the specified ID
+   */
+  public getEntity(id: EntityId) {
+    const entity = this.entities[id]
+
+    if (!entity) throw new Error(`No entity with ID ${id} found :(`)
+
+    return entity
+  }
+
   /* MUTATION FUNCTIONS */
 
   private unregisterEntity = (entity: RegisteredEntity<T>) => {
