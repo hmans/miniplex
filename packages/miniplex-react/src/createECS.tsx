@@ -168,6 +168,10 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     )
   }
 
+  function TagComponent<K extends keyof TEntity>({ name }: { name: K }) {
+    return Component({ name, data: Tag })
+  }
+
   /**
    * Create a number of entities, defined through an optional entity factory,
    * and add/remove them to/from the world on mount/unmount.
@@ -237,6 +241,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     useEntities,
     Entity,
     Component,
+    TagComponent,
     MemoizedEntity,
     Entities,
     Collection

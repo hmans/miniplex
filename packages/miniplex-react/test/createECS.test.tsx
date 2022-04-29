@@ -93,6 +93,24 @@ describe("createECS", () => {
     })
   })
 
+  describe("<TagComponent>", () => {
+    it("adds a tag to an entity", () => {
+      const { world, Entity, TagComponent } = createECS<
+        Entity & { admin?: Tag }
+      >()
+
+      const alice = world.createEntity({ name: "Alice" })
+
+      render(
+        <Entity entity={alice}>
+          <TagComponent name="admin" />
+        </Entity>
+      )
+
+      expect(alice.admin).toEqual(true)
+    })
+  })
+
   describe("useArchetype", () => {
     const setup = (fun?: Function) => {
       const { world, useArchetype } = createECS<Entity>()
@@ -224,7 +242,7 @@ describe("createECS", () => {
       expect(screen.getByTestId("user-2")).toHaveTextContent("Charlie")
     })
 
-    it(" memoizes entity components so they don't always rerender", () => {
+    it("memoizes entity components so they don't always rerender", () => {
       const { world, Collection } = createECS<
         Entity & { renderCount: number }
       >()
