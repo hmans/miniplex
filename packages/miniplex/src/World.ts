@@ -1,6 +1,5 @@
 import { Archetype, Query } from "./Archetype"
 import { commandQueue } from "./util/commandQueue"
-import { idGenerator } from "./util/idGenerator"
 import { normalizeQuery } from "./util/normalizeQuery"
 import { WithRequiredKeys } from "./util/types"
 
@@ -64,9 +63,6 @@ export class World<T extends IEntity = UntypedEntity> {
   /** An array holding all entities known to this world. */
   public entities = new Array<RegisteredEntity<T>>()
 
-  /** An ID generator we use for assigning IDs to newly added entities. */
-  private nextId = idGenerator(1)
-
   /** A list of known archetypes. */
   private archetypes = new Map<string, Archetype<T>>()
 
@@ -107,18 +103,6 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  private registerEntity = (entity: T) => {
-    Object.assign(entity, {
-      __miniplex: {
-        id: this.nextId(),
-        world: this,
-        archetypes: []
-      }
-    })
-
-    return entity as RegisteredEntity<T>
-  }
-
   private unregisterEntity = (entity: RegisteredEntity<T>) => {
     delete (entity as T).__miniplex
     return entity as T
@@ -134,7 +118,13 @@ export class World<T extends IEntity = UntypedEntity> {
     }
 
     /* Mix in internal component into entity. */
-    const registeredEntity = this.registerEntity(entity)
+    const registeredEntity = Object.assign(entity, {
+      __miniplex: {
+        id: this.entities.length + 1,
+        world: this,
+        archetypes: []
+      }
+    })
 
     /* Store the entity... */
     this.entities.push(registeredEntity)
