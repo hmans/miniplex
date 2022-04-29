@@ -4,6 +4,8 @@ import { idGenerator } from "./util/idGenerator"
 import { normalizeQuery } from "./util/normalizeQuery"
 import { WithRequiredKeys } from "./util/types"
 
+export type EntityId = number
+
 /**
  * Entities in Miniplex are just plain old Javascript objects. We are assuming
  * map-like objects that use string-based properties to identify individual components.
@@ -18,7 +20,7 @@ export interface IEntity {
  */
 export type MiniplexComponent<T> = {
   __miniplex: {
-    id: number
+    id: EntityId
     world: World<T>
     archetypes: Archetype<T>[]
   }
