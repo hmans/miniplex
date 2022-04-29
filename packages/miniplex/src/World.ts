@@ -1,8 +1,9 @@
 import { Archetype, Query } from "./Archetype"
 import { commandQueue } from "./util/commandQueue"
-import { idGenerator } from "./util/idGenerator"
 import { normalizeQuery } from "./util/normalizeQuery"
 import { WithRequiredKeys } from "./util/types"
+
+type EntityID = number
 
 /**
  * Entities in Miniplex are just plain old Javascript objects. We are assuming
@@ -18,8 +19,6 @@ export interface IEntity {
  */
 export type MiniplexComponent<T> = {
   __miniplex: {
-    id: number
-    world: World<T>
     archetypes: Archetype<T>[]
   }
 }
@@ -60,10 +59,7 @@ export type Tag = true
 
 export class World<T extends IEntity = UntypedEntity> {
   /** An array holding all entities known to this world. */
-  public entities = new Array<RegisteredEntity<T>>()
-
-  /** An ID generator we use for assigning IDs to newly added entities. */
-  private nextId = idGenerator(1)
+  public entities = new Array<RegisteredEntity<T> | null>()
 
   /** A list of known archetypes. */
   private archetypes = new Map<string, Archetype<T>>()
@@ -85,22 +81,33 @@ export class World<T extends IEntity = UntypedEntity> {
 
     /* ...and refresh the indexing of all our entities. */
     for (const entity of this.entities) {
-      archetype.indexEntity(entity)
+      if (entity) archetype.indexEntity(entity)
     }
 
     return archetype as Archetype<T, TQuery>
   }
 
   private indexEntity(entity: RegisteredEntity<T>) {
-    /*
-    We absolutely never want to add entities to our indices that are not actually
-    part of this world, so let's do a sanity check.
-    */
-    if (entity.__miniplex.world !== this) return
-
     for (const archetype of this.archetypes.values()) {
       archetype.indexEntity(entity)
     }
+  }
+
+  public getEntity(id: EntityID) {
+    /* Try and get the entity from our list of entities. */
+    const entity = this.entities[id]
+
+    /*
+    The entity might have previously been destroyed, or the ID may simply
+    be invalid. Let's deal with that now.
+    */
+    if (!entity) {
+      throw new Error(
+        `Attempted to delete entity with ID ${id}, but entity was null`
+      )
+    }
+
+    return entity
   }
 
   /* MUTATION FUNCTIONS */
@@ -108,7 +115,7 @@ export class World<T extends IEntity = UntypedEntity> {
   public createEntity = <P>(
     entity: T = {} as T,
     ...extraComponents: Partial<T>[]
-  ): RegisteredEntity<T> => {
+  ): number => {
     /* Mix in extra components into entity. */
     for (const extra of extraComponents) {
       Object.assign(entity, extra)
@@ -117,8 +124,6 @@ export class World<T extends IEntity = UntypedEntity> {
     /* Mix in internal component into entity. */
     const registeredEntity = Object.assign(entity, {
       __miniplex: {
-        id: this.nextId(),
-        world: this,
         archetypes: []
       }
     })
@@ -129,15 +134,16 @@ export class World<T extends IEntity = UntypedEntity> {
     /* ...and add it to relevant indices. */
     this.indexEntity(registeredEntity)
 
-    return registeredEntity
+    /* Return the ID. Since we only ever append to the array of entities,
+    we can use the array length here. */
+    return this.entities.length - 1
   }
 
-  public destroyEntity = (entity: RegisteredEntity<T>) => {
-    if (entity.__miniplex?.world !== this) return
+  public destroyEntity = (id: EntityID) => {
+    const entity = this.getEntity(id)
 
-    /* Remove it from our global list of entities */
-    const pos = this.entities.indexOf(entity as RegisteredEntity<T>, 0)
-    this.entities.splice(pos, 1)
+    /* Null the entity. */
+    this.entities[id] = null
 
     /* Remove entity from all archetypes */
     for (const archetype of entity.__miniplex.archetypes) {
@@ -148,14 +154,8 @@ export class World<T extends IEntity = UntypedEntity> {
     delete (entity as T).__miniplex
   }
 
-  public addComponent = (
-    entity: RegisteredEntity<T>,
-    ...partials: Partial<T>[]
-  ) => {
-    /* Sanity check */
-    if (entity.__miniplex?.world !== this) {
-      throw `Tried to add components to an entity that is not managed by this world.`
-    }
+  public addComponent = (id: EntityID, ...partials: Partial<T>[]) => {
+    const entity = this.getEntity(id)
 
     for (const partial of partials) {
       for (const name in partial) {
@@ -175,12 +175,10 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   public removeComponent = (
-    entity: RegisteredEntity<T>,
+    id: EntityID,
     ...components: ComponentName<T>[]
   ) => {
-    if (entity.__miniplex?.world !== this) {
-      throw `Tried to remove ${components} from an entity that is not managed by this world.`
-    }
+    const entity = this.getEntity(id)
 
     for (const name of components) {
       if (!(name in entity)) {
@@ -205,21 +203,16 @@ export class World<T extends IEntity = UntypedEntity> {
       this.queuedCommands.add(() => this.createEntity(entity))
     },
 
-    destroyEntity: (entity: RegisteredEntity<T> | T) => {
-      this.queuedCommands.add(() =>
-        this.destroyEntity(entity as RegisteredEntity<T>)
-      )
+    destroyEntity: (id: EntityID) => {
+      this.queuedCommands.add(() => this.destroyEntity(id))
     },
 
-    addComponent: (entity: RegisteredEntity<T>, ...partials: Partial<T>[]) => {
-      this.queuedCommands.add(() => this.addComponent(entity, ...partials))
+    addComponent: (id: EntityID, ...partials: Partial<T>[]) => {
+      this.queuedCommands.add(() => this.addComponent(id, ...partials))
     },
 
-    removeComponent: (
-      entity: RegisteredEntity<T>,
-      ...names: ComponentName<T>[]
-    ) => {
-      this.queuedCommands.add(() => this.removeComponent(entity, ...names))
+    removeComponent: (id: EntityID, ...names: ComponentName<T>[]) => {
+      this.queuedCommands.add(() => this.removeComponent(id, ...names))
     },
 
     flush: () => {

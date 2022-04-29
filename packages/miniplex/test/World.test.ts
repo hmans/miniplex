@@ -27,27 +27,31 @@ describe("World", () => {
   describe("createEntity", () => {
     it("creates a new entity", () => {
       const world = new World<Entity>()
-      const entity = world.createEntity()
-      expect(entity.__miniplex.id).not.toBeUndefined()
+      const id = world.createEntity()
+      expect(id).not.toBeUndefined()
+      expect(id).toEqual(0)
     })
 
     it("accepts a partial entity", () => {
       const world = new World<Entity>()
-      const entity = world.createEntity({ name: "Alice" })
-      expect(entity).toMatchObject({ name: "Alice" })
+      const id = world.createEntity({ name: "Alice" })
+      expect(id).toEqual(0)
     })
 
-    it("mutates and returns the same new object", () => {
+    it("mutates the first argument", () => {
       const world = new World<Entity>()
       const entity: Partial<Entity> = { name: "Alice" }
-      const returnedEntity = world.createEntity(entity)
-      expect(returnedEntity).toBe(entity)
+      world.createEntity(entity, { admin: true })
+      expect(entity).toMatchObject({
+        name: "Alice",
+        admin: true
+      })
     })
 
     it("accepts multiple partial entities that are merged into the same entity object", () => {
       const world = new World<Entity>()
-      const entity = world.createEntity({ name: "Alice" }, { admin: true })
-      expect(entity).toMatchObject({
+      const id = world.createEntity({ name: "Alice" }, { admin: true })
+      expect(world.entities[id]).toMatchObject({
         name: "Alice",
         admin: true
       })
@@ -59,9 +63,8 @@ describe("World", () => {
       const position = (x = 0, y = 0) => ({ position: { x, y } })
       const velocity = (x = 0, y = 0) => ({ velocity: { x, y } })
 
-      const entity = world.createEntity(position(0, 0), velocity(5, 7))
-
-      expect(entity).toMatchObject({
+      const id = world.createEntity(position(0, 0), velocity(5, 7))
+      expect(world.getEntity(id)).toMatchObject({
         position: { x: 0, y: 0 },
         velocity: { x: 5, y: 7 }
       })
@@ -69,28 +72,9 @@ describe("World", () => {
 
     it("immediately adds the entity to the pool", () => {
       const world = new World<Entity>()
-      expect(world.entities).toEqual([])
-      const entity = world.createEntity({ name: "Alice" })
-      expect(world.entities).toEqual([entity])
-    })
-
-    it("assigns an ID to the entity's miniplex component", () => {
-      const world = new World<Entity>()
-      const entity = world.createEntity({ name: "Alice" })
-      expect(entity.__miniplex.id).toEqual(1)
-    })
-
-    it("assigns a reference to the world to the entity's miniplex component", () => {
-      const world = new World<Entity>()
-      const entity = world.createEntity({ name: "Alice" })
-      expect(entity.__miniplex.world).toEqual(world)
-    })
-
-    it("assigns automatically incrementing IDs", () => {
-      const world = new World<Entity>()
+      expect(world.entities.length).toEqual(0)
       world.createEntity({ name: "Alice" })
-      const entity = world.createEntity({ name: "Bob" })
-      expect(entity.__miniplex.id).toEqual(2)
+      expect(world.entities.length).toEqual(1)
     })
 
     describe(".queued", () => {
@@ -114,43 +98,35 @@ describe("World", () => {
   describe("destroyEntity", () => {
     it("removes an entity from the world", () => {
       const world = new World<GameObject>()
-      const entity = world.createEntity({ position: { x: 0, y: 0 } })
+      const id = world.createEntity({ position: { x: 0, y: 0 } })
+      const entity = world.getEntity(id)
 
       expect(world.entities).toContain(entity)
-      world.destroyEntity(entity)
-      expect(world.entities).not.toContain(entity)
-    })
-
-    it("no-ops when trying to remove an entity that is not managed by this world", () => {
-      const world = new World<GameObject>()
-      const otherWorld = new World<GameObject>()
-      const entity = otherWorld.createEntity({ position: { x: 0, y: 0 } })
-
-      expect(world.entities).not.toContain(entity)
-      expect(() => {
-        world.destroyEntity(entity)
-      }).not.toThrow()
+      world.destroyEntity(id)
       expect(world.entities).not.toContain(entity)
     })
 
     it("removes the entity from all archetypes", () => {
       const world = new World<GameObject>()
       const withVelocity = world.archetype("velocity")
-      const entity = world.createEntity({
+      const id = world.createEntity({
         position: { x: 0, y: 0 },
         velocity: { x: 1, y: 2 }
       })
+      const entity = world.getEntity(id)
 
       expect(withVelocity.entities).toContain(entity)
-      world.destroyEntity(entity)
+      world.destroyEntity(id)
       expect(withVelocity.entities).not.toContain(entity)
     })
 
     it("removes the internal Miniplex component", () => {
       const world = new World<GameObject>()
-      const entity = world.createEntity({ position: { x: 0, y: 0 } })
+      const id = world.createEntity({ position: { x: 0, y: 0 } })
+      const entity = world.getEntity(id)
+
       expect(entity).toHaveProperty("__miniplex")
-      world.destroyEntity(entity)
+      world.destroyEntity(id)
       expect(entity).not.toHaveProperty("__miniplex")
     })
   })
@@ -164,21 +140,22 @@ describe("World", () => {
 
     it("adds a component expressed as a partial entity", () => {
       const world = new World<GameObject>()
-      const entity = world.createEntity()
+      const id = world.createEntity()
+      const entity = world.getEntity(id)
 
-      world.addComponent(entity, position(1, 2))
+      world.addComponent(id, position(1, 2))
 
       expect(entity.position).toEqual({ x: 1, y: 2 })
     })
 
     it("adds multiple components expressed within the same partial entity", () => {
       const world = new World<GameObject>()
-      const entity = world.createEntity()
+      const id = world.createEntity()
 
-      world.addComponent(entity, { ...position(1, 2), ...health(100) })
+      world.addComponent(id, { ...position(1, 2), ...health(100) })
 
-      expect(entity).toEqual({
-        __miniplex: { id: 1, world, archetypes: [] },
+      expect(world.getEntity(id)).toEqual({
+        __miniplex: { archetypes: [] },
         position: { x: 1, y: 2 },
         health: { max: 100, current: 100 }
       })
@@ -186,12 +163,12 @@ describe("World", () => {
 
     it("adds multiple components expressed as multiple partial entitie", () => {
       const world = new World<GameObject>()
-      const entity = world.createEntity()
+      const id = world.createEntity()
 
-      world.addComponent(entity, position(1, 2), health(100))
+      world.addComponent(id, position(1, 2), health(100))
 
-      expect(entity).toEqual({
-        __miniplex: { id: 1, world, archetypes: [] },
+      expect(world.getEntity(id)).toEqual({
+        __miniplex: { archetypes: [] },
         position: { x: 1, y: 2 },
         health: { max: 100, current: 100 }
       })
@@ -201,10 +178,11 @@ describe("World", () => {
       const world = new World<GameObject>()
       const withVelocity = world.archetype("velocity")
 
-      const entity = world.createEntity({ ...position() })
+      const id = world.createEntity({ ...position() })
+      const entity = world.getEntity(id)
       expect(withVelocity.entities).not.toContain(entity)
 
-      world.addComponent(entity, velocity())
+      world.addComponent(id, velocity())
       expect(withVelocity.entities).toContain(entity)
     })
 
@@ -242,12 +220,13 @@ describe("World", () => {
     it("removes entities from relevant archetypes", () => {
       const world = new World<GameObject>()
       const withVelocity = world.archetype("velocity")
-      const entity = world.createEntity({
+      const id = world.createEntity({
         position: { x: 0, y: 0 },
         velocity: { x: 1, y: 2 }
       })
+      const entity = world.getEntity(id)
       expect(withVelocity.entities).toContain(entity)
-      world.removeComponent(entity, "velocity")
+      world.removeComponent(id, "velocity")
       expect(withVelocity.entities).not.toContain(entity)
     })
 
@@ -297,10 +276,11 @@ describe("World", () => {
   describe("archetype", () => {
     const setup = () => {
       const world = new World<Entity>()
-      const alice = world.createEntity({ name: "Alice", admin: true })
-      const bob = world.createEntity({ name: "Bob" })
-
-      return { world, alice, bob }
+      const aliceId = world.createEntity({ name: "Alice", admin: true })
+      const bobId = world.createEntity({ name: "Bob" })
+      const alice = world.getEntity(aliceId)
+      const bob = world.getEntity(bobId)
+      return { world, alice, bob, aliceId, bobId }
     }
 
     it("maintain indices of entities that have a specific set of components", () => {
@@ -310,36 +290,36 @@ describe("World", () => {
     })
 
     it("when a component is added to an entity, archetype indices are automatically updated", () => {
-      const { world, alice, bob } = setup()
+      const { world, alice, bob, bobId } = setup()
       const admins = world.archetype("admin")
       expect(admins.entities).toEqual([alice])
-      world.addComponent(bob, { admin: true })
+      world.addComponent(bobId, { admin: true })
       expect(admins.entities).toEqual([alice, bob])
     })
 
     it("when a component is removed from an entity, archetype indices are automatically updated", () => {
-      const { world: ecs, alice, bob } = setup()
+      const { world: ecs, alice, bob, aliceId } = setup()
       const withAdmin = ecs.archetype("admin")
       const withName = ecs.archetype("name")
 
       expect(withAdmin.entities).toEqual([alice])
       expect(withName.entities).toEqual([alice, bob])
 
-      ecs.removeComponent(alice, "admin")
+      ecs.removeComponent(aliceId, "admin")
 
       expect(withAdmin.entities).toEqual([])
       expect(withName.entities).toEqual([alice, bob])
     })
 
     it("when an entity is removed, archetype indices are automatically updated", () => {
-      const { world, alice, bob } = setup()
+      const { world, alice, bob, aliceId } = setup()
       const withAdmin = world.archetype("admin")
       const withName = world.archetype("name")
 
       expect(withAdmin.entities).toEqual([alice])
       expect(withName.entities).toEqual([alice, bob])
 
-      world.destroyEntity(alice)
+      world.destroyEntity(aliceId)
 
       expect(withAdmin.entities).toEqual([])
       expect(withName.entities).toEqual([bob])
