@@ -3,7 +3,7 @@ import { commandQueue } from "./util/commandQueue"
 import { normalizeQuery } from "./util/normalizeQuery"
 import { WithRequiredKeys } from "./util/types"
 
-type EntityID = number
+export type EntityID = number
 
 /**
  * Entities in Miniplex are just plain old Javascript objects. We are assuming
