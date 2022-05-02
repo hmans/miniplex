@@ -29,6 +29,11 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   const EntityContext = createContext<RegisteredEntity<TEntity>>(null!)
 
   /**
+   * Returns the current entity context.
+   */
+  const useEntity = () => useContext(EntityContext)
+
+  /**
    * A React component to either create a new entity, or represent an existing entity so
    * it can be enhanced with additional components (see the <Component> component.)
    */
@@ -169,45 +174,6 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   }
 
   /**
-   * Create a number of entities, defined through an optional entity factory,
-   * and add/remove them to/from the world on mount/unmount.
-   */
-  function useEntities(count: number, entityFactory?: () => TEntity) {
-    /* Create entity objects */
-    const entities = useConst<TEntity[]>(() => {
-      const entities = []
-
-      for (let i = 0; i < count; i++) {
-        entities.push(entityFactory ? entityFactory() : ({} as TEntity))
-      }
-
-      return entities
-    })
-
-    /* Create/Destroy entities */
-    useEffect(() => {
-      for (const entity of entities) {
-        world.createEntity(entity)
-      }
-
-      return () => {
-        for (const entity of entities) {
-          world.destroyEntity(entity as RegisteredEntity<TEntity>)
-        }
-      }
-    })
-
-    return entities
-  }
-
-  /**
-   * Return a single entity and automatically add/remove it to/from the world.
-   */
-  function useEntity(entityFn?: () => TEntity) {
-    return useEntities(1, entityFn)[0]
-  }
-
-  /**
    * Return the entities of the specified archetype and subscribe this component
    * to it, making it re-render when entities are added to or removed from it.
    */
@@ -236,7 +202,6 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     world,
     useArchetype,
     useEntity,
-    useEntities,
     Entity,
     Component,
     MemoizedEntity,

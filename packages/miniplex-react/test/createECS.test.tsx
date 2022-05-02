@@ -155,6 +155,33 @@ describe("createECS", () => {
     it("automatically rerenders the component when the list of entities changes", () => {})
   })
 
+  describe("useEntity", () => {
+    it("returns the current entity context", () => {
+      const { world, Entity, useEntity } = createECS<Entity>()
+
+      const alice = world.createEntity({ name: "Alice " })
+
+      const Name = () => {
+        /* Use the useEntity hook to fetch the current entity context */
+        const entity = useEntity()
+
+        return (
+          <p data-testid={`user-${entity.__miniplex.id}`}>
+            Name: {entity.name}
+          </p>
+        )
+      }
+
+      render(
+        <Entity entity={alice}>
+          <Name />
+        </Entity>
+      )
+
+      expect(screen.getByTestId("user-0")).toHaveTextContent("Alice")
+    })
+  })
+
   describe("<Entities>", () => {
     it("accepts a collection of entities as a prop and renders its JSX children once per entity", () => {
       const { world, Entities } = createECS<Entity>()
