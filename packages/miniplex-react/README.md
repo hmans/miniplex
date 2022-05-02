@@ -170,17 +170,17 @@ const FriendlyShips = () => {
 }
 ```
 
-### Collections
+### Managed Entity Collections
 
 In games and other ECS-oriented applications, you will often have several distinct _entity types_ -- like spaceships, asteroids, bullets, explosions, etc. -- even if these entities are composed of several shared ECS components. All entities within a specific entity type are typically composed from the same set of components (eg. spaceships always have a position and a velocity), and rendered in a similar manner (eg. bullets will always be rendered using a small box mesh, but with varying materials.)
 
-The `<Collection>` React component is an abstraction over this. It will take over management and rendering of such an entity type, assuming that this type can be identified by the presence of a specific tag (a tag being a miniplex component that is always just `true` and doesn't hold any additional data; miniplex provides a `Tag` type and constant for this.)
+The `<ManagedEntities>` React component is an abstraction over this. It will take over management and rendering of such an entity type, assuming that this type can be identified by the presence of a specific tag (a tag being a miniplex component that is always just `true` and doesn't hold any additional data; miniplex provides a `Tag` type and constant for this.)
 
 Let's take a look at an example:
 
 ```tsx
 const Asteroids = () => (
-  <ECS.Collection tag="asteroid" initial={100}>
+  <ECS.ManagedEntities tag="asteroid" initial={100}>
     {(entity) => (
       <>
         <ECS.Component
@@ -197,7 +197,7 @@ const Asteroids = () => (
         </ECS.Component>
       </>
     )}
-  </ECS.Collection>
+  </ECS.ManagedEntities>
 )
 ```
 
