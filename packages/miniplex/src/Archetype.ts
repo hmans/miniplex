@@ -18,10 +18,10 @@ export class Archetype<
   >()
 
   /** Listeners on this event are invoked when an entity is added to this archetype's index. */
-  public onEntityAdded = Signal<RegisteredEntity<TEntity>>()
+  public onEntityAdded = new Signal<RegisteredEntity<TEntity>>()
 
   /** Listeners on this event are invoked when an entity is removed from this archetype's index. */
-  public onEntityRemoved = Signal<RegisteredEntity<TEntity>>()
+  public onEntityRemoved = new Signal<RegisteredEntity<TEntity>>()
 
   constructor(public query: TQuery) {}
 
