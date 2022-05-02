@@ -141,7 +141,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     data?: V
     children?: ReactElement | ((entity: TEntity) => ReactElement)
   }) {
-    const entity = useContext(EntityContext)
+    const entity = useEntity()
     const ref = useRef<TEntity[K]>(null!)
 
     /* Warn the user that passing multiple children is not allowed. */
