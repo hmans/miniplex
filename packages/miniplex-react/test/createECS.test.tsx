@@ -190,7 +190,7 @@ describe("createECS", () => {
       world.createEntity({ name: "Bob" })
 
       render(
-        <Entities entities={world.entities}>
+        <Entities entities={world.archetype("name").entities}>
           {({ __miniplex, name }) => (
             <p key={__miniplex.id} data-testid={`user-${__miniplex.id}`}>
               {name}
