@@ -40,7 +40,9 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   const Entity = forwardRef<
     TEntity,
     {
-      children?: ReactNode | ((entity: TEntity) => JSX.Element)
+      children?:
+        | ReactNode
+        | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
       entity?: RegisteredEntity<TEntity>
     }
   >(({ entity: existingEntity, children }, ref) => {
@@ -74,10 +76,8 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     children?: ReactNode | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
     entity: RegisteredEntity<TEntity>
   }> = memo(
-    ({ entity, children }) => (
-      <Entity entity={entity} key={entity.__miniplex.id}>
-        {typeof children === "function" ? children(entity) : children}
-      </Entity>
+    ({ entity, ...props }) => (
+      <Entity entity={entity} key={entity.__miniplex.id} {...props} />
     ),
     (a, b) => a.entity === b.entity
   )
