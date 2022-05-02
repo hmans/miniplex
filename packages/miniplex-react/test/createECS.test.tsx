@@ -156,7 +156,7 @@ describe("createECS", () => {
   })
 
   describe("<Entities>", () => {
-    it("accepts a collection of entities as a prop and renders them", () => {
+    it("accepts a collection of entities as a prop and renders its JSX children once per entity", () => {
       const { world, Entities } = createECS<Entity>()
 
       world.createEntity({ name: "Alice" })
@@ -224,7 +224,7 @@ describe("createECS", () => {
       expect(screen.getByTestId("user-2")).toHaveTextContent("Charlie")
     })
 
-    it(" memoizes entity components so they don't always rerender", () => {
+    it("memoizes entity components so they don't always rerender", () => {
       const { world, Collection } = createECS<
         Entity & { renderCount: number }
       >()
