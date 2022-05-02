@@ -28,6 +28,9 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
 
   const EntityContext = createContext<RegisteredEntity<TEntity>>(null!)
 
+  /**
+   * Returns the current entity context.
+   */
   const useEntity = () => useContext(EntityContext)
 
   /**
