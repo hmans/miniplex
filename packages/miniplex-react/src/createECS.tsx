@@ -97,7 +97,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     )
   }
 
-  function Collection<TTag extends keyof TEntity>({
+  function ManagedEntities<TTag extends keyof TEntity>({
     initial = 0,
     tag,
     children
@@ -241,6 +241,6 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     Component,
     MemoizedEntity,
     Entities,
-    Collection
+    ManagedEntities
   }
 }

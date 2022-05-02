@@ -177,21 +177,21 @@ describe("createECS", () => {
     })
   })
 
-  describe("<Collection>", () => {
+  describe("<ManagedEntities>", () => {
     it("renders entities of a specific tag", () => {
-      const { world, Collection } = createECS<Entity>()
+      const { world, ManagedEntities } = createECS<Entity>()
 
       world.createEntity({ name: "Alice" })
       world.createEntity({ name: "Bob" })
 
       render(
-        <Collection tag="name">
+        <ManagedEntities tag="name">
           {({ __miniplex, name }) => (
             <p key={__miniplex.id} data-testid={`user-${__miniplex.id}`}>
               {name}
             </p>
           )}
-        </Collection>
+        </ManagedEntities>
       )
 
       expect(screen.getByTestId("user-0")).toHaveTextContent("Alice")
@@ -199,19 +199,19 @@ describe("createECS", () => {
     })
 
     it("automatically rerenders when an entity is added to the collection", () => {
-      const { world, Collection } = createECS<Entity>()
+      const { world, ManagedEntities } = createECS<Entity>()
 
       world.createEntity({ name: "Alice" })
       world.createEntity({ name: "Bob" })
 
       render(
-        <Collection tag="name">
+        <ManagedEntities tag="name">
           {({ __miniplex, name }) => (
             <p key={__miniplex.id} data-testid={`user-${__miniplex.id}`}>
               {name}
             </p>
           )}
-        </Collection>
+        </ManagedEntities>
       )
 
       expect(screen.getByTestId("user-0")).toHaveTextContent("Alice")
@@ -225,7 +225,7 @@ describe("createECS", () => {
     })
 
     it("memoizes entity components so they don't always rerender", () => {
-      const { world, Collection } = createECS<
+      const { world, ManagedEntities } = createECS<
         Entity & { renderCount: number }
       >()
 
@@ -233,7 +233,7 @@ describe("createECS", () => {
       const bob = world.createEntity({ name: "Bob", renderCount: 0 })
 
       render(
-        <Collection tag="name">
+        <ManagedEntities tag="name">
           {(entity) => {
             entity.renderCount++
 
@@ -246,7 +246,7 @@ describe("createECS", () => {
               </p>
             )
           }}
-        </Collection>
+        </ManagedEntities>
       )
 
       expect(screen.getByTestId("user-0")).toHaveTextContent("Alice")
