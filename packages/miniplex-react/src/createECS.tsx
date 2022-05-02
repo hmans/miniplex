@@ -85,14 +85,14 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   const Entities: FC<{
     children: ReactNode | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
     entities: RegisteredEntity<TEntity>[]
-  }> = ({ entities, children }) => {
+  }> = ({ entities, ...props }) => {
     return (
       <>
         {entities.map((entity) => (
           <MemoizedEntity
             entity={entity}
             key={entity.__miniplex.id}
-            children={children}
+            {...props}
           />
         ))}
       </>
@@ -126,7 +126,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
       }
     }, [tag, initial])
 
-    return <Entities entities={entities}>{children as any}</Entities>
+    return <Entities entities={entities} children={children as any}></Entities>
   }
 
   /**
