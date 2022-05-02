@@ -22,6 +22,7 @@ import React, {
   useRef,
   useState
 } from "react"
+import mergeRefs from "react-merge-refs"
 
 export function createECS<TEntity extends IEntity = UntypedEntity>() {
   const world = new World<TEntity>()
@@ -159,13 +160,15 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
       }
     }, [entity, name, data])
 
+    const childElement =
+      children && (typeof children === "function" ? children(entity) : children)
+
     return (
       <>
-        {children &&
-          cloneElement(
-            typeof children === "function" ? children(entity) : children,
-            { ref }
-          )}
+        {childElement &&
+          cloneElement(childElement, {
+            ref: mergeRefs([ref, (childElement as any).ref])
+          })}
       </>
     )
   }

@@ -59,7 +59,8 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
-    "@hmans/react-toolbox": "^0.1.4"
+    "@hmans/react-toolbox": "^0.1.4",
+    "react-merge-refs": "^1.1.0"
   },
   "peerDependencies": {
     "miniplex": ">=0.9.0",
