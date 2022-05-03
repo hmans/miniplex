@@ -28,7 +28,7 @@ type ComponentProps<T extends IEntity> = Partial<Omit<T, "children" | "entity">>
 
 type ComponentChildren<T extends IEntity> =
   | ReactNode
-  | ((entity: RegisteredEntity<T>) => JSX.Element)
+  | ((entity: T) => JSX.Element)
 
 export function createECS<TEntity extends IEntity = UntypedEntity>() {
   const world = new World<TEntity>()
