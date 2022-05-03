@@ -24,6 +24,10 @@ import React, {
 } from "react"
 import mergeRefs from "react-merge-refs"
 
+type EntityChildren<T extends IEntity> =
+  | ReactNode
+  | ((entity: T) => JSX.Element)
+
 export function createECS<TEntity extends IEntity = UntypedEntity>() {
   const world = new World<TEntity>()
 
@@ -41,9 +45,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   const Entity = forwardRef<
     TEntity,
     {
-      children?:
-        | ReactNode
-        | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
+      children?: EntityChildren<RegisteredEntity<TEntity>>
       entity?: RegisteredEntity<TEntity>
     }
   >(({ entity: existingEntity, children }, ref) => {
@@ -76,7 +78,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   const MemoizedEntity = memo(Entity, (a, b) => a.entity === b.entity)
 
   const Entities: FC<{
-    children: ReactNode | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
+    children: EntityChildren<RegisteredEntity<TEntity>>
     entities: RegisteredEntity<TEntity>[]
   }> = ({ entities, ...props }) => (
     <>
@@ -91,9 +93,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     tag,
     children
   }: {
-    children:
-      | ReactNode
-      | ((entity: EntityWith<RegisteredEntity<TEntity>, TTag>) => JSX.Element)
+    children: EntityChildren<EntityWith<RegisteredEntity<TEntity>, TTag>>
     initial?: number
     tag: TTag
   }) {
