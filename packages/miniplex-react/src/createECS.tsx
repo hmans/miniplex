@@ -24,6 +24,12 @@ import React, {
 } from "react"
 import mergeRefs from "react-merge-refs"
 
+type ComponentProps<T extends IEntity> = Partial<Omit<T, "children" | "entity">>
+
+type ComponentChildren<T extends IEntity> =
+  | ReactNode
+  | ((entity: T) => JSX.Element)
+
 export function createECS<TEntity extends IEntity = UntypedEntity>() {
   const world = new World<TEntity>()
 
@@ -40,13 +46,11 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
    */
   const Entity = forwardRef<
     TEntity,
-    {
-      children?:
-        | ReactNode
-        | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
+    ComponentProps<TEntity> & {
+      children?: ComponentChildren<RegisteredEntity<TEntity>>
       entity?: RegisteredEntity<TEntity>
     }
-  >(({ entity: existingEntity, children }, ref) => {
+  >(({ entity: existingEntity, children, ...props }, ref) => {
     const [entity, setEntity] = useState<RegisteredEntity<TEntity>>(null!)
 
     /* Apply ref */
@@ -63,6 +67,18 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
       }
     }, [])
 
+    /* Set additional props as components */
+    useEffect(() => {
+      if (!entity) return
+      world.addComponent(entity, props as Partial<TEntity>)
+
+      return () => {
+        if ("__miniplex" in entity) {
+          world.removeComponent(entity, ...Object.keys(props))
+        }
+      }
+    }, [entity])
+
     /* Provide a context with the entity so <Component> components can be wired up. */
     return (
       entity && (
@@ -73,18 +89,15 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     )
   })
 
-  const MemoizedEntity: FC<{
-    children?: ReactNode | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
-    entity: RegisteredEntity<TEntity>
-  }> = memo(
-    ({ entity, ...props }) => (
-      <Entity entity={entity} key={entity.__miniplex.id} {...props} />
-    ),
-    (a, b) => a.entity === b.entity
-  )
+  const MemoizedEntity = memo<
+    ComponentProps<TEntity> & {
+      children?: ComponentChildren<RegisteredEntity<TEntity>>
+      entity: RegisteredEntity<TEntity>
+    }
+  >(Entity, (a, b) => a.entity === b.entity)
 
-  const Entities: FC<{
-    children: ReactNode | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
+  const Entities: FC<ComponentProps<TEntity> & {
+    children: ComponentChildren<RegisteredEntity<TEntity>>
     entities: RegisteredEntity<TEntity>[]
   }> = ({ entities, ...props }) => {
     return (
@@ -105,9 +118,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     tag,
     children
   }: {
-    children:
-      | ReactNode
-      | ((entity: EntityWith<RegisteredEntity<TEntity>, TTag>) => JSX.Element)
+    children: ComponentChildren<EntityWith<RegisteredEntity<TEntity>, TTag>>
     initial?: number
     tag: TTag
   }) {

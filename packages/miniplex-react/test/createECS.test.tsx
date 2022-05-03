@@ -22,7 +22,7 @@ describe("createECS", () => {
       expect(world.entities.length).toEqual(1)
     })
 
-    it("represents an existing entity", () => {
+    it("can represent an existing entity through its 'entity' prop", () => {
       const { world, Entity } = createECS<Entity>()
       const alice = world.createEntity({ name: "Alice" })
 
@@ -42,6 +42,17 @@ describe("createECS", () => {
       render(<Entity ref={setEntity} />)
 
       expect(ref).not.toBeNull()
+    })
+
+    it("sets props as the entity's components", () => {
+      type MyEntity = Entity & { admin?: Tag }
+      const { Entity } = createECS<MyEntity>()
+      const ref = createRef<MyEntity>()
+
+      render(<Entity ref={ref} name="Alice" admin />)
+
+      expect(ref.current!.name).toEqual("Alice")
+      expect(ref.current!.admin).toEqual(true)
     })
   })
 
