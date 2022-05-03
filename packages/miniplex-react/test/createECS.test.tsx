@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react"
 import { act } from "react-dom/test-utils"
 import { Tag } from "miniplex"
 import { createECS } from "../src/createECS"
+import { createRef } from "react"
 
 type Entity = { name: string }
 
@@ -74,6 +75,24 @@ describe("createECS", () => {
 
       expect(alice.label).toBeInstanceOf(HTMLParagraphElement)
       expect(alice.label?.textContent).toEqual("Hello")
+    })
+
+    it("when pased a React child, you can still pass your own ref to that child", () => {
+      const { world, Entity, Component } = createECS<
+        Entity & { label?: HTMLElement }
+      >()
+      const alice = world.createEntity({ name: "Alice" })
+      const ref = createRef<HTMLParagraphElement>()
+
+      render(
+        <Entity entity={alice}>
+          <Component name="label">
+            <p ref={ref}>Hello</p>
+          </Component>
+        </Entity>
+      )
+
+      expect(ref.current).toBeInstanceOf(HTMLParagraphElement)
     })
 
     it("when passed a React child, it is also possible to pass a render function", () => {
