@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+
+### Minor Changes
+
+- 0f01a94: **Breaking Change:** `<Collection>` has been renamed to `<ManagedEntities>`.
+- 0ad0e86: **Breaking Change:** `useEntity` has been changed back to its original functionality of returning the current entity context. `useEntities` has been removed.
+
 ## 0.3.1
 
 ### Patch Changes
