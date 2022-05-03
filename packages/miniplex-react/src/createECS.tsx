@@ -45,8 +45,8 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
         | ReactNode
         | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
       entity?: RegisteredEntity<TEntity>
-    }
-  >(({ entity: existingEntity, children }, ref) => {
+    } & Partial<TEntity>
+  >(({ entity: existingEntity, children, ...props }, ref) => {
     const [entity, setEntity] = useState<RegisteredEntity<TEntity>>(null!)
 
     /* Apply ref */
@@ -62,6 +62,18 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
         setEntity(null!)
       }
     }, [])
+
+    /* Set additional props as components */
+    useEffect(() => {
+      if (!entity) return
+      world.addComponent(entity, props as Partial<TEntity>)
+
+      return () => {
+        if ("__miniplex" in entity) {
+          world.removeComponent(entity, ...Object.keys(props))
+        }
+      }
+    }, [entity])
 
     /* Provide a context with the entity so <Component> components can be wired up. */
     return (
