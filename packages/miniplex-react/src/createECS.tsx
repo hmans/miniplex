@@ -73,15 +73,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     )
   })
 
-  const MemoizedEntity: FC<{
-    children?: ReactNode | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
-    entity: RegisteredEntity<TEntity>
-  }> = memo(
-    ({ entity, ...props }) => (
-      <Entity entity={entity} key={entity.__miniplex.id} {...props} />
-    ),
-    (a, b) => a.entity === b.entity
-  )
+  const MemoizedEntity = memo(Entity, (a, b) => a.entity === b.entity)
 
   const Entities: FC<{
     children: ReactNode | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
