@@ -77,6 +77,10 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
 
   const MemoizedEntity = memo(Entity, (a, b) => a.entity === b.entity)
 
+  /**
+   * Takes an array of entities and renders the inner JSX (or function) once per entity,
+   * memoizing the results.
+   */
   const Entities: FC<{
     children: EntityChildren<RegisteredEntity<TEntity>>
     entities: RegisteredEntity<TEntity>[]
@@ -190,13 +194,13 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
   }
 
   return {
-    world,
+    Component,
+    Entity,
+    Entities,
+    ManagedEntities,
+    MemoizedEntity,
     useArchetype,
     useEntity,
-    Entity,
-    Component,
-    MemoizedEntity,
-    Entities,
-    ManagedEntities
+    world
   }
 }
