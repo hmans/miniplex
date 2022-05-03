@@ -8,6 +8,20 @@
 
 **🚨 Warning: the React glue provided by this package is still incomplete and should be considered unstable. (It works, but there will be breaking changes!)**
 
+## Installation
+
+Add `miniplex-react` and its peer dependency `miniplex` to your application using your favorite package manager, eg.
+
+```sh
+yarn add miniplex miniplex-react
+```
+
+or
+
+```sh
+npm install miniplex miniplex-react
+```
+
 ## Usage
 
 The main entry point for this library is the `createECS` function, which will create a miniplex world alongside a collection of useful hooks and React components that will interact with it.
