@@ -89,15 +89,12 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     )
   })
 
-  const MemoizedEntity: FC<ComponentProps<TEntity> & {
-    children?: ComponentChildren<RegisteredEntity<TEntity>>
-    entity: RegisteredEntity<TEntity>
-  }> = memo(
-    ({ entity, ...props }) => (
-      <Entity entity={entity} key={entity.__miniplex.id} {...props} />
-    ),
-    (a, b) => a.entity === b.entity
-  )
+  const MemoizedEntity = memo<
+    ComponentProps<TEntity> & {
+      children?: ComponentChildren<RegisteredEntity<TEntity>>
+      entity: RegisteredEntity<TEntity>
+    }
+  >(Entity, (a, b) => a.entity === b.entity)
 
   const Entities: FC<ComponentProps<TEntity> & {
     children: ComponentChildren<RegisteredEntity<TEntity>>
