@@ -24,6 +24,12 @@ import React, {
 } from "react"
 import mergeRefs from "react-merge-refs"
 
+type ComponentProps<T extends IEntity> = Partial<Omit<T, "children" | "entity">>
+
+type ComponentChildren<T extends IEntity> =
+  | ReactNode
+  | ((entity: RegisteredEntity<T>) => JSX.Element)
+
 export function createECS<TEntity extends IEntity = UntypedEntity>() {
   const world = new World<TEntity>()
 
@@ -40,12 +46,10 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
    */
   const Entity = forwardRef<
     TEntity,
-    {
-      children?:
-        | ReactNode
-        | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
+    ComponentProps<TEntity> & {
+      children?: ComponentChildren<RegisteredEntity<TEntity>>
       entity?: RegisteredEntity<TEntity>
-    } & Partial<TEntity>
+    }
   >(({ entity: existingEntity, children, ...props }, ref) => {
     const [entity, setEntity] = useState<RegisteredEntity<TEntity>>(null!)
 
@@ -85,8 +89,8 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     )
   })
 
-  const MemoizedEntity: FC<{
-    children?: ReactNode | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
+  const MemoizedEntity: FC<ComponentProps<TEntity> & {
+    children?: ComponentChildren<RegisteredEntity<TEntity>>
     entity: RegisteredEntity<TEntity>
   }> = memo(
     ({ entity, ...props }) => (
@@ -95,8 +99,8 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     (a, b) => a.entity === b.entity
   )
 
-  const Entities: FC<{
-    children: ReactNode | ((entity: RegisteredEntity<TEntity>) => JSX.Element)
+  const Entities: FC<ComponentProps<TEntity> & {
+    children: ComponentChildren<RegisteredEntity<TEntity>>
     entities: RegisteredEntity<TEntity>[]
   }> = ({ entities, ...props }) => {
     return (
@@ -117,9 +121,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     tag,
     children
   }: {
-    children:
-      | ReactNode
-      | ((entity: EntityWith<RegisteredEntity<TEntity>, TTag>) => JSX.Element)
+    children: ComponentChildren<EntityWith<RegisteredEntity<TEntity>, TTag>>
     initial?: number
     tag: TTag
   }) {
