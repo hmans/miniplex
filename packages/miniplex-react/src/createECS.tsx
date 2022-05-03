@@ -113,7 +113,12 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
       }
     }, [tag, initial])
 
-    return <Entities entities={entities} children={children as any}></Entities>
+    return (
+      <Entities
+        entities={entities}
+        children={children as EntityChildren<RegisteredEntity<TEntity>>}
+      ></Entities>
+    )
   }
 
   /**
