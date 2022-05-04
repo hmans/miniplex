@@ -193,6 +193,45 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     return archetype
   }
 
+  /**
+   * Create a number of entities, defined through an optional entity factory,
+   * and add/remove them to/from the world on mount/unmount.
+   */
+  function useManagedEntities(count: number, entityFactory?: () => TEntity) {
+    /* Create entity objects */
+    const entities = useConst<TEntity[]>(() => {
+      const entities = []
+
+      for (let i = 0; i < count; i++) {
+        entities.push(entityFactory ? entityFactory() : ({} as TEntity))
+      }
+
+      return entities
+    })
+
+    /* Create/Destroy entities */
+    useEffect(() => {
+      for (const entity of entities) {
+        world.createEntity(entity)
+      }
+
+      return () => {
+        for (const entity of entities) {
+          world.destroyEntity(entity as RegisteredEntity<TEntity>)
+        }
+      }
+    })
+
+    return entities
+  }
+
+  /**
+   * Return a single entity and automatically add/remove it to/from the world.
+   */
+  function useManagedEntity(entityFn?: () => TEntity) {
+    return useManagedEntities(1, entityFn)[0]
+  }
+
   return {
     Component,
     Entity,
@@ -201,6 +240,8 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     MemoizedEntity,
     useArchetype,
     useEntity,
+    useManagedEntities,
+    useManagedEntity,
     world
   }
 }
