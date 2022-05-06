@@ -350,5 +350,20 @@ describe("World", () => {
       expect(withAdmin.entities).toEqual([])
       expect(withName.entities).toEqual([bob])
     })
+
+    describe("Archetype.first", () => {
+      it("returns the first entity when the archetype has entities", () => {
+        const { world, alice, bob } = setup()
+        const withAdmin = world.archetype("admin")
+        expect(withAdmin.first).toBe(alice)
+      })
+
+      it("returns null when the archetype has no entities", () => {
+        const { world, alice, bob } = setup()
+        const withAdmin = world.archetype("admin")
+        world.removeComponent(alice, "admin")
+        expect(withAdmin.first).toEqual(null)
+      })
+    })
   })
 })
