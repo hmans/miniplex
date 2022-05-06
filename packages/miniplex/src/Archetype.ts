@@ -17,6 +17,11 @@ export class Archetype<
     EntityWith<RegisteredEntity<TEntity>, TQuery[number]>
   >()
 
+  /** Returns the first entity within this archetype. */
+  get first() {
+    return this.entities[0] || null
+  }
+
   /** Listeners on this event are invoked when an entity is added to this archetype's index. */
   public onEntityAdded = new Signal<RegisteredEntity<TEntity>>()
 
