@@ -44,7 +44,7 @@
     "@changesets/cli": "^2.22.0",
     "@preconstruct/cli": "^2.1.5",
     "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.1.1",
+    "@testing-library/react": "^13.2.0",
     "@types/jest": "^27.4.0",
     "@types/react": "^18.0.6",
     "@types/react-dom": "^18.0.2",
