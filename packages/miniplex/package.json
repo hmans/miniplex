@@ -40,7 +40,7 @@
     "@babel/preset-typescript": "^7.16.7",
     "@changesets/cli": "^2.22.0",
     "@preconstruct/cli": "^2.1.5",
-    "@types/jest": "^27.4.0",
+    "@types/jest": "^27.5.0",
     "@types/uuid": "^8.3.4",
     "jest": "^27.5.1",
     "rimraf": "^3.0.2",
