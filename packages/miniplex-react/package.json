@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
-    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-env": "^7.18.2",
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
     "@changesets/cli": "^2.22.0",
@@ -46,7 +46,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@types/jest": "^27.4.0",
-    "@types/react": "^18.0.6",
+    "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.2",
     "jest": "^27.5.1",
     "miniplex": "^0.10.0",
