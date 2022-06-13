@@ -35,7 +35,7 @@
     "docs": "typedoc src/index.ts"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.9",
+    "@babel/core": "^7.18.5",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",
     "@changesets/cli": "^2.22.0",
