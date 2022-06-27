@@ -63,6 +63,8 @@ export class World<T extends IEntity = UntypedEntity> {
   /** An array holding all entities known to this world. */
   public entities = new Array<RegisteredEntity<T> | null>()
 
+  private freeEntityIds = new Array<number>();
+
   /** A list of known archetypes. */
   private archetypes = new Map<string, Archetype<T>>()
 
@@ -117,17 +119,23 @@ export class World<T extends IEntity = UntypedEntity> {
       Object.assign(entity, extra)
     }
 
+    /* Get the next available id */
+    let entityId = this.freeEntityIds.pop()
+    if (entityId === undefined) {
+        entityId = this.entities.length;
+    }
+
     /* Mix in internal component into entity. */
     const registeredEntity = Object.assign(entity, {
       __miniplex: {
-        id: this.entities.length,
+        id: entityId,
         world: this,
         archetypes: []
       }
     })
 
     /* Store the entity... */
-    this.entities.push(registeredEntity)
+    this.entities[entityId] = registeredEntity
 
     /* ...and add it to relevant indices. */
     this.indexEntity(registeredEntity)
@@ -140,6 +148,9 @@ export class World<T extends IEntity = UntypedEntity> {
 
     /* Remove it from our global list of entities */
     this.entities[entity.__miniplex.id] = null
+
+    /* Store the ID for future reuse */
+    this.freeEntityIds.push(entity.__miniplex.id)
 
     /* Remove entity from all archetypes */
     for (const archetype of entity.__miniplex.archetypes) {

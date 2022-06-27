@@ -99,6 +99,18 @@ describe("World", () => {
       expect(entity.__miniplex.id).toEqual(1)
     })
 
+    it("resuses ID from deleted entity", () => {
+        const world = new World<Entity>()
+        world.createEntity({ name: "Alice" });
+
+        const entity1 = world.createEntity({ name: "Bob" });
+        world.destroyEntity(entity1);
+
+        const entity2 = world.createEntity({ name: "Steve" });
+        expect(entity2.__miniplex.id).toEqual(1)
+        expect(entity2.__miniplex.id).toEqual(world.entities.indexOf(entity2))
+    });
+
     describe(".queued", () => {
       it("queues an entity to be added to the entity pool", () => {
         const world = new World<Entity>()
