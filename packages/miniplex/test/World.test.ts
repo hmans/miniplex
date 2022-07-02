@@ -351,6 +351,18 @@ describe("World", () => {
       expect(withName.entities).toEqual([bob])
     })
 
+    it("when world is cleared, archetypes remain intact but have entities removed", () => {
+      const { world, alice, bob } = setup()
+      const withAdmin = world.archetype("admin")
+      expect(withAdmin.entities.length).toEqual(1)
+
+      world.clear()
+      expect(withAdmin.entities.length).toEqual(0)
+
+      world.createEntity({ name: "Alice 2.0", admin: true })
+      expect(withAdmin.entities.length).toEqual(1)
+    })
+
     describe("Archetype.first", () => {
       it("returns the first entity when the archetype has entities", () => {
         const { world, alice, bob } = setup()

@@ -236,8 +236,10 @@ export class World<T extends IEntity = UntypedEntity> {
     /* Remove all entities */
     this.entities.length = 0
 
-    /* Remove all archetype indices */
-    this.archetypes.clear()
+    /* Remove all entities from all archetypes, but keep them around in case they are referenced */
+    for (const archetype of this.archetypes.values()) {
+      archetype.entities.length = 0
+    }
 
     /* Clear queue */
     this.queuedCommands.clear()
