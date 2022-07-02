@@ -1,5 +1,11 @@
 # miniplex
 
+## 0.10.2
+
+### Patch Changes
+
+- 821a45c: **Fixed:** When the world is cleared, archetypes now also get their entities lists cleared.
+
 ## 0.10.1
 
 ### Patch Changes
