@@ -1,5 +1,22 @@
 # miniplex
 
+## 0.10.3
+
+### Patch Changes
+
+- 1cee12c: Typing improvements, thanks to @benwest.
+- 65d2b77: **Added:** Archtypes now implement a `[Symbol.iterator]`, meaning they can be iterated over directly:
+
+  ```js
+  const withVelocity = world.archetype("velocity")
+
+  for (const { velocity } of withVelocity) {
+    /* ... */
+  }
+  ```
+
+  (Thanks @benwest.)
+
 ## 0.10.2
 
 ### Patch Changes
