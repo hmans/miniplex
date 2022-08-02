@@ -8,6 +8,8 @@
 const withVelocity = world.archetype("velocity")
 
 for (const { velocity } of withVelocity) {
-   /* ... */
+  /* ... */
 }
 ```
+
+(Thanks @benwest.)
