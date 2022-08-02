@@ -8,13 +8,18 @@ import { ComponentName, EntityWith, IEntity } from "./World"
  */
 export type Query<T extends IEntity> = ComponentName<T>[]
 
+export type ArchetypeEntity<
+  TEntity extends IEntity,
+  TQuery extends Query<TEntity> = Query<TEntity>
+> = EntityWith<TEntity, TQuery[number]>
+
 export class Archetype<
   TEntity extends IEntity,
   TQuery extends Query<TEntity> = Query<TEntity>
 > {
   /** A list of entities belonging to this archetype. */
   public entities = new Array<
-    EntityWith<RegisteredEntity<TEntity>, TQuery[number]>
+    ArchetypeEntity<RegisteredEntity<TEntity>, TQuery>
   >()
 
   get [Symbol.iterator]() {
@@ -22,12 +27,14 @@ export class Archetype<
   }
 
   /** Returns the first entity within this archetype. */
-  get first() {
+  get first(): ArchetypeEntity<RegisteredEntity<TEntity>, TQuery> | null {
     return this.entities[0] || null
   }
 
   /** Listeners on this event are invoked when an entity is added to this archetype's index. */
-  public onEntityAdded = new Signal<RegisteredEntity<TEntity>>()
+  public onEntityAdded = new Signal<
+    ArchetypeEntity<RegisteredEntity<TEntity>, TQuery>
+  >()
 
   /** Listeners on this event are invoked when an entity is removed from this archetype's index. */
   public onEntityRemoved = new Signal<RegisteredEntity<TEntity>>()
@@ -44,7 +51,7 @@ export class Archetype<
     /* If the entity should be indexed, but isn't, add it. */
     if (shouldBeIndexed && !isIndexed) {
       entity.__miniplex.archetypes.push(this)
-      this.entities.push(entity as any)
+      this.entities.push(entity)
       this.onEntityAdded.emit(entity)
       return
     }
