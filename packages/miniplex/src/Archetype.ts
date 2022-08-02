@@ -17,6 +17,10 @@ export class Archetype<
     EntityWith<RegisteredEntity<TEntity>, TQuery[number]>
   >()
 
+  get [Symbol.iterator]() {
+    return this.entities[Symbol.iterator]
+  }
+
   /** Returns the first entity within this archetype. */
   get first() {
     return this.entities[0] || null
