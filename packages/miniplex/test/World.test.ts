@@ -377,5 +377,15 @@ describe("World", () => {
         expect(withAdmin.first).toEqual(null)
       })
     })
+
+    describe("Archetype[Symbol.iterator]", () => {
+      it("iterates over the entities in the archetype", () => {
+        const { world, alice } = setup()
+        const withAdmin = world.archetype("admin")
+        for (const entity of withAdmin) {
+          expect(entity).toBe(alice)
+        }
+      })
+    })
   })
 })
