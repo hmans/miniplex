@@ -20,10 +20,10 @@ export class Archetype<
   /** A list of entities belonging to this archetype. */
   public entities = new Array<
     ArchetypeEntity<RegisteredEntity<TEntity>, TQuery>
-  >()
+  >();
 
-  get [Symbol.iterator]() {
-    return this.entities[Symbol.iterator]
+  [Symbol.iterator]() {
+    return this.entities[Symbol.iterator]()
   }
 
   /** Returns the first entity within this archetype. */
