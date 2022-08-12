@@ -388,6 +388,10 @@ describe("World", () => {
       it("iterates over the entities in the archetype", () => {
         const { world, alice } = setup()
         const withAdmin = world.archetype("admin")
+
+        expect(withAdmin.entities.length).toEqual(1)
+
+        /* The iterator allows us to iterate over the archetype itself. */
         for (const entity of withAdmin) {
           expect(entity).toBe(alice)
         }

@@ -1,5 +1,11 @@
 # miniplex
 
+## 0.10.4
+
+### Patch Changes
+
+- 74e34c7: **Fixed:** Fixed an issue with the new iterator syntax on archetypes. (@benwest)
+
 ## 0.10.3
 
 ### Patch Changes

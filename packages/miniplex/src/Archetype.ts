@@ -20,7 +20,9 @@ export class Archetype<
   /** A list of entities belonging to this archetype. */
   public entities = new Array<
     ArchetypeEntity<RegisteredEntity<TEntity>, TQuery>
-  >();
+  >()
+
+  constructor(public query: TQuery) {}
 
   [Symbol.iterator]() {
     return this.entities[Symbol.iterator]()
@@ -38,8 +40,6 @@ export class Archetype<
 
   /** Listeners on this event are invoked when an entity is removed from this archetype's index. */
   public onEntityRemoved = new Signal<RegisteredEntity<TEntity>>()
-
-  constructor(public query: TQuery) {}
 
   public indexEntity(entity: RegisteredEntity<TEntity>) {
     /* If the entity is of the archetype, it should be indexed by us. */
