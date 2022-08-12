@@ -108,14 +108,15 @@ export class World<T extends IEntity = UntypedEntity> {
     return entity as T
   }
 
-  public createEntity = <P>(
-    entity: T = {} as T,
+  public createEntity<NewEntity extends T>(
+    entity: NewEntity & T
+  ): NewEntity & MiniplexComponent<T>
+  public createEntity(...partials: Partial<T>[]): RegisteredEntity<T>
+  public createEntity<NewEntity extends T = T>(
+    baseEntity: Partial<T> = {},
     ...extraComponents: Partial<T>[]
-  ): RegisteredEntity<T> => {
-    /* Mix in extra components into entity. */
-    for (const extra of extraComponents) {
-      Object.assign(entity, extra)
-    }
+  ) {
+    const entity: NewEntity = Object.assign(baseEntity, ...extraComponents)
 
     /* Mix in internal component into entity. */
     const registeredEntity = Object.assign(entity, {

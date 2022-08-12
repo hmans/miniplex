@@ -44,6 +44,12 @@ describe("World", () => {
       expect(returnedEntity).toBe(entity)
     })
 
+    it("returns an entity type with the components passed to the function", () => {
+      const world = new World<Entity>()
+      const entity = world.createEntity({ name: "Alice" })
+      const name: string = entity.name
+    })
+
     it("accepts multiple partial entities that are merged into the same entity object", () => {
       const world = new World<Entity>()
       const entity = world.createEntity({ name: "Alice" }, { admin: true })
