@@ -11,16 +11,14 @@ export type Query<T extends IEntity> = ComponentName<T>[]
 export type ArchetypeEntity<
   TEntity extends IEntity,
   TQuery extends Query<TEntity> = Query<TEntity>
-> = EntityWith<TEntity, TQuery[number]>
+> = EntityWith<RegisteredEntity<TEntity>, TQuery[number]>
 
 export class Archetype<
   TEntity extends IEntity,
   TQuery extends Query<TEntity> = Query<TEntity>
 > {
   /** A list of entities belonging to this archetype. */
-  public entities = new Array<
-    ArchetypeEntity<RegisteredEntity<TEntity>, TQuery>
-  >()
+  public entities = new Array<ArchetypeEntity<TEntity, TQuery>>()
 
   constructor(public query: TQuery) {}
 
@@ -29,14 +27,12 @@ export class Archetype<
   }
 
   /** Returns the first entity within this archetype. */
-  get first(): ArchetypeEntity<RegisteredEntity<TEntity>, TQuery> | null {
+  get first(): ArchetypeEntity<TEntity, TQuery> | null {
     return this.entities[0] || null
   }
 
   /** Listeners on this event are invoked when an entity is added to this archetype's index. */
-  public onEntityAdded = new Signal<
-    ArchetypeEntity<RegisteredEntity<TEntity>, TQuery>
-  >()
+  public onEntityAdded = new Signal<ArchetypeEntity<TEntity, TQuery>>()
 
   /** Listeners on this event are invoked when an entity is removed from this archetype's index. */
   public onEntityRemoved = new Signal<RegisteredEntity<TEntity>>()
