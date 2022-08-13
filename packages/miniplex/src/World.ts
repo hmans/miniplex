@@ -186,7 +186,9 @@ export class World<T extends IEntity = UntypedEntity> {
 
     for (const name of components) {
       if (!(name in entity)) {
-        throw `Tried to remove component "${name} from an entity that doesn't have it.`
+        throw `Tried to remove component "${String(
+          name
+        )} from an entity that doesn't have it.`
       }
 
       delete entity[name]
