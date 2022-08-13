@@ -1,5 +1,12 @@
 # miniplex
 
+## 0.10.5
+
+### Patch Changes
+
+- 5ef5f95: Included RegisteredEntity in ArchetypeEntity. (@benwest)
+- c680bdd: Narrowed return type for createEntity (with one argument). (@benwest)
+
 ## 0.10.4
 
 ### Patch Changes
