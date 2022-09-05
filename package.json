@@ -29,7 +29,7 @@
     "printWidth": 80
   },
   "dependencies": {
-    "@changesets/cli": "^2.24.2",
+    "@changesets/cli": "^2.24.4",
     "@manypkg/cli": "^0.19.1",
     "@preconstruct/cli": "^2.2.1"
   }
