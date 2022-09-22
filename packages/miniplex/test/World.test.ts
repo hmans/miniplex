@@ -39,7 +39,7 @@ describe("World", () => {
 
     it("mutates and returns the same new object", () => {
       const world = new World<Entity>()
-      const entity: Partial<Entity> = { name: "Alice" }
+      const entity = { name: "Alice" }
       const returnedEntity = world.createEntity(entity)
       expect(returnedEntity).toBe(entity)
     })
