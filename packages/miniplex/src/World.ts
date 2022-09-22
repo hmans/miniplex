@@ -17,7 +17,7 @@ export interface IEntity {
  * Miniplex uses an internal component that it will automatically add to all created
  * entities.
  */
-export type MiniplexComponent<T> = {
+export type MiniplexComponent<T extends IEntity> = {
   __miniplex: {
     id: EntityId
     world: World<T>
