@@ -59,7 +59,7 @@ export type Tag = true
 
 export class World<T extends IEntity = UntypedEntity> {
   /** An array holding all entities known to this world. */
-  private entities = new Array<RegisteredEntity<T> | null>()
+  public entities = new Array<RegisteredEntity<T>>()
 
   /** The ID assigned to the next entity. */
   private nextId = 0
