@@ -140,7 +140,9 @@ export class World<T extends IEntity = UntypedEntity> {
   ) => {
     /* Sanity check */
     if (entity.__miniplex?.world !== this) {
-      throw `Tried to add components to an entity that is not managed by this world.`
+      throw new Error(
+        `Tried to add components to an entity that is not managed by this world.`
+      )
     }
 
     for (const partial of partials) {
@@ -165,14 +167,18 @@ export class World<T extends IEntity = UntypedEntity> {
     ...components: ComponentName<T>[]
   ) => {
     if (entity.__miniplex?.world !== this) {
-      throw `Tried to remove ${components} from an entity that is not managed by this world.`
+      throw new Error(
+        `Tried to remove ${components} from an entity that is not managed by this world.`
+      )
     }
 
     for (const name of components) {
       if (!(name in entity)) {
-        throw `Tried to remove component "${String(
-          name
-        )} from an entity that doesn't have it.`
+        throw new Error(
+          `Tried to remove component "${String(
+            name
+          )} from an entity that doesn't have it.`
+        )
       }
 
       delete entity[name]
