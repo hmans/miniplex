@@ -23,6 +23,10 @@ export type MiniplexComponent<T extends IEntity> = {
   }
 }
 
+/**
+ * A RegisteredEntity is an entity that has been registered with a world (and thus was blessed
+ * with the __miniplex component).
+ */
 export type RegisteredEntity<T extends IEntity> = T & MiniplexComponent<T>
 
 /**
@@ -41,9 +45,9 @@ export type ComponentName<T extends IEntity> = keyof T
  * component(s) available.
  */
 export type EntityWith<
-  TEntity extends IEntity,
-  TComponents extends ComponentName<TEntity>
-> = WithRequiredKeys<TEntity, TComponents> & TEntity
+  E extends IEntity,
+  C extends ComponentName<E>
+> = WithRequiredKeys<E, C> & E
 
 /**
  * A tag is just an "empty" component. For convenience and nicer type support, we're
