@@ -58,7 +58,7 @@ export type Tag = true
 
 export class World<T extends IEntity = UntypedEntity> {
   /** An array holding all entities known to this world. */
-  public entities = new Array<RegisteredEntity<T> | null>()
+  private entities = new Array<RegisteredEntity<T> | null>()
 
   /** A list of known archetypes. */
   private archetypes = new Map<string, Archetype<T>>()
