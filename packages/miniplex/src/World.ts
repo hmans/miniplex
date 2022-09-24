@@ -103,11 +103,6 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  private unregisterEntity = (entity: RegisteredEntity<T>) => {
-    delete (entity as T).__miniplex
-    return entity as T
-  }
-
   public createEntity<I extends T>(entity: I): RegisteredEntity<T> & I {
     /* Mix in internal component into entity. */
     const registeredEntity = Object.assign(entity, {
@@ -139,7 +134,7 @@ export class World<T extends IEntity = UntypedEntity> {
     }
 
     /* Remove its miniplex component */
-    this.unregisterEntity(entity)
+    delete (entity as T).__miniplex
   }
 
   public addComponent = (
