@@ -60,6 +60,9 @@ export class World<T extends IEntity = UntypedEntity> {
   /** An array holding all entities known to this world. */
   private entities = new Array<RegisteredEntity<T> | null>()
 
+  /** The ID assigned to the next entity. */
+  private nextId = 0
+
   /** A list of known archetypes. */
   private archetypes = new Map<string, Archetype<T>>()
 
@@ -104,7 +107,7 @@ export class World<T extends IEntity = UntypedEntity> {
     /* Mix in internal component into entity. */
     const registeredEntity = Object.assign(entity, {
       __miniplex: {
-        id: this.entities.length,
+        id: this.nextId++,
         world: this,
         archetypes: []
       }
