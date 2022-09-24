@@ -27,37 +27,10 @@
     "README.md"
   ],
   "license": "MIT",
-  "scripts": {
-    "clean": "rimraf dist",
-    "dev": "preconstruct watch",
-    "build": "preconstruct build",
-    "release": "yarn ci && yarn publish",
-    "test": "jest",
-    "ci": "yarn clean & yarn build && yarn test",
-    "docs": "typedoc src/index.ts"
-  },
   "devDependencies": {
-    "@babel/core": "^7.19.1",
-    "@babel/preset-env": "^7.19.1",
-    "@babel/preset-react": "^7.18.6",
-    "@babel/preset-typescript": "^7.18.6",
-    "@changesets/cli": "^2.24.2",
-    "@preconstruct/cli": "^2.2.1",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.3.0",
-    "@types/jest": "^28.1.6",
-    "@types/react": "^18.0.20",
-    "@types/react-dom": "^18.0.6",
-    "jest": "^28.1.3",
-    "jest-environment-jsdom": "^28.1.3",
     "miniplex": "^0.10.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^28.0.7",
-    "tslib": "^2.4.0",
-    "typedoc": "^0.23.15",
-    "typescript": "^4.7.4"
+    "react-dom": "^18.2.0"
   },
   "dependencies": {
     "@hmans/react-toolbox": "^0.1.4",
@@ -66,18 +39,5 @@
   "peerDependencies": {
     "miniplex": ">=0.9.0",
     "react": ">=16.8"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react",
-      [
-        "@babel/preset-typescript",
-        {
-          "isTSX": true,
-          "allExtensions": true
-        }
-      ]
-    ]
   }
 }
