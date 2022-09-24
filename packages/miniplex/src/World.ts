@@ -3,14 +3,12 @@ import { commandQueue } from "./util/commandQueue"
 import { normalizeQuery } from "./util/normalizeQuery"
 import { WithRequiredKeys } from "./util/types"
 
-export type EntityId = number
-
 /**
  * Entities in Miniplex are just plain old Javascript objects. We are assuming
  * map-like objects that use string-based properties to identify individual components.
  */
 export interface IEntity {
-  [key: string]: ComponentData
+  [key: string]: any
 }
 
 /**
@@ -19,19 +17,23 @@ export interface IEntity {
  */
 export type MiniplexComponent<T extends IEntity> = {
   __miniplex: {
-    id: EntityId
+    id: number
     world: World<T>
     archetypes: Archetype<T>[]
   }
 }
 
+/**
+ * A RegisteredEntity is an entity that has been registered with a world (and thus was blessed
+ * with the __miniplex component).
+ */
 export type RegisteredEntity<T extends IEntity> = T & MiniplexComponent<T>
 
 /**
  * For situations where no entity type argument is passed to createWorld, we'll
  * default to an untyped entity type that can hold any component.
  */
-export type UntypedEntity = { [components: string]: ComponentData }
+export type UntypedEntity = IEntity
 
 /**
  * Component names are just strings/object property names.
@@ -39,18 +41,13 @@ export type UntypedEntity = { [components: string]: ComponentData }
 export type ComponentName<T extends IEntity> = keyof T
 
 /**
- * The data of a component can be literally anything. Good times!
- */
-export type ComponentData = any
-
-/**
  * Utility type that represents an Entity that is guaranteed to have the specified
  * component(s) available.
  */
 export type EntityWith<
-  TEntity extends IEntity,
-  TComponents extends ComponentName<TEntity>
-> = WithRequiredKeys<TEntity, TComponents> & TEntity
+  E extends IEntity,
+  C extends ComponentName<E>
+> = WithRequiredKeys<E, C> & E
 
 /**
  * A tag is just an "empty" component. For convenience and nicer type support, we're
