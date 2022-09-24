@@ -108,7 +108,7 @@ export class World<T extends IEntity = UntypedEntity> {
     return entity as T
   }
 
-  public createEntity<S extends T>(entity: S): RegisteredEntity<T> & S {
+  public createEntity<I extends T>(entity: I): RegisteredEntity<T> & I {
     /* Mix in internal component into entity. */
     const registeredEntity = Object.assign(entity, {
       __miniplex: {
