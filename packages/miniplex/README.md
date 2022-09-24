@@ -103,7 +103,7 @@ world.addComponent(entity, { velocity: { x: 10, y: 0, z: 0 } })
 
 Now the entity has two components: `position` and `velocity`.
 
-**Note:** Once added to the world, entities also automatically receive an internal `__miniplex` component. This component contains data that helps Miniplex track the entity's lifecycle, and optimize a lot of interactions with the world, and you can safely ignore it.
+> **Note** Once added to the world, entities also automatically receive an internal `__miniplex` component. This component contains data that helps Miniplex track the entity's lifecycle, and optimize a lot of interactions with the world, and you can safely ignore it.
 
 ### Querying Entities
 
@@ -160,6 +160,10 @@ world.queue.flush()
 **Note:** Please remember that the queue is not flushed automatically, and doing this is left to you. You might, for example, do this in your game's main loop, after all systems have finished executing.
 
 ## Usage Hints
+
+### Do not add or remove entity properties directly
+
+Since entities are just normal objects, you might be tempted to just add new properties to (or delete properties from) them directly. **This is a bad idea** because it will skip the indexing step needed to make sure the entity is listed in the correct archetypes. Please always go through `addComponent` and `removeComponent`!
 
 ### Consider using Component Factories
 
