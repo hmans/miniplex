@@ -84,7 +84,7 @@ export class World<T extends IEntity = UntypedEntity> {
 
     /* ...and refresh the indexing of all our entities. */
     for (const entity of this.entities) {
-      if (entity) archetype.indexEntity(entity)
+      archetype.indexEntity(entity)
     }
 
     return archetype as Archetype<T, TQuery>
