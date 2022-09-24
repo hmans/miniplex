@@ -1,6 +1,7 @@
 import { Archetype, Query } from "./Archetype"
 import { commandQueue } from "./util/commandQueue"
 import { normalizeQuery } from "./util/normalizeQuery"
+import { removeFromList } from "./util/removeFromList"
 import { WithRequiredKeys } from "./util/types"
 
 /**
@@ -126,9 +127,7 @@ export class World<T extends IEntity = UntypedEntity> {
     if (entity.__miniplex?.world !== this) return
 
     /* Remove it from our global list of entities */
-    const pos = this.entities.indexOf(entity)
-    this.entities[pos] = this.entities[this.entities.length - 1]
-    this.entities.pop()
+    removeFromList(this.entities, entity)
 
     /* Remove entity from all archetypes */
     for (const archetype of entity.__miniplex.archetypes) {
