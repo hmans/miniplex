@@ -174,7 +174,11 @@ const health = (initial) => ({ health: { max: initial, current: initial } })
 const world = new World()
 
 /* Use these in createEntity */
-const entity = world.createEntity(position(0, 0), velocity(5, 7), health(1000))
+const entity = world.createEntity({
+  ...position(0, 0),
+  ...velocity(5, 7),
+  ...health(1000)
+})
 
 /* Use these in addComponent */
 const other = world.createEntity(position(0, 0))
@@ -203,7 +207,11 @@ const health = (initial: number): HealthComponent => ({
 const world = new World<Entity>()
 
 /* Use these in createEntity */
-const entity = world.createEntity(position(0, 0), velocity(5, 7), health(1000))
+const entity = world.createEntity({
+  ...position(0, 0),
+  ...velocity(5, 7),
+  ...health(1000)
+})
 
 /* Use these in addComponent */
 const other = world.createEntity(position(0, 0))
