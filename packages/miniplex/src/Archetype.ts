@@ -9,35 +9,32 @@ import { ComponentName, EntityWith, IEntity } from "./World"
 export type Query<T extends IEntity> = ComponentName<T>[]
 
 export type ArchetypeEntity<
-  TEntity extends IEntity,
-  TQuery extends Query<TEntity> = Query<TEntity>
-> = EntityWith<RegisteredEntity<TEntity>, TQuery[number]>
+  E extends IEntity,
+  Q extends Query<E> = Query<E>
+> = EntityWith<RegisteredEntity<E>, Q[number]>
 
-export class Archetype<
-  TEntity extends IEntity,
-  TQuery extends Query<TEntity> = Query<TEntity>
-> {
+export class Archetype<E extends IEntity, Q extends Query<E> = Query<E>> {
   /** A list of entities belonging to this archetype. */
-  public entities = new Array<ArchetypeEntity<TEntity, TQuery>>()
+  public entities = new Array<ArchetypeEntity<E, Q>>()
 
-  constructor(public query: TQuery) {}
+  constructor(public query: Q) {}
 
   [Symbol.iterator]() {
     return this.entities[Symbol.iterator]()
   }
 
   /** Returns the first entity within this archetype. */
-  get first(): ArchetypeEntity<TEntity, TQuery> | null {
+  get first(): ArchetypeEntity<E, Q> | null {
     return this.entities[0] || null
   }
 
   /** Listeners on this event are invoked when an entity is added to this archetype's index. */
-  public onEntityAdded = new Signal<ArchetypeEntity<TEntity, TQuery>>()
+  public onEntityAdded = new Signal<ArchetypeEntity<E, Q>>()
 
   /** Listeners on this event are invoked when an entity is removed from this archetype's index. */
-  public onEntityRemoved = new Signal<RegisteredEntity<TEntity>>()
+  public onEntityRemoved = new Signal<RegisteredEntity<E>>()
 
-  public indexEntity(entity: RegisteredEntity<TEntity>) {
+  public indexEntity(entity: RegisteredEntity<E>) {
     /* If the entity is of the archetype, it should be indexed by us. */
     const shouldBeIndexed = entityIsArchetype(entity, this.query)
 
@@ -62,7 +59,7 @@ export class Archetype<
     }
   }
 
-  public removeEntity(entity: RegisteredEntity<TEntity>) {
+  public removeEntity(entity: RegisteredEntity<E>) {
     const pos = this.entities.indexOf(entity as any, 0)
     if (pos >= 0) {
       this.entities.splice(pos, 1)
