@@ -130,7 +130,8 @@ export class World<T extends IEntity = UntypedEntity> {
     removeFromList(this.entities, entity)
 
     /* Remove entity from all archetypes */
-    for (const archetype of entity.__miniplex.archetypes) {
+    for (let i = entity.__miniplex.archetypes.length - 1; i >= 0; i--) {
+      const archetype = entity.__miniplex.archetypes[i]
       archetype.removeEntity(entity)
     }
 
