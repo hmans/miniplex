@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0-next.0
+
+### Patch Changes
+
+- Updated dependencies [b8b2c9b]
+- Updated dependencies [4d9e51b]
+  - miniplex@0.11.0-next.0
+
 ## 0.4.1
 
 ### Patch Changes

@@ -5,5 +5,8 @@
     "miniplex": "0.10.5",
     "miniplex-react": "0.4.1"
   },
-  "changesets": []
+  "changesets": [
+    "heavy-books-float",
+    "wise-islands-exercise"
+  ]
 }

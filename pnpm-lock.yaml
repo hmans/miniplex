@@ -59,7 +59,7 @@ importers:
   packages/miniplex-react:
     specifiers:
       '@hmans/react-toolbox': ^0.1.4
-      miniplex: ^0.10.0
+      miniplex: ^0.11.0-next.0
       react: ^18.2.0
       react-dom: ^18.2.0
       react-merge-refs: ^1.1.0
