@@ -56,7 +56,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
     useEffect(() => {
-      const entity = existingEntity ?? world.createEntity()
+      const entity = existingEntity ?? world.createEntity({} as TEntity)
       setEntity(entity)
 
       return () => {

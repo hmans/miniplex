@@ -27,7 +27,7 @@ describe("World", () => {
   describe("createEntity", () => {
     it("creates a new entity", () => {
       const world = new World<Entity>()
-      const entity = world.createEntity()
+      const entity = world.createEntity({})
       expect(entity.__miniplex.id).not.toBeUndefined()
     })
 
@@ -50,22 +50,21 @@ describe("World", () => {
       const name: string = entity.name
     })
 
-    it("accepts multiple partial entities that are merged into the same entity object", () => {
-      const world = new World<Entity>()
-      const entity = world.createEntity({ name: "Alice" }, { admin: true })
-      expect(entity).toMatchObject({
-        name: "Alice",
-        admin: true
-      })
-    })
-
     it("allows for use of component factories", () => {
+      /* NOTE: an earlier version of miniplex allowed multiple arguments to be passed
+      into `createEntity`. This functionality was removed to improve API clarity.
+      This test no longer tests something specific to miniplex, but it's still
+      a useful example of how to use component factories. */
+
       const world = new World<GameObject>()
 
       const position = (x = 0, y = 0) => ({ position: { x, y } })
       const velocity = (x = 0, y = 0) => ({ velocity: { x, y } })
 
-      const entity = world.createEntity(position(0, 0), velocity(5, 7))
+      const entity = world.createEntity({
+        ...position(0, 0),
+        ...velocity(5, 7)
+      })
 
       expect(entity).toMatchObject({
         position: { x: 0, y: 0 },
@@ -176,35 +175,37 @@ describe("World", () => {
 
     it("adds a component expressed as a partial entity", () => {
       const world = new World<GameObject>()
-      const entity = world.createEntity()
+      const entity = world.createEntity(position(1, 2))
 
-      world.addComponent(entity, position(1, 2))
+      world.addComponent(entity, velocity(3, 4))
 
-      expect(entity.position).toEqual({ x: 1, y: 2 })
+      expect(entity.velocity).toEqual({ x: 3, y: 4 })
     })
 
     it("adds multiple components expressed within the same partial entity", () => {
       const world = new World<GameObject>()
-      const entity = world.createEntity()
+      const entity = world.createEntity(position(1, 2))
 
-      world.addComponent(entity, { ...position(1, 2), ...health(100) })
+      world.addComponent(entity, { ...velocity(3, 4), ...health(100) })
 
       expect(entity).toEqual({
         __miniplex: { id: 0, world, archetypes: [] },
         position: { x: 1, y: 2 },
+        velocity: { x: 3, y: 4 },
         health: { max: 100, current: 100 }
       })
     })
 
-    it("adds multiple components expressed as multiple partial entitie", () => {
+    it("adds multiple components expressed as multiple partial entities", () => {
       const world = new World<GameObject>()
-      const entity = world.createEntity()
+      const entity = world.createEntity({ ...position(0, 0) })
 
-      world.addComponent(entity, position(1, 2), health(100))
+      world.addComponent(entity, velocity(3, 4), health(100))
 
       expect(entity).toEqual({
         __miniplex: { id: 0, world, archetypes: [] },
-        position: { x: 1, y: 2 },
+        position: { x: 0, y: 0 },
+        velocity: { x: 3, y: 4 },
         health: { max: 100, current: 100 }
       })
     })
