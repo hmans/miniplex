@@ -165,63 +165,6 @@ world.queue.flush()
 
 Since entities are just normal objects, you might be tempted to just add new properties to (or delete properties from) them directly. **This is a bad idea** because it will skip the indexing step needed to make sure the entity is listed in the correct archetypes. Please always go through `addComponent` and `removeComponent`!
 
-### Consider using Component Factories
-
-`createEntity` and `addComponent` accept plain Javascript objects, opening the door to some nice patterns for making entities and components nicely composable. For example, you could create a set of functions acting as component factories, like this:
-
-```js
-/* Provide a bunch of component factories */
-const position = (x = 0, y = 0) => ({ position: { x, y } })
-const velocity = (x = 0, y = 0) => ({ velocity: { x, y } })
-const health = (initial) => ({ health: { max: initial, current: initial } })
-
-const world = new World()
-
-/* Use these in createEntity */
-const entity = world.createEntity({
-  ...position(0, 0),
-  ...velocity(5, 7),
-  ...health(1000)
-})
-
-/* Use these in addComponent */
-const other = world.createEntity(position(0, 0))
-world.addComponent(other, velocity(-10, 0), health(500))
-```
-
-If you're using Typescript, you may even add some per-component types on top like in the following example:
-
-```ts
-/* Define component types */
-type Vector2 = { x: number; y: number }
-type PositionComponent = { position: Vector2 }
-type VelocityComponent = { velocity: Vector2 }
-type HealthComponent = { health: { max: number; current: number } }
-
-/* Define an entity type composed of required and optional components */
-type Entity = PositionComponent & Partial<VelocityComponent, HealthComponent>
-
-/* Provide a bunch of component factories */
-const position = (x = 0, y = 0): PositionComponent => ({ position: { x, y } })
-const velocity = (x = 0, y = 0): VelocityComponent => ({ velocity: { x, y } })
-const health = (initial: number): HealthComponent => ({
-  health: { max: initial, current: initial }
-})
-
-const world = new World<Entity>()
-
-/* Use these in createEntity */
-const entity = world.createEntity({
-  ...position(0, 0),
-  ...velocity(5, 7),
-  ...health(1000)
-})
-
-/* Use these in addComponent */
-const other = world.createEntity(position(0, 0))
-world.addComponent(other, velocity(-10, 0), health(500))
-```
-
 ## Performance Hints
 
 ### Prefer `for` over `forEach`
