@@ -150,6 +150,8 @@ export class World<T extends IEntity = UntypedEntity> {
       )
     }
 
+    console.warn("extendEntity is deprecated. Use addComponent instead.")
+
     for (const partial of partials) {
       for (const name in partial) {
         if (name in entity) {
