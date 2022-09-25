@@ -172,7 +172,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
    * Return the entities of the specified archetype and subscribe this component
    * to it, making it re-render when entities are added to or removed from it.
    */
-  function useArchetype(...query: Query<TEntity>) {
+  function useArchetype<Q extends Query<TEntity>>(...query: Q) {
     const rerender = useRerender()
     const archetype = useConst(() => world.archetype(...query))
 
