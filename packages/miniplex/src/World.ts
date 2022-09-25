@@ -1,6 +1,7 @@
 import { Archetype, Query } from "./Archetype"
 import { commandQueue } from "./util/commandQueue"
 import { normalizeQuery } from "./util/normalizeQuery"
+import { removeFromList } from "./util/removeFromList"
 import { WithRequiredKeys } from "./util/types"
 
 /**
@@ -58,7 +59,10 @@ export type Tag = true
 
 export class World<T extends IEntity = UntypedEntity> {
   /** An array holding all entities known to this world. */
-  public entities = new Array<RegisteredEntity<T> | null>()
+  public entities = new Array<RegisteredEntity<T>>()
+
+  /** The ID assigned to the next entity. */
+  private nextId = 0
 
   /** A list of known archetypes. */
   private archetypes = new Map<string, Archetype<T>>()
@@ -80,7 +84,7 @@ export class World<T extends IEntity = UntypedEntity> {
 
     /* ...and refresh the indexing of all our entities. */
     for (const entity of this.entities) {
-      if (entity) archetype.indexEntity(entity)
+      archetype.indexEntity(entity)
     }
 
     return archetype as Archetype<T, TQuery>
@@ -104,7 +108,7 @@ export class World<T extends IEntity = UntypedEntity> {
     /* Mix in internal component into entity. */
     const registeredEntity = Object.assign(entity, {
       __miniplex: {
-        id: this.entities.length,
+        id: this.nextId++,
         world: this,
         archetypes: []
       }
@@ -123,10 +127,11 @@ export class World<T extends IEntity = UntypedEntity> {
     if (entity.__miniplex?.world !== this) return
 
     /* Remove it from our global list of entities */
-    this.entities[entity.__miniplex.id] = null
+    removeFromList(this.entities, entity)
 
     /* Remove entity from all archetypes */
-    for (const archetype of entity.__miniplex.archetypes) {
+    for (let i = entity.__miniplex.archetypes.length - 1; i >= 0; i--) {
+      const archetype = entity.__miniplex.archetypes[i]
       archetype.removeEntity(entity)
     }
 

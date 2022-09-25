@@ -1,6 +1,7 @@
 import { Signal } from "@hmans/signal"
 import { RegisteredEntity } from "."
 import { entityIsArchetype } from "./util/entityIsArchetype"
+import { removeFromList } from "./util/removeFromList"
 import { ComponentName, EntityWith, IEntity } from "./World"
 
 /**
@@ -51,19 +52,14 @@ export class Archetype<E extends IEntity, Q extends Query<E> = Query<E>> {
 
     /* If the entity should not be indexed, but is, let's remove it. */
     if (!shouldBeIndexed && isIndexed) {
-      this.entities.splice(this.entities.indexOf(entity as any, 0), 1)
-      this.onEntityRemoved.emit(entity)
-      const apos = entity.__miniplex.archetypes.indexOf(this, 0)
-      entity.__miniplex.archetypes.splice(apos, 1)
+      this.removeEntity(entity)
       return
     }
   }
 
   public removeEntity(entity: RegisteredEntity<E>) {
-    const pos = this.entities.indexOf(entity as any, 0)
-    if (pos >= 0) {
-      this.entities.splice(pos, 1)
-      this.onEntityRemoved.emit(entity)
-    }
+    removeFromList(this.entities, entity)
+    removeFromList(entity.__miniplex.archetypes, this)
+    this.onEntityRemoved.emit(entity)
   }
 }
