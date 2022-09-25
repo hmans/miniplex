@@ -166,7 +166,7 @@ describe("World", () => {
     })
   })
 
-  describe("addComponent", () => {
+  describe("extendEntity", () => {
     const position = (x: number = 0, y: number = 0) => ({ position: { x, y } })
     const velocity = (x: number = 0, y: number = 0) => ({ velocity: { x, y } })
     const health = (amount: number) => ({
@@ -177,7 +177,7 @@ describe("World", () => {
       const world = new World<GameObject>()
       const entity = world.createEntity(position(1, 2))
 
-      world.addComponent(entity, velocity(3, 4))
+      world.extendEntity(entity, velocity(3, 4))
 
       expect(entity.velocity).toEqual({ x: 3, y: 4 })
     })
@@ -186,7 +186,7 @@ describe("World", () => {
       const world = new World<GameObject>()
       const entity = world.createEntity(position(1, 2))
 
-      world.addComponent(entity, { ...velocity(3, 4), ...health(100) })
+      world.extendEntity(entity, { ...velocity(3, 4), ...health(100) })
 
       expect(entity).toEqual({
         __miniplex: { id: 0, world, archetypes: [] },
@@ -200,7 +200,7 @@ describe("World", () => {
       const world = new World<GameObject>()
       const entity = world.createEntity({ ...position(0, 0) })
 
-      world.addComponent(entity, velocity(3, 4), health(100))
+      world.extendEntity(entity, velocity(3, 4), health(100))
 
       expect(entity).toEqual({
         __miniplex: { id: 0, world, archetypes: [] },
@@ -217,7 +217,7 @@ describe("World", () => {
       const entity = world.createEntity({ ...position() })
       expect(withVelocity.entities).not.toContain(entity)
 
-      world.addComponent(entity, velocity())
+      world.extendEntity(entity, velocity())
       expect(withVelocity.entities).toContain(entity)
     })
 
@@ -227,7 +227,7 @@ describe("World", () => {
       const entity = otherWorld.createEntity({ position: { x: 0, y: 0 } })
 
       expect(() => {
-        world.addComponent(entity, velocity())
+        world.extendEntity(entity, velocity())
       }).toThrow()
     })
 
@@ -236,7 +236,7 @@ describe("World", () => {
       const entity = world.createEntity(position())
 
       expect(() => {
-        world.addComponent(entity, position())
+        world.extendEntity(entity, position())
       }).toThrow()
     })
   })
@@ -326,7 +326,7 @@ describe("World", () => {
       const { world, alice, bob } = setup()
       const admins = world.archetype("admin")
       expect(admins.entities).toEqual([alice])
-      world.addComponent(bob, { admin: true })
+      world.extendEntity(bob, { admin: true })
       expect(admins.entities).toEqual([alice, bob])
     })
 
