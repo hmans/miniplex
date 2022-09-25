@@ -1,0 +1,9 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "miniplex": "0.10.5",
+    "miniplex-react": "0.4.2"
+  },
+  "changesets": []
+}
