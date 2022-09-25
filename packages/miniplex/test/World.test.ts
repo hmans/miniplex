@@ -241,6 +241,64 @@ describe("World", () => {
     })
   })
 
+  describe("addComponent", () => {
+    it("adds a component to an entity", () => {
+      const world = new World<GameObject>()
+      const entity = world.createEntity({ position: { x: 0, y: 0 } })
+
+      world.addComponent(entity, "velocity", { x: 1, y: 2 })
+
+      expect(entity.velocity).toEqual({ x: 1, y: 2 })
+    })
+
+    it("uses the same object for the component value", () => {
+      const world = new World<GameObject>()
+      const entity = world.createEntity({ position: { x: 0, y: 0 } })
+
+      const velocity = { x: 1, y: 2 }
+
+      world.addComponent(entity, "velocity", velocity)
+
+      expect(entity.velocity).toBe(velocity)
+    })
+
+    it("adds entities to relevant archetypes", () => {
+      const world = new World<GameObject>()
+      const withVelocity = world.archetype("velocity")
+
+      const entity = world.createEntity({ position: { x: 0, y: 0 } })
+      expect(withVelocity.entities).not.toContain(entity)
+
+      world.addComponent(entity, "velocity", { x: 1, y: 2 })
+      expect(withVelocity.entities).toContain(entity)
+    })
+
+    it("throws an error when the component already exists", () => {
+      const world = new World<GameObject>()
+      const entity = world.createEntity({ position: { x: 0, y: 0 } })
+
+      world.addComponent(entity, "velocity", { x: 1, y: 2 })
+
+      expect(() => {
+        world.addComponent(entity, "velocity", { x: 3, y: 4 })
+      }).toThrowErrorMatchingInlineSnapshot(
+        `"Component \\"velocity\\" is already present in entity. Aborting!"`
+      )
+    })
+
+    it("throws when the specified entity is not managed by this world", () => {
+      const world = new World<GameObject>()
+      const otherWorld = new World<GameObject>()
+      const entity = otherWorld.createEntity({ position: { x: 0, y: 0 } })
+
+      expect(() => {
+        world.addComponent(entity, "velocity", { x: 1, y: 2 })
+      }).toThrowErrorMatchingInlineSnapshot(
+        `"Tried to add components to an entity that is not managed by this world."`
+      )
+    })
+  })
+
   describe("removeComponent", () => {
     it("removes a component from an entity", () => {
       const world = new World<GameObject>()
