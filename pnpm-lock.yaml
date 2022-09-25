@@ -65,9 +65,9 @@ importers:
       react-merge-refs: ^1.1.0
     dependencies:
       '@hmans/react-toolbox': 0.1.4_react@18.2.0
+      miniplex: link:../miniplex
       react-merge-refs: 1.1.0
     devDependencies:
-      miniplex: link:../miniplex
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
 
