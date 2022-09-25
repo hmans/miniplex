@@ -139,7 +139,7 @@ export class World<T extends IEntity = UntypedEntity> {
     delete (entity as T).__miniplex
   }
 
-  public addComponent = (
+  public extendEntity = (
     entity: RegisteredEntity<T>,
     ...partials: Partial<T>[]
   ) => {
@@ -149,6 +149,8 @@ export class World<T extends IEntity = UntypedEntity> {
         `Tried to add components to an entity that is not managed by this world.`
       )
     }
+
+    console.warn("extendEntity is deprecated. Use addComponent instead.")
 
     for (const partial of partials) {
       for (const name in partial) {
@@ -162,6 +164,34 @@ export class World<T extends IEntity = UntypedEntity> {
         entity[name] = partial[name]!
       }
     }
+
+    /* Trigger a reindexing of the entity */
+    this.indexEntity(entity)
+  }
+
+  public addComponent = <
+    E extends RegisteredEntity<T>,
+    C extends ComponentName<E>
+  >(
+    entity: E,
+    name: C,
+    value: E[C]
+  ) => {
+    /* Sanity check */
+    if (entity.__miniplex?.world !== this) {
+      throw new Error(
+        `Tried to add components to an entity that is not managed by this world.`
+      )
+    }
+
+    if (name in entity) {
+      throw new Error(
+        `Component "${String(name)}" is already present in entity. Aborting!`
+      )
+    }
+
+    /* Set component */
+    entity[name] = value
 
     /* Trigger a reindexing of the entity */
     this.indexEntity(entity)
@@ -210,8 +240,16 @@ export class World<T extends IEntity = UntypedEntity> {
       )
     },
 
-    addComponent: (entity: RegisteredEntity<T>, ...partials: Partial<T>[]) => {
-      this.queuedCommands.add(() => this.addComponent(entity, ...partials))
+    extendEntity: (entity: RegisteredEntity<T>, ...partials: Partial<T>[]) => {
+      this.queuedCommands.add(() => this.extendEntity(entity, ...partials))
+    },
+
+    addComponent: <E extends RegisteredEntity<T>, C extends ComponentName<E>>(
+      entity: E,
+      name: C,
+      value: E[C]
+    ) => {
+      this.queuedCommands.add(() => this.addComponent(entity, name, value))
     },
 
     removeComponent: (

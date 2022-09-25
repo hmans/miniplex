@@ -146,7 +146,7 @@ export function createECS<TEntity extends IEntity = UntypedEntity>() {
     }
 
     useEffect(() => {
-      world.addComponent(entity, { [name]: data ?? ref.current } as any)
+      world.addComponent(entity, name, data ?? (ref.current as any))
 
       return () => {
         if ("__miniplex" in entity) {
