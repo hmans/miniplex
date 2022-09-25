@@ -235,7 +235,7 @@ The `archetype` function aims to be idempotent and will reuse existing archetype
 For example, creating your archetypes within a system function like this will work, but unnecessarily create additional overhead, and is thus not recommended:
 
 ```ts
-function healthSystem(world) {
+function movementSystem(world) {
   const movingEntities = world.archetype("position", "velocity")
 
   for (const { position, velocity } of movingEntities.entities) {
@@ -251,7 +251,7 @@ Instead, create the archetype outside of your system:
 ```ts
 const movingEntities = world.archetype("position", "velocity")
 
-function healthSystem(world) {
+function movementSystem(world) {
   for (const { position, velocity } of movingEntities.entities) {
     position.x += velocity.x
     position.y += velocity.y
