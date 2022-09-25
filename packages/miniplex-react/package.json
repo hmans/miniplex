@@ -17,7 +17,7 @@
     "hooks"
   ],
   "sideEffects": false,
-  "version": "0.4.2",
+  "version": "0.4.3",
   "main": "dist/miniplex-react.cjs.js",
   "module": "dist/miniplex-react.esm.js",
   "types": "dist/miniplex-react.cjs.d.ts",
@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@hmans/react-toolbox": "^0.1.4",
-    "miniplex": "^0.10.0",
+    "miniplex": "^0.11.0",
     "react-merge-refs": "^1.1.0"
   },
   "peerDependencies": {
