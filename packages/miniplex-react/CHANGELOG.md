@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.3-next.0
+
+### Patch Changes
+
+- dd047e9: This package now loads `miniplex` as a direct dependency; it is no longer necessary to install miniplex as a peer dependency.
+- Updated dependencies [769dba7]
+- Updated dependencies [b8b2c9b]
+- Updated dependencies [cb6d078]
+- Updated dependencies [4d9e51b]
+  - miniplex@0.11.0-next.0
+
 ## 0.4.2
 
 ### Patch Changes

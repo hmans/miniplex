@@ -5,5 +5,11 @@
     "miniplex": "0.10.5",
     "miniplex-react": "0.4.2"
   },
-  "changesets": []
+  "changesets": [
+    "funny-hounds-drum",
+    "heavy-books-float",
+    "lemon-eagles-appear",
+    "many-dryers-yawn",
+    "wise-islands-exercise"
+  ]
 }
