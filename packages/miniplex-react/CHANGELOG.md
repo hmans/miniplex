@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.2
+
+### Patch Changes
+
+- 1422853: Fixed return type of `useArchetype`.
+
 ## 0.4.1
 
 ### Patch Changes
