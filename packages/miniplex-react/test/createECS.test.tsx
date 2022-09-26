@@ -1,13 +1,24 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import { act } from "react-dom/test-utils"
-import { Tag } from "miniplex"
+import { Tag, World } from "miniplex"
 import { createECS } from "../src/createECS"
 import { createRef } from "react"
 
 type Entity = { name: string }
 
 describe("createECS", () => {
+  it("allows the user to pass in an existing World instance", () => {
+    const world = new World<Entity>()
+    const ecs = createECS(world)
+    expect(ecs.world).toBe(world)
+  })
+
+  it("creates a fresh world if none is passed into it", () => {
+    const ecs = createECS<Entity>()
+    expect(ecs.world).toBeInstanceOf(World)
+  })
+
   it("returns a useArchetype function", () => {
     const ECS = createECS<Entity>()
     expect(ECS).toHaveProperty("useArchetype")

@@ -28,8 +28,10 @@ type EntityChildren<T extends IEntity> =
   | ReactNode
   | ((entity: T) => JSX.Element)
 
-export function createECS<TEntity extends IEntity = UntypedEntity>() {
-  const world = new World<TEntity>()
+export function createECS<TEntity extends IEntity = UntypedEntity>(
+  inWorld?: World<TEntity>
+) {
+  const world = inWorld || new World<TEntity>()
 
   const EntityContext = createContext<RegisteredEntity<TEntity>>(null!)
 
