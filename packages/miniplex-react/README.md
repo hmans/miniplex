@@ -46,6 +46,18 @@ type Entity = {
 export const ECS = createECS<Entity>()
 ```
 
+### Using an existing World
+
+Alternatively, you can pass an existing instance of `World` into `createECS` to use that instead of creating a new one:
+
+```ts
+import { World } from "miniplex"
+import { createECS } from "miniplex-react"
+
+const world = new World<Entity>()
+const ECS = createECS(world)
+```
+
 ### The World
 
 `createECS` returns a `world` property containing the actual ECS world. You can interact with it like you would usually do to imperatively create, modify and destroy entities:
