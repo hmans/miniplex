@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.0-next.1
+
+### Major Changes
+
+- 4016fb2: 1.0!
+
+### Patch Changes
+
+- Updated dependencies [410e0f6]
+- Updated dependencies [4016fb2]
+  - miniplex@1.0.0-next.1
+
 ## 0.4.3-next.0
 
 ### Patch Changes
