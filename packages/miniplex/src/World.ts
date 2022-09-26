@@ -67,6 +67,14 @@ export class World<T extends IEntity = UntypedEntity> {
   /** A list of known archetypes. */
   private archetypes = new Map<string, Archetype<T>>()
 
+  constructor(options: { entities?: T[] } = {}) {
+    if (options.entities) {
+      for (const entity of options.entities) {
+        this.createEntity(entity)
+      }
+    }
+  }
+
   public archetype<TQuery extends Query<T>>(
     ...query: TQuery
   ): Archetype<T, TQuery> {

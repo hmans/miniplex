@@ -24,6 +24,15 @@ describe("World", () => {
     expect(world).toBeInstanceOf(World)
   })
 
+  it("can be passed an initial list of entities", () => {
+    const alice = { name: "Alice", admin: true }
+    const bob = { name: "Bob", age: 42 }
+
+    const world = new World<Entity>({ entities: [alice, bob] })
+
+    expect(world.entities).toEqual([alice, bob])
+  })
+
   describe("createEntity", () => {
     it("creates a new entity", () => {
       const world = new World<Entity>()
