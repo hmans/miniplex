@@ -200,7 +200,7 @@ describe("World", () => {
       const world = new World<GameObject>()
       const entity = world.createEntity({ ...position(0, 0) })
 
-      world.extendEntity(entity, velocity(3, 4), health(100))
+      world.extendEntity(entity, { ...velocity(3, 4), ...health(100) })
 
       expect(entity).toEqual({
         __miniplex: { id: 0, world, archetypes: [] },

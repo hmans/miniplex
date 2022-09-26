@@ -141,7 +141,7 @@ export class World<T extends IEntity = UntypedEntity> {
 
   public extendEntity = (
     entity: RegisteredEntity<T>,
-    ...partials: Partial<T>[]
+    components: Partial<T>
   ) => {
     /* Sanity check */
     if (entity.__miniplex?.world !== this) {
@@ -150,17 +150,15 @@ export class World<T extends IEntity = UntypedEntity> {
       )
     }
 
-    for (const partial of partials) {
-      for (const name in partial) {
-        if (name in entity) {
-          throw new Error(
-            `Component "${name}" is already present in entity. Aborting!`
-          )
-        }
-
-        /* Set entity */
-        entity[name] = partial[name]!
+    for (const name in components) {
+      if (name in entity) {
+        throw new Error(
+          `Component "${name}" is already present in entity. Aborting!`
+        )
       }
+
+      /* Set entity */
+      entity[name] = components[name]!
     }
 
     /* Trigger a reindexing of the entity */
@@ -238,8 +236,8 @@ export class World<T extends IEntity = UntypedEntity> {
       )
     },
 
-    extendEntity: (entity: RegisteredEntity<T>, ...partials: Partial<T>[]) => {
-      this.queuedCommands.add(() => this.extendEntity(entity, ...partials))
+    extendEntity: (entity: RegisteredEntity<T>, components: Partial<T>) => {
+      this.queuedCommands.add(() => this.extendEntity(entity, components))
     },
 
     addComponent: <E extends RegisteredEntity<T>, C extends ComponentName<E>>(
