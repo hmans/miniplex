@@ -12,4 +12,12 @@ world.addComponent(entity, { position: { x: 0, y: 0 } })
 world.addComponent(entity, "position", { x: 0, y: 0 })
 ```
 
-The previous API for `addComponent` is now available as `extendEntity`, but _marked as deprecated_.
+The previous API for `addComponent` is now available as `extendEntity`:
+
+```ts
+world.extendEntity(
+  entity,
+  { position: { x: 0, y: 0 } },
+  { velocity: { x: 10, y: 20 } }
+)
+```
