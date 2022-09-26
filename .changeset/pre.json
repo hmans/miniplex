@@ -6,10 +6,12 @@
     "miniplex-react": "0.4.2"
   },
   "changesets": [
+    "chilled-waves-sniff",
     "funny-hounds-drum",
     "heavy-books-float",
     "lemon-eagles-appear",
     "many-dryers-yawn",
+    "tough-bobcats-learn",
     "wise-islands-exercise"
   ]
 }

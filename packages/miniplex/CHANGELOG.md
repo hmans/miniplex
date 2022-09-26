@@ -1,5 +1,19 @@
 # miniplex
 
+## 1.0.0-next.1
+
+### Major Changes
+
+- 4016fb2: 1.0!
+
+### Patch Changes
+
+- 410e0f6: The `World` class can now be instantiated with an initial list of entities like so:
+
+  ```js
+  const world = new World({ entities: [entity1, entity2] })
+  ```
+
 ## 0.11.0-next.0
 
 ### Minor Changes
