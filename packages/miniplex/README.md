@@ -67,7 +67,7 @@ import { World } from "miniplex"
 const world = new World()
 ```
 
-### Typing your Entities (optional)
+### Typing your Entities (optional, but recommended)
 
 If you're using TypeScript, you can define a type that describes your entities and provide it to the `World` constructor to get full type support in all interactions with it:
 
@@ -183,10 +183,17 @@ const entity = world.createEntity({
   ...velocity(5, 7),
   ...health(1000)
 })
+```
 
-/* Use these in addComponent */
+Miniplex offers the `extendEntity` function to add multiple components to an entity in one go, and you can make use of your factory components here:
+
+```js
 const other = world.createEntity(position(0, 0))
-world.addComponent(other, velocity(-10, 0), health(500))
+
+world.addComponent(other, {
+  ...velocity(-10, 0),
+  ...health(500)
+})
 ```
 
 If you're using Typescript, you may even add some per-component types on top like in the following example:
@@ -217,9 +224,13 @@ const entity = world.createEntity({
   ...health(1000)
 })
 
-/* Use these in addComponent */
+/* Use these in extendComponent */
 const other = world.createEntity(position(0, 0))
-world.addComponent(other, velocity(-10, 0), health(500))
+
+world.extendComponent(other, {
+  ...velocity(-10, 0),
+  ...health(500)
+})
 ```
 
 ## Performance Hints
