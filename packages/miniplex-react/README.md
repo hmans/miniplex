@@ -6,20 +6,14 @@
 
 ### React glue for [miniplex], the gentle game entity manager.
 
-**🚨 Warning: the React glue provided by this package is still incomplete and should be considered unstable. (It works, but there will be breaking changes!)**
-
 ## Installation
 
 Add `miniplex-react` and its peer dependency `miniplex` to your application using your favorite package manager, eg.
 
 ```sh
-yarn add miniplex miniplex-react
-```
-
-or
-
-```sh
 npm install miniplex miniplex-react
+yarn add miniplex miniplex-react
+pnpm add miniplex miniplex-react
 ```
 
 ## Usage
