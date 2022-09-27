@@ -58,13 +58,15 @@ importers:
 
   packages/miniplex-react:
     specifiers:
-      '@hmans/react-toolbox': ^0.1.4
+      '@hmans/use-const': ^0.0.1
+      '@hmans/use-rerender': ^0.0.2
       miniplex: 1.0.0-next.1
       react: ^18.2.0
       react-dom: ^18.2.0
       react-merge-refs: ^1.1.0
     dependencies:
-      '@hmans/react-toolbox': 0.1.4_react@18.2.0
+      '@hmans/use-const': 0.0.1_react@18.2.0
+      '@hmans/use-rerender': 0.0.2_react@18.2.0
       react-merge-refs: 1.1.0
     devDependencies:
       miniplex: link:../miniplex
@@ -1568,16 +1570,33 @@ packages:
       prettier: 2.7.1
     dev: false
 
-  /@hmans/react-toolbox/0.1.4_react@18.2.0:
-    resolution: {integrity: sha512-PmhaalZ70hSfIX7AUgWO9gVhKkWH8cbZXxGzmjgJ+46sw6cJUlnawkc/WlIxtUro+TTW61YG1i+18QD0zsvF+Q==}
+  /@hmans/signal/0.2.2:
+    resolution: {integrity: sha512-4KlR6FiqICOY9J8V483Atk7bfMqoGM/hdYd/6ab+HB+CJfiOBPzY6PtYz3O6bBsNkIZpimnTMSw2AqOz1WDlrA==}
+    dev: false
+
+  /@hmans/use-const/0.0.1_react@18.2.0:
+    resolution: {integrity: sha512-qYWCVLc6NjVq7PcwoCZ/i70VvmBZ+Nni/ZC5qauzksZB1l8M6ltyTs5MEvDC+Z1O/eUKPkiEvCPwgAqiP619BQ==}
     peerDependencies:
-      react: '>=16.8'
+      react: '>=18.1.0'
     dependencies:
       react: 18.2.0
     dev: false
 
-  /@hmans/signal/0.2.2:
-    resolution: {integrity: sha512-4KlR6FiqICOY9J8V483Atk7bfMqoGM/hdYd/6ab+HB+CJfiOBPzY6PtYz3O6bBsNkIZpimnTMSw2AqOz1WDlrA==}
+  /@hmans/use-rerender/0.0.2_react@18.2.0:
+    resolution: {integrity: sha512-Z4So8S8Gg2Iudr1ldClZVhq2mO/sAbhzvlQ1RD9F5Ez4rJlx3CY7++XuMwemcz05DAyNBRUrYtl+eL+uiIzI7A==}
+    peerDependencies:
+      react: '>=18.1.0'
+    dependencies:
+      '@hmans/use-version': 0.0.2_react@18.2.0
+      react: 18.2.0
+    dev: false
+
+  /@hmans/use-version/0.0.2_react@18.2.0:
+    resolution: {integrity: sha512-fkHcIxHFjNimT9+DuUax92MWpIKxZDMGsAVAM5AK4sE5GEMDVbiSq+ayKWMMYuLPqQn05ZJ01/D27CS7lA624g==}
+    peerDependencies:
+      react: '>=18.1.0'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /@istanbuljs/load-nyc-config/1.1.0:
