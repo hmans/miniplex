@@ -6,6 +6,7 @@
     "miniplex-react": "0.4.2"
   },
   "changesets": [
+    "brown-actors-wave",
     "chilled-waves-sniff",
     "funny-hounds-drum",
     "heavy-books-float",
