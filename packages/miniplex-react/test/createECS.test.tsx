@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import { act } from "react-dom/test-utils"
-import { Tag, World } from "miniplex"
+import { RegisteredEntity, Tag, World } from "miniplex"
 import { createECS } from "../src/createECS"
 import { createRef } from "react"
 
@@ -46,7 +46,7 @@ describe("createECS", () => {
       const { Entity } = createECS<Entity>()
       let ref = null
 
-      const setEntity = (entity: Entity) => {
+      const setEntity = (entity: RegisteredEntity<Entity> | null) => {
         ref = entity
       }
 
