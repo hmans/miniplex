@@ -190,6 +190,39 @@ const FriendlyShips = () => {
 }
 ```
 
+Since rendering all entities of a specific archetype is such a common operation, this library also provides a `<ArchetypeEntities>` component that does exactly that:
+
+```tsx
+const EnemyShips = () => (
+  <ECS.ArchetypeEntities archetype={["enemy"]}>
+    <ECS.Component name="three">
+      <EnemyShipModel />
+    </ECS.Component>
+  </ECS.ArchetypeEntities>
+)
+```
+
+### Using Render Props
+
+`<Entity>`, `<Entities>` and `<ArchetypeEntities>` all support the optional use of [children render props](https://reactjs.org/docs/render-props.html), where instead of JSX children, you pass a _function_ that receives each entity as its first and only argument, and is expected to _return_ the JSX that is to be rendered. This is useful if you're rendering a collection of entities and need some code to run _for each entity_, for example when setting random values like in this example:
+
+```tsx
+const EnemyShips = () => (
+  <ECS.ArchetypeEntities archetype={["enemy"]}>
+    {(entity) => (
+      <ECS.Entity entity={entity}>
+        {/* Randomize the value of the health component */}
+        <ECS.Component name="health" value={Math.random() * 1000}>
+
+        <ECS.Component name="three">
+          <EnemyShipModel />
+        </ECS.Component>
+      </ECS.Entity>
+    )}
+  </ECS.ArchetypeEntities>
+)
+```
+
 ### Managed Entity Collections
 
 In games and other ECS-oriented applications, you will often have several distinct _entity types_ -- like spaceships, asteroids, bullets, explosions, etc. -- even if these entities are composed of several shared ECS components. All entities within a specific entity type are typically composed from the same set of components (eg. spaceships always have a position and a velocity), and rendered in a similar manner (eg. bullets will always be rendered using a small box mesh, but with varying materials.)

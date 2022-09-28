@@ -1,11 +1,11 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import { act } from "react-dom/test-utils"
-import { Tag, World } from "miniplex"
+import { RegisteredEntity, Tag, World } from "miniplex"
 import { createECS } from "../src/createECS"
 import { createRef } from "react"
 
-type Entity = { name: string }
+type Entity = { name: string; age?: number }
 
 describe("createECS", () => {
   it("allows the user to pass in an existing World instance", () => {
@@ -46,7 +46,7 @@ describe("createECS", () => {
       const { Entity } = createECS<Entity>()
       let ref = null
 
-      const setEntity = (entity: Entity) => {
+      const setEntity = (entity: RegisteredEntity<Entity> | null) => {
         ref = entity
       }
 
@@ -231,6 +231,42 @@ describe("createECS", () => {
 
       expect(screen.getByTestId("user-0")).toHaveTextContent("Alice")
       expect(screen.getByTestId("user-1")).toHaveTextContent("Bob")
+    })
+  })
+
+  describe("<ArchetypeEntities>", () => {
+    it("renders entities of the specified archetype", () => {
+      const ECS = createECS<Entity>()
+
+      ECS.world.createEntity({ name: "Alice" })
+      ECS.world.createEntity({ name: "Bob", age: 40 })
+      ECS.world.createEntity({ name: "Charlie", age: 31 })
+
+      render(
+        <ECS.ArchetypeEntities archetype={["name", "age"]}>
+          {({ __miniplex, name, age }) => (
+            <p key={__miniplex.id} data-testid={`user-${__miniplex.id}`}>
+              {name} is {age} years old
+            </p>
+          )}
+        </ECS.ArchetypeEntities>
+      )
+
+      expect(screen.queryByTestId("user-0")).toBeNull()
+      expect(screen.getByTestId("user-1")).toHaveTextContent(
+        "Bob is 40 years old"
+      )
+      expect(screen.getByTestId("user-2")).toHaveTextContent(
+        "Charlie is 31 years old"
+      )
+
+      act(() => {
+        ECS.world.createEntity({ name: "Dörte", age: 35 })
+      })
+
+      expect(screen.getByTestId("user-3")).toHaveTextContent(
+        "Dörte is 35 years old"
+      )
     })
   })
 
