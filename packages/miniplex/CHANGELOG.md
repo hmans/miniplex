@@ -1,5 +1,11 @@
 # miniplex
 
+## 1.0.0-next.5
+
+### Patch Changes
+
+- c12dfc1: **Fixed:** Improved typing of `createEntity`.
+
 ## 1.0.0-next.1
 
 ### Major Changes
