@@ -112,7 +112,7 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  public createEntity<I extends T>(entity: I): RegisteredEntity<T> & I {
+  public createEntity(entity: T): RegisteredEntity<T> {
     /* Mix in internal component into entity. */
     const registeredEntity = Object.assign(entity, {
       __miniplex: {
