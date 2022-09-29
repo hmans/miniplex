@@ -59,10 +59,10 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     },
     ref: Ref<T>
   ) {
-    const [entity, setEntity] = useState<T>(null!)
+    const [entity, setEntity] = useState<RegisteredEntity<Entity>>(null!)
 
     /* Apply ref */
-    useImperativeHandle(ref, () => entity)
+    useImperativeHandle(ref, () => entity as T)
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
     useEffect(() => {
@@ -79,7 +79,7 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     return (
       entity && (
         <EntityContext.Provider value={entity}>
-          {typeof children === "function" ? children(entity) : children}
+          {typeof children === "function" ? children(entity as T) : children}
         </EntityContext.Provider>
       )
     )
