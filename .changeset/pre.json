@@ -6,6 +6,7 @@
     "miniplex-react": "0.4.2"
   },
   "changesets": [
+    "big-monkeys-worry",
     "brown-actors-wave",
     "chilled-waves-sniff",
     "dry-sheep-glow",
