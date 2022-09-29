@@ -1,5 +1,11 @@
 # miniplex
 
+## 1.0.0-next.6
+
+### Patch Changes
+
+- efa21f2: Typing tweaks.
+
 ## 1.0.0-next.5
 
 ### Patch Changes
