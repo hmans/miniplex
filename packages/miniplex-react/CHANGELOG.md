@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0-next.8
+
+### Patch Changes
+
+- 877dac5: **Fixed:** Make use of `useIsomorphicLayoutEffect`.
+
 ## 1.0.0-next.7
 
 ### Patch Changes
