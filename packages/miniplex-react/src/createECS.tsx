@@ -10,7 +10,7 @@ import {
   UntypedEntity,
   World
 } from "miniplex"
-import {
+import React, {
   cloneElement,
   createContext,
   forwardRef,
