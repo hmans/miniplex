@@ -10,7 +10,7 @@ import {
   UntypedEntity,
   World
 } from "miniplex"
-import React, {
+import {
   cloneElement,
   createContext,
   forwardRef,
@@ -21,8 +21,8 @@ import React, {
   useContext,
   useEffect,
   useImperativeHandle,
-  useRef,
-  useState
+  useLayoutEffect,
+  useRef
 } from "react"
 import mergeRefs from "react-merge-refs"
 
@@ -59,29 +59,23 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     },
     ref: Ref<T>
   ) {
-    const [entity, setEntity] = useState<RegisteredEntity<Entity>>(null!)
+    const entity = useConst(() => existingEntity ?? world.createEntity({} as T))
+
+    /* If the entity was freshly created, manage its presence in the ECS world. */
+    useLayoutEffect(() => {
+      return () => {
+        if (!existingEntity) world.destroyEntity(entity)
+      }
+    }, [])
 
     /* Apply ref */
     useImperativeHandle(ref, () => entity as T)
 
-    /* If the entity was freshly created, manage its presence in the ECS world. */
-    useEffect(() => {
-      const entity = existingEntity ?? world.createEntity({} as T)
-      setEntity(entity)
-
-      return () => {
-        if (!existingEntity) world.destroyEntity(entity)
-        setEntity(null!)
-      }
-    }, [])
-
     /* Provide a context with the entity so <Component> components can be wired up. */
     return (
-      entity && (
-        <EntityContext.Provider value={entity}>
-          {typeof children === "function" ? children(entity as T) : children}
-        </EntityContext.Provider>
-      )
+      <EntityContext.Provider value={entity}>
+        {typeof children === "function" ? children(entity as T) : children}
+      </EntityContext.Provider>
     )
   })
 
