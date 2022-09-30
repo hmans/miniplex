@@ -19,7 +19,6 @@ import React, {
   ReactNode,
   Ref,
   useContext,
-  useEffect,
   useImperativeHandle,
   useLayoutEffect,
   useRef
@@ -124,7 +123,7 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
   }) {
     const { entities } = useArchetype(tag)
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       /* When firing up, create the requested number of entities. */
       for (let i = 0; i < initial; i++) {
         world.createEntity({ [tag]: Tag } as Entity)
@@ -166,7 +165,7 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
       throw new Error("<Component> will only accept a single React child.")
     }
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       world.addComponent(entity, name, data ?? (ref.current as any))
 
       return () => {
@@ -199,7 +198,7 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     const rerender = useRerender()
     const archetype = useConst(() => world.archetype(...query))
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       archetype.onEntityAdded.add(rerender)
       archetype.onEntityRemoved.add(rerender)
 
