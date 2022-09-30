@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0-next.7
+
+### Patch Changes
+
+- c38d7e5: **Fixed:** A couple of components were using `useEffect` where it should have been `useLayoutEffect`.
+- 54bb5ef: **Fixed:** <Entity> no longer re-renders once after mounting.
+
 ## 1.0.0-next.6
 
 ### Patch Changes
