@@ -20,10 +20,10 @@ import React, {
   Ref,
   useContext,
   useImperativeHandle,
-  useLayoutEffect,
   useRef
 } from "react"
 import mergeRefs from "react-merge-refs"
+import useIsomorphicLayoutEffect from "./isomorphicLayoutEffect"
 
 type EntityChildren<T extends IEntity> =
   | ReactNode
@@ -61,7 +61,7 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     const entity = useConst(() => existingEntity ?? world.createEntity({} as T))
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
-    useLayoutEffect(() => {
+    useIsomorphicLayoutEffect(() => {
       return () => {
         if (!existingEntity) world.destroyEntity(entity)
       }
@@ -123,7 +123,7 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
   }) {
     const { entities } = useArchetype(tag)
 
-    useLayoutEffect(() => {
+    useIsomorphicLayoutEffect(() => {
       /* When firing up, create the requested number of entities. */
       for (let i = 0; i < initial; i++) {
         world.createEntity({ [tag]: Tag } as Entity)
@@ -165,7 +165,7 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
       throw new Error("<Component> will only accept a single React child.")
     }
 
-    useLayoutEffect(() => {
+    useIsomorphicLayoutEffect(() => {
       world.addComponent(entity, name, data ?? (ref.current as any))
 
       return () => {
@@ -198,7 +198,7 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     const rerender = useRerender()
     const archetype = useConst(() => world.archetype(...query))
 
-    useLayoutEffect(() => {
+    useIsomorphicLayoutEffect(() => {
       archetype.onEntityAdded.add(rerender)
       archetype.onEntityRemoved.add(rerender)
 
