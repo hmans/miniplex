@@ -45,19 +45,20 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
    * A React component to either create a new entity, or represent an existing entity so
    * it can be enhanced with additional components (see the <Component> component.)
    */
-  const Entity = forwardRef(function (
+  const Entity = forwardRef(function <
+    E extends RegisteredEntity<Entity>,
+    C extends EntityChildren<E>
+  >(
     {
       entity: existingEntity,
       children
     }: {
-      entity?: RegisteredEntity<Entity>
-      children?: EntityChildren<Entity>
+      entity?: E
+      children?: C
     },
-    ref: Ref<RegisteredEntity<Entity>>
+    ref: Ref<E>
   ) {
-    const entity = useConst(
-      () => existingEntity ?? world.createEntity({} as Entity)
-    )
+    const entity = useConst(() => existingEntity ?? world.createEntity({} as E))
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
     useIsomorphicLayoutEffect(() => {
@@ -67,14 +68,12 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     }, [])
 
     /* Apply ref */
-    useImperativeHandle(ref, () => entity as RegisteredEntity<Entity>)
+    useImperativeHandle(ref, () => entity as E)
 
     /* Provide a context with the entity so <Component> components can be wired up. */
     return (
       <EntityContext.Provider value={entity}>
-        {typeof children === "function"
-          ? children(entity as RegisteredEntity<Entity>)
-          : children}
+        {typeof children === "function" ? children(entity as E) : children}
       </EntityContext.Provider>
     )
   })
@@ -86,9 +85,9 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
    * memoizing the results.
    */
   function Entities<
-    T extends RegisteredEntity<Entity>,
-    C extends EntityChildren<T>
-  >({ entities, children }: { entities: T[]; children: C }) {
+    E extends RegisteredEntity<Entity>,
+    C extends EntityChildren<E>
+  >({ entities, children }: { entities: E[]; children: C }) {
     return (
       <>
         {entities.map((entity) => (
