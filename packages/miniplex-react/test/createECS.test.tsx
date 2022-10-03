@@ -185,15 +185,15 @@ describe("createECS", () => {
     it("automatically rerenders the component when the list of entities changes", () => {})
   })
 
-  describe("useEntity", () => {
+  describe("useCurrentEntity", () => {
     it("returns the current entity context", () => {
-      const { world, Entity, useEntity } = createECS<Entity>()
+      const { world, Entity, useCurrentEntity } = createECS<Entity>()
 
       const alice = world.createEntity({ name: "Alice " })
 
       const Name = () => {
-        /* Use the useEntity hook to fetch the current entity context */
-        const entity = useEntity()
+        /* Use the useCurrentEntity hook to fetch the current entity context */
+        const entity = useCurrentEntity()
 
         return (
           <p data-testid={`user-${entity.__miniplex.id}`}>

@@ -223,6 +223,24 @@ const EnemyShips = () => (
 )
 ```
 
+## Advanced Usage
+
+### Hooking into the current entities
+
+When you're composing entities from nested components, you may need to get the current entity context the React component is in. You can do this using the `useCurrentEntity` hook:
+
+```tsx
+const Health = () => {
+  const entity = ECS.useCurrentEntity()
+
+  useEffect(() => {
+    /* Do something with the entity here */
+  })
+
+  return null
+}
+```
+
 ### Managed Entity Collections
 
 In games and other ECS-oriented applications, you will often have several distinct _entity types_ -- like spaceships, asteroids, bullets, explosions, etc. -- even if these entities are composed of several shared ECS components. All entities within a specific entity type are typically composed from the same set of components (eg. spaceships always have a position and a velocity), and rendered in a similar manner (eg. bullets will always be rendered using a small box mesh, but with varying materials.)
