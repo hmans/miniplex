@@ -2,4 +2,4 @@
 "miniplex": patch
 ---
 
-**Fixed:** Improved typing of `createEntity`.
+**Fixed:** `createEntity` was not checking against the world's entity type; this has been fixed.

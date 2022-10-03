@@ -1,5 +1,5 @@
 ---
-"miniplex": minor
+"miniplex": major
 ---
 
 **Breaking Change:** When destroying entities, they are now removed from the world's global list of entities as well as the archetypes' lists of entities using the shuffle-and-pop pattern. This has the following side-effects that _may_ impact your code:

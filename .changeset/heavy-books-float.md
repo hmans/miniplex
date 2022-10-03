@@ -1,8 +1,8 @@
 ---
-"miniplex": minor
+"miniplex": major
 ---
 
-**Breaking Change:** The API signature of `createEntity` has been simplified in order to improve clarity of the API and reduce complexity in both implementation and types. `createEntity` now only supports a single argument, which _must_ satisfy the world's entity type.
+**Major Breaking Change:** The API signature of `createEntity` has been simplified in order to improve clarity of the API and reduce complexity in both implementation and types. `createEntity` now only supports a single argument, which _must_ satisfy the world's entity type.
 
 This will only affect you if you have been using `createEntity` with more than one argument in order to compose entities from partial entities, like so:
 

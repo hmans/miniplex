@@ -1,5 +1,5 @@
 ---
-"miniplex": minor
+"miniplex": major
 ---
 
 **Major Breaking Change:** The signature of `addComponent` has been simplified to accept an entity, a component name, and the value of the component:
