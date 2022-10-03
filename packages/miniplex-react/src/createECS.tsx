@@ -46,19 +46,19 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
    * it can be enhanced with additional components (see the <Component> component.)
    */
   const Entity = forwardRef(function <
-    T extends RegisteredEntity<Entity>,
-    C extends EntityChildren<T>
+    E extends RegisteredEntity<Entity>,
+    C extends EntityChildren<E>
   >(
     {
       entity: existingEntity,
       children
     }: {
-      entity?: T
+      entity?: E
       children?: C
     },
-    ref: Ref<T>
+    ref: Ref<E>
   ) {
-    const entity = useConst(() => existingEntity ?? world.createEntity({} as T))
+    const entity = useConst(() => existingEntity ?? world.createEntity({} as E))
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
     useIsomorphicLayoutEffect(() => {
@@ -68,12 +68,12 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     }, [])
 
     /* Apply ref */
-    useImperativeHandle(ref, () => entity as T)
+    useImperativeHandle(ref, () => entity as E)
 
     /* Provide a context with the entity so <Component> components can be wired up. */
     return (
       <EntityContext.Provider value={entity}>
-        {typeof children === "function" ? children(entity as T) : children}
+        {typeof children === "function" ? children(entity as E) : children}
       </EntityContext.Provider>
     )
   })
@@ -85,9 +85,9 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
    * memoizing the results.
    */
   function Entities<
-    T extends RegisteredEntity<Entity>,
-    C extends EntityChildren<T>
-  >({ entities, children }: { entities: T[]; children: C }) {
+    E extends RegisteredEntity<Entity>,
+    C extends EntityChildren<E>
+  >({ entities, children }: { entities: E[]; children: C }) {
     return (
       <>
         {entities.map((entity) => (
@@ -112,14 +112,14 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     return <Entities entities={entities} children={children} />
   }
 
-  function ManagedEntities<TTag extends keyof Entity>({
+  function ManagedEntities<C extends keyof Entity>({
     initial = 0,
     tag,
     children
   }: {
-    children: EntityChildren<EntityWith<RegisteredEntity<Entity>, TTag>>
+    children: EntityChildren<EntityWith<RegisteredEntity<Entity>, C>>
     initial?: number
-    tag: TTag
+    tag: C
   }) {
     const { entities } = useArchetype(tag)
 
@@ -148,17 +148,17 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
   /**
    * Declaratively add a component to an entity.
    */
-  function Component<K extends keyof Entity, V = Entity[K]>({
+  function Component<C extends keyof Entity>({
     name,
     data,
     children
   }: {
-    name: K
-    data?: V
+    name: C
+    data?: Entity[C]
     children?: ReactElement | ((entity: Entity) => ReactElement)
   }) {
     const entity = useEntity()
-    const ref = useRef<Entity[K]>(null!)
+    const ref = useRef<Entity[C]>(null!)
 
     /* Warn the user that passing multiple children is not allowed. */
     if (children && Array.isArray(children)) {
