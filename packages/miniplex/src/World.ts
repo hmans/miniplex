@@ -53,17 +53,17 @@ export type EntityWith<T extends IEntity, C extends keyof T> = WithRequiredKeys<
 export const Tag = true
 export type Tag = true
 
-export class World<T extends IEntity = UntypedEntity> {
+export class World<Entity extends IEntity = UntypedEntity> {
   /** An array holding all entities known to this world. */
-  public entities = new Array<RegisteredEntity<T>>()
+  public entities = new Array<RegisteredEntity<Entity>>()
 
   /** The ID assigned to the next entity. */
   private nextId = 0
 
   /** A list of known archetypes. */
-  private archetypes = new Map<string, Archetype<T>>()
+  private archetypes = new Map<string, Archetype<Entity>>()
 
-  constructor(options: { entities?: T[] } = {}) {
+  constructor(options: { entities?: Entity[] } = {}) {
     if (options.entities) {
       for (const entity of options.entities) {
         this.createEntity(entity)
@@ -71,17 +71,17 @@ export class World<T extends IEntity = UntypedEntity> {
     }
   }
 
-  public archetype<Q extends Query<T>>(...query: Q): Archetype<T, Q> {
+  public archetype<Q extends Query<Entity>>(...query: Q): Archetype<Entity, Q> {
     const normalizedQuery = normalizeQuery(query)
     const stringifiedQuery = JSON.stringify(normalizedQuery)
 
     /* We may already have an archetype representing the same query */
     if (this.archetypes.has(stringifiedQuery)) {
-      return this.archetypes.get(stringifiedQuery) as Archetype<T, Q>
+      return this.archetypes.get(stringifiedQuery) as Archetype<Entity, Q>
     }
 
     /* Once we reach this point, we need to create a new archetype... */
-    const archetype = new Archetype<T>(normalizedQuery)
+    const archetype = new Archetype<Entity>(normalizedQuery)
     this.archetypes.set(stringifiedQuery, archetype)
 
     /* ...and refresh the indexing of all our entities. */
@@ -89,10 +89,10 @@ export class World<T extends IEntity = UntypedEntity> {
       archetype.indexEntity(entity)
     }
 
-    return archetype as Archetype<T, Q>
+    return archetype as Archetype<Entity, Q>
   }
 
-  private indexEntity(entity: RegisteredEntity<T>) {
+  private indexEntity(entity: RegisteredEntity<Entity>) {
     /*
     We absolutely never want to add entities to our indices that are not actually
     part of this world, so let's do a sanity check.
@@ -106,7 +106,7 @@ export class World<T extends IEntity = UntypedEntity> {
 
   /* MUTATION FUNCTIONS */
 
-  public createEntity(entity: T): RegisteredEntity<T> {
+  public createEntity(entity: Entity): RegisteredEntity<Entity> {
     /* Mix in internal component into entity. */
     const registeredEntity = Object.assign(entity, {
       __miniplex: {
@@ -125,7 +125,7 @@ export class World<T extends IEntity = UntypedEntity> {
     return registeredEntity
   }
 
-  public destroyEntity(entity: RegisteredEntity<T>) {
+  public destroyEntity(entity: RegisteredEntity<Entity>) {
     if (entity.__miniplex?.world !== this) return
 
     /* Remove it from our global list of entities */
@@ -138,10 +138,13 @@ export class World<T extends IEntity = UntypedEntity> {
     }
 
     /* Remove its miniplex component */
-    delete (entity as T).__miniplex
+    delete (entity as Entity).__miniplex
   }
 
-  public extendEntity(entity: RegisteredEntity<T>, components: Partial<T>) {
+  public extendEntity(
+    entity: RegisteredEntity<Entity>,
+    components: Partial<Entity>
+  ) {
     /* Sanity check */
     if (entity.__miniplex?.world !== this) {
       throw new Error(
@@ -164,10 +167,10 @@ export class World<T extends IEntity = UntypedEntity> {
     this.indexEntity(entity)
   }
 
-  public addComponent = <C extends keyof T>(
-    entity: RegisteredEntity<T>,
+  public addComponent = <C extends keyof Entity>(
+    entity: RegisteredEntity<Entity>,
     name: C,
-    value: RegisteredEntity<T>[C]
+    value: RegisteredEntity<Entity>[C]
   ) => {
     /* Sanity check */
     if (entity.__miniplex?.world !== this) {
@@ -190,8 +193,8 @@ export class World<T extends IEntity = UntypedEntity> {
   }
 
   public removeComponent = (
-    entity: RegisteredEntity<T>,
-    ...components: (keyof T)[]
+    entity: RegisteredEntity<Entity>,
+    ...components: (keyof Entity)[]
   ) => {
     if (entity.__miniplex?.world !== this) {
       throw new Error(
@@ -222,29 +225,35 @@ export class World<T extends IEntity = UntypedEntity> {
   private queuedCommands = commandQueue()
 
   public queue = {
-    createEntity: (entity: T) => {
+    createEntity: (entity: Entity) => {
       this.queuedCommands.add(() => this.createEntity(entity))
     },
 
-    destroyEntity: (entity: RegisteredEntity<T> | T) => {
+    destroyEntity: (entity: RegisteredEntity<Entity> | Entity) => {
       this.queuedCommands.add(() =>
-        this.destroyEntity(entity as RegisteredEntity<T>)
+        this.destroyEntity(entity as RegisteredEntity<Entity>)
       )
     },
 
-    extendEntity: (entity: RegisteredEntity<T>, components: Partial<T>) => {
+    extendEntity: (
+      entity: RegisteredEntity<Entity>,
+      components: Partial<Entity>
+    ) => {
       this.queuedCommands.add(() => this.extendEntity(entity, components))
     },
 
-    addComponent: <C extends keyof T>(
-      entity: RegisteredEntity<T>,
+    addComponent: <C extends keyof Entity>(
+      entity: RegisteredEntity<Entity>,
       name: C,
-      value: RegisteredEntity<T>[C]
+      value: RegisteredEntity<Entity>[C]
     ) => {
       this.queuedCommands.add(() => this.addComponent(entity, name, value))
     },
 
-    removeComponent: (entity: RegisteredEntity<T>, ...names: (keyof T)[]) => {
+    removeComponent: (
+      entity: RegisteredEntity<Entity>,
+      ...names: (keyof Entity)[]
+    ) => {
       this.queuedCommands.add(() => this.removeComponent(entity, ...names))
     },
 
