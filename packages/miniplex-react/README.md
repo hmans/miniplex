@@ -193,10 +193,20 @@ const FriendlyShips = () => {
 Since rendering all entities of a specific archetype is such a common operation, this library also provides a `<ArchetypeEntities>` component that does exactly that:
 
 ```tsx
+/* Archetypes can be specified using arrays of component names: */
 const EnemyShips = () => (
-  <ECS.ArchetypeEntities archetype={["enemy"]}>
+  <ECS.ArchetypeEntities archetype={["ship", "enemy"]}>
     <ECS.Component name="three">
       <EnemyShipModel />
+    </ECS.Component>
+  </ECS.ArchetypeEntities>
+)
+
+/* Or just strings: */
+const HealthPickups = () => (
+  <ECS.ArchetypeEntities archetype="healthPickup">
+    <ECS.Component name="three">
+      <HealthPickupModel />
     </ECS.Component>
   </ECS.ArchetypeEntities>
 )
