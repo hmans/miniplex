@@ -61,7 +61,7 @@ export class World<Entity extends IEntity = UntypedEntity> {
   private nextId = 0
 
   /** A list of known archetypes. */
-  private archetypes = new Map<string, Archetype<Entity>>()
+  public archetypes = new Map<string, Archetype<Entity>>()
 
   constructor(options: { entities?: Entity[] } = {}) {
     if (options.entities) {
