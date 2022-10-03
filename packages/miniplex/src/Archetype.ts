@@ -2,12 +2,12 @@ import { Signal } from "@hmans/signal"
 import { RegisteredEntity } from "."
 import { entityIsArchetype } from "./util/entityIsArchetype"
 import { removeFromList } from "./util/removeFromList"
-import { ComponentName, EntityWith, IEntity } from "./World"
+import { EntityWith, IEntity } from "./World"
 
 /**
  * A query is an array of component names.
  */
-export type Query<T extends IEntity> = ComponentName<T>[]
+export type Query<T extends IEntity> = (keyof T)[]
 
 export type ArchetypeEntity<
   E extends IEntity,
