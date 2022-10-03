@@ -105,10 +105,19 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
    * Reactively renders all entities that match the given archetype.
    */
   function ArchetypeEntities<
-    Q extends Query<Entity>,
-    C extends EntityChildren<ArchetypeEntity<Entity, Q>>
-  >({ archetype, children }: { archetype: Q; children: C }) {
-    const { entities } = useArchetype(...archetype)
+    K extends (keyof Entity)[] | keyof Entity,
+    Q extends K extends (keyof Entity)[] ? K : K[]
+  >({
+    archetype,
+    children
+  }: {
+    archetype: K
+    children: EntityChildren<ArchetypeEntity<Entity, Q>>
+  }) {
+    const entities = useArchetype(
+      ...(Array.isArray(archetype) ? archetype : [archetype])
+    ).entities as ArchetypeEntity<Entity, Q>[]
+
     return <Entities entities={entities} children={children} />
   }
 

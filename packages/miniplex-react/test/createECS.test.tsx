@@ -268,6 +268,32 @@ describe("createECS", () => {
         "Dörte is 35 years old"
       )
     })
+
+    it("also accepts a singular component name", () => {
+      const ECS = createECS<Entity>()
+
+      ECS.world.createEntity({ name: "Alice" })
+      ECS.world.createEntity({ name: "Bob", age: 40 })
+      ECS.world.createEntity({ name: "Charlie", age: 31 })
+
+      render(
+        <ECS.ArchetypeEntities archetype="age">
+          {({ __miniplex, name, age }) => (
+            <p key={__miniplex.id} data-testid={`user-${__miniplex.id}`}>
+              {name} is {age} years old
+            </p>
+          )}
+        </ECS.ArchetypeEntities>
+      )
+
+      expect(screen.queryByTestId("user-0")).toBeNull()
+      expect(screen.getByTestId("user-1")).toHaveTextContent(
+        "Bob is 40 years old"
+      )
+      expect(screen.getByTestId("user-2")).toHaveTextContent(
+        "Charlie is 31 years old"
+      )
+    })
   })
 
   describe("<ManagedEntities>", () => {
