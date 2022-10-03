@@ -148,13 +148,13 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
   /**
    * Declaratively add a component to an entity.
    */
-  function Component<K extends keyof Entity, V = Entity[K]>({
+  function Component<K extends keyof Entity>({
     name,
     data,
     children
   }: {
     name: K
-    data?: V
+    data?: Entity[K]
     children?: ReactElement | ((entity: Entity) => ReactElement)
   }) {
     const entity = useEntity()
