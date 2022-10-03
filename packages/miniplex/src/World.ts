@@ -37,18 +37,14 @@ export type RegisteredEntity<T extends IEntity> = T & MiniplexComponent<T>
 export type UntypedEntity = IEntity
 
 /**
- * Component names are just strings/object property names.
- */
-export type ComponentName<T extends IEntity> = keyof T
-
-/**
  * Utility type that represents an Entity that is guaranteed to have the specified
  * component(s) available.
  */
-export type EntityWith<
-  E extends IEntity,
-  C extends ComponentName<E>
-> = WithRequiredKeys<E, C> & E
+export type EntityWith<T extends IEntity, C extends keyof T> = WithRequiredKeys<
+  T,
+  C
+> &
+  T
 
 /**
  * A tag is just an "empty" component. For convenience and nicer type support, we're
@@ -173,10 +169,7 @@ export class World<T extends IEntity = UntypedEntity> {
     this.indexEntity(entity)
   }
 
-  public addComponent = <
-    E extends RegisteredEntity<T>,
-    C extends ComponentName<E>
-  >(
+  public addComponent = <E extends RegisteredEntity<T>, C extends keyof E>(
     entity: E,
     name: C,
     value: E[C]
@@ -203,7 +196,7 @@ export class World<T extends IEntity = UntypedEntity> {
 
   public removeComponent = (
     entity: RegisteredEntity<T>,
-    ...components: ComponentName<T>[]
+    ...components: (keyof T)[]
   ) => {
     if (entity.__miniplex?.world !== this) {
       throw new Error(
@@ -248,7 +241,7 @@ export class World<T extends IEntity = UntypedEntity> {
       this.queuedCommands.add(() => this.extendEntity(entity, components))
     },
 
-    addComponent: <E extends RegisteredEntity<T>, C extends ComponentName<E>>(
+    addComponent: <E extends RegisteredEntity<T>, C extends keyof E>(
       entity: E,
       name: C,
       value: E[C]
@@ -256,10 +249,7 @@ export class World<T extends IEntity = UntypedEntity> {
       this.queuedCommands.add(() => this.addComponent(entity, name, value))
     },
 
-    removeComponent: (
-      entity: RegisteredEntity<T>,
-      ...names: ComponentName<T>[]
-    ) => {
+    removeComponent: (entity: RegisteredEntity<T>, ...names: (keyof T)[]) => {
       this.queuedCommands.add(() => this.removeComponent(entity, ...names))
     },
 
