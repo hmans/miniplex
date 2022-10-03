@@ -71,15 +71,13 @@ export class World<T extends IEntity = UntypedEntity> {
     }
   }
 
-  public archetype<TQuery extends Query<T>>(
-    ...query: TQuery
-  ): Archetype<T, TQuery> {
+  public archetype<Q extends Query<T>>(...query: Q): Archetype<T, Q> {
     const normalizedQuery = normalizeQuery(query)
     const stringifiedQuery = JSON.stringify(normalizedQuery)
 
     /* We may already have an archetype representing the same query */
     if (this.archetypes.has(stringifiedQuery)) {
-      return this.archetypes.get(stringifiedQuery) as Archetype<T, TQuery>
+      return this.archetypes.get(stringifiedQuery) as Archetype<T, Q>
     }
 
     /* Once we reach this point, we need to create a new archetype... */
@@ -91,7 +89,7 @@ export class World<T extends IEntity = UntypedEntity> {
       archetype.indexEntity(entity)
     }
 
-    return archetype as Archetype<T, TQuery>
+    return archetype as Archetype<T, Q>
   }
 
   private indexEntity(entity: RegisteredEntity<T>) {
@@ -127,7 +125,7 @@ export class World<T extends IEntity = UntypedEntity> {
     return registeredEntity
   }
 
-  public destroyEntity = (entity: RegisteredEntity<T>) => {
+  public destroyEntity(entity: RegisteredEntity<T>) {
     if (entity.__miniplex?.world !== this) return
 
     /* Remove it from our global list of entities */
@@ -143,10 +141,7 @@ export class World<T extends IEntity = UntypedEntity> {
     delete (entity as T).__miniplex
   }
 
-  public extendEntity = (
-    entity: RegisteredEntity<T>,
-    components: Partial<T>
-  ) => {
+  public extendEntity(entity: RegisteredEntity<T>, components: Partial<T>) {
     /* Sanity check */
     if (entity.__miniplex?.world !== this) {
       throw new Error(
@@ -169,10 +164,10 @@ export class World<T extends IEntity = UntypedEntity> {
     this.indexEntity(entity)
   }
 
-  public addComponent = <E extends RegisteredEntity<T>, C extends keyof E>(
-    entity: E,
+  public addComponent = <C extends keyof T>(
+    entity: RegisteredEntity<T>,
     name: C,
-    value: E[C]
+    value: RegisteredEntity<T>[C]
   ) => {
     /* Sanity check */
     if (entity.__miniplex?.world !== this) {
@@ -241,10 +236,10 @@ export class World<T extends IEntity = UntypedEntity> {
       this.queuedCommands.add(() => this.extendEntity(entity, components))
     },
 
-    addComponent: <E extends RegisteredEntity<T>, C extends keyof E>(
-      entity: E,
+    addComponent: <C extends keyof T>(
+      entity: RegisteredEntity<T>,
       name: C,
-      value: E[C]
+      value: RegisteredEntity<T>[C]
     ) => {
       this.queuedCommands.add(() => this.addComponent(entity, name, value))
     },
