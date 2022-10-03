@@ -112,14 +112,14 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     return <Entities entities={entities} children={children} />
   }
 
-  function ManagedEntities<TTag extends keyof Entity>({
+  function ManagedEntities<C extends keyof Entity>({
     initial = 0,
     tag,
     children
   }: {
-    children: EntityChildren<EntityWith<RegisteredEntity<Entity>, TTag>>
+    children: EntityChildren<EntityWith<RegisteredEntity<Entity>, C>>
     initial?: number
-    tag: TTag
+    tag: C
   }) {
     const { entities } = useArchetype(tag)
 
@@ -148,17 +148,17 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
   /**
    * Declaratively add a component to an entity.
    */
-  function Component<K extends keyof Entity>({
+  function Component<C extends keyof Entity>({
     name,
     data,
     children
   }: {
-    name: K
-    data?: Entity[K]
+    name: C
+    data?: Entity[C]
     children?: ReactElement | ((entity: Entity) => ReactElement)
   }) {
     const entity = useEntity()
-    const ref = useRef<Entity[K]>(null!)
+    const ref = useRef<Entity[C]>(null!)
 
     /* Warn the user that passing multiple children is not allowed. */
     if (children && Array.isArray(children)) {
