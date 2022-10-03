@@ -165,6 +165,28 @@ world.queue.flush()
 
 Since entities are just normal objects, you might be tempted to just add new properties to (or delete properties from) them directly. **This is a bad idea** because it will skip the indexing step needed to make sure the entity is listed in the correct archetypes. Please always go through `addComponent` and `removeComponent`!
 
+### Be careful when deleting entities from within a system
+
+If your system code will under some circumstances remove entities (without queueing the deletion), it is recommended to iterate over the entities in reverse order, like this:
+
+```ts
+const withHealth = world.archetype("health")
+
+function healthSystem(world) {
+  /* Note how we're going through the list in reverse order: */
+  for (let i = withHealth.entities.length; i > 0; i--) {
+    const entity = withHealth.entities[i - 1]
+
+    /* If health is depleted, destroy the entity */
+    if (entity.health <= 0) {
+      world.destroyEntity(entity)
+    }
+  }
+}
+```
+
+This is because the `destroyEntity` function will remove the entity from the archetype's entity list, and if you're iterating over the list in normal order, you will end up skipping the next entity in the list.
+
 ### Consider using Component Factories
 
 `createEntity` and `addComponent` accept plain Javascript objects, opening the door to some nice patterns for making entities and components nicely composable. For example, you could create a set of functions acting as component factories, like this:
@@ -275,28 +297,6 @@ function movementSystem(world) {
   }
 }
 ```
-
-### Deleting entities in a system
-
-If your system code will under some circumstances remove entities (without queueing the deletion), it is recommended to iterate over the entities in reverse order, like this:
-
-```ts
-const withHealth = world.archetype("health")
-
-function healthSystem(world) {
-  /* Note how we're going through the list in reverse order: */
-  for (let i = withHealth.entities.length; i > 0; i--) {
-    const entity = withHealth.entities[i - 1]
-
-    /* If health is depleted, destroy the entity */
-    if (entity.health <= 0) {
-      world.destroyEntity(entity)
-    }
-  }
-}
-```
-
-This is because the `destroyEntity` function will remove the entity from the archetype's entity list, and if you're iterating over the list in normal order, you will end up skipping the next entity in the list.
 
 ### Reuse archetypes where possible
 
