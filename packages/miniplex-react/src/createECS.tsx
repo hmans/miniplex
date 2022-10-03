@@ -45,20 +45,19 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
    * A React component to either create a new entity, or represent an existing entity so
    * it can be enhanced with additional components (see the <Component> component.)
    */
-  const Entity = forwardRef(function <
-    T extends RegisteredEntity<Entity>,
-    C extends EntityChildren<T>
-  >(
+  const Entity = forwardRef(function (
     {
       entity: existingEntity,
       children
     }: {
-      entity?: T
-      children?: C
+      entity?: RegisteredEntity<Entity>
+      children?: EntityChildren<Entity>
     },
-    ref: Ref<T>
+    ref: Ref<RegisteredEntity<Entity>>
   ) {
-    const entity = useConst(() => existingEntity ?? world.createEntity({} as T))
+    const entity = useConst(
+      () => existingEntity ?? world.createEntity({} as Entity)
+    )
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
     useIsomorphicLayoutEffect(() => {
@@ -68,12 +67,14 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     }, [])
 
     /* Apply ref */
-    useImperativeHandle(ref, () => entity as T)
+    useImperativeHandle(ref, () => entity as RegisteredEntity<Entity>)
 
     /* Provide a context with the entity so <Component> components can be wired up. */
     return (
       <EntityContext.Provider value={entity}>
-        {typeof children === "function" ? children(entity as T) : children}
+        {typeof children === "function"
+          ? children(entity as RegisteredEntity<Entity>)
+          : children}
       </EntityContext.Provider>
     )
   })
