@@ -37,9 +37,9 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
   const EntityContext = createContext<RegisteredEntity<Entity>>(null!)
 
   /**
-   * Returns the current entity context.
+   * Returns the current parent entity context.
    */
-  const useEntity = () => useContext(EntityContext)
+  const useParentEntity = () => useContext(EntityContext)
 
   /**
    * A React component to either create a new entity, or represent an existing entity so
@@ -157,7 +157,7 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     data?: V
     children?: ReactElement | ((entity: Entity) => ReactElement)
   }) {
-    const entity = useEntity()
+    const entity = useParentEntity()
     const ref = useRef<Entity[K]>(null!)
 
     /* Warn the user that passing multiple children is not allowed. */
@@ -223,7 +223,7 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     ManagedEntities,
     MemoizedEntity,
     useArchetype,
-    useEntity,
+    useParentEntity,
     world
   }
 }
