@@ -19,6 +19,14 @@ You can now do this:
 ```tsx
 const MyComponent = () => {
   /* This component will not rerender */
-  return <ArchetypeEntities archetype={["my-archetype"]} />
+  return <ArchetypeEntities archetype="my-archetype" />
+}
+```
+
+The component will also accept arrays of component names:
+
+```tsx
+const EnemyShips = () => {
+  return <ArchetypeEntities archetype={["ship", "enemy"]} />
 }
 ```
