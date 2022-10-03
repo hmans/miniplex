@@ -276,16 +276,16 @@ function movementSystem(world) {
 }
 ```
 
-If your system code will under some circumstances immediately remove entities, you might even want to go the safest route of iterating through the collection in reversed order:
+### Deleting entities in a system
+
+If your system code will under some circumstances remove entities (without queueing the deletion), it is recommended to iterate over the entities in reverse order, like this:
 
 ```ts
 const withHealth = world.archetype("health")
 
 function healthSystem(world) {
-  const len = withHealth.entities.length
-
   /* Note how we're going through the list in reverse order: */
-  for (let i = len; i > 0; i--) {
+  for (let i = withHealth.entities.length; i > 0; i--) {
     const entity = withHealth.entities[i - 1]
 
     /* If health is depleted, destroy the entity */
@@ -295,6 +295,8 @@ function healthSystem(world) {
   }
 }
 ```
+
+This is because the `destroyEntity` function will remove the entity from the archetype's entity list, and if you're iterating over the list in normal order, you will end up skipping the next entity in the list.
 
 ### Reuse archetypes where possible
 
