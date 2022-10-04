@@ -1,5 +1,78 @@
 # miniplex
 
+## 1.0.0
+
+### Major Changes
+
+- 769dba7: **Major Breaking Change:** The signature of `addComponent` has been simplified to accept an entity, a component name, and the value of the component:
+
+  ```ts
+  /* Before */
+  world.addComponent(entity, { position: { x: 0, y: 0 } })
+
+  /* After */
+  world.addComponent(entity, "position", { x: 0, y: 0 })
+  ```
+
+  The previous API for `addComponent` is now available as `extendEntity`, with the caveat that it now only accepts two arguments, the entity and the component object:
+
+  ```ts
+  world.extendEntity(entity, {
+    position: { x: 0, y: 0 },
+    velocity: { x: 10, y: 20 }
+  })
+  ```
+
+- b8b2c9b: **Major Breaking Change:** The API signature of `createEntity` has been simplified in order to improve clarity of the API and reduce complexity in both implementation and types. `createEntity` now only supports a single argument, which _must_ satisfy the world's entity type.
+
+  This will only affect you if you have been using `createEntity` with more than one argument in order to compose entities from partial entities, like so:
+
+  ```js
+  const entity = createEntity(position(0, 0), velocity(1, 1), health(100))
+  ```
+
+  This always had the issue of `createEntity` not checking the initial state of the entity against the world's entity type. Theoretically, the library could invest some additional effort into complex type assembly to ensure that the entity is valid, but there are enough object composition tools available already, so it felt like an unneccessary duplication.
+
+  Instead, composition is now deferred into userland, where one of the most simple tools is the spread operator:
+
+  ```js
+  const entity = createEntity({
+    ...position(0, 0),
+    ...velocity(1, 1),
+    ...health(100)
+  })
+  ```
+
+- 54c59c8: **Breaking Change:** The `Archetype.first` getter has been removed in the interest of reducing API surface where things can also be expressed using common JavaScript constructs:
+
+  ```jsx
+  /* Before: */
+  const player = world.archetype("player").first
+
+  /* Now: */
+  const [player] = world.archetype("player")
+  ```
+
+- cb6d078: **Breaking Change:** When destroying entities, they are now removed from the world's global list of entities as well as the archetypes' lists of entities using the shuffle-and-pop pattern. This has the following side-effects that _may_ impact your code:
+
+  - Entities are no longer guaranteed to stay in the same order.
+  - The entity ID storied in its internal `__miniplex` component no longer corresponds to its index in the `entities` array.
+
+  This change provides significantly improved performance in situations where a large number of entities are continuously being created and destroyed.
+
+- 4d9e51b: **Breaking Change:** Removed the `EntityID` and `ComponentData` types.
+- c08f39a: **Breaking Change:** The `ComponentName<T>` type has been removed in favor of just using `keyof T`.
+
+### Patch Changes
+
+- 410e0f6: **New:** The `World` class can now be instantiated with an initial list of entities like so:
+
+  ```js
+  const world = new World({ entities: [entity1, entity2] })
+  ```
+
+- c12dfc1: **Fixed:** `createEntity` was not checking against the world's entity type; this has been fixed.
+
 ## 1.0.0-next.6
 
 ### Patch Changes

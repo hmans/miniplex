@@ -1,5 +1,46 @@
 # Changelog
 
+## 1.0.0
+
+### Major Changes
+
+- ce9cfb4: **Breaking Change:** The `useEntity` hook has been renamed to `useCurrentEntity` to better express what it does, and to make way for future `useEntity` and `useEntities` hooks that will create and destroy entities.
+
+### Patch Changes
+
+- c102f2d: **New:** `<ArchetypeEntities>`, a new component that (reactively) renders all entities of the specified archetype. This can be used as a replacement for the combination of `useArchetype` and `<Entities>`, except now your component won't re-render when entities appear or disappear, because the subscription will be scoped to `<ArchetypeEntities>`.
+
+  Where before you may have done this:
+
+  ```tsx
+  const MyComponent = () => {
+    const { entities } = useArchetype("my-archetype")
+    /* This component will now re-render every time the archetype is updated */
+    return <Entities entities={entities} />
+  }
+  ```
+
+  You can now do this:
+
+  ```tsx
+  const MyComponent = () => {
+    /* This component will not rerender */
+    return <ArchetypeEntities archetype="my-archetype" />
+  }
+  ```
+
+  The component will also accept arrays of component names:
+
+  ```tsx
+  const EnemyShips = () => {
+    return <ArchetypeEntities archetype={["ship", "enemy"]} />
+  }
+  ```
+
+- c38d7e5: **Fixed:** A couple of components were using `useEffect` where it should have been `useLayoutEffect`.
+- 54bb5ef: **Fixed:** <Entity> no longer re-renders once after mounting.
+- 551dcd9: **New:** The `createECS` function now allows you to pass in an existing `World` instance as its first argument. If no world is passed, it will create a new one (using the specified type, if any), as it has previously.
+
 ## 1.0.0-next.8
 
 ### Patch Changes
