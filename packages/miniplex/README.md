@@ -1,19 +1,24 @@
-[![Tests](https://github.com/hmans/miniplex/actions/workflows/tests.yml/badge.svg)](https://github.com/hmans/miniplex/actions/workflows/tests.yml)
-[![Downloads](https://img.shields.io/npm/dt/miniplex.svg)](https://www.npmjs.com/package/miniplex)
-[![Bundle Size](https://img.shields.io/bundlephobia/min/miniplex?label=bundle%20size)](https://bundlephobia.com/result?p=miniplex)
+![Miniplex](https://user-images.githubusercontent.com/1061/193760498-fb6b4d42-f48b-48b4-b7c1-b5b5674df55c.jpg)  
+[![Tests](https://img.shields.io/github/workflow/status/hmans/miniplex/Tests?label=CI&style=for-the-badge)](https://github.com/hmans/miniplex/actions/workflows/tests.yml)
+[![Downloads](https://img.shields.io/npm/dt/miniplex.svg?style=for-the-badge)](https://www.npmjs.com/package/miniplex)
+[![Bundle Size](https://img.shields.io/bundlephobia/min/miniplex?style=for-the-badge&label=bundle%20size)](https://bundlephobia.com/result?p=miniplex)
 
-# Miniplex
+## Testimonials
+
+> Tested @hmans' Miniplex library over the weekend and after having previously implemented an ECS for my wip browser game, I have to say **Miniplex feels like the "right" way to do ECS in #r3f**. - [Brian Breiholz](https://twitter.com/BrianBreiholz/status/1577182839509962752)
 
 ## Ecosystem
 
-- [![Version](https://img.shields.io/npm/v/miniplex)](https://www.npmjs.com/package/miniplex) [miniplex](https://github.com/hmans/miniplex/tree/main/packages/miniplex)
-- [![Version](https://img.shields.io/npm/v/miniplex-react)](https://www.npmjs.com/package/miniplex-react) [miniplex-react](https://github.com/hmans/miniplex/tree/main/packages/miniplex-react)
+- **[miniplex](https://github.com/hmans/miniplex/tree/main/packages/miniplex)**  
+  The core package. Use it in any JavaScript or TypeScript project.
+- **[miniplex-react](https://github.com/hmans/miniplex/tree/main/packages/miniplex-react)**  
+  React bindings. Create, extend and render entities declaratively.
 
 ## Introduction
 
 **Miniplex is an entity management system for games and similarly demanding applications.** Instead of creating separate buckets for different types of entities (eg. asteroids, enemies, pickups, the player, etc.), you throw all of them into a single store, describe their properties through components, and then write code that performs updates on entities of specific types.
 
-If you're familiar with Entity Component System architecture, this will sound familiar to you -- and rightfully so, for Miniplex is, first and foremost, a very straight-forward ECS implementation.
+If you're familiar with **Entity Component System** architecture, this will sound familiar to you -- and rightfully so, for Miniplex is, first and foremost, a very straight-forward ECS implementation!
 
 If you're hearing about this approach for the first time, maybe it will sound a little counter-intuitive -- but once you dive into it, you will understand how it can help you decouple concerns and keep your codebase well-structured and maintainable. [This post](https://community.amethyst.rs/t/archetypal-vs-grouped-ecs-architectures-my-take/1344) has a nice summary:
 
@@ -35,7 +40,7 @@ If you've used other Entity Component System libraries before, here's how Minipl
 
 ### Entities are just normal JavaScript objects
 
-Entities are just **plain JavaScript objects**, and components are just **properties on those objects**. Component data can be **anything** you need, from primitive values to entire class instances, or even [reactive stores](https://github.com/hmans/statery). Miniplex aims to put developer experience first, and the most important way it does this is by making its usage feel as natural as possible in a JavaScript setting.
+Entities are just **plain JavaScript objects**, and components are just **properties on those objects**. Component data can be **anything** you need, from primitive values to entire class instances, or even [entire reactive stores](https://github.com/hmans/statery). Miniplex puts developer experience first, and the most important way it does this is by making its usage feel as natural as possible in a JavaScript setting.
 
 Miniplex does not expect you to programmatically declare component types before using them, but if you're using TypeScript, you can provide a type describing your entities and Miniplex will provide full edit- and compile-time type hints and safety.
 
@@ -47,7 +52,7 @@ Systems are extremely straight-forward: just write simple functions that operate
 
 ### Archetypal Queries
 
-Entity queries are performed through **archetypes**, with archetypes representing a subset of your world's entities that have a specific set of components. More complex querying capabilities may be added at a later date.
+Entity queries are performed through **archetypes**, with individual archetypes representing a subset of your world's entities that have a specific set of components. More complex querying capabilities may be added at a later date.
 
 ### Focus on Object Identities over numerical IDs
 
@@ -57,9 +62,11 @@ Most interactions with Miniplex are using **object identity** to identify entiti
 
 Miniplex can be used in any JavaScript or TypeScript project, regardless of which extra frameworks you might be using. Integrations with frameworks like React are provided as separate packages, so here we will only talk about framework-less usage.
 
+Specifically, if you intend to use Miniplex in a React project, please don't miss the [miniplex-react](https://github.com/hmans/miniplex/tree/main/packages/miniplex-react) documentation!
+
 ### Creating a World
 
-Miniplex manages entities in worlds, which act as a containers for entities as well as an API for interacting with them. You can have one big world in your project, or several smaller worlds handling separate concerns.
+Miniplex manages entities in worlds, which act as containers for entities as well as an API for interacting with them. You can have one big world in your project, or several smaller worlds handling separate concerns.
 
 ```ts
 import { World } from "miniplex"
@@ -67,7 +74,7 @@ import { World } from "miniplex"
 const world = new World()
 ```
 
-### Typing your Entities (optional, but recommended)
+### Typing your Entities (optional, but recommended!)
 
 If you're using TypeScript, you can define a type that describes your entities and provide it to the `World` constructor to get full type support in all interactions with it:
 
@@ -122,8 +129,8 @@ const movingEntities = world.archetype("position", "velocity")
 Now we can implement our system, which is really just a function -- or any other piece of code -- that uses the archetype to fetch the associated entities and then iterates over them:
 
 ```ts
-function movementSystem(world) {
-  for (const { position, velocity } of movingEntities.entities) {
+function movementSystem() {
+  for (const { position, velocity } of movingEntities) {
     position.x += velocity.x
     position.y += velocity.y
     position.z += velocity.z
@@ -271,11 +278,11 @@ function movementSystem(world) {
 }
 ```
 
-This will incur a modest, but noticeable performance penalty, since you would be calling and returning from a function for every entity in the archetype. It is typically recommended to use either a `for/of` loop:
+This will incur a modest, but noticeable performance penalty, since you would be calling and returning from a function for every entity in the archetype. If performance is a concern, it is recommended to use either a `for/of` loop:
 
 ```ts
 function movementSystem(world) {
-  for (const { position, velocity } of movingEntities.entities) {
+  for (const { position, velocity } of movingEntities) {
     position.x += velocity.x
     position.y += velocity.y
     position.z += velocity.z
@@ -283,7 +290,7 @@ function movementSystem(world) {
 }
 ```
 
-Or a classic `for` loop:
+Or a classic `for` loop with numerical index access:
 
 ```ts
 function movementSystem(world) {
@@ -308,7 +315,7 @@ For example, creating your archetypes within a system function like this will wo
 function movementSystem(world) {
   const movingEntities = world.archetype("position", "velocity")
 
-  for (const { position, velocity } of movingEntities.entities) {
+  for (const { position, velocity } of movingEntities) {
     position.x += velocity.x
     position.y += velocity.y
     position.z += velocity.z
@@ -321,8 +328,8 @@ Instead, create the archetype outside of your system:
 ```ts
 const movingEntities = world.archetype("position", "velocity")
 
-function movementSystem(world) {
-  for (const { position, velocity } of movingEntities.entities) {
+function movementSystem() {
+  for (const { position, velocity } of movingEntities) {
     position.x += velocity.x
     position.y += velocity.y
     position.z += velocity.z
@@ -333,3 +340,28 @@ function movementSystem(world) {
 ## Questions?
 
 Find me on [Twitter](https://twitter.com/hmans) or the [Poimandres Discord](https://discord.gg/aAYjm2p7c7).
+
+## License
+
+```
+Copyright (c) 2022 Hendrik Mans
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```
