@@ -1,10 +1,12 @@
-[![Version](https://img.shields.io/npm/v/miniplex-react)](https://www.npmjs.com/package/miniplex-react)
-[![Downloads](https://img.shields.io/npm/dt/miniplex-react.svg)](https://www.npmjs.com/package/miniplex-react)
-[![Bundle Size](https://img.shields.io/bundlephobia/min/miniplex-react?label=bundle%20size)](https://bundlephobia.com/result?p=miniplex-react)
+[![Tests](https://img.shields.io/github/workflow/status/hmans/miniplex/Tests?label=CI&style=for-the-badge)](https://github.com/hmans/miniplex/actions/workflows/tests.yml)
+[![Downloads](https://img.shields.io/npm/dt/miniplex-react.svg?style=for-the-badge)](https://www.npmjs.com/package/miniplex-react)
+[![Bundle Size](https://img.shields.io/bundlephobia/min/miniplex-react?style=for-the-badge&label=bundle%20size)](https://bundlephobia.com/result?p=miniplex-react)
 
 # miniplex-react
 
 ### React glue for [miniplex], the gentle game entity manager.
+
+> **Note** This package contains the React glue for Miniplex. This documentation assumes that you are familiar with how Miniplex works. If you haven't done so already, please read the [Miniplex documentation](https://github.com/hmans/miniplex/tree/main/packages/miniplex#readme) first.
 
 ## Installation
 
@@ -85,7 +87,7 @@ const Player = () => (
 
 This will, once mounted, create a single entity in your ECS world, and add the `position` and `health` components to it. Once unmounted, it will also automatically destroy the entity.
 
-### Storing objects in components
+### Capturing object refs into components
 
 If your components are designed to store rich objects, and these can be expressed as React components providing Refs, you can pass a single React child to `<Component>`, and its Ref value will automatically be picked up. For example, let's imagine a react-three-fiber based game that allows entities to have a scene object:
 
@@ -253,6 +255,8 @@ const Health = () => {
 
 ### Managed Entity Collections
 
+> **Note** This feature is still experimental and may change (or even be removed) in the future.
+
 In games and other ECS-oriented applications, you will often have several distinct _entity types_ -- like spaceships, asteroids, bullets, explosions, etc. -- even if these entities are composed of several shared ECS components. All entities within a specific entity type are typically composed from the same set of components (eg. spaceships always have a position and a velocity), and rendered in a similar manner (eg. bullets will always be rendered using a small box mesh, but with varying materials.)
 
 The `<ManagedEntities>` React component is an abstraction over this. It will take over management and rendering of such an entity type, assuming that this type can be identified by the presence of a specific tag (a tag being a miniplex component that is always just `true` and doesn't hold any additional data; miniplex provides a `Tag` type and constant for this.)
@@ -300,3 +304,28 @@ A couple of important notes:
 Find me on [Twitter](https://twitter.com/hmans) or the [Poimandres Discord](https://discord.gg/aAYjm2p7c7).
 
 [miniplex]: https://github.com/hmans/miniplex
+
+## License
+
+```
+Copyright (c) 2022 Hendrik Mans
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```
