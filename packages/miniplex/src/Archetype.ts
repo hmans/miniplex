@@ -24,11 +24,6 @@ export class Archetype<E extends IEntity, Q extends Query<E> = Query<E>> {
     return this.entities[Symbol.iterator]()
   }
 
-  /** Returns the first entity within this archetype. */
-  get first(): ArchetypeEntity<E, Q> | null {
-    return this.entities[0] || null
-  }
-
   /** Listeners on this event are invoked when an entity is added to this archetype's index. */
   public onEntityAdded = new Signal<ArchetypeEntity<E, Q>>()
 
