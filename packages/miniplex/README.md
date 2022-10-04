@@ -1,13 +1,18 @@
-[![Tests](https://github.com/hmans/miniplex/actions/workflows/tests.yml/badge.svg)](https://github.com/hmans/miniplex/actions/workflows/tests.yml)
-[![Downloads](https://img.shields.io/npm/dt/miniplex.svg)](https://www.npmjs.com/package/miniplex)
-[![Bundle Size](https://img.shields.io/bundlephobia/min/miniplex?label=bundle%20size)](https://bundlephobia.com/result?p=miniplex)
+[![Tests](https://img.shields.io/github/workflow/status/hmans/miniplex/Tests?label=CI&style=for-the-badge)](https://github.com/hmans/miniplex/actions/workflows/tests.yml)
+[![Downloads](https://img.shields.io/npm/dt/miniplex.svg?style=for-the-badge)](https://www.npmjs.com/package/miniplex)
+[![Bundle Size](https://img.shields.io/bundlephobia/min/miniplex?style=for-the-badge&label=bundle%20size)](https://bundlephobia.com/result?p=miniplex)
 
 # Miniplex
 
+> Tested @hmans' Miniplex library over the weekend and after having previously implemented an ECS for my wip browser game, I have to say **Miniplex feels like the "right" way to do ECS in #r3f**.  
+> [Brian Breiholz](https://twitter.com/BrianBreiholz/status/1577182839509962752)
+
 ## Ecosystem
 
-- [![Version](https://img.shields.io/npm/v/miniplex)](https://www.npmjs.com/package/miniplex) [miniplex](https://github.com/hmans/miniplex/tree/main/packages/miniplex)
-- [![Version](https://img.shields.io/npm/v/miniplex-react)](https://www.npmjs.com/package/miniplex-react) [miniplex-react](https://github.com/hmans/miniplex/tree/main/packages/miniplex-react)
+- **[miniplex](https://github.com/hmans/miniplex/tree/main/packages/miniplex)**  
+  The core package. Use it in any JavaScript or TypeScript project.
+- **[miniplex-react](https://github.com/hmans/miniplex/tree/main/packages/miniplex-react)**  
+  React bindings. Create, extend and render entities declaratively.
 
 ## Introduction
 
