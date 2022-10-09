@@ -220,7 +220,7 @@ Miniplex offers the `extendEntity` function to add multiple components to an ent
 ```js
 const other = world.createEntity(position(0, 0))
 
-world.addComponent(other, {
+world.extendEntity(other, {
   ...velocity(-10, 0),
   ...health(500)
 })
@@ -254,10 +254,10 @@ const entity = world.createEntity({
   ...health(1000)
 })
 
-/* Use these in extendComponent */
+/* Use these in extendEntity */
 const other = world.createEntity(position(0, 0))
 
-world.extendComponent(other, {
+world.extendEntity(other, {
   ...velocity(-10, 0),
   ...health(500)
 })
