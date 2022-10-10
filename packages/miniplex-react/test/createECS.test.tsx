@@ -1,9 +1,9 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
-import { act } from "react-dom/test-utils"
 import { RegisteredEntity, Tag, World } from "miniplex"
+import { createRef } from "react"
+import { act } from "react-dom/test-utils"
 import { createECS } from "../src/createECS"
-import { createRef, useLayoutEffect, useState } from "react"
 
 type Entity = { name: string; age?: number }
 
