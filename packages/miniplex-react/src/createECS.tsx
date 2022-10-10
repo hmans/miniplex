@@ -20,7 +20,8 @@ import React, {
   Ref,
   useContext,
   useImperativeHandle,
-  useRef
+  useRef,
+  useState
 } from "react"
 import mergeRefs from "react-merge-refs"
 import useIsomorphicLayoutEffect from "./isomorphicLayoutEffect"
@@ -58,24 +59,34 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
     },
     ref: Ref<E>
   ) {
-    const entity = useConst(() => existingEntity ?? world.createEntity({} as E))
+    const rerender = useRerender()
+
+    /* The entity object is either the entity that was passed in, or a newly created object. */
+    const entityObject = useConst(() => existingEntity ?? {}) as E
 
     /* If the entity was freshly created, manage its presence in the ECS world. */
     useIsomorphicLayoutEffect(() => {
-      return () => {
-        if (!existingEntity) world.destroyEntity(entity)
-      }
+      if (existingEntity) return
+
+      /* We're going to need to trigger an immediate rerender of this component, so that
+      we can make the _registered_ version of this entity available to this React component's
+      children. */
+      rerender()
+
+      /* Add and remove the entity from the ECS world. */
+      const entity = world.createEntity(entityObject)
+      return () => world.destroyEntity(entity)
     }, [])
 
     /* Apply ref */
-    useImperativeHandle(ref, () => entity as E)
+    useImperativeHandle(ref, () => entityObject)
 
     /* Provide a context with the entity so <Component> components can be wired up. */
-    return (
-      <EntityContext.Provider value={entity}>
-        {typeof children === "function" ? children(entity as E) : children}
+    return "__miniplex" in entityObject ? (
+      <EntityContext.Provider value={entityObject}>
+        {typeof children === "function" ? children(entityObject) : children}
       </EntityContext.Provider>
-    )
+    ) : null
   })
 
   const MemoizedEntity = memo(Entity, (a, b) => a.entity === b.entity)
