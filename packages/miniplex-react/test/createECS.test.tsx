@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react"
 import { act } from "react-dom/test-utils"
 import { RegisteredEntity, Tag, World } from "miniplex"
 import { createECS } from "../src/createECS"
-import { createRef } from "react"
+import { createRef, useLayoutEffect, useState } from "react"
 
 type Entity = { name: string; age?: number }
 
@@ -68,6 +68,23 @@ describe("createECS", () => {
       )
 
       expect(alice.admin).toEqual(true)
+    })
+
+    it("updates the component reactively", () => {
+      const { world, Entity, Component } = createECS<{ count?: number }>()
+      const alice = world.createEntity({})
+
+      const Test = ({ count = 0 }) => (
+        <Entity entity={alice}>
+          <Component name="count" data={count} />
+        </Entity>
+      )
+
+      const { rerender } = render(<Test count={0} />)
+      expect(alice.count).toEqual(0)
+
+      rerender(<Test count={1} />)
+      expect(alice.count).toEqual(1)
     })
 
     it("it accepts a single React child to set as the entity's data", () => {
