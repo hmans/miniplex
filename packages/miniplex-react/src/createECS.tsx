@@ -174,6 +174,7 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
       throw new Error("<Component> will only accept a single React child.")
     }
 
+    /* Add (and remove) the component on mount/unmount. */
     useIsomorphicLayoutEffect(() => {
       world.addComponent(entity, name, data ?? (ref.current as any))
 
@@ -182,7 +183,12 @@ export function createECS<Entity extends IEntity = UntypedEntity>(
           world.removeComponent(entity, name)
         }
       }
-    }, [entity, name, data])
+    }, [entity, name])
+
+    /* On regular re-renders of this component, update the component data. */
+    useIsomorphicLayoutEffect(() => {
+      Object.assign(entity, { [name]: data ?? (ref.current as any) })
+    }, [entity, data])
 
     /* If no children are passed, we're done. */
     if (!children) return null
