@@ -74,6 +74,11 @@ describe("createECS", () => {
       const { world, Entity, Component } = createECS<{ count?: number }>()
       const alice = world.createEntity({})
 
+      /* Set up an archetype callback that we use to check if the entity is being re-added or not */
+      let callbacks = 0
+      const withCount = world.archetype("count")
+      withCount.onEntityAdded.add(() => callbacks++)
+
       const Test = ({ count = 0 }) => (
         <Entity entity={alice}>
           <Component name="count" data={count} />
@@ -82,9 +87,11 @@ describe("createECS", () => {
 
       const { rerender } = render(<Test count={0} />)
       expect(alice.count).toEqual(0)
+      expect(callbacks).toEqual(1)
 
       rerender(<Test count={1} />)
       expect(alice.count).toEqual(1)
+      expect(callbacks).toEqual(1) /* The entity should not be re-added */
     })
 
     it("it accepts a single React child to set as the entity's data", () => {
