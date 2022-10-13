@@ -11,7 +11,7 @@ function App() {
       <color args={["#457b9d"]} attach="background" />
       <ambientLight intensity={0.2} />
       <directionalLight
-        position={[20, 10, 30]}
+        position={[10, 10, 30]}
         castShadow
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
