@@ -23,7 +23,8 @@ export const spawnBall = (props: GroupProps) =>
     physics: {
       velocity: new Vector3(),
       mass: 1,
-      radius: 0.5
+      radius: 0.5,
+      restitution: 0.7
     },
 
     jsx: (

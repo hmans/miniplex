@@ -13,7 +13,7 @@ export function physicsSystem(dt: number) {
     /* Check bounds collision */
     if (transform.position.y < -BOUNDS) {
       transform.position.y = -BOUNDS
-      physics.velocity.y *= -1
+      physics.velocity.y *= -physics.restitution
     }
   }
 }

@@ -14,6 +14,7 @@ export type Entity = {
     velocity: Vector3
     mass: number
     radius: number
+    restitution: number
   }
 }
 
