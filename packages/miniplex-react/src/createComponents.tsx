@@ -148,7 +148,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
   return { Entity, Entities, Bucket, Archetype, Property, useCurrentEntity }
 }
 
-export const useBucket = <E extends IEntity>(bucket: Bucket<E>) => {
+export const useEntities = <E extends IEntity>(bucket: Bucket<E>) => {
   const rerender = useRerender()
 
   useIsomorphicLayoutEffect(() => {
@@ -163,8 +163,5 @@ export const useBucket = <E extends IEntity>(bucket: Bucket<E>) => {
 
   useIsomorphicLayoutEffect(rerender, [])
 
-  return bucket
+  return bucket.entities
 }
-
-export const useEntities = <E extends IEntity>(bucket: Bucket<E>) =>
-  useBucket(bucket).entities
