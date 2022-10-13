@@ -44,14 +44,10 @@ export function getEntitiesInRadius(
 ) {
   out.length = 0
 
-  const x = p.x
-  const y = p.y
-  const z = p.z
-
   for (let i = -r; i <= r; i++) {
     for (let j = -r; j <= r; j++) {
       for (let k = -r; k <= r; k++) {
-        const key = cellKey(x + i, y + j, z + k)
+        const key = cellKey(p.x + i, p.y + j, p.z + k)
         const cell = cells.get(key)
 
         if (cell) {
