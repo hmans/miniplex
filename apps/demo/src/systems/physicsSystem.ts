@@ -39,16 +39,12 @@ export function physicsSystem(dt: number) {
       handleWallCollision(entity)
 
       /* Ball collisions */
-      const neighbors = getEntitiesInRadius(
-        transform.position,
-        physics.radius * 2
-      ) as EntityWith<Entity, "transform" | "physics">[]
-
-      for (const neighbor of neighbors) {
-        if (!neighbor.physics) continue
-        if (neighbor === entity) continue
-        handleBallCollision(entity, neighbor)
-      }
+      if (entity.neighbors)
+        for (const neighbor of entity.neighbors) {
+          if (!neighbor.physics) continue
+          if (neighbor === entity) continue
+          handleBallCollision(entity, neighbor as PhysicsEntity)
+        }
     }
   }
 }

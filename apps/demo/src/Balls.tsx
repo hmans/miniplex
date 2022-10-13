@@ -27,6 +27,8 @@ export const spawnBall = (props: ParticleProps) => {
 
     spatialHashing: {},
 
+    neighbors: new Set(),
+
     jsx: (
       <ECS.Property name="transform">
         <Particle scale={radius} {...props} />

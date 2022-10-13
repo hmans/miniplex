@@ -15,6 +15,8 @@ export type Entity = {
     currentCell?: Set<Entity>
   }
 
+  neighbors?: Set<Entity>
+
   physics?: {
     velocity: Vector3
     mass: number
