@@ -3,6 +3,8 @@ import { Quaternion, Vector3 } from "three"
 import { BOUNDS, ECS, Entity } from "../state"
 import { getEntitiesInRadius } from "./spatialHashingSystem"
 
+const SUBSTEPS = 5
+
 const { entities } = ECS.world.archetype("transform", "physics")
 
 const cubes = ECS.world.archetype("isCube")
@@ -18,59 +20,62 @@ export function physicsSystem(dt: number) {
 
   const [cube] = cubes
   tmpQuat.copy(cube.transform!.quaternion).invert()
-  gravity.applyQuaternion(tmpQuat.copy(cube.transform!.quaternion).invert())
+  gravity.applyQuaternion(tmpQuat)
 
   for (const entity of entities) {
     const { transform, physics } = entity
 
-    /* Apply gravity */
-    physics.velocity.addScaledVector(gravity, dt)
+    const stepTime = dt / SUBSTEPS
+    for (let i = 0; i < SUBSTEPS; i++) {
+      /* Apply gravity */
+      physics.velocity.addScaledVector(gravity, stepTime)
 
-    /* Apply velocity */
-    transform.position.addScaledVector(physics.velocity, dt)
+      /* Apply velocity */
+      transform.position.addScaledVector(physics.velocity, stepTime)
 
-    /* Check bounds collision */
-    const B = BOUNDS - physics.radius
-    if (transform.position.y < -B) {
-      transform.position.y = -B
-      physics.velocity.y *= -physics.restitution
-    }
+      /* Check bounds collision */
+      const B = BOUNDS - physics.radius
+      if (transform.position.y < -B) {
+        transform.position.y = -B
+        physics.velocity.y *= -physics.restitution
+      }
 
-    if (transform.position.y > B) {
-      transform.position.y = B
-      physics.velocity.y *= -physics.restitution
-    }
+      if (transform.position.y > B) {
+        transform.position.y = B
+        physics.velocity.y *= -physics.restitution
+      }
 
-    if (transform.position.x < -B) {
-      transform.position.x = -B
-      physics.velocity.x *= -physics.restitution
-    }
+      if (transform.position.x < -B) {
+        transform.position.x = -B
+        physics.velocity.x *= -physics.restitution
+      }
 
-    if (transform.position.x > B) {
-      transform.position.x = B
-      physics.velocity.x *= -physics.restitution
-    }
+      if (transform.position.x > B) {
+        transform.position.x = B
+        physics.velocity.x *= -physics.restitution
+      }
 
-    if (transform.position.z < -B) {
-      transform.position.z = -B
-      physics.velocity.z *= -physics.restitution
-    }
+      if (transform.position.z < -B) {
+        transform.position.z = -B
+        physics.velocity.z *= -physics.restitution
+      }
 
-    if (transform.position.z > B) {
-      transform.position.z = B
-      physics.velocity.z *= -physics.restitution
-    }
+      if (transform.position.z > B) {
+        transform.position.z = B
+        physics.velocity.z *= -physics.restitution
+      }
 
-    /* Ball collisions */
-    const neighbors = getEntitiesInRadius(
-      transform.position,
-      physics.radius * 2
-    ) as EntityWith<Entity, "transform" | "physics">[]
+      /* Ball collisions */
+      const neighbors = getEntitiesInRadius(
+        transform.position,
+        physics.radius * 2
+      ) as EntityWith<Entity, "transform" | "physics">[]
 
-    for (const neighbor of neighbors) {
-      if (!neighbor.physics) continue
-      if (neighbor === entity) continue
-      handleBallCollision(entity, neighbor)
+      for (const neighbor of neighbors) {
+        if (!neighbor.physics) continue
+        if (neighbor === entity) continue
+        handleBallCollision(entity, neighbor)
+      }
     }
   }
 }
