@@ -1,1 +1,1 @@
-export { createECS } from "./createECS"
+export const foo = "bar"
