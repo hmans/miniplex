@@ -56,8 +56,8 @@ importers:
       '@types/react-dom': ^18.0.6
       '@types/three': ^0.144.0
       '@vitejs/plugin-react': ^2.1.0
-      miniplex: workspace:2.0.0-next.0
-      miniplex-react: ^1.0.1
+      miniplex: workspace:2.0.0-next.1
+      miniplex-react: ^2.0.0-next.1
       react: ^18.2.0
       react-dom: ^18.2.0
       three: ^0.145.0
@@ -67,7 +67,7 @@ importers:
       '@react-three/drei': 9.34.3_cpod6d3cr76qxhqbh6bdljlrqm
       '@react-three/fiber': 8.8.10_ee34sidbpuk5ebd4phepfgxxdi
       miniplex: link:../../packages/miniplex
-      miniplex-react: 1.0.1_cb5c7vhlgfbfwo5qqnkfc2juea
+      miniplex-react: link:../../packages/miniplex-react
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       three: 0.145.0
@@ -89,7 +89,7 @@ importers:
     specifiers:
       '@hmans/use-const': ^0.0.1
       '@hmans/use-rerender': ^0.0.2
-      miniplex: 2.0.0-next.0
+      miniplex: 2.0.0-next.1
       react: ^18.2.0
       react-dom: ^18.2.0
       react-merge-refs: ^1.1.0
@@ -5002,19 +5002,6 @@ packages:
       arrify: 1.0.1
       is-plain-obj: 1.1.0
       kind-of: 6.0.3
-    dev: false
-
-  /miniplex-react/1.0.1_cb5c7vhlgfbfwo5qqnkfc2juea:
-    resolution: {integrity: sha512-U5q77ZoRnzn/TmVkI9q0Pfm5Ya2pdzPszxj3ul17Pm4klpi1NNIIxCXUEKjhjXkfiH/KDbwwysPi1vT1lOktbw==}
-    peerDependencies:
-      miniplex: ^1.0.0-next.1
-      react: '>=16.8'
-    dependencies:
-      '@hmans/use-const': 0.0.1_react@18.2.0
-      '@hmans/use-rerender': 0.0.2_react@18.2.0
-      miniplex: link:packages/miniplex
-      react: 18.2.0
-      react-merge-refs: 1.1.0
     dev: false
 
   /mixme/0.5.4:

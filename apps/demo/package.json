@@ -11,8 +11,8 @@
   "dependencies": {
     "@react-three/drei": "^9.34.3",
     "@react-three/fiber": "^8.8.10",
-    "miniplex": "workspace:2.0.0-next.0",
-    "miniplex-react": "^1.0.1",
+    "miniplex": "workspace:2.0.0-next.1",
+    "miniplex-react": "^2.0.0-next.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.145.0"

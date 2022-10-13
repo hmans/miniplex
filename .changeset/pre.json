@@ -3,9 +3,14 @@
   "tag": "next",
   "initialVersions": {
     "miniplex": "1.0.0",
-    "miniplex-react": "1.0.1"
+    "miniplex-react": "1.0.1",
+    "demo": "0.0.0"
   },
   "changesets": [
-    "eleven-pianos-cry"
+    "afraid-bats-matter",
+    "eleven-pianos-cry",
+    "gentle-dodos-shake",
+    "shy-cycles-decide",
+    "swift-radios-decide"
   ]
 }
