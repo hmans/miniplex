@@ -110,12 +110,20 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
       throw new Error("Property must be a child of Entity")
     }
 
-    /* Handle setting of value */
+    /* Handle creation and removal of property */
     useIsomorphicLayoutEffect(() => {
       if (props.value === undefined) return
 
       world.addProperty(entity, props.name, props.value)
       return () => world.removeProperty(entity, props.name)
+    }, [entity, props.name])
+
+    /* Handle updates to existing property */
+    useIsomorphicLayoutEffect(() => {
+      if (props.value === undefined) return
+
+      entity[props.name] = props.value
+      world.touch(entity)
     }, [entity, props.name, props.value])
 
     /* Handle setting of child value */

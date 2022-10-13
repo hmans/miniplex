@@ -110,6 +110,22 @@ describe("<Property>", () => {
     expect(bucket.entities[0].foo).toBe("baz")
   })
 
+  it("removes the property when the component is unmounted", () => {
+    const bucket = new World()
+    const entity = bucket.add({})
+    const { Entity, Property } = createComponents(bucket)
+
+    const { unmount } = render(
+      <Entity entity={entity}>
+        <Property name="foo" value="bar" />
+      </Entity>
+    )
+    expect(bucket.entities[0].foo).toBe("bar")
+
+    unmount()
+    expect(bucket.entities[0]).toMatchObject({})
+  })
+
   it("captures the ref of the child when it has one", () => {
     const bucket = new World()
     const { Entity, Property } = createComponents(bucket)
