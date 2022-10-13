@@ -16,7 +16,7 @@ export class World<E extends IEntity> extends Bucket<E> {
     this.touch(entity)
   }
 
-  archetype(...properties: (keyof E)[]) {
+  archetype<P extends keyof E>(...properties: P[]) {
     return this.derive(archetype(...properties))
   }
 }
