@@ -20,7 +20,10 @@ export const Box = ({ children, ...props }: GroupProps) => {
             <meshPhysicalMaterial
               color="#eee"
               transparent
-              opacity={0.3}
+              opacity={0.5}
+              metalness={0.8}
+              roughness={0.1}
+              clearcoat={0.5}
               side={DoubleSide}
             />
           </mesh>

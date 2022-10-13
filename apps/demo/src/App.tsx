@@ -1,4 +1,4 @@
-import { PerspectiveCamera } from "@react-three/drei"
+import { Environment, PerspectiveCamera } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 import { Perf } from "r3f-perf"
 import { Balls } from "./Balls"
@@ -9,10 +9,12 @@ function App() {
   return (
     <Canvas shadows>
       <color args={["#457b9d"]} attach="background" />
+      <Environment preset="sunset" />
       <ambientLight intensity={0.2} />
       <directionalLight
         position={[10, 10, 30]}
         castShadow
+        intensity={1}
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
         shadow-camera-far={200}
