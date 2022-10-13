@@ -1,14 +1,24 @@
 import { EntityWith } from "miniplex"
-import { Vector3 } from "three"
+import { Quaternion, Vector3 } from "three"
 import { BOUNDS, ECS, Entity } from "../state"
 
 const { entities } = ECS.world.archetype("transform", "physics")
 
+const cubes = ECS.world.archetype("isCube")
+
 const gravity = new Vector3(0, -20, 0)
 
 const tmpVec3 = new Vector3()
+const tmpQuat = new Quaternion()
 
 export function physicsSystem(dt: number) {
+  /* Determine gravity */
+  gravity.set(0, -20, 0)
+
+  const [cube] = cubes
+  tmpQuat.copy(cube.transform!.quaternion).invert()
+  gravity.applyQuaternion(cube.transform!.quaternion)
+
   for (let i = 0; i < entities.length; i++) {
     const { transform, physics } = entities[i]
 
@@ -19,33 +29,34 @@ export function physicsSystem(dt: number) {
     transform.position.addScaledVector(physics.velocity, dt)
 
     /* Check bounds collision */
-    if (transform.position.y < -BOUNDS) {
-      transform.position.y = -BOUNDS
+    const B = BOUNDS - physics.radius
+    if (transform.position.y < -B) {
+      transform.position.y = -B
       physics.velocity.y *= -physics.restitution
     }
 
-    if (transform.position.y > BOUNDS) {
-      transform.position.y = BOUNDS
+    if (transform.position.y > B) {
+      transform.position.y = B
       physics.velocity.y *= -physics.restitution
     }
 
-    if (transform.position.x < -BOUNDS) {
-      transform.position.x = -BOUNDS
+    if (transform.position.x < -B) {
+      transform.position.x = -B
       physics.velocity.x *= -physics.restitution
     }
 
-    if (transform.position.x > BOUNDS) {
-      transform.position.x = BOUNDS
+    if (transform.position.x > B) {
+      transform.position.x = B
       physics.velocity.x *= -physics.restitution
     }
 
-    if (transform.position.z < -BOUNDS) {
-      transform.position.z = -BOUNDS
+    if (transform.position.z < -B) {
+      transform.position.z = -B
       physics.velocity.z *= -physics.restitution
     }
 
-    if (transform.position.z > BOUNDS) {
-      transform.position.z = BOUNDS
+    if (transform.position.z > B) {
+      transform.position.z = B
       physics.velocity.z *= -physics.restitution
     }
 

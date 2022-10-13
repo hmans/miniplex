@@ -18,7 +18,7 @@ function App() {
           plusMinus(BOUNDS - 1)
         ]
       })
-    }, 500)
+    }, 50)
 
     return () => {
       clearInterval(id)
@@ -33,7 +33,7 @@ function App() {
       <OrbitControls />
 
       <ECS.Entity>
-        <ECS.Property name="isCube" />
+        <ECS.Property name="isCube" value={true} />
         <ECS.Property name="transform">
           <Animate
             fun={(g, dt) => {
@@ -50,11 +50,11 @@ function App() {
                 side={DoubleSide}
               />
             </mesh>
+
+            <Balls />
           </Animate>
         </ECS.Property>
       </ECS.Entity>
-
-      <Balls />
 
       <Systems />
     </Canvas>
