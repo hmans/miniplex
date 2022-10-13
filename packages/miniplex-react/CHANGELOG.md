@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.0.0-next.0
+
+### Major Changes
+
+- f2406db: 2.0!
+
+### Patch Changes
+
+- Updated dependencies [f2406db]
+  - miniplex@2.0.0-next.0
+
 ## 1.0.1
 
 ### Patch Changes
