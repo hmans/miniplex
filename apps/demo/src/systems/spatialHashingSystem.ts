@@ -43,9 +43,10 @@ export function getEntitiesInRadius(
   p: Vector3,
   r: number,
   max = Infinity,
-  out = new Array<Entity>()
+  out?: Entity[]
 ) {
-  out.length = 0
+  const entities = out || []
+  entities.length = 0
 
   for (let i = -r; i <= r; i++) {
     for (let j = -r; j <= r; j++) {
@@ -54,12 +55,12 @@ export function getEntitiesInRadius(
         const cell = cells.get(key)
 
         if (cell) {
-          out.push(...cell)
-          if (out.length >= max) return out
+          entities.push(...cell)
+          if (entities.length >= max) return entities
         }
       }
     }
   }
 
-  return out
+  return entities
 }
