@@ -15,7 +15,7 @@ export const Box = ({ children, ...props }: GroupProps) => {
             g.rotation.x += dt * 0.1
           }}
         >
-          <mesh receiveShadow onClick={() => bounce()}>
+          <mesh receiveShadow onPointerDown={() => bounce()}>
             <boxGeometry args={[BOUNDS * 2.1, BOUNDS * 2.1, BOUNDS * 2.1]} />
             <meshPhysicalMaterial
               color="#eee"
