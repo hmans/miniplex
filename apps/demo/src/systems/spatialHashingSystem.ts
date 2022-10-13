@@ -39,8 +39,10 @@ export function cellKey(x: number, y: number, z: number) {
 export function getEntitiesInRadius(
   p: Vector3,
   r: number,
+  max = Infinity,
   out = new Set<Entity>()
 ) {
+  let count = 0
   out.clear()
 
   const x = Math.floor(p.x)
@@ -55,6 +57,7 @@ export function getEntitiesInRadius(
         if (contents) {
           for (const entity of contents) {
             out.add(entity)
+            if (++count >= max) return out
           }
         }
       }
