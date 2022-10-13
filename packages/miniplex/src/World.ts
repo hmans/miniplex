@@ -1,3 +1,4 @@
+import { archetype } from "./archetypes"
 import { Bucket, IEntity } from "./Bucket"
 
 export class World<E extends IEntity> extends Bucket<E> {
@@ -13,5 +14,9 @@ export class World<E extends IEntity> extends Bucket<E> {
 
     delete entity[property]
     this.touch(entity)
+  }
+
+  archetype(...properties: (keyof E)[]) {
+    return this.derive(archetype(...properties))
   }
 }
