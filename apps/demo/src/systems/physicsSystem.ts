@@ -1,4 +1,4 @@
-import { ECS } from "../state"
+import { BOUNDS, ECS } from "../state"
 
 const entities = ECS.world.archetype("transform", "physics")
 
@@ -9,5 +9,11 @@ export function physicsSystem(dt: number) {
 
     /* Apply velocity */
     transform.position.addScaledVector(physics.velocity, dt)
+
+    /* Check bounds collision */
+    if (transform.position.y < -BOUNDS) {
+      transform.position.y = -BOUNDS
+      physics.velocity.y *= -1
+    }
   }
 }
