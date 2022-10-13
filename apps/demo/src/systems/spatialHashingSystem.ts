@@ -45,17 +45,18 @@ export function getEntitiesInRadius(
   let count = 0
   out.clear()
 
-  const x = Math.floor(p.x)
-  const y = Math.floor(p.y)
-  const z = Math.floor(p.z)
+  const x = p.x
+  const y = p.y
+  const z = p.z
 
   for (let i = -r; i <= r; i++) {
     for (let j = -r; j <= r; j++) {
       for (let k = -r; k <= r; k++) {
         const key = cellKey(x + i, y + j, z + k)
-        const contents = cells.get(key)
-        if (contents) {
-          for (const entity of contents) {
+        const cell = cells.get(key)
+
+        if (cell) {
+          for (const entity of cell) {
             out.add(entity)
             if (++count >= max) return out
           }
