@@ -7,7 +7,7 @@ export const Balls = () => {
   return (
     <InstancedParticles castShadow receiveShadow>
       <sphereGeometry args={[0.5, 12, 12]} />
-      <meshStandardMaterial color="hotpink" />
+      <meshStandardMaterial color="#f1faee" />
 
       <ECS.Archetype properties="isBall">
         {(entity) => entity.jsx}

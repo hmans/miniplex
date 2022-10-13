@@ -27,6 +27,7 @@ function App() {
 
   return (
     <Canvas shadows>
+      <color args={["#457b9d"]} attach="background" />
       <ambientLight />
       <directionalLight position={[30, 20, 10]} castShadow />
 
@@ -45,9 +46,9 @@ function App() {
             <mesh receiveShadow>
               <boxGeometry args={[BOUNDS * 2, BOUNDS * 2, BOUNDS * 2]} />
               <meshPhysicalMaterial
-                color="#444"
+                color="#eee"
                 transparent
-                opacity={0.1}
+                opacity={0.3}
                 side={DoubleSide}
               />
             </mesh>
