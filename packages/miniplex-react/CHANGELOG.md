@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0-next.2
+
+### Patch Changes
+
+- 87a8b8c: Added a global `useArchetype` export that takes a world as its first argument.
+
 ## 2.0.0-next.1
 
 ### Patch Changes
