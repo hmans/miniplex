@@ -6,11 +6,14 @@ export class World<E extends IEntity> {
     return this.entities[Symbol.iterator]()
   }
 
-  entities = new Array<E>()
-
+  entities: E[]
   onEntityAdded = new Event<E>()
   onEntityRemoved = new Event<E>()
   onEntityUpdated = new Event<E>()
+
+  constructor(options: { entities?: E[] } = {}) {
+    this.entities = options.entities || []
+  }
 
   add(entity: E) {
     if (this.entities.includes(entity)) return

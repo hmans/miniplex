@@ -1,6 +1,12 @@
 import { World } from "../src/World"
 
 describe("World", () => {
+  it("can be constructed with a list of entities", () => {
+    const alice = { name: "Alice" }
+    const world = new World({ entities: [alice] })
+    expect(world.entities).toEqual([alice])
+  })
+
   describe("add", () => {
     it("adds an entity to the world", () => {
       const world = new World()
