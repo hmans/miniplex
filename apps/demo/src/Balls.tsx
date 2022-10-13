@@ -43,9 +43,9 @@ export const spawnBall = (props: ParticleProps) => {
 
     physics: {
       velocity: new Vector3(),
-      mass: 1,
+      mass: radius * 7,
       radius,
-      restitution: 0.8 - radius
+      restitution: 0.5 - radius
     },
 
     spatialHashing: {},
