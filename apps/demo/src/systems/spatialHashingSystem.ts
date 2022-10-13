@@ -3,9 +3,9 @@ import { ECS, Entity } from "../state"
 
 const entities = ECS.world.archetype("transform")
 
-export const spatialHashingSystem = () => {
+export function spatialHashingSystem() {
   /* Bluntly clear the spatial hash every frame. TODO: optimize this */
-  for (const key in cells) cells.get(key)!.length = 0
+  cells.clear()
 
   for (const entity of entities) {
     const p = entity.transform.position
@@ -17,13 +17,14 @@ export const spatialHashingSystem = () => {
 
 const cells = new Map<string, Entity[]>()
 
-export const cellKey = (x: number, y: number, z: number) =>
-  `${Math.floor(x)}|${Math.floor(y)}|${Math.floor(z)}`
+export function cellKey(x: number, y: number, z: number) {
+  return `${Math.floor(x)}|${Math.floor(y)}|${Math.floor(z)}`
+}
 
 export const getEntitiesInCell = (p: Vector3) =>
   cells.get(cellKey(p.x, p.y, p.z)) || []
 
-export const getEntitiesInRadius = (p: Vector3, r: number) => {
+export function getEntitiesInRadius(p: Vector3, r: number) {
   const entities: Entity[] = []
   const x = Math.floor(p.x)
   const y = Math.floor(p.y)
