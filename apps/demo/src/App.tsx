@@ -1,5 +1,6 @@
 import { PerspectiveCamera } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
+import { Perf } from "r3f-perf"
 import { plusMinus } from "randomish"
 import { useEffect } from "react"
 import { Balls, spawnBall } from "./Balls"
@@ -37,6 +38,7 @@ function App() {
       </Box>
 
       <Systems />
+      <Perf position="bottom-right" matrixUpdate />
     </Canvas>
   )
 }

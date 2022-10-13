@@ -15,6 +15,7 @@
     "material-composer": "^0.2.6",
     "miniplex": "workspace:2.0.0-next.1",
     "miniplex-react": "workspace:^2.0.0-next.2",
+    "r3f-perf": "^6.5.0",
     "randomish": "^0.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
