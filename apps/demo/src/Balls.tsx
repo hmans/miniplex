@@ -1,10 +1,18 @@
 import { GroupProps } from "@react-three/fiber"
 import { Vector3 } from "three"
+import { InstancedParticles, Particle } from "vfx-composer-r3f"
 import { ECS } from "./state"
 
 export const Balls = () => {
   return (
-    <ECS.Archetype properties="isBall">{(entity) => entity.jsx}</ECS.Archetype>
+    <InstancedParticles>
+      <sphereGeometry args={[0.5, 12, 12]} />
+      <meshStandardMaterial color="hotpink" />
+
+      <ECS.Archetype properties="isBall">
+        {(entity) => entity.jsx}
+      </ECS.Archetype>
+    </InstancedParticles>
   )
 }
 
@@ -21,10 +29,7 @@ export const spawnBall = (props: GroupProps) =>
     jsx: (
       <ECS.Property name="transform">
         <group {...props}>
-          <mesh>
-            <sphereGeometry args={[0.5]} />
-            <meshStandardMaterial color="hotpink" />
-          </mesh>
+          <Particle />
         </group>
       </ECS.Property>
     )

@@ -11,12 +11,15 @@
   "dependencies": {
     "@react-three/drei": "^9.34.3",
     "@react-three/fiber": "^8.8.10",
+    "material-composer": "^0.2.6",
     "miniplex": "workspace:2.0.0-next.1",
     "miniplex-react": "workspace:^2.0.0-next.2",
     "randomish": "^0.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "three": "^0.145.0"
+    "three": "^0.145.0",
+    "vfx-composer": "^0.4.0",
+    "vfx-composer-r3f": "^0.4.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",
