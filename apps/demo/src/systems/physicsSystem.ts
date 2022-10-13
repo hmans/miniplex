@@ -5,6 +5,8 @@ import { getEntitiesInRadius } from "./spatialHashingSystem"
 
 const SUBSTEPS = 5
 
+type PhysicsEntity = EntityWith<Entity, "transform" | "physics">
+
 const { entities } = ECS.world.archetype("transform", "physics")
 
 const cubes = ECS.world.archetype("isCube")
@@ -51,10 +53,7 @@ export function physicsSystem(dt: number) {
   }
 }
 
-function handleWallCollision({
-  physics,
-  transform
-}: EntityWith<Entity, "transform" | "physics">) {
+function handleWallCollision({ physics, transform }: PhysicsEntity) {
   const B = BOUNDS - physics.radius
   if (transform.position.y < -B) {
     transform.position.y = -B
@@ -87,10 +86,7 @@ function handleWallCollision({
   }
 }
 
-function handleBallCollision(
-  a: EntityWith<Entity, "transform" | "physics">,
-  b: EntityWith<Entity, "transform" | "physics">
-) {
+function handleBallCollision(a: PhysicsEntity, b: PhysicsEntity) {
   const diff = tmpVec3.subVectors(a.transform.position, b.transform.position)
   const distance = diff.length()
   const penetration = (a.physics.radius + b.physics.radius - distance) / 2.0
