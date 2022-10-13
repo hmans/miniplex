@@ -24,6 +24,31 @@ export function physicsSystem(dt: number) {
       physics.velocity.y *= -physics.restitution
     }
 
+    if (transform.position.y > BOUNDS) {
+      transform.position.y = BOUNDS
+      physics.velocity.y *= -physics.restitution
+    }
+
+    if (transform.position.x < -BOUNDS) {
+      transform.position.x = -BOUNDS
+      physics.velocity.x *= -physics.restitution
+    }
+
+    if (transform.position.x > BOUNDS) {
+      transform.position.x = BOUNDS
+      physics.velocity.x *= -physics.restitution
+    }
+
+    if (transform.position.z < -BOUNDS) {
+      transform.position.z = -BOUNDS
+      physics.velocity.z *= -physics.restitution
+    }
+
+    if (transform.position.z > BOUNDS) {
+      transform.position.z = BOUNDS
+      physics.velocity.z *= -physics.restitution
+    }
+
     /* Ball collisions */
     for (let j = i + 1; j < entities.length; j++) {
       handleBallCollision(entities[i], entities[j])
