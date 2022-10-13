@@ -21,19 +21,19 @@ export function cellKey(x: number, y: number, z: number) {
   return `${Math.floor(x)}|${Math.floor(y)}|${Math.floor(z)}`
 }
 
-export const getEntitiesInCell = (p: Vector3) =>
-  cells.get(cellKey(p.x, p.y, p.z)) || []
-
 export function getEntitiesInRadius(p: Vector3, r: number) {
   const entities: Entity[] = []
+
   const x = Math.floor(p.x)
   const y = Math.floor(p.y)
   const z = Math.floor(p.z)
+
   for (let i = -r; i <= r; i++) {
     for (let j = -r; j <= r; j++) {
       for (let k = -r; k <= r; k++) {
         const key = cellKey(x + i, y + j, z + k)
-        if (cells.has(key)) entities.push(...cells.get(key)!)
+        const contents = cells.get(key)
+        if (contents) entities.push(...contents)
       }
     }
   }
