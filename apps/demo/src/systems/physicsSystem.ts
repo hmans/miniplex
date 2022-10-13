@@ -1,5 +1,5 @@
 import { EntityWith } from "miniplex"
-import { Quaternion, Vector3 } from "three"
+import { MathUtils, Quaternion, Vector3 } from "three"
 import { BOUNDS, ECS, Entity } from "../state"
 
 type PhysicsEntity = EntityWith<Entity, "transform" | "physics">
@@ -27,7 +27,7 @@ export function physicsSystem(dt: number) {
   tmpQuat.copy(cube.transform!.quaternion).invert()
   gravity.applyQuaternion(tmpQuat)
 
-  accumulatedTime += dt
+  accumulatedTime += MathUtils.clamp(dt, 0, 0.2)
 
   while (accumulatedTime >= STEP) {
     accumulatedTime -= STEP
