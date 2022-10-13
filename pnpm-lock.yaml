@@ -53,10 +53,8 @@ importers:
   packages/miniplex:
     specifiers:
       '@hmans/event': ^0.0.1
-      '@hmans/signal': ^0.2.2
     dependencies:
       '@hmans/event': 0.0.1
-      '@hmans/signal': 0.2.2
 
   packages/miniplex-react:
     specifiers:
@@ -1574,10 +1572,6 @@ packages:
 
   /@hmans/event/0.0.1:
     resolution: {integrity: sha512-3PHdcAc1gOn6AsUOVzdOGYPWwso4LQsNvty0y/moKdLXx+uJ7wS9ZBKLiXjZljkOrQOngtGY/VhccI0cKe0twA==}
-    dev: false
-
-  /@hmans/signal/0.2.2:
-    resolution: {integrity: sha512-4KlR6FiqICOY9J8V483Atk7bfMqoGM/hdYd/6ab+HB+CJfiOBPzY6PtYz3O6bBsNkIZpimnTMSw2AqOz1WDlrA==}
     dev: false
 
   /@hmans/use-const/0.0.1_react@18.2.0:

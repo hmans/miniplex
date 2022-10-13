@@ -26,7 +26,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@hmans/event": "^0.0.1",
-    "@hmans/signal": "^0.2.2"
+    "@hmans/event": "^0.0.1"
   }
 }
