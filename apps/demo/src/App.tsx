@@ -5,11 +5,18 @@ import { DoubleSide } from "three"
 import { Balls, spawnBall } from "./Balls"
 import { Systems } from "./Systems"
 import { plusMinus } from "randomish"
+import { BOUNDS } from "./state"
 
 function App() {
   useEffect(() => {
     const id = setInterval(() => {
-      spawnBall({ position: [plusMinus(4), plusMinus(4), plusMinus(4)] })
+      spawnBall({
+        position: [
+          plusMinus(BOUNDS - 1),
+          plusMinus(BOUNDS - 1),
+          plusMinus(BOUNDS - 1)
+        ]
+      })
     }, 500)
 
     return () => {
@@ -25,7 +32,7 @@ function App() {
       <OrbitControls />
 
       <mesh>
-        <boxGeometry args={[10, 10, 10]} />
+        <boxGeometry args={[BOUNDS * 2, BOUNDS * 2, BOUNDS * 2]} />
         <meshPhysicalMaterial
           color="#444"
           transparent
