@@ -11,11 +11,13 @@ export const spawnBall = (props: GroupProps) =>
   ECS.world.add({
     isBall: true,
     jsx: (
-      <group {...props}>
-        <mesh>
-          <sphereBufferGeometry args={[0.5]} />
-          <meshStandardMaterial color="hotpink" />
-        </mesh>
-      </group>
+      <ECS.Property name="transform">
+        <group {...props}>
+          <mesh>
+            <sphereGeometry args={[0.5]} />
+            <meshStandardMaterial color="hotpink" />
+          </mesh>
+        </group>
+      </ECS.Property>
     )
   })
