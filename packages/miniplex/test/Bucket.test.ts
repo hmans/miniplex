@@ -185,6 +185,22 @@ describe("derive", () => {
   })
 })
 
+describe("Symbol.iterator", () => {
+  it("iterating through a bucket happens in reverse order", () => {
+    const bucket = new Bucket()
+    const entity1 = bucket.add({})
+    const entity2 = bucket.add({})
+    const entity3 = bucket.add({})
+
+    const entities = []
+    for (const entity of bucket) {
+      entities.push(entity)
+    }
+
+    expect(entities).toEqual([entity3, entity2, entity1])
+  })
+})
+
 describe("id", () => {
   it("returns a numerical ID for the specified entity", () => {
     const entity = {}

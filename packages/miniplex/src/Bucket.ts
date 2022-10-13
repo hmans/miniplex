@@ -10,7 +10,14 @@ export type EntityPredicate<E, D extends E> = (entity: E) => entity is D
 
 export class Bucket<E extends IEntity> {
   [Symbol.iterator]() {
-    return this.entities[Symbol.iterator]()
+    let index = this.entities.length
+
+    return {
+      next: () => {
+        const value = this.entities[--index]
+        return { value, done: index < 0 }
+      }
+    }
   }
 
   entities = new Array<E>()
