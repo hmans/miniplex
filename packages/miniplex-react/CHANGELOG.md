@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.0-next.1
+
+### Patch Changes
+
+- 41ccab7: <Property> now reactively changes a property's value without removing and re-adding the property.
+- 86c2fdb: Added `useArchetype`.
+- 40cf138: Removed `useBucket`, it didn't do anything useful. Just use `useEntities`.
+
 ## 2.0.0-next.0
 
 ### Major Changes

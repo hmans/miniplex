@@ -1,5 +1,11 @@
 # miniplex
 
+## 2.0.0-next.1
+
+### Patch Changes
+
+- da62d8c: Fixed the return type of `World.archetype()`.
+
 ## 2.0.0-next.0
 
 ### Major Changes
