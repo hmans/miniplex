@@ -6,6 +6,7 @@ export const BOUNDS = 5
 
 export type Entity = {
   isBall?: true
+  isCube?: true
 
   jsx?: JSX.Element
   transform?: Object3D
