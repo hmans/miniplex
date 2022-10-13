@@ -1,21 +1,33 @@
 import { Vector3 } from "three"
 import { ECS, Entity } from "../state"
 
-const entities = ECS.world.archetype("transform")
+const entities = ECS.world.archetype("transform", "spatialHashing")
 
 export function spatialHashingSystem() {
-  /* Bluntly clear the spatial hash every frame. TODO: optimize this */
-  cells.clear()
-
   for (const entity of entities) {
+    /* Determine the entity's current cell */
     const p = entity.transform.position
     const key = cellKey(p.x, p.y, p.z)
-    if (!cells.has(key)) cells.set(key, [])
-    cells.get(key)!.push(entity)
+
+    /* If the entity has moved cells, update the spatial hash */
+    if (entity.spatialHashing.currentCell !== key) {
+      /* Remove the entity from its previous cell */
+      if (entity.spatialHashing.currentCell) {
+        const oldCell = cells.get(entity.spatialHashing.currentCell)!
+        oldCell.delete(entity)
+      }
+
+      /* Make sure a cell exists */
+      if (!cells.has(key)) cells.set(key, new Set())
+
+      /* Add the entity to its new cell */
+      cells.get(key)!.add(entity)
+      entity.spatialHashing.currentCell = key
+    }
   }
 }
 
-const cells = new Map<string, Entity[]>()
+const cells = new Map<string, Set<Entity>>()
 
 export function cellKey(x: number, y: number, z: number) {
   return `${Math.floor(x)}|${Math.floor(y)}|${Math.floor(z)}`

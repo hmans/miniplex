@@ -11,6 +11,10 @@ export type Entity = {
   jsx?: JSX.Element
   transform?: Object3D
 
+  spatialHashing?: {
+    currentCell?: string
+  }
+
   physics?: {
     velocity: Vector3
     mass: number
