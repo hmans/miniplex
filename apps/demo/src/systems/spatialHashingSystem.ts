@@ -8,7 +8,8 @@ export const spatialHashingSystem = () => {
   for (const key in cells) cells.get(key)!.length = 0
 
   for (const entity of entities) {
-    const key = cellKey(entity.transform.position)
+    const p = entity.transform.position
+    const key = cellKey(p.x, p.y, p.z)
     if (!cells.has(key)) cells.set(key, [])
     cells.get(key)!.push(entity)
   }
@@ -16,10 +17,11 @@ export const spatialHashingSystem = () => {
 
 const cells = new Map<string, Entity[]>()
 
-export const cellKey = (p: Vector3) =>
-  `${Math.floor(p.x)}|${Math.floor(p.y)}|${Math.floor(p.z)}`
+export const cellKey = (x: number, y: number, z: number) =>
+  `${Math.floor(x)}|${Math.floor(y)}|${Math.floor(z)}`
 
-export const getEntitiesInCell = (p: Vector3) => cells.get(cellKey(p)) || []
+export const getEntitiesInCell = (p: Vector3) =>
+  cells.get(cellKey(p.x, p.y, p.z)) || []
 
 export const getEntitiesInRadius = (p: Vector3, r: number) => {
   const entities: Entity[] = []
@@ -29,7 +31,7 @@ export const getEntitiesInRadius = (p: Vector3, r: number) => {
   for (let i = -r; i <= r; i++) {
     for (let j = -r; j <= r; j++) {
       for (let k = -r; k <= r; k++) {
-        const key = `${x + i}|${y + j}|${z + k}`
+        const key = cellKey(x + i, y + j, z + k)
         if (cells.has(key)) entities.push(...cells.get(key)!)
       }
     }

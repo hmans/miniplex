@@ -1,6 +1,7 @@
 import { EntityWith } from "miniplex"
 import { Quaternion, Vector3 } from "three"
 import { BOUNDS, ECS, Entity } from "../state"
+import { getEntitiesInRadius } from "./spatialHashingSystem"
 
 const { entities } = ECS.world.archetype("transform", "physics")
 
@@ -61,8 +62,15 @@ export function physicsSystem(dt: number) {
     }
 
     /* Ball collisions */
-    for (let j = i + 1; j < entities.length; j++) {
-      handleBallCollision(entities[i], entities[j])
+    const neighbors = getEntitiesInRadius(
+      transform.position,
+      physics.radius * 2
+    ) as EntityWith<Entity, "transform" | "physics">[]
+
+    for (const neighbor of neighbors) {
+      if (!neighbor.physics) continue
+      if (neighbor === entities[i]) continue
+      handleBallCollision(entities[i], neighbor)
     }
   }
 }
