@@ -1,4 +1,4 @@
-import { archetype, Bucket, id } from "../src/Bucket"
+import { archetype, Bucket, id } from "../src"
 
 describe("new Bucket", () => {
   it("creates a bucket", () => {
