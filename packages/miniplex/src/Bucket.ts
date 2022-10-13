@@ -9,17 +9,17 @@ export type EntityWith<E, P extends keyof E> = E & { [K in P]-?: E[K] }
 export type EntityPredicate<E, D extends E> = (entity: E) => entity is D
 
 export class Bucket<E extends IEntity> {
+  [Symbol.iterator]() {
+    return this.entities[Symbol.iterator]()
+  }
+
   entities = new Array<E>()
 
   onEntityAdded = new Event<E>()
   onEntityRemoved = new Event<E>()
   onEntityTouched = new Event<E>()
 
-  derivedBuckets = new WeakMap();
-
-  [Symbol.iterator]() {
-    return this.entities[Symbol.iterator]()
-  }
+  derivedBuckets = new WeakMap()
 
   has(entity: E) {
     return this.entities.includes(entity)
