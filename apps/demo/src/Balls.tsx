@@ -1,4 +1,5 @@
 import { GroupProps } from "@react-three/fiber"
+import { Vector3 } from "three"
 import { ECS } from "./state"
 
 export const Balls = () => {
@@ -10,6 +11,13 @@ export const Balls = () => {
 export const spawnBall = (props: GroupProps) =>
   ECS.world.add({
     isBall: true,
+
+    physics: {
+      velocity: new Vector3(),
+      mass: 1,
+      radius: 0.5
+    },
+
     jsx: (
       <ECS.Property name="transform">
         <group {...props}>

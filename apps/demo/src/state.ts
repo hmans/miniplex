@@ -1,12 +1,18 @@
 import { World } from "miniplex"
 import { createComponents } from "miniplex-react"
-import { Object3D } from "three"
+import { Object3D, Vector3 } from "three"
 
 export type Entity = {
   isBall?: true
 
-  transform?: Object3D
   jsx?: JSX.Element
+  transform?: Object3D
+
+  physics?: {
+    velocity: Vector3
+    mass: number
+    radius: number
+  }
 }
 
 const world = new World<Entity>()
