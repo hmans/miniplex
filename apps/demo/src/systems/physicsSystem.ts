@@ -20,8 +20,8 @@ export function physicsSystem(dt: number) {
   tmpQuat.copy(cube.transform!.quaternion).invert()
   gravity.applyQuaternion(tmpQuat.copy(cube.transform!.quaternion).invert())
 
-  for (let i = 0; i < entities.length; i++) {
-    const { transform, physics } = entities[i]
+  for (const entity of entities) {
+    const { transform, physics } = entity
 
     /* Apply gravity */
     physics.velocity.addScaledVector(gravity, dt)
@@ -69,8 +69,8 @@ export function physicsSystem(dt: number) {
 
     for (const neighbor of neighbors) {
       if (!neighbor.physics) continue
-      if (neighbor === entities[i]) continue
-      handleBallCollision(entities[i], neighbor)
+      if (neighbor === entity) continue
+      handleBallCollision(entity, neighbor)
     }
   }
 }
