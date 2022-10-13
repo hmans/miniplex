@@ -23,9 +23,7 @@ import { mergeRefs } from "./lib/mergeRefs"
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect
 
-export type EntityChildren<E> =
-  | ReactNode
-  | ((props: { entity: E }) => ReactNode)
+export type EntityChildren<E> = ReactNode | ((entity: E) => ReactNode)
 
 export const createComponents = <E extends IEntity>(world: World<E>) => {
   const EntityContext = createContext<E | null>(null)
@@ -51,7 +49,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
 
     return (
       <EntityContext.Provider value={entity}>
-        {typeof children === "function" ? children({ entity }) : children}
+        {typeof children === "function" ? children(entity) : children}
       </EntityContext.Provider>
     )
   }
@@ -159,3 +157,6 @@ export const useBucket = <E extends IEntity>(bucket: Bucket<E>) => {
 
   return bucket
 }
+
+export const useEntities = <E extends IEntity>(bucket: Bucket<E>) =>
+  useBucket(bucket).entities
