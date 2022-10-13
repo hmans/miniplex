@@ -8,8 +8,6 @@ export type EntityWith<E, P extends keyof E> = E & { [K in P]-?: E[K] }
 
 export type EntityPredicate<E, D extends E> = (entity: E) => entity is D
 
-export const createBucket = <E extends IEntity>() => new Bucket<E>()
-
 export class Bucket<E extends IEntity> {
   entities = new Array<E>()
 
