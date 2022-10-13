@@ -14,7 +14,7 @@ export const Balls = () => (
 )
 
 export const spawnBall = (props: GroupProps) => {
-  const radius = between(0.1, 0.3)
+  const radius = between(0.2, 0.4)
 
   return ECS.world.add({
     isBall: true,
