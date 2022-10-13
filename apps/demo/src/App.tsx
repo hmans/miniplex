@@ -8,7 +8,7 @@ import { Systems } from "./Systems"
 
 function App() {
   return (
-    <Canvas shadows>
+    <Canvas shadows dpr={1}>
       <StrictMode>
         <color args={["#457b9d"]} attach="background" />
         <Suspense>
