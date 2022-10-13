@@ -5,5 +5,7 @@
     "miniplex": "1.0.0",
     "miniplex-react": "1.0.1"
   },
-  "changesets": []
+  "changesets": [
+    "eleven-pianos-cry"
+  ]
 }
