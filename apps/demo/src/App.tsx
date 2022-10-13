@@ -4,11 +4,12 @@ import { useEffect } from "react"
 import { DoubleSide } from "three"
 import { Balls, spawnBall } from "./Balls"
 import { Systems } from "./Systems"
+import { plusMinus } from "randomish"
 
 function App() {
   useEffect(() => {
     const id = setInterval(() => {
-      spawnBall({ position: [0, 0, 0] })
+      spawnBall({ position: [plusMinus(4), plusMinus(4), plusMinus(4)] })
     }, 500)
 
     return () => {

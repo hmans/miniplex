@@ -58,6 +58,7 @@ importers:
       '@vitejs/plugin-react': ^2.1.0
       miniplex: workspace:2.0.0-next.1
       miniplex-react: workspace:^2.0.0-next.2
+      randomish: ^0.1.4
       react: ^18.2.0
       react-dom: ^18.2.0
       three: ^0.145.0
@@ -68,6 +69,7 @@ importers:
       '@react-three/fiber': 8.8.10_ee34sidbpuk5ebd4phepfgxxdi
       miniplex: link:../../packages/miniplex
       miniplex-react: link:../../packages/miniplex-react
+      randomish: 0.1.4
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       three: 0.145.0
@@ -5365,6 +5367,10 @@ packages:
   /quick-lru/5.1.1:
     resolution: {integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==}
     engines: {node: '>=10'}
+    dev: false
+
+  /randomish/0.1.4:
+    resolution: {integrity: sha512-Apk+kYQjTJPuvg2MvxhmUcdxPjkzUl02LjxOn8UjERW338PQKsn2lFVf/mjSd1UMcRea4eHWrnVzoCBo0wEfrw==}
     dev: false
 
   /react-composer/5.0.3_react@18.2.0:
