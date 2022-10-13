@@ -1,5 +1,13 @@
 import { useConst } from "@hmans/use-const"
-import { useRerender } from "@hmans/use-rerender"
+import {
+  archetype,
+  Bucket,
+  EntityPredicate,
+  EntityWith,
+  id,
+  IEntity,
+  World
+} from "miniplex"
 import React, {
   createContext,
   memo,
@@ -9,15 +17,7 @@ import React, {
   useEffect,
   useLayoutEffect
 } from "react"
-import {
-  archetype,
-  World,
-  EntityPredicate,
-  EntityWith,
-  id,
-  IEntity,
-  Bucket
-} from "miniplex"
+import { useArchetype as useArchetypeGlobal, useEntities } from "./hooks"
 import { mergeRefs } from "./lib/mergeRefs"
 
 const useIsomorphicLayoutEffect =
@@ -31,7 +31,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
   const useCurrentEntity = () => useContext(EntityContext)
 
   const useArchetype = <P extends keyof E>(...properties: P[]) =>
-    useEntities(world.archetype(...properties))
+    useArchetypeGlobal(world, ...properties)
 
   const RawEntity = <D extends E>({
     children,
@@ -157,22 +157,4 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     useCurrentEntity,
     useArchetype
   }
-}
-
-export const useEntities = <E extends IEntity>(bucket: Bucket<E>) => {
-  const rerender = useRerender()
-
-  useIsomorphicLayoutEffect(() => {
-    bucket.onEntityAdded.addListener(rerender)
-    bucket.onEntityRemoved.addListener(rerender)
-
-    return () => {
-      bucket.onEntityAdded.removeListener(rerender)
-      bucket.onEntityRemoved.removeListener(rerender)
-    }
-  }, [])
-
-  useIsomorphicLayoutEffect(rerender, [])
-
-  return bucket.entities
 }
