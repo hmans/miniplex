@@ -4,7 +4,7 @@ import { Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
 import { BOUNDS, ECS } from "./state"
 
-export const Balls = ({ count = 1000 }) => {
+export const Balls = ({ count = 500 }) => {
   useLayoutEffect(() => {
     for (let i = 0; i < count; i++) {
       spawnBall({
@@ -36,7 +36,7 @@ export const Balls = ({ count = 1000 }) => {
 }
 
 export const spawnBall = (props: ParticleProps) => {
-  const radius = between(0.2, 0.4)
+  const radius = between(0.2, 0.6)
 
   return ECS.world.add({
     isBall: true,
