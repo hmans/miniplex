@@ -6,35 +6,35 @@ import { createComponents } from "../src"
 
 describe("<Entity>", () => {
   it("creates an entity", () => {
-    const bucket = new World()
-    const { Entity } = createComponents(bucket)
+    const world = new World()
+    const { Entity } = createComponents(world)
 
-    expect(bucket.entities.length).toBe(0)
+    expect(world.entities.length).toBe(0)
     render(<Entity />)
-    expect(bucket.entities.length).toBe(1)
+    expect(world.entities.length).toBe(1)
   })
 
   it("removes the entity on unmount", () => {
-    const bucket = new World()
-    const { Entity } = createComponents(bucket)
+    const world = new World()
+    const { Entity } = createComponents(world)
 
     const { unmount } = render(<Entity />)
-    expect(bucket.entities.length).toBe(1)
+    expect(world.entities.length).toBe(1)
     unmount()
-    expect(bucket.entities.length).toBe(0)
+    expect(world.entities.length).toBe(0)
   })
 
   it("accepts a function as its child", () => {
-    const bucket = new World<{ foo: string }>()
-    const { Entity } = createComponents(bucket)
+    const world = new World<{ foo: string }>()
+    const { Entity } = createComponents(world)
 
-    const entity = bucket.add({ foo: "bar" })
+    const entity = world.add({ foo: "bar" })
 
     render(
       <Entity entity={entity}>{(entity) => <div>{entity.foo}</div>}</Entity>
     )
 
-    expect(bucket.entities[0].foo).toBe("bar")
+    expect(world.entities[0].foo).toBe("bar")
     expect(screen.getByText("bar")).toBeInTheDocument()
   })
 
@@ -54,81 +54,81 @@ describe("<Entity>", () => {
 
   describe("with a given entity that is not yet part of the bucket", () => {
     it("adds the entity to the bucket", () => {
-      const bucket = new World()
-      const { Entity } = createComponents(bucket)
+      const world = new World()
+      const { Entity } = createComponents(world)
       const entity = {}
 
-      expect(bucket.entities.length).toBe(0)
+      expect(world.entities.length).toBe(0)
       render(<Entity entity={entity} />)
-      expect(bucket.entities.length).toBe(1)
-      expect(bucket.entities[0]).toBe(entity)
+      expect(world.entities.length).toBe(1)
+      expect(world.entities[0]).toBe(entity)
     })
 
     it("removes the entity on unmount", () => {
-      const bucket = new World()
-      const { Entity } = createComponents(bucket)
+      const world = new World()
+      const { Entity } = createComponents(world)
       const entity = {}
 
       const { unmount } = render(<Entity entity={entity} />)
-      expect(bucket.entities.length).toBe(1)
+      expect(world.entities.length).toBe(1)
       unmount()
-      expect(bucket.entities.length).toBe(0)
+      expect(world.entities.length).toBe(0)
     })
   })
 })
 
 describe("<Property>", () => {
   it("assigns the specified property", () => {
-    const bucket = new World()
-    const { Entity, Property } = createComponents(bucket)
+    const world = new World()
+    const { Entity, Property } = createComponents(world)
 
     render(
       <Entity>
         <Property name="foo" value="bar" />
       </Entity>
     )
-    expect(bucket.entities[0]).toMatchObject({})
-    expect(bucket.entities[0].foo).toBe("bar")
+    expect(world.entities[0]).toMatchObject({})
+    expect(world.entities[0].foo).toBe("bar")
   })
 
   it("updates the specified property on re-rendering", () => {
-    const bucket = new World()
-    const { Entity, Property } = createComponents(bucket)
+    const world = new World()
+    const { Entity, Property } = createComponents(world)
 
     const { rerender } = render(
       <Entity>
         <Property name="foo" value="bar" />
       </Entity>
     )
-    expect(bucket.entities[0].foo).toBe("bar")
+    expect(world.entities[0].foo).toBe("bar")
 
     rerender(
       <Entity>
         <Property name="foo" value="baz" />
       </Entity>
     )
-    expect(bucket.entities[0].foo).toBe("baz")
+    expect(world.entities[0].foo).toBe("baz")
   })
 
   it("removes the property when the component is unmounted", () => {
-    const bucket = new World()
-    const entity = bucket.add({})
-    const { Entity, Property } = createComponents(bucket)
+    const world = new World()
+    const entity = world.add({})
+    const { Entity, Property } = createComponents(world)
 
     const { unmount } = render(
       <Entity entity={entity}>
         <Property name="foo" value="bar" />
       </Entity>
     )
-    expect(bucket.entities[0].foo).toBe("bar")
+    expect(world.entities[0].foo).toBe("bar")
 
     unmount()
-    expect(bucket.entities[0]).toMatchObject({})
+    expect(world.entities[0]).toMatchObject({})
   })
 
   it("captures the ref of the child when it has one", () => {
-    const bucket = new World()
-    const { Entity, Property } = createComponents(bucket)
+    const world = new World()
+    const { Entity, Property } = createComponents(world)
 
     const ref = React.createRef<HTMLDivElement>()
 
@@ -140,20 +140,20 @@ describe("<Property>", () => {
       </Entity>
     )
 
-    expect(bucket.entities[0].foo).toBe(ref.current)
+    expect(world.entities[0].foo).toBe(ref.current)
   })
 })
 
 describe("<Entities>", () => {
   it("renders a list of entities", () => {
-    const bucket = new World<{ name: string }>()
-    const { Entities } = createComponents(bucket)
+    const world = new World<{ name: string }>()
+    const { Entities } = createComponents(world)
 
-    bucket.add({ name: "Alice" })
-    bucket.add({ name: "Bob" })
+    world.add({ name: "Alice" })
+    world.add({ name: "Bob" })
 
     render(
-      <Entities entities={bucket.entities}>
+      <Entities entities={world.entities}>
         {(entity) => <p>{entity.name}</p>}
       </Entities>
     )
@@ -165,36 +165,34 @@ describe("<Entities>", () => {
 
 describe("<Bucket>", () => {
   it("renders the entities within the given bucket", () => {
-    const bucket = new World<{ name: string }>()
-    const { Bucket } = createComponents(bucket)
+    const world = new World<{ name: string }>()
+    const { Bucket } = createComponents(world)
 
-    bucket.add({ name: "Alice" })
-    bucket.add({ name: "Bob" })
+    world.add({ name: "Alice" })
+    world.add({ name: "Bob" })
 
-    render(<Bucket bucket={bucket}>{(entity) => <p>{entity.name}</p>}</Bucket>)
+    render(<Bucket bucket={world}>{(entity) => <p>{entity.name}</p>}</Bucket>)
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
   })
 
   it("re-renders the entities when the bucket contents change", () => {
-    const bucket = new World<{ name: string }>()
-    const { Bucket } = createComponents(bucket)
+    const world = new World<{ name: string }>()
+    const { Bucket } = createComponents(world)
 
-    bucket.add({ name: "Alice" })
-    bucket.add({ name: "Bob" })
+    world.add({ name: "Alice" })
+    world.add({ name: "Bob" })
 
     const { rerender } = render(
-      <Bucket bucket={bucket}>{(entity) => <p>{entity.name}</p>}</Bucket>
+      <Bucket bucket={world}>{(entity) => <p>{entity.name}</p>}</Bucket>
     )
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
 
-    bucket.add({ name: "Charlie" })
-    rerender(
-      <Bucket bucket={bucket}>{(entity) => <p>{entity.name}</p>}</Bucket>
-    )
+    world.add({ name: "Charlie" })
+    rerender(<Bucket bucket={world}>{(entity) => <p>{entity.name}</p>}</Bucket>)
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
@@ -204,11 +202,11 @@ describe("<Bucket>", () => {
 
 describe("<Archetype>", () => {
   it("renders the entities within the given archetype bucket", () => {
-    const bucket = new World<{ name: string }>()
-    const { Archetype } = createComponents(bucket)
+    const world = new World<{ name: string }>()
+    const { Archetype } = createComponents(world)
 
-    bucket.add({ name: "Alice" })
-    bucket.add({ name: "Bob" })
+    world.add({ name: "Alice" })
+    world.add({ name: "Bob" })
 
     render(
       <Archetype properties="name">
@@ -221,11 +219,11 @@ describe("<Archetype>", () => {
   })
 
   it("re-renders the entities when the bucket contents change", () => {
-    const bucket = new World<{ name: string }>()
-    const { Archetype } = createComponents(bucket)
+    const world = new World<{ name: string }>()
+    const { Archetype } = createComponents(world)
 
-    bucket.add({ name: "Alice" })
-    bucket.add({ name: "Bob" })
+    world.add({ name: "Alice" })
+    world.add({ name: "Bob" })
 
     const { rerender } = render(
       <Archetype properties="name">
@@ -236,7 +234,7 @@ describe("<Archetype>", () => {
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
 
-    bucket.add({ name: "Charlie" })
+    world.add({ name: "Charlie" })
     rerender(
       <Archetype properties="name">
         {(entity) => <p>{entity.name}</p>}
