@@ -13,6 +13,9 @@ const gravity = new Vector3(0, -20, 0)
 const tmpVec3 = new Vector3()
 const tmpQuat = new Quaternion()
 
+let accumulatedTime = 0
+const STEP = 1 / 60
+
 export function physicsSystem(dt: number) {
   /* Determine gravity */
   gravity.set(0, -20, 0)
@@ -24,25 +27,31 @@ export function physicsSystem(dt: number) {
   tmpQuat.copy(cube.transform!.quaternion).invert()
   gravity.applyQuaternion(tmpQuat)
 
-  for (const entity of entities) {
-    const { transform, physics } = entity
+  accumulatedTime += dt
 
-    /* Apply gravity */
-    physics.velocity.addScaledVector(gravity, dt)
+  while (accumulatedTime >= STEP) {
+    accumulatedTime -= STEP
 
-    /* Apply velocity */
-    transform.position.addScaledVector(physics.velocity, dt)
+    for (const entity of entities) {
+      const { transform, physics } = entity
 
-    /* Check bounds collision */
-    handleWallCollision(entity)
+      /* Apply gravity */
+      physics.velocity.addScaledVector(gravity, dt)
 
-    /* Ball collisions */
-    if (entity.neighbors)
-      for (const neighbor of entity.neighbors) {
-        if (!neighbor.physics) continue
-        if (neighbor === entity) continue
-        handleBallCollision(entity, neighbor as PhysicsEntity)
-      }
+      /* Apply velocity */
+      transform.position.addScaledVector(physics.velocity, dt)
+
+      /* Check bounds collision */
+      handleWallCollision(entity)
+
+      /* Ball collisions */
+      if (entity.neighbors)
+        for (const neighbor of entity.neighbors) {
+          if (!neighbor.physics) continue
+          if (neighbor === entity) continue
+          handleBallCollision(entity, neighbor as PhysicsEntity)
+        }
+    }
   }
 }
 
