@@ -9,6 +9,7 @@
   "scripts": {
     "postinstall": "preconstruct dev && manypkg check",
     "dev": "preconstruct dev",
+    "demo": "pnpm dev && pnpm -F demo dev",
     "build": "preconstruct build",
     "test": "jest",
     "ci": "preconstruct validate && manypkg check && pnpm build && pnpm test",
