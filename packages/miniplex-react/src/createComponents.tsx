@@ -11,11 +11,12 @@ import React, {
 } from "react"
 import {
   archetype,
-  Bucket,
+  World,
   EntityPredicate,
   EntityWith,
   id,
-  IEntity
+  IEntity,
+  Bucket
 } from "miniplex"
 import { mergeRefs } from "./lib/mergeRefs"
 
@@ -26,7 +27,7 @@ export type EntityChildren<E> =
   | ReactNode
   | ((props: { entity: E }) => ReactNode)
 
-export const createComponents = <E extends IEntity>(bucket: Bucket<E>) => {
+export const createComponents = <E extends IEntity>(world: World<E>) => {
   const EntityContext = createContext<E | null>(null)
 
   const useCurrentEntity = () => useContext(EntityContext)
@@ -42,11 +43,11 @@ export const createComponents = <E extends IEntity>(bucket: Bucket<E>) => {
 
     /* Add the entity to the bucket represented by this component if it isn't already part of it. */
     useIsomorphicLayoutEffect(() => {
-      if (bucket.has(entity)) return
+      if (world.has(entity)) return
 
-      bucket.add(entity)
-      return () => bucket.remove(entity)
-    }, [bucket, entity])
+      world.add(entity)
+      return () => world.remove(entity)
+    }, [world, entity])
 
     return (
       <EntityContext.Provider value={entity}>
@@ -79,7 +80,7 @@ export const createComponents = <E extends IEntity>(bucket: Bucket<E>) => {
     children?: EntityChildren<D>
   }) => {
     const source =
-      typeof _bucket === "function" ? bucket.derive(_bucket) : _bucket
+      typeof _bucket === "function" ? world.derive(_bucket) : _bucket
 
     const { entities } = useBucket(source)
     return <Entities entities={entities} children={children} />
@@ -115,13 +116,8 @@ export const createComponents = <E extends IEntity>(bucket: Bucket<E>) => {
     useIsomorphicLayoutEffect(() => {
       if (props.value === undefined) return
 
-      /* We need to write this directly into the object because at this point,
-      the entity might not yet be part of the bucket (since this effect will run
-      before the one that will add it to the bucket, which would make the update
-      call below a no-op). */
-      entity[props.name] = props.value
-
-      bucket.update(entity)
+      world.addProperty(entity, props.name, props.value)
+      return () => world.removeProperty(entity, props.name)
     }, [entity, props.name, props.value])
 
     /* Handle setting of child value */
@@ -132,8 +128,7 @@ export const createComponents = <E extends IEntity>(bucket: Bucket<E>) => {
         ref: mergeRefs([
           (child as any).ref,
           (ref: E[P]) => {
-            entity[props.name] = ref
-            bucket.update(entity)
+            world.addProperty(entity, props.name, ref)
           }
         ])
       })

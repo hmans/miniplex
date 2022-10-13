@@ -1,13 +1,12 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
+import { World } from "miniplex"
 import React from "react"
-
-import { Bucket } from "miniplex"
 import { createComponents } from "../src"
 
 describe("<Entity>", () => {
   it("creates an entity", () => {
-    const bucket = new Bucket()
+    const bucket = new World()
     const { Entity } = createComponents(bucket)
 
     expect(bucket.entities.length).toBe(0)
@@ -16,7 +15,7 @@ describe("<Entity>", () => {
   })
 
   it("removes the entity on unmount", () => {
-    const bucket = new Bucket()
+    const bucket = new World()
     const { Entity } = createComponents(bucket)
 
     const { unmount } = render(<Entity />)
@@ -26,7 +25,7 @@ describe("<Entity>", () => {
   })
 
   it("accepts a function as its child", () => {
-    const bucket = new Bucket<{ foo: string }>()
+    const bucket = new World<{ foo: string }>()
     const { Entity } = createComponents(bucket)
 
     const entity = bucket.add({ foo: "bar" })
@@ -41,7 +40,7 @@ describe("<Entity>", () => {
 
   it("accepts a React function component as a child", () => {
     type Entity = { name: string; age: number }
-    const bucket = new Bucket<Entity>()
+    const bucket = new World<Entity>()
     const { Entity } = createComponents(bucket)
 
     const entity = bucket.add({ name: "Alice", age: 30 })
@@ -55,7 +54,7 @@ describe("<Entity>", () => {
 
   describe("with a given entity that is not yet part of the bucket", () => {
     it("adds the entity to the bucket", () => {
-      const bucket = new Bucket()
+      const bucket = new World()
       const { Entity } = createComponents(bucket)
       const entity = {}
 
@@ -66,7 +65,7 @@ describe("<Entity>", () => {
     })
 
     it("removes the entity on unmount", () => {
-      const bucket = new Bucket()
+      const bucket = new World()
       const { Entity } = createComponents(bucket)
       const entity = {}
 
@@ -80,7 +79,7 @@ describe("<Entity>", () => {
 
 describe("<Property>", () => {
   it("assigns the specified property", () => {
-    const bucket = new Bucket()
+    const bucket = new World()
     const { Entity, Property } = createComponents(bucket)
 
     render(
@@ -93,7 +92,7 @@ describe("<Property>", () => {
   })
 
   it("updates the specified property on re-rendering", () => {
-    const bucket = new Bucket()
+    const bucket = new World()
     const { Entity, Property } = createComponents(bucket)
 
     const { rerender } = render(
@@ -112,7 +111,7 @@ describe("<Property>", () => {
   })
 
   it("captures the ref of the child when it has one", () => {
-    const bucket = new Bucket()
+    const bucket = new World()
     const { Entity, Property } = createComponents(bucket)
 
     const ref = React.createRef<HTMLDivElement>()
