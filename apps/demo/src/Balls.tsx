@@ -24,7 +24,7 @@ export const Balls = ({ count = 1000 }) => {
   })
 
   return (
-    <InstancedParticles castShadow receiveShadow capacity={count}>
+    <InstancedParticles castShadow receiveShadow capacity={count * 2}>
       <sphereGeometry args={[1, 12, 12]} />
       <meshStandardMaterial color="#f1faee" />
 
