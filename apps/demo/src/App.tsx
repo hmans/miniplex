@@ -1,5 +1,7 @@
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 import { useEffect } from "react"
+import { DoubleSide } from "three"
 import { Balls, spawnBall } from "./Balls"
 import { Systems } from "./Systems"
 
@@ -17,9 +19,20 @@ function App() {
   return (
     <Canvas>
       <ambientLight />
-      <directionalLight position={[10, 10, 5]} />
+      <directionalLight position={[30, 20, 10]} />
+      <PerspectiveCamera position={[0, 0, 30]} makeDefault />
+      <OrbitControls />
 
-      <Balls />
+      <mesh>
+        <boxGeometry args={[10, 10, 10]} />
+        <meshPhysicalMaterial
+          color="#444"
+          transparent
+          opacity={0.1}
+          side={DoubleSide}
+        />
+        <Balls />
+      </mesh>
 
       <Systems />
     </Canvas>
