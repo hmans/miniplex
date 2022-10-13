@@ -1,4 +1,5 @@
 import { World, Bucket } from "../src"
+
 describe("World", () => {
   it("inherits from Bucket", () => {
     const world = new World()
