@@ -12,7 +12,7 @@ export type Entity = {
   transform?: Object3D
 
   spatialHashing?: {
-    currentCell?: string
+    currentCell?: Set<Entity>
   }
 
   physics?: {

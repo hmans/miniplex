@@ -9,20 +9,23 @@ export function spatialHashingSystem() {
     const p = entity.transform.position
     const key = cellKey(p.x, p.y, p.z)
 
+    let cell = cells.get(key)
+
+    if (!cell) {
+      cell = new Set()
+      cells.set(key, cell)
+    }
+
     /* If the entity has moved cells, update the spatial hash */
-    if (entity.spatialHashing.currentCell !== key) {
+    if (entity.spatialHashing.currentCell !== cell) {
       /* Remove the entity from its previous cell */
       if (entity.spatialHashing.currentCell) {
-        const oldCell = cells.get(entity.spatialHashing.currentCell)!
-        oldCell.delete(entity)
+        entity.spatialHashing.currentCell.delete(entity)
       }
 
-      /* Make sure a cell exists */
-      if (!cells.has(key)) cells.set(key, new Set())
-
       /* Add the entity to its new cell */
-      cells.get(key)!.add(entity)
-      entity.spatialHashing.currentCell = key
+      cell.add(entity)
+      entity.spatialHashing.currentCell = cell
     }
   }
 }
