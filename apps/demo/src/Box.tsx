@@ -16,7 +16,7 @@ export const Box = ({ children, ...props }: GroupProps) => {
           }}
         >
           <mesh receiveShadow onClick={() => bounce()}>
-            <boxGeometry args={[BOUNDS * 2, BOUNDS * 2, BOUNDS * 2]} />
+            <boxGeometry args={[BOUNDS * 2.1, BOUNDS * 2.1, BOUNDS * 2.1]} />
             <meshPhysicalMaterial
               color="#eee"
               transparent
