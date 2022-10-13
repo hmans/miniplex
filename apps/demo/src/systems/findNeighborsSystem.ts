@@ -7,7 +7,7 @@ export function findNeighborsSystem() {
   for (const entity of entities) {
     getEntitiesInRadius(
       entity.transform.position,
-      1,
+      0.5,
       Infinity,
       entity.neighbors
     )
