@@ -1,5 +1,5 @@
 import { GroupProps } from "@react-three/fiber"
-import { DoubleSide } from "three"
+import { DoubleSide, Vector3 } from "three"
 import { BOUNDS, ECS } from "./state"
 import { Animate } from "@hmans/r3f-animate"
 
@@ -15,7 +15,7 @@ export const Box = ({ children, ...props }: GroupProps) => {
             g.rotation.x += dt * 0.1
           }}
         >
-          <mesh receiveShadow>
+          <mesh receiveShadow onClick={() => bounce()}>
             <boxGeometry args={[BOUNDS * 2, BOUNDS * 2, BOUNDS * 2]} />
             <meshPhysicalMaterial
               color="#eee"
@@ -30,4 +30,15 @@ export const Box = ({ children, ...props }: GroupProps) => {
       </ECS.Property>
     </ECS.Entity>
   )
+}
+
+const bounce = () => {
+  const [cube] = ECS.world.archetype("isCube")
+  if (!cube) return
+
+  for (const { physics } of ECS.world.archetype("physics")) {
+    physics.velocity.add(
+      new Vector3(0, 10, 0).applyQuaternion(cube.transform!.quaternion.invert())
+    )
+  }
 }
