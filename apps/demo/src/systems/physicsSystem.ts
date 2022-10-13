@@ -20,6 +20,9 @@ export function physicsSystem(dt: number) {
   gravity.set(0, -20, 0)
 
   const [cube] = cubes
+
+  if (!cube) return
+
   tmpQuat.copy(cube.transform!.quaternion).invert()
   gravity.applyQuaternion(tmpQuat)
 
