@@ -1,9 +1,8 @@
 import { EntityWith } from "miniplex"
 import { Quaternion, Vector3 } from "three"
 import { BOUNDS, ECS, Entity } from "../state"
-import { getEntitiesInRadius } from "./spatialHashingSystem"
 
-const SUBSTEPS = 5
+const SUBSTEPS = 1
 
 type PhysicsEntity = EntityWith<Entity, "transform" | "physics">
 

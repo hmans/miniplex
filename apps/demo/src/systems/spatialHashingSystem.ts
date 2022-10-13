@@ -36,8 +36,12 @@ export function cellKey(x: number, y: number, z: number) {
   return `${Math.floor(x)}|${Math.floor(y)}|${Math.floor(z)}`
 }
 
-export function getEntitiesInRadius(p: Vector3, r: number) {
-  const entities: Entity[] = []
+export function getEntitiesInRadius(
+  p: Vector3,
+  r: number,
+  out = new Set<Entity>()
+) {
+  out.clear()
 
   const x = Math.floor(p.x)
   const y = Math.floor(p.y)
@@ -48,9 +52,14 @@ export function getEntitiesInRadius(p: Vector3, r: number) {
       for (let k = -r; k <= r; k++) {
         const key = cellKey(x + i, y + j, z + k)
         const contents = cells.get(key)
-        if (contents) entities.push(...contents)
+        if (contents) {
+          for (const entity of contents) {
+            out.add(entity)
+          }
+        }
       }
     }
   }
-  return entities
+
+  return out
 }
