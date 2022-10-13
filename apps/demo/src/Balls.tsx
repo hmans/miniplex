@@ -5,7 +5,7 @@ import { ECS } from "./state"
 
 export const Balls = () => {
   return (
-    <InstancedParticles>
+    <InstancedParticles castShadow receiveShadow>
       <sphereGeometry args={[0.5, 12, 12]} />
       <meshStandardMaterial color="hotpink" />
 

@@ -17,7 +17,7 @@ export function physicsSystem(dt: number) {
 
   const [cube] = cubes
   tmpQuat.copy(cube.transform!.quaternion).invert()
-  gravity.applyQuaternion(cube.transform!.quaternion)
+  gravity.applyQuaternion(tmpQuat.copy(cube.transform!.quaternion).invert())
 
   for (let i = 0; i < entities.length; i++) {
     const { transform, physics } = entities[i]

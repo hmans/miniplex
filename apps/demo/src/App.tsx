@@ -26,9 +26,10 @@ function App() {
   })
 
   return (
-    <Canvas>
+    <Canvas shadows>
       <ambientLight />
-      <directionalLight position={[30, 20, 10]} />
+      <directionalLight position={[30, 20, 10]} castShadow />
+
       <PerspectiveCamera position={[0, 0, 30]} makeDefault />
       <OrbitControls />
 
@@ -41,7 +42,7 @@ function App() {
               g.rotation.x += 0.3 * dt
             }}
           >
-            <mesh>
+            <mesh receiveShadow>
               <boxGeometry args={[BOUNDS * 2, BOUNDS * 2, BOUNDS * 2]} />
               <meshPhysicalMaterial
                 color="#444"
