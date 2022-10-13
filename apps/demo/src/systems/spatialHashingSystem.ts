@@ -12,25 +12,28 @@ export function spatialHashingSystem() {
     let cell = cells.get(key)
 
     if (!cell) {
-      cell = new Set()
+      cell = new Array<Entity>()
       cells.set(key, cell)
     }
 
     /* If the entity has moved cells, update the spatial hash */
-    if (entity.spatialHashing.currentCell !== cell) {
+    const current = entity.spatialHashing.currentCell
+    if (current !== cell) {
       /* Remove the entity from its previous cell */
-      if (entity.spatialHashing.currentCell) {
-        entity.spatialHashing.currentCell.delete(entity)
+      if (current) {
+        const index = current.indexOf(entity)
+        current[index] = current[current.length - 1]
+        current.pop()
       }
 
       /* Add the entity to its new cell */
-      cell.add(entity)
+      cell.push(entity)
       entity.spatialHashing.currentCell = cell
     }
   }
 }
 
-const cells = new Map<string, Set<Entity>>()
+const cells = new Map<string, Entity[]>()
 
 export function cellKey(x: number, y: number, z: number) {
   return `${Math.floor(x)}|${Math.floor(y)}|${Math.floor(z)}`

@@ -12,7 +12,7 @@ export type Entity = {
   transform?: Object3D
 
   spatialHashing?: {
-    currentCell?: Set<Entity>
+    currentCell?: Entity[]
   }
 
   neighbors?: Entity[]
