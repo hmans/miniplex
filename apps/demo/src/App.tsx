@@ -5,7 +5,13 @@ import { Systems } from "./Systems"
 
 function App() {
   useEffect(() => {
-    spawnBall({ position: [0, 0, 0] })
+    const id = setInterval(() => {
+      spawnBall({ position: [0, 0, 0] })
+    }, 500)
+
+    return () => {
+      clearInterval(id)
+    }
   })
 
   return (
