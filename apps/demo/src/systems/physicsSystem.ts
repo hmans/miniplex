@@ -2,8 +2,6 @@ import { EntityWith } from "miniplex"
 import { Quaternion, Vector3 } from "three"
 import { BOUNDS, ECS, Entity } from "../state"
 
-const SUBSTEPS = 1
-
 type PhysicsEntity = EntityWith<Entity, "transform" | "physics">
 
 const { entities } = ECS.world.archetype("transform", "physics")
@@ -29,25 +27,22 @@ export function physicsSystem(dt: number) {
   for (const entity of entities) {
     const { transform, physics } = entity
 
-    const stepTime = dt / SUBSTEPS
-    for (let i = 0; i < SUBSTEPS; i++) {
-      /* Apply gravity */
-      physics.velocity.addScaledVector(gravity, stepTime)
+    /* Apply gravity */
+    physics.velocity.addScaledVector(gravity, dt)
 
-      /* Apply velocity */
-      transform.position.addScaledVector(physics.velocity, stepTime)
+    /* Apply velocity */
+    transform.position.addScaledVector(physics.velocity, dt)
 
-      /* Check bounds collision */
-      handleWallCollision(entity)
+    /* Check bounds collision */
+    handleWallCollision(entity)
 
-      /* Ball collisions */
-      if (entity.neighbors)
-        for (const neighbor of entity.neighbors) {
-          if (!neighbor.physics) continue
-          if (neighbor === entity) continue
-          handleBallCollision(entity, neighbor as PhysicsEntity)
-        }
-    }
+    /* Ball collisions */
+    if (entity.neighbors)
+      for (const neighbor of entity.neighbors) {
+        if (!neighbor.physics) continue
+        if (neighbor === entity) continue
+        handleBallCollision(entity, neighbor as PhysicsEntity)
+      }
   }
 }
 
