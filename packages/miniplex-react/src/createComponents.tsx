@@ -30,6 +30,9 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
 
   const useCurrentEntity = () => useContext(EntityContext)
 
+  const useArchetype = <P extends keyof E>(...properties: P[]) =>
+    useEntities(world.archetype(...properties))
+
   const RawEntity = <D extends E>({
     children,
     entity: givenEntity = {} as D
@@ -145,7 +148,15 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     return null
   }
 
-  return { Entity, Entities, Bucket, Archetype, Property, useCurrentEntity }
+  return {
+    Entity,
+    Entities,
+    Bucket,
+    Archetype,
+    Property,
+    useCurrentEntity,
+    useArchetype
+  }
 }
 
 export const useEntities = <E extends IEntity>(bucket: Bucket<E>) => {

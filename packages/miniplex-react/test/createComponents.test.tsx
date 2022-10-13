@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom"
-import { render, screen } from "@testing-library/react"
+import { render, renderHook, screen } from "@testing-library/react"
 import { World } from "miniplex"
 import React from "react"
 import { createComponents } from "../src"
@@ -40,10 +40,10 @@ describe("<Entity>", () => {
 
   it("accepts a React function component as a child", () => {
     type Entity = { name: string; age: number }
-    const bucket = new World<Entity>()
-    const { Entity } = createComponents(bucket)
+    const world = new World<Entity>()
+    const { Entity } = createComponents(world)
 
-    const entity = bucket.add({ name: "Alice", age: 30 })
+    const entity = world.add({ name: "Alice", age: 30 })
 
     const User = (entity: Entity) => <p>Name: {entity.name}</p>
 
@@ -246,5 +246,28 @@ describe("<Archetype>", () => {
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
     expect(screen.getByText("Charlie")).toBeInTheDocument()
+  })
+})
+
+describe("useArchetype", () => {
+  it("returns the entities of the specified archetype and re-renders the component when the archetype updates", () => {
+    const world = new World<{ name: string }>()
+    const { useArchetype } = createComponents(world)
+
+    world.add({ name: "Alice" })
+    world.add({ name: "Bob" })
+
+    const { result } = renderHook(() => useArchetype("name"))
+
+    expect(result.current).toHaveLength(2)
+    expect(result.current[0].name).toBe("Alice")
+    expect(result.current[1].name).toBe("Bob")
+
+    world.add({ name: "Charlie" })
+
+    expect(result.current).toHaveLength(3)
+    expect(result.current[0].name).toBe("Alice")
+    expect(result.current[1].name).toBe("Bob")
+    expect(result.current[2].name).toBe("Charlie")
   })
 })
