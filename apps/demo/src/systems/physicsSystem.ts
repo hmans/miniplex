@@ -34,36 +34,7 @@ export function physicsSystem(dt: number) {
       transform.position.addScaledVector(physics.velocity, stepTime)
 
       /* Check bounds collision */
-      const B = BOUNDS - physics.radius
-      if (transform.position.y < -B) {
-        transform.position.y = -B
-        physics.velocity.y *= -physics.restitution
-      }
-
-      if (transform.position.y > B) {
-        transform.position.y = B
-        physics.velocity.y *= -physics.restitution
-      }
-
-      if (transform.position.x < -B) {
-        transform.position.x = -B
-        physics.velocity.x *= -physics.restitution
-      }
-
-      if (transform.position.x > B) {
-        transform.position.x = B
-        physics.velocity.x *= -physics.restitution
-      }
-
-      if (transform.position.z < -B) {
-        transform.position.z = -B
-        physics.velocity.z *= -physics.restitution
-      }
-
-      if (transform.position.z > B) {
-        transform.position.z = B
-        physics.velocity.z *= -physics.restitution
-      }
+      handleWallCollision(entity)
 
       /* Ball collisions */
       const neighbors = getEntitiesInRadius(
@@ -77,6 +48,42 @@ export function physicsSystem(dt: number) {
         handleBallCollision(entity, neighbor)
       }
     }
+  }
+}
+
+function handleWallCollision({
+  physics,
+  transform
+}: EntityWith<Entity, "transform" | "physics">) {
+  const B = BOUNDS - physics.radius
+  if (transform.position.y < -B) {
+    transform.position.y = -B
+    physics.velocity.y *= -physics.restitution
+  }
+
+  if (transform.position.y > B) {
+    transform.position.y = B
+    physics.velocity.y *= -physics.restitution
+  }
+
+  if (transform.position.x < -B) {
+    transform.position.x = -B
+    physics.velocity.x *= -physics.restitution
+  }
+
+  if (transform.position.x > B) {
+    transform.position.x = B
+    physics.velocity.x *= -physics.restitution
+  }
+
+  if (transform.position.z < -B) {
+    transform.position.z = -B
+    physics.velocity.z *= -physics.restitution
+  }
+
+  if (transform.position.z > B) {
+    transform.position.z = B
+    physics.velocity.z *= -physics.restitution
   }
 }
 
