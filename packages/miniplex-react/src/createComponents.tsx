@@ -80,7 +80,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     const source =
       typeof _bucket === "function" ? world.derive(_bucket) : _bucket
 
-    const { entities } = useBucket(source)
+    const entities = useEntities(source)
     return <Entities entities={entities} children={children} />
   }
 
