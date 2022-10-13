@@ -14,7 +14,7 @@ const tmpVec3 = new Vector3()
 const tmpQuat = new Quaternion()
 
 let accumulatedTime = 0
-const STEP = 1 / 60
+const STEP = 1 / 100
 
 export function physicsSystem(dt: number) {
   /* Determine gravity */
@@ -36,10 +36,10 @@ export function physicsSystem(dt: number) {
       const { transform, physics } = entity
 
       /* Apply gravity */
-      physics.velocity.addScaledVector(gravity, dt)
+      physics.velocity.addScaledVector(gravity, STEP)
 
       /* Apply velocity */
-      transform.position.addScaledVector(physics.velocity, dt)
+      transform.position.addScaledVector(physics.velocity, STEP)
 
       /* Check bounds collision */
       handleWallCollision(entity)
