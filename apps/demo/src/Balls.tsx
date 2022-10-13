@@ -1,7 +1,6 @@
-import { GroupProps } from "@react-three/fiber"
 import { between } from "randomish"
 import { Vector3 } from "three"
-import { InstancedParticles, Particle } from "vfx-composer-r3f"
+import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
 import { ECS } from "./state"
 
 export const Balls = () => (
@@ -13,7 +12,7 @@ export const Balls = () => (
   </InstancedParticles>
 )
 
-export const spawnBall = (props: GroupProps) => {
+export const spawnBall = (props: ParticleProps) => {
   const radius = between(0.2, 0.4)
 
   return ECS.world.add({
@@ -28,9 +27,7 @@ export const spawnBall = (props: GroupProps) => {
 
     jsx: (
       <ECS.Property name="transform">
-        <group {...props}>
-          <Particle scale={radius} />
-        </group>
+        <Particle scale={radius} {...props} />
       </ECS.Property>
     )
   })
