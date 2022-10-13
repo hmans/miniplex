@@ -8,12 +8,12 @@
     "packages/*"
   ],
   "scripts": {
-    "postinstall": "preconstruct dev && manypkg check",
+    "postinstall": "preconstruct dev",
     "dev": "preconstruct dev",
     "demo": "pnpm dev && pnpm -F demo dev",
     "build": "preconstruct build",
     "test": "jest",
-    "ci": "preconstruct validate && manypkg check && pnpm build && pnpm test",
+    "ci": "preconstruct validate && pnpm build && pnpm test",
     "ci:version": "changeset version && pnpm install --no-frozen-lockfile",
     "ci:release": "pnpm ci && pnpm changeset publish"
   },
@@ -37,7 +37,6 @@
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@changesets/cli": "^2.24.2",
-    "@manypkg/cli": "^0.19.1",
     "@preconstruct/cli": "^2.2.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
