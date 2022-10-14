@@ -21,14 +21,14 @@ export const PlayerSystem = () => {
 
     if (input.thrust) {
       tmpVec3
-        .set(0, input.thrust * 100, 0)
+        .set(0, input.thrust * 20, 0)
         .applyQuaternion(player.transform.quaternion)
 
       player.physics.velocity.addScaledVector(tmpVec3, dt)
     }
 
     if (input.rotate) {
-      player.physics.angularVelocity.z -= input.rotate
+      player.physics.angularVelocity.z -= input.rotate * 10 * dt
     }
   })
 

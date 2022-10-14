@@ -6,8 +6,7 @@ export const BOUNDS = 5
 
 export type Entity = {
   isPlayer?: true
-  isBall?: true
-  isCube?: true
+  isAsteroid?: true
 
   jsx?: JSX.Element
   transform?: Object3D
