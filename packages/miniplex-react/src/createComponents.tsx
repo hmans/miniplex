@@ -52,7 +52,11 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
 
     return (
       <EntityContext.Provider value={entity}>
-        {typeof children === "function" ? children(entity) : children}
+        {children
+          ? typeof children === "function"
+            ? children(entity)
+            : children
+          : entity.jsx}
       </EntityContext.Provider>
     )
   }

@@ -21,7 +21,7 @@ export const Asteroids = () => {
       <icosahedronGeometry args={[0.5]} />
       <meshStandardMaterial color="#888" />
 
-      <ECS.Bucket bucket={asteroids}>{(entity) => entity.jsx}</ECS.Bucket>
+      <ECS.Bucket bucket={asteroids} />
     </InstancedParticles>
   )
 }
