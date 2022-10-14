@@ -1,4 +1,5 @@
 import { Event } from "@hmans/event"
+import { Predicate } from "./types"
 
 export class Bucket<E> {
   [Symbol.iterator]() {
@@ -67,8 +68,7 @@ export class Bucket<E> {
   }
 
   derive<D extends E = E>(
-    predicate: ((entity: E) => entity is D) | ((entity: E) => boolean) = () =>
-      true
+    predicate: Predicate<E, D> | ((entity: E) => boolean) = () => true
   ): Bucket<D> {
     /* Check if we already have a derived bucket for this predicate */
     if (this.derivedBuckets.has(predicate)) {
