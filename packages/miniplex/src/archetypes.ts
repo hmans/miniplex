@@ -1,4 +1,4 @@
-import { EntityPredicate, EntityWith, IEntity } from "./Bucket"
+import { EntityPredicate, EntityWith, IEntity } from "./types"
 
 export const isArchetype = <E extends IEntity, P extends keyof E>(
   entity: E,

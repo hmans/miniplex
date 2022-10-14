@@ -1,5 +1,6 @@
 import { archetype } from "./archetypes"
-import { Bucket, IEntity } from "./Bucket"
+import { Bucket } from "./Bucket"
+import { IEntity } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
   addProperty<P extends keyof E>(entity: E, property: P, value: E[P]) {

@@ -1,4 +1,4 @@
-import { IEntity } from "./Bucket"
+import { IEntity } from "./types"
 
 const entityToId = new WeakMap<IEntity, number>()
 
