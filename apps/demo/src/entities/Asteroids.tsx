@@ -1,7 +1,7 @@
 import { plusMinus } from "randomish"
 import { useLayoutEffect } from "react"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
-import { ECS, physics } from "../state"
+import { ECS, physics, Entity } from "../state"
 
 export const Asteroids = () => {
   useLayoutEffect(() => {
@@ -10,7 +10,7 @@ export const Asteroids = () => {
     }
 
     return () => {
-      for (const asteroid of ECS.world.archetype("isAsteroid")) {
+      for (const asteroid of asteroids) {
         ECS.world.remove(asteroid)
       }
     }
@@ -21,12 +21,17 @@ export const Asteroids = () => {
       <icosahedronGeometry args={[0.5]} />
       <meshStandardMaterial color="#888" />
 
-      <ECS.Archetype properties="isAsteroid">
-        {(entity) => entity.jsx}
-      </ECS.Archetype>
+      <ECS.Bucket bucket={asteroids}>{(entity) => entity.jsx}</ECS.Bucket>
     </InstancedParticles>
   )
 }
+
+export type Asteroid = Entity & ReturnType<typeof spawnAsteroid>
+
+export const isAsteroid = (entity: Entity): entity is Asteroid =>
+  "isAsteroid" in entity
+
+const asteroids = ECS.world.derive(isAsteroid)
 
 export const spawnAsteroid = (props: ParticleProps) => {
   const entity = ECS.world.add({

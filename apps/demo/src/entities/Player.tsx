@@ -1,4 +1,18 @@
-import { ECS, physics } from "../state"
+import { WithRequiredKeys } from "miniplex"
+import { ECS, Entity, physics } from "../state"
+
+export type Player = WithRequiredKeys<
+  Entity,
+  | "isPlayer"
+  | "transform"
+  | "physics"
+  | "spatialHashing"
+  | "neighbors"
+  | "transform"
+>
+
+export const isPlayer = (entity: Entity): entity is Player =>
+  "isPlayer" in entity
 
 export const Player = () => {
   return (

@@ -1,14 +1,17 @@
 import { useFrame } from "@react-three/fiber"
 import { Vector3 } from "three"
+import { isPlayer } from "../entities/Player"
 import { ECS } from "../state"
 import { useKeyboard } from "../util/useKeyboard"
 
 const tmpVec3 = new Vector3()
 
+const players = ECS.world.derive(isPlayer)
+
 export const PlayerSystem = () => {
   const keyboard = useKeyboard()
 
-  const [player] = ECS.useArchetype("isPlayer", "physics", "transform")
+  const [player] = players
 
   useFrame((_, dt) => {
     if (!player) return
