@@ -51,6 +51,8 @@ importers:
   apps/demo:
     specifiers:
       '@hmans/r3f-animate': ^0.0.5
+      '@miniplex/core': workspace:2.0.0-next.3
+      '@miniplex/react': workspace:^2.0.0-next.3
       '@react-three/drei': ^9.34.3
       '@react-three/fiber': ^8.8.10
       '@types/react': ^18.0.17
@@ -58,8 +60,6 @@ importers:
       '@types/three': ^0.144.0
       '@vitejs/plugin-react': ^2.1.0
       material-composer: ^0.2.6
-      miniplex: workspace:2.0.0-next.3
-      miniplex-react: workspace:^2.0.0-next.3
       r3f-perf: ^6.5.0
       randomish: ^0.1.4
       react: ^18.2.0
@@ -72,11 +72,11 @@ importers:
       vite: ^3.1.0
     dependencies:
       '@hmans/r3f-animate': 0.0.5_cpod6d3cr76qxhqbh6bdljlrqm
+      '@miniplex/core': link:../../packages/miniplex-core
+      '@miniplex/react': link:../../packages/miniplex-react
       '@react-three/drei': 9.34.3_cpod6d3cr76qxhqbh6bdljlrqm
       '@react-three/fiber': 8.8.10_ee34sidbpuk5ebd4phepfgxxdi
       material-composer: 0.2.6_three@0.145.0
-      miniplex: link:../../packages/miniplex
-      miniplex-react: link:../../packages/miniplex-react
       r3f-perf: 6.5.0_gpcxvdsfl5xtf7s5g5krcozdg4
       randomish: 0.1.4
       react: 18.2.0
@@ -93,7 +93,7 @@ importers:
       typescript: 4.8.3
       vite: 3.1.8
 
-  packages/miniplex:
+  packages/miniplex-core:
     specifiers:
       '@hmans/event': ^0.0.1
     dependencies:
@@ -103,7 +103,7 @@ importers:
     specifiers:
       '@hmans/use-const': ^0.0.1
       '@hmans/use-rerender': ^0.0.2
-      miniplex: 2.0.0-next.3
+      '@miniplex/core': 2.0.0-next.3
       react: ^18.2.0
       react-dom: ^18.2.0
       react-merge-refs: ^1.1.0
@@ -112,7 +112,7 @@ importers:
       '@hmans/use-rerender': 0.0.2_react@18.2.0
       react-merge-refs: 1.1.0
     devDependencies:
-      miniplex: link:../miniplex
+      '@miniplex/core': link:../miniplex-core
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
 

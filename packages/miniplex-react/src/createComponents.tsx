@@ -2,12 +2,12 @@ import { useConst } from "@hmans/use-const"
 import {
   archetype,
   Bucket,
-  Predicate,
-  WithRequiredKeys,
   id,
   IEntity,
+  Predicate,
+  WithRequiredKeys,
   World
-} from "../../miniplex-core/dist/miniplex.cjs"
+} from "@miniplex/core"
 import React, {
   createContext,
   memo,

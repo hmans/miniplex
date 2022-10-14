@@ -1,5 +1,5 @@
 import { act, renderHook } from "@testing-library/react"
-import { World } from "../../miniplex-core/dist/miniplex.cjs"
+import { World } from "@miniplex/core"
 import { useArchetype } from "../src"
 
 describe("useArchetype", () => {

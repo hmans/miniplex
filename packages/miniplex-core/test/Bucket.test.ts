@@ -149,7 +149,7 @@ describe("derive", () => {
     const entity = world.add({ name: "Bob", age: 20 })
     expect(withName.entities).toEqual([entity])
 
-    console.log(withName.entities[0].name.length)
+    withName.entities[0].name.length
     /* No real test, just making sure the type is correct */
   })
 
