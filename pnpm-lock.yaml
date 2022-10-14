@@ -105,10 +105,10 @@ importers:
     dependencies:
       '@hmans/use-const': 0.0.1_react@18.2.0
       '@hmans/use-rerender': 0.0.2_react@18.2.0
-      react-merge-refs: 1.1.0
-    devDependencies:
       '@miniplex/core': link:../miniplex-core
       '@miniplex/react': link:../miniplex-react
+      react-merge-refs: 1.1.0
+    devDependencies:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
 
