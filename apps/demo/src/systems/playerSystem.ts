@@ -11,9 +11,8 @@ const players = ECS.world.derive(isPlayer)
 export const PlayerSystem = () => {
   const keyboard = useKeyboard()
 
-  const [player] = players
-
   useFrame((_, dt) => {
+    const [player] = players
     if (!player) return
 
     const input = {
