@@ -28,6 +28,10 @@ export function physicsSystem(dt: number) {
       transform.rotation.y += physics.angularVelocity.y * STEP
       transform.rotation.z += physics.angularVelocity.z * STEP
 
+      /* Apply damping */
+      physics.velocity.multiplyScalar(physics.linearDamping)
+      physics.angularVelocity.multiplyScalar(physics.angularDamping)
+
       /* Check bounds collision */
       handleWallCollision(entity)
 

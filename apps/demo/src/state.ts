@@ -24,6 +24,8 @@ export type Entity = {
 type Physics = {
   velocity: Vector3
   angularVelocity: Vector3
+  linearDamping: number
+  angularDamping: number
   mass: number
   radius: number
   restitution: number
@@ -32,6 +34,8 @@ type Physics = {
 export const physics = (input: Partial<Physics> = {}): Physics => ({
   velocity: new Vector3(0, 0, 0),
   angularVelocity: new Vector3(0, 0, 0),
+  linearDamping: 0.99,
+  angularDamping: 0.99,
   mass: 1,
   radius: 1,
   restitution: 0.5,
