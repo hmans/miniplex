@@ -17,13 +17,23 @@ export type Entity = {
 
   neighbors?: Entity[]
 
-  physics?: {
-    velocity: Vector3
-    mass: number
-    radius: number
-    restitution: number
-  }
+  physics?: Physics
 }
+
+type Physics = {
+  velocity: Vector3
+  mass: number
+  radius: number
+  restitution: number
+}
+
+export const physics = (input: Partial<Physics> = {}) => ({
+  velocity: new Vector3(0, 0, 0),
+  mass: 1,
+  radius: 1,
+  restitution: 0.5,
+  ...input
+})
 
 const world = new World<Entity>()
 

@@ -2,6 +2,7 @@ import { Environment, Loader, PerspectiveCamera } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 import { Perf } from "r3f-perf"
 import { StrictMode, Suspense } from "react"
+import { Player } from "./entities/Player"
 import { Systems } from "./Systems"
 
 function App() {
@@ -29,6 +30,8 @@ function App() {
             />
 
             <PerspectiveCamera position={[0, 0, 30]} makeDefault />
+
+            <Player />
 
             <Systems />
 

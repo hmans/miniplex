@@ -1,32 +1,19 @@
 import { WithRequiredKeys } from "miniplex"
-import { MathUtils, Quaternion, Vector3 } from "three"
+import { MathUtils, Vector3 } from "three"
 import { BOUNDS, ECS, Entity } from "../state"
 
 type PhysicsEntity = WithRequiredKeys<Entity, "transform" | "physics">
 
 const entities = ECS.world.archetype("transform", "physics")
 
-const cubes = ECS.world.archetype("isCube")
-
-const gravity = new Vector3(0, -20, 0)
+const gravity = new Vector3(0, 0, 0)
 
 const tmpVec3 = new Vector3()
-const tmpQuat = new Quaternion()
 
 let accumulatedTime = 0
 const STEP = 1 / 100
 
 export function physicsSystem(dt: number) {
-  /* Determine gravity */
-  gravity.set(0, -20, 0)
-
-  const [cube] = cubes
-
-  if (!cube) return
-
-  tmpQuat.copy(cube.transform!.quaternion).invert()
-  gravity.applyQuaternion(tmpQuat)
-
   accumulatedTime += MathUtils.clamp(dt, 0, 0.2)
 
   while (accumulatedTime >= STEP) {
