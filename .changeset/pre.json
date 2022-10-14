@@ -4,11 +4,14 @@
   "initialVersions": {
     "miniplex": "1.0.0",
     "miniplex-react": "1.0.1",
-    "demo": "0.0.0"
+    "demo": "0.0.0",
+    "@miniplex/core": "2.0.0-next.3",
+    "@miniplex/react": "2.0.0-next.3"
   },
   "changesets": [
     "afraid-bats-matter",
     "eleven-pianos-cry",
+    "funny-hounds-love",
     "gentle-dodos-shake",
     "gorgeous-boxes-love",
     "gorgeous-pets-grab",
