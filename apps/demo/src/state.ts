@@ -1,4 +1,4 @@
-import { IEntity, World } from "miniplex"
+import { World } from "miniplex"
 import { createComponents, EntityChildren } from "miniplex/react"
 import { Object3D, Vector3 } from "three"
 
