@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom"
 import { act, render, renderHook, screen } from "@testing-library/react"
-import { World } from "miniplex"
+import { World } from "../../miniplex-core/dist/miniplex.cjs"
 import React from "react"
 import { createComponents } from "../src"
 

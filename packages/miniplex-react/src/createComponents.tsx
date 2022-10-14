@@ -7,7 +7,7 @@ import {
   id,
   IEntity,
   World
-} from "miniplex"
+} from "../../miniplex-core/dist/miniplex.cjs"
 import React, {
   createContext,
   memo,

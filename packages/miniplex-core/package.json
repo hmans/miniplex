@@ -1,5 +1,5 @@
 {
-  "name": "miniplex",
+  "name": "@miniplex/core",
   "author": {
     "name": "Hendrik Mans",
     "email": "hendrik@mans.de",
@@ -16,9 +16,9 @@
   ],
   "sideEffects": false,
   "version": "2.0.0-next.3",
-  "main": "dist/miniplex.cjs.js",
-  "module": "dist/miniplex.esm.js",
-  "types": "dist/miniplex.cjs.d.ts",
+  "main": "dist/miniplex-core.cjs.js",
+  "module": "dist/miniplex-core.esm.js",
+  "types": "dist/miniplex-core.cjs.d.ts",
   "files": [
     "dist/**",
     "LICENSE",
