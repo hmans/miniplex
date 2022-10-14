@@ -1,3 +1,4 @@
+import { WithRequiredKeys } from "miniplex"
 import { plusMinus } from "randomish"
 import { useLayoutEffect } from "react"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
@@ -26,7 +27,10 @@ export const Asteroids = () => {
   )
 }
 
-export type Asteroid = Entity & ReturnType<typeof spawnAsteroid>
+export type Asteroid = WithRequiredKeys<
+  Entity,
+  "isAsteroid" | "transform" | "physics" | "spatialHashing" | "neighbors"
+>
 
 export const isAsteroid = (entity: Entity): entity is Asteroid =>
   "isAsteroid" in entity
@@ -40,7 +44,7 @@ export const spawnAsteroid = (props: ParticleProps) =>
     spatialHashing: {},
     neighbors: [],
 
-    jsx: (
+    render: (
       <ECS.Property name="transform">
         <Particle {...props} />
       </ECS.Property>

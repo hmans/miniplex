@@ -5,7 +5,7 @@ import { Object3D, Vector3 } from "three"
 export const BOUNDS = 10
 
 export interface IRenderableEntity {
-  jsx: JSX.Element
+  render: JSX.Element
 }
 
 export type Entity = Partial<IRenderableEntity> & {
