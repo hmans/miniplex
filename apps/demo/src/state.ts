@@ -5,6 +5,7 @@ import { Object3D, Vector3 } from "three"
 export const BOUNDS = 5
 
 export type Entity = {
+  isPlayer?: true
   isBall?: true
   isCube?: true
 
@@ -22,13 +23,15 @@ export type Entity = {
 
 type Physics = {
   velocity: Vector3
+  angularVelocity: Vector3
   mass: number
   radius: number
   restitution: number
 }
 
-export const physics = (input: Partial<Physics> = {}) => ({
+export const physics = (input: Partial<Physics> = {}): Physics => ({
   velocity: new Vector3(0, 0, 0),
+  angularVelocity: new Vector3(0, 0, 0),
   mass: 1,
   radius: 1,
   restitution: 0.5,

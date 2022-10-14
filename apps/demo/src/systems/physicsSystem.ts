@@ -6,8 +6,6 @@ type PhysicsEntity = WithRequiredKeys<Entity, "transform" | "physics">
 
 const entities = ECS.world.archetype("transform", "physics")
 
-const gravity = new Vector3(0, 0, 0)
-
 const tmpVec3 = new Vector3()
 
 let accumulatedTime = 0
@@ -22,11 +20,13 @@ export function physicsSystem(dt: number) {
     for (const entity of entities) {
       const { transform, physics } = entity
 
-      /* Apply gravity */
-      physics.velocity.addScaledVector(gravity, STEP)
-
       /* Apply velocity */
       transform.position.addScaledVector(physics.velocity, STEP)
+
+      /* Apply angular velocity */
+      transform.rotation.x += physics.angularVelocity.x * STEP
+      transform.rotation.y += physics.angularVelocity.y * STEP
+      transform.rotation.z += physics.angularVelocity.z * STEP
 
       /* Check bounds collision */
       handleWallCollision(entity)

@@ -3,6 +3,7 @@ import { ECS, physics } from "../state"
 export const Player = () => {
   return (
     <ECS.Entity>
+      <ECS.Property name="isPlayer" value={true} />
       <ECS.Property name="physics" value={physics()} />
       <ECS.Property name="transform">
         <mesh>

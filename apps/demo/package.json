@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@hmans/r3f-animate": "^0.0.5",
+    "@hmans/use-const": "^0.0.1",
     "@react-three/drei": "^9.34.3",
     "@react-three/fiber": "^8.8.10",
     "material-composer": "^0.2.6",

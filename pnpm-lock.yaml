@@ -51,6 +51,7 @@ importers:
   apps/demo:
     specifiers:
       '@hmans/r3f-animate': ^0.0.5
+      '@hmans/use-const': ^0.0.1
       '@react-three/drei': ^9.34.3
       '@react-three/fiber': ^8.8.10
       '@types/react': ^18.0.17
@@ -71,6 +72,7 @@ importers:
       vite: ^3.1.0
     dependencies:
       '@hmans/r3f-animate': 0.0.5_cpod6d3cr76qxhqbh6bdljlrqm
+      '@hmans/use-const': 0.0.1_react@18.2.0
       '@react-three/drei': 9.34.3_cpod6d3cr76qxhqbh6bdljlrqm
       '@react-three/fiber': 8.8.10_ee34sidbpuk5ebd4phepfgxxdi
       material-composer: 0.2.6_three@0.145.0
