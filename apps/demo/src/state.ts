@@ -1,14 +1,10 @@
-import { World } from "miniplex"
-import { createComponents } from "miniplex/react"
+import { IEntity, World } from "miniplex"
+import { createComponents, EntityChildren } from "miniplex/react"
 import { Object3D, Vector3 } from "three"
 
 export const BOUNDS = 10
 
-export interface IRenderableEntity {
-  render: JSX.Element
-}
-
-export type Entity = Partial<IRenderableEntity> & {
+export type Entity = {
   isPlayer?: true
   isAsteroid?: true
 
@@ -21,6 +17,8 @@ export type Entity = Partial<IRenderableEntity> & {
   neighbors?: Entity[]
 
   physics?: Physics
+
+  render?: EntityChildren<Entity>
 }
 
 type Physics = {

@@ -44,7 +44,7 @@ export const spawnAsteroid = (props: ParticleProps) =>
     spatialHashing: {},
     neighbors: [],
 
-    render: (
+    render: () => (
       <ECS.Property name="transform">
         <Particle {...props} />
       </ECS.Property>
