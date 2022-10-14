@@ -1,7 +1,6 @@
 import { Event } from "@hmans/event"
-import { IEntity } from "./types"
 
-export class Bucket<E extends IEntity> {
+export class Bucket<E> {
   [Symbol.iterator]() {
     let index = this.entities.length
 
