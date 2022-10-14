@@ -33,8 +33,8 @@ export const isAsteroid = (entity: Entity): entity is Asteroid =>
 
 const asteroids = ECS.world.derive(isAsteroid)
 
-export const spawnAsteroid = (props: ParticleProps) => {
-  const entity = ECS.world.add({
+export const spawnAsteroid = (props: ParticleProps) =>
+  ECS.world.add({
     isAsteroid: true,
     physics: physics({ radius: 0.4, restitution: 0.1 }),
     spatialHashing: {},
@@ -46,6 +46,3 @@ export const spawnAsteroid = (props: ParticleProps) => {
       </ECS.Property>
     )
   })
-
-  return entity
-}
