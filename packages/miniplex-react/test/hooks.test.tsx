@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react"
+import { act, renderHook } from "@testing-library/react"
 import { World } from "miniplex"
 import { useArchetype } from "../src"
 
@@ -15,7 +15,9 @@ describe("useArchetype", () => {
     expect(result.current[0].name).toBe("Alice")
     expect(result.current[1].name).toBe("Bob")
 
-    world.add({ name: "Charlie" })
+    act(() => {
+      world.add({ name: "Charlie" })
+    })
 
     expect(result.current).toHaveLength(3)
     expect(result.current[0].name).toBe("Alice")

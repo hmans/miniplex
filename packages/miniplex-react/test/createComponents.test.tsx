@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom"
-import { render, renderHook, screen } from "@testing-library/react"
+import { act, render, renderHook, screen } from "@testing-library/react"
 import { World } from "miniplex"
 import React from "react"
 import { createComponents } from "../src"
@@ -184,15 +184,14 @@ describe("<Bucket>", () => {
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })
 
-    const { rerender } = render(
-      <Bucket bucket={world}>{(entity) => <p>{entity.name}</p>}</Bucket>
-    )
+    render(<Bucket bucket={world}>{(entity) => <p>{entity.name}</p>}</Bucket>)
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
 
-    world.add({ name: "Charlie" })
-    rerender(<Bucket bucket={world}>{(entity) => <p>{entity.name}</p>}</Bucket>)
+    act(() => {
+      world.add({ name: "Charlie" })
+    })
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
@@ -234,12 +233,9 @@ describe("<Archetype>", () => {
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
 
-    world.add({ name: "Charlie" })
-    rerender(
-      <Archetype properties="name">
-        {(entity) => <p>{entity.name}</p>}
-      </Archetype>
-    )
+    act(() => {
+      world.add({ name: "Charlie" })
+    })
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
@@ -261,7 +257,9 @@ describe("useArchetype", () => {
     expect(result.current[0].name).toBe("Alice")
     expect(result.current[1].name).toBe("Bob")
 
-    world.add({ name: "Charlie" })
+    act(() => {
+      world.add({ name: "Charlie" })
+    })
 
     expect(result.current).toHaveLength(3)
     expect(result.current[0].name).toBe("Alice")
