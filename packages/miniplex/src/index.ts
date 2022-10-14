@@ -1,5 +1,1 @@
-export * from "./archetypes"
-export * from "./Bucket"
-export * from "./ids"
-export * from "./types"
-export * from "./World"
+export * from "@miniplex/core"
