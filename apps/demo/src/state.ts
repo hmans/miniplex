@@ -1,5 +1,5 @@
 import { World } from "miniplex"
-import { createComponents } from "miniplex-react"
+import { createComponents } from "miniplex/react"
 import { Object3D, Vector3 } from "three"
 
 export const BOUNDS = 5

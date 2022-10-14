@@ -1,8 +1,8 @@
-import { EntityWith } from "miniplex"
+import { WithRequiredKeys } from "miniplex"
 import { MathUtils, Quaternion, Vector3 } from "three"
 import { BOUNDS, ECS, Entity } from "../state"
 
-type PhysicsEntity = EntityWith<Entity, "transform" | "physics">
+type PhysicsEntity = WithRequiredKeys<Entity, "transform" | "physics">
 
 const { entities } = ECS.world.archetype("transform", "physics")
 
