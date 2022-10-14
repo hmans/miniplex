@@ -65,6 +65,7 @@ importers:
       react: ^18.2.0
       react-dom: ^18.2.0
       three: ^0.145.0
+      three-stdlib: ^2.17.2
       typescript: ^4.6.4
       vfx-composer: ^0.4.0
       vfx-composer-r3f: ^0.4.0
@@ -76,11 +77,12 @@ importers:
       material-composer: 0.2.6_three@0.145.0
       miniplex: link:../../packages/miniplex
       miniplex-react: link:../../packages/miniplex-react
-      r3f-perf: 6.5.0_p7sqhzaabr3kwbgdwbn2r335cq
+      r3f-perf: 6.5.0_gpcxvdsfl5xtf7s5g5krcozdg4
       randomish: 0.1.4
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       three: 0.145.0
+      three-stdlib: 2.17.2_three@0.145.0
       vfx-composer: 0.4.0_three@0.145.0
       vfx-composer-r3f: 0.4.0_lkhdok7kqythgfjoas36b6ejf4
     devDependencies:
@@ -5523,7 +5525,7 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /r3f-perf/6.5.0_p7sqhzaabr3kwbgdwbn2r335cq:
+  /r3f-perf/6.5.0_gpcxvdsfl5xtf7s5g5krcozdg4:
     resolution: {integrity: sha512-6hT9V5ihOOv2g/zyOpMGviiqxW9SKFX6AMfcAMnFz3S74M5WNjfAWx4D54Cd89O+5hrcj5Pa69/piGZEKmWPeg==}
     peerDependencies:
       '@react-three/drei': '*'
@@ -5540,6 +5542,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       three: 0.145.0
+      three-stdlib: 2.17.2_three@0.145.0
       zustand: 3.7.2_react@18.2.0
     dev: false
 
