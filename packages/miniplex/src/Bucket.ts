@@ -20,9 +20,25 @@ export class Bucket<E> {
   /** The entities in the bucket. */
   entities = new Array<E>()
 
+  /**
+   * The event that is emitted when an entity is added to this bucket.
+   */
   onEntityAdded = new Event<E>()
+
+  /**
+   * The event that is emitted when an entity is removed from this bucket.
+   */
   onEntityRemoved = new Event<E>()
+
+  /**
+   * The event that is emitted when an entity is touched in this bucket.
+   */
   onEntityTouched = new Event<E>()
+
+  /**
+   * A cache of derived buckets. This is used to ensure that we don't create
+   * multiple derived buckets for the same predicate.
+   */
   derivedBuckets = new WeakMap()
 
   /**
