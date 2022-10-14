@@ -57,7 +57,7 @@ export class Bucket<E> {
    * @param entity The entity to add.
    * @returns The entity that was added.
    */
-  add<D extends E>(entity: D) {
+  add(entity: E) {
     const index = this.entities.indexOf(entity)
 
     /* Add the entity if we don't already have it */
