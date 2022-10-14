@@ -4,7 +4,7 @@ import { BOUNDS, ECS, Entity } from "../state"
 
 type PhysicsEntity = WithRequiredKeys<Entity, "transform" | "physics">
 
-const { entities } = ECS.world.archetype("transform", "physics")
+const entities = ECS.world.archetype("transform", "physics")
 
 const cubes = ECS.world.archetype("isCube")
 
