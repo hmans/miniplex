@@ -4,11 +4,14 @@ import { Object3D, Vector3 } from "three"
 
 export const BOUNDS = 10
 
-export type Entity = {
+export interface IRenderableEntity {
+  jsx: JSX.Element
+}
+
+export type Entity = Partial<IRenderableEntity> & {
   isPlayer?: true
   isAsteroid?: true
 
-  jsx?: JSX.Element
   transform?: Object3D
 
   spatialHashing?: {
