@@ -1,11 +1,11 @@
 {
-  "name": "@miniplex/react",
+  "name": "miniplex",
   "author": {
     "name": "Hendrik Mans",
     "email": "hendrik@mans.de",
     "url": "https://hendrik.mans.de"
   },
-  "description": "React glue for Miniplex.",
+  "description": "A developer-friendly entity management system for games and similarly demanding applications, based on ECS architecture.",
   "homepage": "https://github.com/hmans/miniplex",
   "keywords": [
     "gamedev",
@@ -18,10 +18,17 @@
   ],
   "sideEffects": false,
   "version": "2.0.0-next.3",
-  "main": "dist/miniplex-react.cjs.js",
-  "module": "dist/miniplex-react.esm.js",
-  "types": "dist/miniplex-react.cjs.d.ts",
+  "main": "dist/miniplex.cjs.js",
+  "module": "dist/miniplex.esm.js",
+  "types": "dist/miniplex.cjs.d.ts",
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "react.ts"
+    ]
+  },
   "files": [
+    "react/**",
     "dist/**",
     "LICENSE",
     "README.md"
@@ -29,6 +36,7 @@
   "license": "MIT",
   "devDependencies": {
     "@miniplex/core": "2.0.0-next.3",
+    "@miniplex/react": "2.0.0-next.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -38,7 +46,6 @@
     "react-merge-refs": "^1.1.0"
   },
   "peerDependencies": {
-    "@miniplex/core": "^2.0.0-next.0",
     "react": ">=16.8"
   }
 }

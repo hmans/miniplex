@@ -93,6 +93,25 @@ importers:
       typescript: 4.8.3
       vite: 3.1.8
 
+  packages/miniplex:
+    specifiers:
+      '@hmans/use-const': ^0.0.1
+      '@hmans/use-rerender': ^0.0.2
+      '@miniplex/core': 2.0.0-next.3
+      '@miniplex/react': 2.0.0-next.3
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      react-merge-refs: ^1.1.0
+    dependencies:
+      '@hmans/use-const': 0.0.1_react@18.2.0
+      '@hmans/use-rerender': 0.0.2_react@18.2.0
+      react-merge-refs: 1.1.0
+    devDependencies:
+      '@miniplex/core': link:../miniplex-core
+      '@miniplex/react': link:../miniplex-react
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+
   packages/miniplex-core:
     specifiers:
       '@hmans/event': ^0.0.1
