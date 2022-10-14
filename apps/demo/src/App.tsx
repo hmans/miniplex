@@ -2,8 +2,6 @@ import { Environment, Loader, PerspectiveCamera } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 import { Perf } from "r3f-perf"
 import { StrictMode, Suspense } from "react"
-import { Balls } from "./Balls"
-import { Box } from "./Box"
 import { Systems } from "./Systems"
 
 function App() {
@@ -12,7 +10,7 @@ function App() {
       <Loader />
       <Canvas shadows dpr={1}>
         <StrictMode>
-          <color args={["#457b9d"]} attach="background" />
+          <color args={["#223"]} attach="background" />
           <Suspense>
             <Environment preset="sunset" />
 
@@ -32,11 +30,8 @@ function App() {
 
             <PerspectiveCamera position={[0, 0, 30]} makeDefault />
 
-            <Box>
-              <Balls />
-            </Box>
-
             <Systems />
+
             <Perf position="bottom-right" matrixUpdate />
           </Suspense>
         </StrictMode>
