@@ -1,5 +1,14 @@
 # miniplex
 
+## 2.0.0-next.3
+
+### Patch Changes
+
+- f81bf3e: The `EntityPredicate` type has been renamed to just `Predicate`.
+- cf0212e: Iterating over a bucket will now iterate over its entities _in reverse order_, which makes it a little safer to synchronously remove entities from within a system.
+- 2af57a6: The `EntityWith` type has been renamed to `WithRequiredKeys`.
+- aa3d6d2: `Bucket` can represent any type, not just types extending `IEntity`, so its type parameter has been changed to reflect this.
+
 ## 2.0.0-next.1
 
 ### Patch Changes
