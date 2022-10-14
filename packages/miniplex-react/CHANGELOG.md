@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.0-next.3
+
+### Patch Changes
+
+- f81bf3e: The `EntityPredicate` type has been renamed to just `Predicate`.
+- 2af57a6: The `EntityWith` type has been renamed to `WithRequiredKeys`.
+
 ## 2.0.0-next.2
 
 ### Patch Changes
