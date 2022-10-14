@@ -3,7 +3,7 @@ import {
   archetype,
   Bucket,
   Predicate,
-  EntityWith,
+  WithRequiredKeys,
   id,
   IEntity,
   World
@@ -92,7 +92,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     children
   }: {
     properties: A[] | A
-    children?: EntityChildren<EntityWith<E, A>>
+    children?: EntityChildren<WithRequiredKeys<E, A>>
   }) => (
     <Bucket
       bucket={archetype(
