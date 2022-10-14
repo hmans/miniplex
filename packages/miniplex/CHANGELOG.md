@@ -1,25 +1,19 @@
-# Changelog
+# miniplex
 
 ## 2.0.0-next.3
 
 ### Patch Changes
 
 - f81bf3e: The `EntityPredicate` type has been renamed to just `Predicate`.
+- cf0212e: Iterating over a bucket will now iterate over its entities _in reverse order_, which makes it a little safer to synchronously remove entities from within a system.
 - 2af57a6: The `EntityWith` type has been renamed to `WithRequiredKeys`.
-
-## 2.0.0-next.2
-
-### Patch Changes
-
-- 87a8b8c: Added a global `useArchetype` export that takes a world as its first argument.
+- aa3d6d2: `Bucket` can represent any type, not just types extending `IEntity`, so its type parameter has been changed to reflect this.
 
 ## 2.0.0-next.1
 
 ### Patch Changes
 
-- 41ccab7: <Property> now reactively changes a property's value without removing and re-adding the property.
-- 86c2fdb: Added `useArchetype`.
-- 40cf138: Removed `useBucket`, it didn't do anything useful. Just use `useEntities`.
+- da62d8c: Fixed the return type of `World.archetype()`.
 
 ## 2.0.0-next.0
 
@@ -27,72 +21,78 @@
 
 - f2406db: 2.0!
 
-### Patch Changes
-
-- Updated dependencies [f2406db]
-  - miniplex@2.0.0-next.0
-
-## 1.0.1
-
-### Patch Changes
-
-- a43c734: **Fixed:** When `<Component>` re-renders, it is expected to reactively update the component's data to the value of its `data` prop, or the `ref` of its React child. It has so far been doing that by removing and re-adding the entire component, which had the side-effect of making the entity disappear from and then reappear in archetypes indexing that component. This has now been fixed.
-
-  The component will only be added and removed once (at the beginning and the end of the React component's lifetime, respectively); in re-renders during its lifetime, the data will simply be updated directly when a change is detected. This allows you to connect a `<Component>` to the usual reactive mechanisms in React.
-
 ## 1.0.0
 
 ### Major Changes
 
-- ce9cfb4: **Breaking Change:** The `useEntity` hook has been renamed to `useCurrentEntity` to better express what it does, and to make way for future `useEntity` and `useEntities` hooks that will create and destroy entities.
+- 769dba7: **Major Breaking Change:** The signature of `addComponent` has been simplified to accept an entity, a component name, and the value of the component:
+
+  ```ts
+  /* Before */
+  world.addComponent(entity, { position: { x: 0, y: 0 } })
+
+  /* After */
+  world.addComponent(entity, "position", { x: 0, y: 0 })
+  ```
+
+  The previous API for `addComponent` is now available as `extendEntity`, with the caveat that it now only accepts two arguments, the entity and the component object:
+
+  ```ts
+  world.extendEntity(entity, {
+    position: { x: 0, y: 0 },
+    velocity: { x: 10, y: 20 }
+  })
+  ```
+
+- b8b2c9b: **Major Breaking Change:** The API signature of `createEntity` has been simplified in order to improve clarity of the API and reduce complexity in both implementation and types. `createEntity` now only supports a single argument, which _must_ satisfy the world's entity type.
+
+  This will only affect you if you have been using `createEntity` with more than one argument in order to compose entities from partial entities, like so:
+
+  ```js
+  const entity = createEntity(position(0, 0), velocity(1, 1), health(100))
+  ```
+
+  This always had the issue of `createEntity` not checking the initial state of the entity against the world's entity type. Theoretically, the library could invest some additional effort into complex type assembly to ensure that the entity is valid, but there are enough object composition tools available already, so it felt like an unneccessary duplication.
+
+  Instead, composition is now deferred into userland, where one of the most simple tools is the spread operator:
+
+  ```js
+  const entity = createEntity({
+    ...position(0, 0),
+    ...velocity(1, 1),
+    ...health(100)
+  })
+  ```
+
+- 54c59c8: **Breaking Change:** The `Archetype.first` getter has been removed in the interest of reducing API surface where things can also be expressed using common JavaScript constructs:
+
+  ```jsx
+  /* Before: */
+  const player = world.archetype("player").first
+
+  /* Now: */
+  const [player] = world.archetype("player")
+  ```
+
+- cb6d078: **Breaking Change:** When destroying entities, they are now removed from the world's global list of entities as well as the archetypes' lists of entities using the shuffle-and-pop pattern. This has the following side-effects that _may_ impact your code:
+
+  - Entities are no longer guaranteed to stay in the same order.
+  - The entity ID storied in its internal `__miniplex` component no longer corresponds to its index in the `entities` array.
+
+  This change provides significantly improved performance in situations where a large number of entities are continuously being created and destroyed.
+
+- 4d9e51b: **Breaking Change:** Removed the `EntityID` and `ComponentData` types.
+- c08f39a: **Breaking Change:** The `ComponentName<T>` type has been removed in favor of just using `keyof T`.
 
 ### Patch Changes
 
-- c102f2d: **New:** `<ArchetypeEntities>`, a new component that (reactively) renders all entities of the specified archetype. This can be used as a replacement for the combination of `useArchetype` and `<Entities>`, except now your component won't re-render when entities appear or disappear, because the subscription will be scoped to `<ArchetypeEntities>`.
+- 410e0f6: **New:** The `World` class can now be instantiated with an initial list of entities like so:
 
-  Where before you may have done this:
-
-  ```tsx
-  const MyComponent = () => {
-    const { entities } = useArchetype("my-archetype")
-    /* This component will now re-render every time the archetype is updated */
-    return <Entities entities={entities} />
-  }
+  ```js
+  const world = new World({ entities: [entity1, entity2] })
   ```
 
-  You can now do this:
-
-  ```tsx
-  const MyComponent = () => {
-    /* This component will not rerender */
-    return <ArchetypeEntities archetype="my-archetype" />
-  }
-  ```
-
-  The component will also accept arrays of component names:
-
-  ```tsx
-  const EnemyShips = () => {
-    return <ArchetypeEntities archetype={["ship", "enemy"]} />
-  }
-  ```
-
-- c38d7e5: **Fixed:** A couple of components were using `useEffect` where it should have been `useLayoutEffect`.
-- 54bb5ef: **Fixed:** <Entity> no longer re-renders once after mounting.
-- 551dcd9: **New:** The `createECS` function now allows you to pass in an existing `World` instance as its first argument. If no world is passed, it will create a new one (using the specified type, if any), as it has previously.
-
-## 1.0.0-next.8
-
-### Patch Changes
-
-- 877dac5: **Fixed:** Make use of `useIsomorphicLayoutEffect`.
-
-## 1.0.0-next.7
-
-### Patch Changes
-
-- c38d7e5: **Fixed:** A couple of components were using `useEffect` where it should have been `useLayoutEffect`.
-- 54bb5ef: **Fixed:** <Entity> no longer re-renders once after mounting.
+- c12dfc1: **Fixed:** `createEntity` was not checking against the world's entity type; this has been fixed.
 
 ## 1.0.0-next.6
 
@@ -100,23 +100,11 @@
 
 - efa21f2: Typing tweaks.
 
-## 1.0.0-next.4
+## 1.0.0-next.5
 
 ### Patch Changes
 
-- c102f2d: **New:** `<ArchetypeEntities>`, a new component that (reactively) renders all entities of the specified archetype.
-
-## 1.0.0-next.3
-
-### Patch Changes
-
-- 1950b9b: General cleanup and typing improvements.
-
-## 1.0.0-next.2
-
-### Patch Changes
-
-- 551dcd9: The `createECS` function now allows you to pass in an existing `World` instance as its first argument. If no world is passed, it will create a new one (using the specified type, if any), as it has previously.
+- c12dfc1: **Fixed:** Improved typing of `createEntity`.
 
 ## 1.0.0-next.1
 
@@ -126,87 +114,191 @@
 
 ### Patch Changes
 
-- Updated dependencies [410e0f6]
-- Updated dependencies [4016fb2]
-  - miniplex@1.0.0-next.1
+- 410e0f6: The `World` class can now be instantiated with an initial list of entities like so:
 
-## 0.4.3-next.0
+  ```js
+  const world = new World({ entities: [entity1, entity2] })
+  ```
 
-### Patch Changes
-
-- dd047e9: This package now loads `miniplex` as a direct dependency; it is no longer necessary to install miniplex as a peer dependency.
-- Updated dependencies [769dba7]
-- Updated dependencies [b8b2c9b]
-- Updated dependencies [cb6d078]
-- Updated dependencies [4d9e51b]
-  - miniplex@0.11.0-next.0
-
-## 0.4.2
-
-### Patch Changes
-
-- 1422853: Fixed return type of `useArchetype`.
-
-## 0.4.1
-
-### Patch Changes
-
-- cb09f35: **Fixed:** When you're passing a complete React element (through JSX) to a `<Component>`, you were not able to set a `ref` on it. This has now been fixed.
-
-## 0.4.0
+## 0.11.0-next.0
 
 ### Minor Changes
 
-- 0f01a94: **Breaking Change:** `<Collection>` has been renamed to `<ManagedEntities>`.
-- 0ad0e86: **Breaking Change:** `useEntity` has been changed back to its original functionality of returning the current entity context. `useEntities` has been removed.
+- 769dba7: **Major Breaking Change:** The signature of `addComponent` has been simplified to accept an entity, a component name, and the value of the component:
 
-## 0.3.1
+  ```ts
+  /* Before */
+  world.addComponent(entity, { position: { x: 0, y: 0 } })
+
+  /* After */
+  world.addComponent(entity, "position", { x: 0, y: 0 })
+  ```
+
+  The previous API for `addComponent` is now available as `extendEntity`, but _marked as deprecated_.
+
+- b8b2c9b: **Breaking Change:** The API signature of `createEntity` has been simplified in order to improve clarity of the API and reduce complexity in both implementation and types. `createEntity` now only supports a single argument, which _must_ satisfy the world's entity type.
+
+  This will only affect you if you have been using `createEntity` with more than one argument in order to compose entities from partial entities, like so:
+
+  ```js
+  const entity = createEntity(position(0, 0), velocity(1, 1), health(100))
+  ```
+
+  This always had the issue of `createEntity` not checking the initial state of the entity against the world's entity type. Theoretically, the library could invest some additional effort into complex type assembly to ensure that the entity is valid, but there are enough object composition tools available already, so it felt like an unneccessary duplication.
+
+  Instead, composition is now deferred into userland, where one of the most simple tools is the spread operator:
+
+  ```js
+  const entity = createEntity({
+    ...position(0, 0),
+    ...velocity(1, 1),
+    ...health(100)
+  })
+  ```
+
+- cb6d078: **Breaking Change:** When destroying entities, they are now removed from the world's global list of entities as well as the archetypes' lists of entities using the shuffle-and-pop pattern. This has the following side-effects that _may_ impact your code:
+
+  - Entities are no longer guaranteed to stay in the same order.
+  - The entity ID storied in its internal `__miniplex` component no longer corresponds to its index in the `entities` array.
+
+  This change provides significantly improved performance in situations where a large number of entities are continuously being created and destroyed.
+
+- 4d9e51b: **Breaking Change:** Removed the `EntityID` and `ComponentData` types.
+
+## 0.10.5
 
 ### Patch Changes
 
-- db987cd: Improve typings within `useEntities`.
+- 5ef5f95: Included RegisteredEntity in ArchetypeEntity. (@benwest)
+- c680bdd: Narrowed return type for createEntity (with one argument). (@benwest)
 
-## 0.3.0
+## 0.10.4
+
+### Patch Changes
+
+- 74e34c7: **Fixed:** Fixed an issue with the new iterator syntax on archetypes. (@benwest)
+
+## 0.10.3
+
+### Patch Changes
+
+- 1cee12c: Typing improvements, thanks to @benwest.
+- 65d2b77: **Added:** Archtypes now implement a `[Symbol.iterator]`, meaning they can be iterated over directly:
+
+  ```js
+  const withVelocity = world.archetype("velocity")
+
+  for (const { velocity } of withVelocity) {
+    /* ... */
+  }
+  ```
+
+  (Thanks @benwest.)
+
+## 0.10.2
+
+### Patch Changes
+
+- 821a45c: **Fixed:** When the world is cleared, archetypes now also get their entities lists cleared.
+
+## 0.10.1
+
+### Patch Changes
+
+- cca39cd: **New:** Archetypes now expose a `first` getter that returns the first of the entities in the archetype (or `null` if it doesn't have any entities.) This streamlines situations where you deal with singleton entities (like a player, camera, and so on.) For example, in `miniplex-react`, you can now do the following:
+
+  ```tsx
+  export const CameraRigSystem: FC = () => {
+    const player = ECS.useArchetype("isPlayer").first
+    const camera = ECS.useArchetype("isCamera").first
+
+    /* Do things with player and camera */
+  }
+  ```
+
+## 0.10.0
 
 ### Minor Changes
 
-- cc4032d: **New:** `useEntities` is a new hook that will create and return a specified number of entities, initialized through an optional entity factory. `useEntity` does the same, but just for a single entity.
-
-## 0.2.4
+- cc4032d: **Breaking Change:** `createEntity` will now, like in earlier versions of this library, mutate the first argument that is passed into it (and return it). This allows for patterns where you create the actual entity _object_ before you actually convert it into an entity through _createEntity_.
 
 ### Patch Changes
 
-- 68cff32: Fix React 18 Strict Mode compatibility in `<Component>`.
+- b93a831: The internal IDs that are being generated for entities have been changed slightly, as they now start at `0` (instead of `1`) and are always equal to the position of the entity within the world's `entities` array. The behavior of `destroyEntity` has also been changed to `null` the destroyed entity's entry in that array, instead of cutting the entity from it.
 
-## 0.2.3
+  This change allows you to confidently and reliably use the entity ID (found in the internal miniplex component, `entity.__miniplex.id`) when integrating with non-miniplex systems, including storing data in TypedArrays (for which miniplex may gain built-in support at some point in the future; this change is also in preparation for that.)
 
-### Patch Changes
-
-- c23681c: More tweaks to the sanity checks
-
-## 0.2.2
+## 0.9.2
 
 ### Patch Changes
 
-- 48e785d: Fix sanity check in `<Component>`
+- 92cf103: Safer sanity check in `addComponent`
 
-## 0.2.1
+## 0.9.1
 
 ### Patch Changes
 
-- 0c1ce64: Now uses `useEffect` instead of `useLayoutEffect`, which should make it easier to use the components in server-side React.
+- 48e785d: Fix sanity check in `removeComponent`
 
-## 0.2.0
+## 0.9.0
 
 ### Minor Changes
 
-- b4fa0b4: `<Component>` and `<Collection>` now use the new `addComponent` API introduced with miniplex 0.8.0.
+- b4cee80: **Breaking Change:** `createEntity` will now always return a new object, and not return the one passed to it.
+- 544f231: **Typescript:** You no longer need to mix in `IEntity` into your own entity types, as part of a wider refactoring of the library's typings. Also, `createWorld` will now return a `RegisteredEntity<YourEntity>` type that reflects the presence of the automatically added internal `__miniplex` component, and makes a lot of interactions with the world instance safer than it was previously.
+- 544f231: **Breaking Change:** Miniplex will no longer automatically add an `id` component to created entities. If your project has been making use of these automatically generated IDs, you will now need to add them yourself.
+
+  Example:
+
+  ```js
+  let nextId = 0
+
+  /* Some component factories */
+  const id = () => ({ id: nextId++ })
+  const name = (name) => ({ name })
+
+  const world = new World()
+  const entity = world.createEntity(id(), name("Alice"))
+  ```
+
+  **Note:** Keep in mind that Miniplex doesn't care about entity IDs much, since all interactions with the world are done through object references. Your project may not need to add IDs to entities at all; if it does, this can now be done using any schema that your project requires (numerical IDs, UUIDs, ...).
 
 ### Patch Changes
 
-- Updated dependencies [011c384]
-  - miniplex@0.8.1
+- b4cee80: `createEntity` now allows you to pass multiple parameters, each representing a partial entity. This makes the use of component factory functions more convenient. Example:
 
-## 0.1.0
+  ```js
+  /* Provide a bunch of component factories */
+  const position = (x = 0, y = 0) => ({ position: { x, y } })
+  const velocity = (x = 0, y = 0) => ({ velocity: { x, y } })
+  const health = (initial) => ({
+    health: { max: initial, current: initial }
+  })
 
-- First release
+  const world = new World()
+
+  const entity = world.createEntity(
+    position(0, 0),
+    velocity(5, 7),
+    health(1000)
+  )
+  ```
+
+  **Typescript Note:** The first argument will always be typechecked against your entity type, so if your entity type has required components, you will need to pass a first argument that satisfies these. The remaining arguments are expected to be partials of your entity type.
+
+- b4cee80: **Breaking Change:** `world.queue.createEntity` no longer returns an entity (which didn't make a whole lot of semantic sense to begin with.)
+
+## 0.8.1
+
+### Patch Changes
+
+- 011c384: Change the API signature of `addComponent` to expect a partial entity instead of name and value, to provide a better interface for component factories:
+
+  ```ts
+  const position = (x: number = 0, y: number = 0) => ({ position: { x, y } })
+  const health = (amount: number) => ({
+    health: { max: amount, current: amount }
+  })
+
+  world.addComponent(entity, { ...position(), ...health(100) })
+  ```
