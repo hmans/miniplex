@@ -1,5 +1,14 @@
 # miniplex
 
+## 2.0.0-next.4
+
+### Patch Changes
+
+- 1d26060: Restructured the packages into `@miniplex/core` and `@miniplex/react`, with a main `miniplex` package re-exporting these.
+- Updated dependencies [1d26060]
+  - @miniplex/core@2.0.0-next.4
+  - @miniplex/react@2.0.0-next.4
+
 ## 2.0.0-next.3
 
 ### Patch Changes

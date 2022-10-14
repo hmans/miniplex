@@ -13,7 +13,7 @@
     "@react-three/drei": "^9.34.3",
     "@react-three/fiber": "^8.8.10",
     "material-composer": "^0.2.6",
-    "miniplex": "workspace:2.0.0-next.3",
+    "miniplex": "workspace:2.0.0-next.4",
     "r3f-perf": "^6.5.0",
     "randomish": "^0.1.4",
     "react": "^18.2.0",
