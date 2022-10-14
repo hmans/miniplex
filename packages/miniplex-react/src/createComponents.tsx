@@ -2,7 +2,7 @@ import { useConst } from "@hmans/use-const"
 import {
   archetype,
   Bucket,
-  EntityPredicate,
+  Predicate,
   EntityWith,
   id,
   IEntity,
@@ -77,7 +77,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     bucket: _bucket,
     children
   }: {
-    bucket: Bucket<D> | EntityPredicate<E, D>
+    bucket: Bucket<D> | Predicate<E, D>
     children?: EntityChildren<D>
   }) => {
     const source =

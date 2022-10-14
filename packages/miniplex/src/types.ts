@@ -4,4 +4,4 @@ export interface IEntity {
 
 export type EntityWith<E, P extends keyof E> = E & { [K in P]-?: E[K] }
 
-export type EntityPredicate<E, D extends E> = (entity: E) => entity is D
+export type Predicate<E, D extends E> = (entity: E) => entity is D

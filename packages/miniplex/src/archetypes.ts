@@ -1,4 +1,4 @@
-import { EntityPredicate, EntityWith, IEntity } from "./types"
+import { Predicate, EntityWith, IEntity } from "./types"
 
 export const isArchetype = <E extends IEntity, P extends keyof E>(
   entity: E,
@@ -12,7 +12,7 @@ const archetypeCache = new Map()
 
 export const archetype = <E extends IEntity, P extends keyof E>(
   ...properties: P[]
-): EntityPredicate<E, EntityWith<E, P>> => {
+): Predicate<E, EntityWith<E, P>> => {
   const normalizedProperties = properties.sort().filter((p) => !!p && p !== "")
   const key = JSON.stringify(normalizedProperties)
 
