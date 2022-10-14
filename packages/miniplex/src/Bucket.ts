@@ -1,6 +1,10 @@
 import { Event } from "@hmans/event"
 import { Predicate } from "./types"
 
+/**
+ * A bucket is a collection of entities. Entities can be added, removed, and
+ * touched; the bucket exposes events for each of these operations.
+ */
 export class Bucket<E> {
   [Symbol.iterator]() {
     let index = this.entities.length
@@ -13,18 +17,30 @@ export class Bucket<E> {
     }
   }
 
+  /** The entities in the bucket. */
   entities = new Array<E>()
 
   onEntityAdded = new Event<E>()
   onEntityRemoved = new Event<E>()
   onEntityTouched = new Event<E>()
-
   derivedBuckets = new WeakMap()
 
+  /**
+   * Returns true if this bucket is currently tracking the given entity.
+   * @param entity The entity to check for.
+   * @returns True if the entity is being tracked.
+   */
   has(entity: E) {
     return this.entities.includes(entity)
   }
 
+  /**
+   * Adds the entity to this bucket. If the entity is already in the bucket, it
+   * does nothing.
+   *
+   * @param entity The entity to add.
+   * @returns The entity that was added.
+   */
   add(entity: E) {
     const index = this.entities.indexOf(entity)
 
@@ -37,6 +53,13 @@ export class Bucket<E> {
     return entity
   }
 
+  /**
+   * Touches the entity, signaling this bucket that the entity was updated, and should
+   * be re-evaluated by any buckets derived from this one.
+   *
+   * @param entity The entity to touch.
+   * @returns The entity that was touched.
+   */
   touch(entity: E) {
     const index = this.entities.indexOf(entity)
 
@@ -48,6 +71,13 @@ export class Bucket<E> {
     return entity
   }
 
+  /**
+   * Removes the entity from this bucket. If the entity is not in the bucket,
+   * it does nothing.
+   *
+   * @param entity The entity to remove.
+   * @returns The entity that was removed.
+   */
   remove(entity: E) {
     /* Only act if we know about the entity */
     const index = this.entities.indexOf(entity)
@@ -61,12 +91,24 @@ export class Bucket<E> {
     this.onEntityRemoved.emit(entity)
   }
 
+  /**
+   * Removes all entities from this bucket. This will emit the `onEntityRemoved` event
+   * for each entity, giving derived buckets a chance to remove the entity as well.
+   */
   clear() {
     for (let i = this.entities.length - 1; i >= 0; i--) {
       this.remove(this.entities[i])
     }
   }
 
+  /**
+   * Create a new bucket derived from this bucket. The derived bucket will contain
+   * only entities that match the given predicate, and will be updated reactively
+   * as entities are added, removed, or touched.
+   *
+   * @param predicate The predicate to use to filter entities.
+   * @returns The new derived bucket.
+   */
   derive<D extends E = E>(
     predicate: Predicate<E, D> | ((entity: E) => boolean) = () => true
   ): Bucket<D> {
