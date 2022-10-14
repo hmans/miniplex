@@ -7,7 +7,7 @@ export function spatialHashingSystem() {
   for (const entity of entities) {
     /* Determine the entity's current cell */
     const p = entity.transform.position
-    const key = cellKey(p.x, p.y, p.z)
+    const key = cellKey(p.x, p.y)
 
     let cell = cells.get(key)
 
@@ -35,8 +35,8 @@ export function spatialHashingSystem() {
 
 const cells = new Map<string, Entity[]>()
 
-export function cellKey(x: number, y: number, z: number) {
-  return `${Math.floor(x)}|${Math.floor(y)}|${Math.floor(z)}`
+export function cellKey(x: number, y: number) {
+  return `${Math.floor(x)}|${Math.floor(y)}`
 }
 
 export function getEntitiesInRadius(
@@ -51,7 +51,7 @@ export function getEntitiesInRadius(
   for (let i = -r; i <= r; i++) {
     for (let j = -r; j <= r; j++) {
       for (let k = -r; k <= r; k++) {
-        const key = cellKey(p.x + i, p.y + j, p.z + k)
+        const key = cellKey(p.x + i, p.y + j)
         const cell = cells.get(key)
 
         if (cell) {
