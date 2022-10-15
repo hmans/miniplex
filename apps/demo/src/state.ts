@@ -46,6 +46,7 @@ export type Entity = {
     radius: number
     restitution: number
     groupMask: number
+    sleeping: boolean
     collisionMask: number
     contacts: Set<Entity>
     onContactStart?: (other: Entity, force: number) => void
@@ -59,6 +60,7 @@ export type Entity = {
 export const physics = (
   input: Partial<Entity["physics"]> = {}
 ): Entity["physics"] => ({
+  sleeping: false,
   velocity: new Vector3(0, 0, 0),
   angularVelocity: new Vector3(0, 0, 0),
   linearDamping: 0.99,

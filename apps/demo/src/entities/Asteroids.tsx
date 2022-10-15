@@ -11,7 +11,6 @@ export const Asteroids = () => {
   useLayoutEffect(() => {
     for (let i = 0; i < 500; i++) {
       const pos = insideCircle()
-      console.log(pos)
       spawnAsteroid({ position: [pos.x * 100, pos.y * 100, 0] })
     }
 

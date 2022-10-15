@@ -6,6 +6,8 @@ const entities = ECS.world.archetype("transform", "neighbors", "spatialHashing")
 
 export function findNeighborsSystem() {
   for (const entity of entities) {
+    if (entity.physics?.sleeping) continue
+
     getEntitiesInRadius(
       entity.transform.position,
       2,

@@ -19,6 +19,8 @@ export function physicsSystem(dt: number) {
     accumulatedTime -= STEP
 
     for (const entity of entities) {
+      if (entity.physics.sleeping) continue
+
       const { transform, physics } = entity
 
       /* Apply velocity */
@@ -33,50 +35,20 @@ export function physicsSystem(dt: number) {
       physics.velocity.multiplyScalar(physics.linearDamping)
       physics.angularVelocity.multiplyScalar(physics.angularDamping)
 
-      /* Check bounds collision */
-      // handleWallCollision(entity)
-
       /* Ball collisions */
-      if (entity.neighbors)
+      if (entity.neighbors) {
         for (const neighbor of entity.neighbors) {
           if (!neighbor.physics) continue
           if (neighbor === entity) continue
           handleBallCollision(entity, neighbor as PhysicsEntity)
         }
+      }
+      /* Go to sleep if we're not moving */
+      if (physics.velocity.length() < 0.001) {
+        // console.log("going to sleep")
+        physics.sleeping = true
+      }
     }
-  }
-}
-
-function handleWallCollision({ physics, transform }: PhysicsEntity) {
-  const B = BOUNDS - physics.radius
-  if (transform.position.y < -B) {
-    transform.position.y = -B
-    physics.velocity.y *= -physics.restitution
-  }
-
-  if (transform.position.y > B) {
-    transform.position.y = B
-    physics.velocity.y *= -physics.restitution
-  }
-
-  if (transform.position.x < -B) {
-    transform.position.x = -B
-    physics.velocity.x *= -physics.restitution
-  }
-
-  if (transform.position.x > B) {
-    transform.position.x = B
-    physics.velocity.x *= -physics.restitution
-  }
-
-  if (transform.position.z < -B) {
-    transform.position.z = -B
-    physics.velocity.z *= -physics.restitution
-  }
-
-  if (transform.position.z > B) {
-    transform.position.z = B
-    physics.velocity.z *= -physics.restitution
   }
 }
 
@@ -91,6 +63,10 @@ function handleBallCollision(a: PhysicsEntity, b: PhysicsEntity) {
   const penetration = (a.physics.radius + b.physics.radius - distance) / 2.0
 
   if (penetration > 0) {
+    /* Wake up both bodies */
+    a.physics.sleeping = false
+    b.physics.sleeping = false
+
     /* Resolve collision */
     const normal = diff.normalize()
 

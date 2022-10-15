@@ -35,10 +35,12 @@ export const PlayerSystem = () => {
         .applyQuaternion(player.transform.quaternion)
 
       player.physics.velocity.addScaledVector(tmpVec3, dt)
+      player.physics.sleeping = false
     }
 
     if (input.rotate) {
       player.physics.angularVelocity.z -= input.rotate * 10 * dt
+      player.physics.sleeping = false
     }
 
     if (input.fire && performance.now() > lastFireTime + 65) {
