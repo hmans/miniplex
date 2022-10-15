@@ -34,7 +34,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     useArchetypeGlobal(world, ...properties)
 
   const RawEntity = <D extends E>({
-    children,
+    children: givenChildren,
     entity: givenEntity = {} as D
   }: {
     entity?: D
@@ -52,10 +52,13 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
       }
     }, [world, entity])
 
+    const children =
+      typeof givenChildren === "function"
+        ? givenChildren(entity)
+        : givenChildren
+
     return (
-      <EntityContext.Provider value={entity}>
-        {typeof children === "function" ? children(entity) : children}
-      </EntityContext.Provider>
+      <EntityContext.Provider value={entity}>{children}</EntityContext.Provider>
     )
   }
 
