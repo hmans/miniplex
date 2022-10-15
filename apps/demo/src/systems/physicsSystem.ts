@@ -44,7 +44,10 @@ export function physicsSystem(dt: number) {
         }
       }
       /* Go to sleep if we're not moving */
-      if (physics.velocity.length() < 0.001) {
+      if (
+        physics.velocity.length() < 0.001 &&
+        physics.angularVelocity.length() < 0.001
+      ) {
         // console.log("going to sleep")
         physics.sleeping = true
       }
