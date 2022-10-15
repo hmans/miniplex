@@ -1,5 +1,5 @@
 import { WithRequiredKeys } from "miniplex"
-import { plusMinus, power } from "randomish"
+import { insideCircle, plusMinus, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
@@ -9,8 +9,10 @@ import { RenderableEntity } from "./RenderableEntity"
 
 export const Asteroids = () => {
   useLayoutEffect(() => {
-    for (let i = 0; i < 15; i++) {
-      spawnAsteroid({ position: [plusMinus(9), plusMinus(9), 0] })
+    for (let i = 0; i < 500; i++) {
+      const pos = insideCircle()
+      console.log(pos)
+      spawnAsteroid({ position: [pos.x * 100, pos.y * 100, 0] })
     }
 
     return () => {
