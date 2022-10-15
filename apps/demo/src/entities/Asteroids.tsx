@@ -22,14 +22,25 @@ export const Asteroids = () => {
       <icosahedronGeometry args={[0.5]} />
       <meshStandardMaterial color="#888" />
 
-      <ECS.Bucket bucket={asteroids} />
+      <ECS.Bucket bucket={asteroids}>
+        {(entity) =>
+          typeof entity.render === "function"
+            ? entity.render(entity)
+            : entity.render
+        }
+      </ECS.Bucket>
     </InstancedParticles>
   )
 }
 
 export type Asteroid = WithRequiredKeys<
   Entity,
-  "isAsteroid" | "transform" | "physics" | "spatialHashing" | "neighbors"
+  | "isAsteroid"
+  | "transform"
+  | "physics"
+  | "spatialHashing"
+  | "neighbors"
+  | "render"
 >
 
 export const isAsteroid = (entity: Entity): entity is Asteroid =>
