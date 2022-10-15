@@ -155,7 +155,7 @@ export class Bucket<E> {
     this.derivedBuckets.set(predicate, bucket)
 
     /* Add entities that match the predicate */
-    for (const entity of this) {
+    for (const entity of this.entities) {
       if (predicate(entity)) {
         bucket.add(entity)
       }
