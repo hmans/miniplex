@@ -1,7 +1,7 @@
 import { WithRequiredKeys } from "miniplex"
-import { plusMinus } from "randomish"
+import { between, plusMinus } from "randomish"
 import { useLayoutEffect } from "react"
-import { Vector3 } from "three"
+import { Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
 import { ECS, Entity, physics } from "../state"
 
@@ -13,7 +13,7 @@ const RenderableEntity = ({
 
 export const Asteroids = () => {
   useLayoutEffect(() => {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 100; i++) {
       spawnAsteroid({ position: [plusMinus(9), plusMinus(9), 0] })
     }
 
@@ -26,7 +26,7 @@ export const Asteroids = () => {
 
   return (
     <InstancedParticles>
-      <icosahedronGeometry args={[0.5]} />
+      <icosahedronGeometry />
       <meshStandardMaterial color="#888" />
 
       <ECS.Bucket bucket={asteroids} as={RenderableEntity} />
@@ -52,10 +52,12 @@ const asteroids = ECS.world.derive(isAsteroid)
 const tmpVec3 = new Vector3()
 
 export const spawnAsteroid = (props: ParticleProps) => {
+  const scale = between(0.8, 1)
+
   const entity = ECS.world.add({
     isAsteroid: true,
     physics: physics({
-      radius: 0.4,
+      radius: scale * 0.9,
       restitution: 0.1,
       onContactStart: () => {
         entity.physics!.angularVelocity.add(tmpVec3.randomDirection())
@@ -66,7 +68,11 @@ export const spawnAsteroid = (props: ParticleProps) => {
 
     render: (
       <ECS.Property name="transform">
-        <Particle {...props} />
+        <Particle
+          {...props}
+          scale={scale}
+          quaternion={new Quaternion().random()}
+        />
       </ECS.Property>
     )
   })
