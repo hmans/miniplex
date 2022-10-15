@@ -58,15 +58,18 @@ export const spawnAsteroid = (props: ParticleProps) => {
     physics: physics({
       radius: scale * 0.8,
       restitution: 0.1,
+      mass: 40 * scale,
+
       groupMask: bitmask(PhysicsLayers.Asteroid),
       collisionMask: bitmask([
         PhysicsLayers.Player,
         PhysicsLayers.Bullet,
         PhysicsLayers.Asteroid
       ]),
+
       onContactStart: (other, force) => {
         entity.physics!.angularVelocity.add(
-          tmpVec3.randomDirection().multiplyScalar(force / 30)
+          tmpVec3.randomDirection().multiplyScalar(force / 500)
         )
       }
     }),
