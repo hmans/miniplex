@@ -75,6 +75,23 @@ describe("<Entity>", () => {
       expect(world.entities.length).toBe(0)
     })
   })
+
+  describe("given an `as` prop", () => {
+    it("renders the entity using that component, passing the entity to it", () => {
+      const world = new World<{ foo: string }>()
+      const { Entity } = createComponents(world)
+
+      const entity = world.add({ foo: "bar" })
+
+      const Foo = (props: { entity: { foo: string } }) => (
+        <div>{props.entity.foo}</div>
+      )
+
+      render(<Entity as={Foo} entity={entity} />)
+
+      expect(screen.getByText("bar")).toBeInTheDocument()
+    })
+  })
 })
 
 describe("<Property>", () => {
@@ -192,6 +209,24 @@ describe("<Entities>", () => {
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
   })
+
+  describe("given an `as` prop", () => {
+    it("renders the entities using the given component, passing the entity to it", () => {
+      type Entity = { name: string }
+      const world = new World<Entity>()
+      const { Entities } = createComponents(world)
+
+      world.add({ name: "Alice" })
+      world.add({ name: "Bob" })
+
+      const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
+
+      render(<Entities as={User} entities={world.entities} />)
+
+      expect(screen.getByText("Alice")).toBeInTheDocument()
+      expect(screen.getByText("Bob")).toBeInTheDocument()
+    })
+  })
 })
 
 describe("<Bucket>", () => {
@@ -227,6 +262,24 @@ describe("<Bucket>", () => {
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
     expect(screen.getByText("Charlie")).toBeInTheDocument()
+  })
+
+  describe("given an `as` prop", () => {
+    it("renders the entities using the given component, passing the entity to it", () => {
+      type Entity = { name: string }
+      const world = new World<Entity>()
+      const { Bucket } = createComponents(world)
+
+      world.add({ name: "Alice" })
+      world.add({ name: "Bob" })
+
+      const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
+
+      render(<Bucket as={User} bucket={world} />)
+
+      expect(screen.getByText("Alice")).toBeInTheDocument()
+      expect(screen.getByText("Bob")).toBeInTheDocument()
+    })
   })
 })
 
@@ -271,6 +324,24 @@ describe("<Archetype>", () => {
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
     expect(screen.getByText("Charlie")).toBeInTheDocument()
+  })
+
+  describe("given an `as` prop", () => {
+    it("renders the entities using the given component, passing the entity to it", () => {
+      type Entity = { name: string }
+      const world = new World<Entity>()
+      const { Archetype } = createComponents(world)
+
+      world.add({ name: "Alice" })
+      world.add({ name: "Bob" })
+
+      const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
+
+      render(<Archetype as={User} properties="name" />)
+
+      expect(screen.getByText("Alice")).toBeInTheDocument()
+      expect(screen.getByText("Bob")).toBeInTheDocument()
+    })
   })
 })
 

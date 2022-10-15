@@ -1,5 +1,12 @@
 # miniplex
 
+## 2.0.0-next.6
+
+### Patch Changes
+
+- 10c60f8: Implemented `Bucket.dispose`, which will also dispose of derived buckets properly.
+- f92b5f7: Added the `Bucket.onCleared` event, which is emitted when the bucket's `clear` function is invoked.
+
 ## 2.0.0-next.5
 
 ### Patch Changes

@@ -42,10 +42,20 @@ export class Bucket<E> {
   onEntityTouched = new Event<E>()
 
   /**
+   * The event that is emitted when the bucket is cleared.
+   */
+  onCleared = new Event()
+
+  /**
+   * The event that is emitted when the bucket is being disposed.
+   */
+  onDisposed = new Event()
+
+  /**
    * A cache of derived buckets. This is used to ensure that we don't create
    * multiple derived buckets for the same predicate.
    */
-  derivedBuckets = new WeakMap()
+  derivedBuckets = new Map()
 
   /**
    * Returns the size of this bucket (the number of entities it contains).
@@ -133,6 +143,27 @@ export class Bucket<E> {
     for (const entity of this) {
       this.remove(entity)
     }
+
+    this.onCleared.emit()
+  }
+
+  /**
+   * Dispose of this bucket. This will remove all entities from the bucket, dispose of all
+   * known derived buckets, and clear all event listeners.
+   */
+  dispose() {
+    /* Emit onDisposed event */
+    this.onDisposed.emit()
+
+    /* Clear all state */
+    this.derivedBuckets.clear()
+    this.entities = []
+    this.entityPositions.clear()
+    this.onCleared.clear()
+    this.onDisposed.clear()
+    this.onEntityAdded.clear()
+    this.onEntityRemoved.clear()
+    this.onEntityTouched.clear()
   }
 
   /**
@@ -166,24 +197,35 @@ export class Bucket<E> {
     }
 
     /* Listen for new entities */
-    this.onEntityAdded.addListener((entity) => {
-      if (predicate(entity)) {
-        bucket.add(entity)
-      }
-    })
+    bucket.onDisposed.addListener(
+      this.onEntityAdded.addListener((entity) => {
+        if (predicate(entity)) {
+          bucket.add(entity)
+        }
+      })
+    )
 
     /* Listen for removed entities */
-    this.onEntityRemoved.addListener((entity) => {
-      bucket.remove(entity as D)
-    })
+    bucket.onDisposed.addListener(
+      this.onEntityRemoved.addListener((entity) => {
+        bucket.remove(entity as D)
+      })
+    )
 
     /* Listen for changed entities */
-    this.onEntityTouched.addListener((entity) => {
-      if (predicate(entity)) {
-        bucket.add(entity) && bucket.touch(entity)
-      } else {
-        bucket.remove(entity as D)
-      }
+    bucket.onDisposed.addListener(
+      this.onEntityTouched.addListener((entity) => {
+        if (predicate(entity)) {
+          bucket.add(entity) && bucket.touch(entity)
+        } else {
+          bucket.remove(entity as D)
+        }
+      })
+    )
+
+    /* React to this bucket being disposed */
+    this.onDisposed.addListener(() => {
+      bucket.dispose()
     })
 
     return bucket as Bucket<D>
