@@ -8,7 +8,7 @@ const profile = (name: string, setup: () => () => void) => {
   test()
   const after = performance.now()
   const duration = (after - before).toFixed(2)
-  console.log(`[${name}] ${duration}ms`)
+  console.log(`${name.padStart(30)}  ${duration.padStart(8)}ms`)
 }
 
 type Vector = {
