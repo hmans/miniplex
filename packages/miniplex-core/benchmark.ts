@@ -2,11 +2,16 @@ import { World } from "./src"
 
 const entityCount = 1_000_000
 
-const profile = (name: string, setup: () => () => void) => {
+const profile = (name: string, setup: () => () => () => boolean) => {
   const test = setup()
   const before = performance.now()
-  test()
+  const assertion = test()
   const after = performance.now()
+
+  /* Check assertion */
+  if (!assertion()) {
+    throw new Error("Assertion failed!")
+  }
 
   /* Results */
   const duration = after - before
@@ -36,11 +41,14 @@ profile("add", () => {
   const world = new World<Entity>()
 
   return () => {
-    for (let i = 0; i < entityCount; i++)
+    for (let i = 0; i < entityCount; i++) {
       world.add({
         position: { x: 0, y: i, z: 0 },
         velocity: { x: 0, y: 0, z: 0 }
       })
+    }
+
+    return () => world.size === entityCount
   }
 })
 
@@ -50,11 +58,14 @@ profile("add (with archetypes)", () => {
   const withVelocity = world.archetype("velocity")
 
   return () => {
-    for (let i = 0; i < entityCount; i++)
+    for (let i = 0; i < entityCount; i++) {
       world.add({
         position: { x: 0, y: i, z: 0 },
         velocity: { x: 0, y: 0, z: 0 }
       })
+    }
+
+    return () => world.size === entityCount
   }
 })
 
@@ -71,8 +82,7 @@ profile("remove", () => {
       world.remove(entity)
     }
 
-    if (world.size > 0)
-      throw new Error("World not empty, reverse iteration is leaky")
+    return () => world.size === 0
   }
 })
 
@@ -92,8 +102,7 @@ profile("remove (with archetypes)", () => {
       world.remove(entity)
     }
 
-    if (world.size > 0)
-      throw new Error("World not empty, reverse iteration is leaky")
+    return () => world.size === 0
   }
 })
 
@@ -107,12 +116,16 @@ profile("simulate", () => {
     })
 
   return () => {
+    let i = 0
     for (const { position, velocity } of world) {
+      i++
       if (!velocity) continue
       position.x += velocity.x
       position.y += velocity.y
       position.z += velocity.z
     }
+
+    return () => i === entityCount
   }
 })
 
@@ -127,10 +140,15 @@ profile("simulate (with archetypes)", () => {
     })
 
   return () => {
+    let i = 0
+
     for (const { position, velocity } of withVelocity) {
+      i++
       position.x += velocity.x
       position.y += velocity.y
       position.z += velocity.z
     }
+
+    return () => i === entityCount
   }
 })
