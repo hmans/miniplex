@@ -1,3 +1,4 @@
+import { useFrame } from "@react-three/fiber"
 import { WithRequiredKeys } from "miniplex"
 import { MathUtils, Vector3 } from "three"
 import { BOUNDS, ECS, Entity } from "../state"
@@ -104,4 +105,9 @@ function handleBallCollision(a: PhysicsEntity, b: PhysicsEntity) {
 
   a.physics.velocity.addScaledVector(normal, aNewVel - aVel)
   b.physics.velocity.addScaledVector(normal, bNewVel - bVel)
+}
+
+export const PhysicsSystem = () => {
+  useFrame((_, dt) => physicsSystem(MathUtils.clamp(dt, 0, 0.2)))
+  return null
 }
