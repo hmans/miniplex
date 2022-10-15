@@ -25,6 +25,7 @@ export class Bucket<E> {
    * internally to speed up lookups.
    */
   private entitiesSet = new Set<any>()
+  private entityPositions = new Map<E, number>()
 
   /**
    * The event that is emitted when an entity is added to this bucket.
@@ -76,6 +77,7 @@ export class Bucket<E> {
     if (!this.has(entity)) {
       this.entities.push(entity)
       this.entitiesSet.add(entity)
+      this.entityPositions.set(entity, this.entities.length - 1)
 
       this.onEntityAdded.emit(entity)
     }
@@ -109,8 +111,13 @@ export class Bucket<E> {
     /* Only act if we know about the entity */
     if (this.has(entity)) {
       /* Remove entity from our list */
-      const index = this.entities.indexOf(entity)
-      this.entities[index] = this.entities[this.entities.length - 1]
+      const index = this.entityPositions.get(entity)!
+      this.entityPositions.delete(entity)
+
+      const other = this.entities[this.entities.length - 1]
+      this.entities[index] = other
+      this.entityPositions.set(other, index)
+
       this.entities.pop()
       this.entitiesSet.delete(entity)
 
