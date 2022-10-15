@@ -55,7 +55,7 @@ export const spawnBullet = () => {
             if (other.isAsteroid) {
               const scale = other.transform!.scale.x
               if (scale > 0.8) {
-                const count = between(2, 5)
+                const count = between(2, 10)
                 for (let i = 0; i < count; i++) {
                   const direction = new Vector3(
                     Math.cos(((2 * Math.PI) / count) * i),
@@ -63,13 +63,14 @@ export const spawnBullet = () => {
                     0
                   )
 
-                  const asteroid = spawnAsteroid({
-                    position: new Vector3()
-                      .copy(direction)
-                      .add(other.transform!.position),
-
-                    scale: scale / count
-                  })
+                  const asteroid = spawnAsteroid(
+                    {
+                      position: new Vector3()
+                        .copy(direction)
+                        .add(other.transform!.position)
+                    },
+                    (scale / (count / 4)) * between(0.8, 1.2)
+                  )
 
                   asteroid.physics!.velocity = direction
                     .clone()

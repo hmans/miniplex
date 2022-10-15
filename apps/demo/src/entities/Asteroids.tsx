@@ -48,9 +48,10 @@ const asteroids = ECS.world.derive(isAsteroid)
 
 const tmpVec3 = new Vector3()
 
-export const spawnAsteroid = (props: ParticleProps) => {
-  const scale = 1 + power(2) * 1
-
+export const spawnAsteroid = (
+  props: ParticleProps,
+  scale = 1 + power(2) * 1
+) => {
   const entity = ECS.world.add({
     isAsteroid: true,
 
