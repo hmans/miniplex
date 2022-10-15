@@ -199,6 +199,22 @@ describe("Symbol.iterator", () => {
 
     expect(entities).toEqual([entity3, entity2, entity1])
   })
+
+  it("allows for safe entity deletions", () => {
+    const bucket = new Bucket()
+    const entity1 = bucket.add({})
+    const entity2 = bucket.add({})
+    const entity3 = bucket.add({})
+
+    const entities = []
+    for (const entity of bucket) {
+      entities.push(entity)
+      bucket.remove(entity)
+    }
+
+    expect(entities).toEqual([entity3, entity2, entity1])
+    expect(bucket.entities).toEqual([])
+  })
 })
 
 describe("id", () => {
