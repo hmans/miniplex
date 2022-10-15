@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0-next.5
+
+### Patch Changes
+
+- 1c63f90: Added `World.setProperty`.
+
 ## 2.0.0-next.4
 
 ### Patch Changes
