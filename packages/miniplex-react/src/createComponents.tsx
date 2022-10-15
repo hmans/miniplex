@@ -119,10 +119,12 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     useIsomorphicLayoutEffect(() => {
       if (props.value === undefined) return
 
-      world.addProperty(entity, props.name, props.value)
+      const added = world.addProperty(entity, props.name, props.value)
+      const originalValue = entity[props.name]
 
       return () => {
-        world.removeProperty(entity, props.name)
+        if (added) world.removeProperty(entity, props.name)
+        else entity[props.name] = originalValue
       }
     }, [entity, props.name])
 

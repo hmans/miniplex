@@ -142,6 +142,37 @@ describe("<Property>", () => {
 
     expect(world.entities[0].foo).toBe(ref.current)
   })
+
+  describe("when the entity already has the property", () => {
+    it("updates the property", () => {
+      const world = new World()
+      const { Entity, Property } = createComponents(world)
+      const entity = world.add({ foo: "bar" })
+
+      render(
+        <Entity entity={entity}>
+          <Property name="foo" value="baz" />
+        </Entity>
+      )
+
+      expect(world.entities[0].foo).toBe("baz")
+    })
+
+    it("does not remove the property when unmounted", () => {
+      const world = new World()
+      const { Entity, Property } = createComponents(world)
+      const entity = world.add({ foo: "bar" })
+
+      const { unmount } = render(
+        <Entity entity={entity}>
+          <Property name="foo" value="baz" />
+        </Entity>
+      )
+
+      unmount()
+      expect(world.entities[0].foo).toBe("bar")
+    })
+  })
 })
 
 describe("<Entities>", () => {
