@@ -1,6 +1,6 @@
 import { World } from "./src"
 
-const count = 1_000_000
+const count = 1_000_00
 
 const profile = (name: string, setup: () => () => void) => {
   const test = setup()
@@ -27,7 +27,10 @@ profile("adding without archetypes", () => {
 
   return () => {
     for (let i = 0; i < count; i++)
-      world.add({ position: { x: 0, y: i, z: 0 } })
+      world.add({
+        position: { x: 0, y: i, z: 0 },
+        velocity: { x: 0, y: 0, z: 0 }
+      })
   }
 })
 
@@ -42,6 +45,24 @@ profile("adding with archetypes", () => {
         position: { x: 0, y: i, z: 0 },
         velocity: { x: 0, y: 0, z: 0 }
       })
+  }
+})
+
+profile("removing without archetypes", () => {
+  const world = new World<Entity>()
+  for (let i = 0; i < count; i++)
+    world.add({
+      position: { x: 0, y: i, z: 0 },
+      velocity: { x: 0, y: 0, z: 0 }
+    })
+
+  return () => {
+    for (const entity of world) {
+      world.remove(entity)
+    }
+
+    if (world.size > 0)
+      throw new Error("World not empty, reverse iteration is leaky")
   }
 })
 
