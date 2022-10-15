@@ -185,6 +185,20 @@ describe("derive", () => {
   })
 })
 
+describe("size", () => {
+  it("returns the size of the world", () => {
+    const bucket = new Bucket()
+    bucket.add({})
+    expect(bucket.size).toBe(1)
+  })
+
+  it("is equal to the amount of entities stored in the bucket", () => {
+    const bucket = new Bucket()
+    bucket.add({})
+    expect(bucket.size).toBe(bucket.entities.length)
+  })
+})
+
 describe("Symbol.iterator", () => {
   it("iterating through a bucket happens in reverse order", () => {
     const bucket = new Bucket()
