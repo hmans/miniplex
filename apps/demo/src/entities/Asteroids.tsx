@@ -9,7 +9,7 @@ import { RenderableEntity } from "./RenderableEntity"
 
 export const Asteroids = () => {
   useLayoutEffect(() => {
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 1000; i++) {
       const pos = insideCircle()
       spawnAsteroid({ position: [pos.x * 100, pos.y * 100, 0] })
     }
@@ -22,7 +22,7 @@ export const Asteroids = () => {
   }, [])
 
   return (
-    <InstancedParticles>
+    <InstancedParticles capacity={20000}>
       <icosahedronGeometry />
       <meshStandardMaterial color="#888" />
 
