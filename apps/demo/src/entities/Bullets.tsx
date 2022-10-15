@@ -1,5 +1,5 @@
 import { between } from "randomish"
-import { Color, Quaternion, Vector3 } from "three"
+import { Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle } from "vfx-composer-r3f"
 import { ECS, physics, PhysicsLayers } from "../state"
 import { bitmask } from "../util/bitmask"
