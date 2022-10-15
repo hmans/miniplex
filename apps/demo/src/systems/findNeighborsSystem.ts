@@ -1,3 +1,4 @@
+import { useFrame } from "@react-three/fiber"
 import { ECS } from "../state"
 import { getEntitiesInRadius } from "./spatialHashingSystem"
 
@@ -12,4 +13,12 @@ export function findNeighborsSystem() {
       entity.neighbors
     )
   }
+}
+
+export const FindNeighborsSystem = () => {
+  useFrame(() => {
+    findNeighborsSystem()
+  })
+
+  return null
 }

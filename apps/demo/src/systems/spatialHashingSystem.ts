@@ -1,3 +1,4 @@
+import { useFrame } from "@react-three/fiber"
 import { Vector3 } from "three"
 import { ECS, Entity } from "../state"
 
@@ -63,4 +64,12 @@ export function getEntitiesInRadius(
   }
 
   return entities
+}
+
+export const SpatialHashingSystem = () => {
+  useFrame(() => {
+    spatialHashingSystem()
+  })
+
+  return null
 }

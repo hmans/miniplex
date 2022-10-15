@@ -1,20 +1,13 @@
-import { useFrame } from "@react-three/fiber"
-import { MathUtils } from "three"
-import { findNeighborsSystem } from "./systems/findNeighborsSystem"
-import { PhysicsSystem, physicsSystem } from "./systems/physicsSystem"
+import { FindNeighborsSystem } from "./systems/findNeighborsSystem"
+import { PhysicsSystem } from "./systems/physicsSystem"
 import { PlayerSystem } from "./systems/playerSystem"
-import { spatialHashingSystem } from "./systems/spatialHashingSystem"
+import { SpatialHashingSystem } from "./systems/spatialHashingSystem"
 
-export const Systems = () => {
-  useFrame(function Systems() {
-    spatialHashingSystem()
-    findNeighborsSystem()
-  })
-
-  return (
-    <>
-      <PhysicsSystem />
-      <PlayerSystem />
-    </>
-  )
-}
+export const Systems = () => (
+  <>
+    <SpatialHashingSystem />
+    <FindNeighborsSystem />
+    <PhysicsSystem />
+    <PlayerSystem />
+  </>
+)
