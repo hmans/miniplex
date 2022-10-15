@@ -4,6 +4,7 @@ import { useLayoutEffect } from "react"
 import { Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
 import { ECS, Entity, physics, PhysicsLayers } from "../state"
+import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
 
 export const Asteroids = () => {
@@ -54,7 +55,12 @@ export const spawnAsteroid = (props: ParticleProps) => {
     physics: physics({
       radius: scale * 0.9,
       restitution: 0.1,
-      groupMask: 1,
+      groupMask: bitmask(PhysicsLayers.Asteroid),
+      collisionMask: bitmask([
+        PhysicsLayers.Player,
+        PhysicsLayers.Bullet,
+        PhysicsLayers.Asteroid
+      ]),
       onContactStart: (other, force) => {
         entity.physics!.angularVelocity.add(
           tmpVec3.randomDirection().multiplyScalar(force / 30)

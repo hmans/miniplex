@@ -82,11 +82,8 @@ function handleWallCollision({ physics, transform }: PhysicsEntity) {
 
 function handleBallCollision(a: PhysicsEntity, b: PhysicsEntity) {
   /* Check groups and masks */
-  const check =
-    a.physics.groupMask & b.physics.collisionMask ||
-    b.physics.groupMask & a.physics.collisionMask
-
-  if (!check) return
+  if (!(a.physics.groupMask & b.physics.collisionMask)) return
+  if (!(b.physics.groupMask & a.physics.collisionMask)) return
 
   /* Check distance */
   const diff = tmpVec3.subVectors(a.transform.position, b.transform.position)

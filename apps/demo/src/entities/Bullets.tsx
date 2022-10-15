@@ -1,6 +1,7 @@
 import { Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
-import { ECS, physics } from "../state"
+import { ECS, physics, PhysicsLayers } from "../state"
+import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
 
 export const Bullets = () => (
@@ -21,7 +22,9 @@ export const spawnBullet = (props: ParticleProps) => {
       radius: 0.1,
       restitution: 0,
       linearDamping: 1,
-      angularDamping: 1
+      angularDamping: 1,
+      groupMask: bitmask(PhysicsLayers.Bullet),
+      collisionMask: bitmask([PhysicsLayers.Asteroid])
     }),
 
     spatialHashing: {},
