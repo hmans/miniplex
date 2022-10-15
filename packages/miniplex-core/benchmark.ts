@@ -24,7 +24,7 @@ type Entity = {
 
 console.log(`Entity count: ${entityCount}\n`)
 
-profile("adding without archetypes", () => {
+profile("add", () => {
   const world = new World<Entity>()
 
   return () => {
@@ -36,7 +36,7 @@ profile("adding without archetypes", () => {
   }
 })
 
-profile("adding with archetypes", () => {
+profile("add (with archetypes)", () => {
   const world = new World<Entity>()
   const withPosition = world.archetype("position")
   const withVelocity = world.archetype("velocity")
@@ -50,7 +50,7 @@ profile("adding with archetypes", () => {
   }
 })
 
-profile("removing without archetypes", () => {
+profile("remove", () => {
   const world = new World<Entity>()
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -68,7 +68,7 @@ profile("removing without archetypes", () => {
   }
 })
 
-profile("removing with archetypes", () => {
+profile("remove (with archetypes)", () => {
   const world = new World<Entity>()
   const withPosition = world.archetype("position")
   const withVelocity = world.archetype("velocity")
@@ -89,7 +89,7 @@ profile("removing with archetypes", () => {
   }
 })
 
-profile("simulate without archetype", () => {
+profile("simulate", () => {
   const world = new World<Entity>()
 
   for (let i = 0; i < entityCount; i++)
@@ -108,7 +108,7 @@ profile("simulate without archetype", () => {
   }
 })
 
-profile("simulate with archetypes", () => {
+profile("simulate (with archetypes)", () => {
   const world = new World<Entity>()
   const withPosition = world.archetype("position")
   const withVelocity = world.archetype("velocity")
