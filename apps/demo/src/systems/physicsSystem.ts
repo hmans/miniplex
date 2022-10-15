@@ -34,7 +34,7 @@ export function physicsSystem(dt: number) {
       physics.angularVelocity.multiplyScalar(physics.angularDamping)
 
       /* Check bounds collision */
-      handleWallCollision(entity)
+      // handleWallCollision(entity)
 
       /* Ball collisions */
       if (entity.neighbors)
