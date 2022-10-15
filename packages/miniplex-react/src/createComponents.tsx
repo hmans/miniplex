@@ -47,7 +47,9 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
       if (world.has(entity)) return
 
       world.add(entity)
-      return () => world.remove(entity)
+      return () => {
+        world.remove(entity)
+      }
     }, [world, entity])
 
     return (

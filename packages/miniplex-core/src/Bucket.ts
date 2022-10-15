@@ -21,6 +21,12 @@ export class Bucket<E> {
   entities = new Array<E>()
 
   /**
+   * A set of all entities known to this world. This is primarily used
+   * internally to speed up lookups.
+   */
+  private entitiesSet = new Set<any>()
+
+  /**
    * The event that is emitted when an entity is added to this bucket.
    */
   onEntityAdded = new Event<E>()
@@ -42,12 +48,20 @@ export class Bucket<E> {
   derivedBuckets = new WeakMap()
 
   /**
+   * Returns the size of this bucket (the number of entities it contains).
+   */
+  get size() {
+    return this.entities.length
+  }
+
+  /**
    * Returns true if this bucket is currently tracking the given entity.
+   *
    * @param entity The entity to check for.
    * @returns True if the entity is being tracked.
    */
   has(entity: E) {
-    return this.entities.includes(entity)
+    return this.entitiesSet.has(entity)
   }
 
   /**
@@ -58,11 +72,11 @@ export class Bucket<E> {
    * @returns The entity that was added.
    */
   add(entity: E) {
-    const index = this.entities.indexOf(entity)
-
     /* Add the entity if we don't already have it */
-    if (index === -1) {
+    if (!this.has(entity)) {
       this.entities.push(entity)
+      this.entitiesSet.add(entity)
+
       this.onEntityAdded.emit(entity)
     }
 
@@ -77,10 +91,7 @@ export class Bucket<E> {
    * @returns The entity that was touched.
    */
   touch(entity: E) {
-    const index = this.entities.indexOf(entity)
-
-    if (index !== -1) {
-      /* Emit an event if the entity changed */
+    if (this.has(entity)) {
       this.onEntityTouched.emit(entity)
     }
 
@@ -96,15 +107,18 @@ export class Bucket<E> {
    */
   remove(entity: E) {
     /* Only act if we know about the entity */
-    const index = this.entities.indexOf(entity)
-    if (index === -1) return
+    if (this.has(entity)) {
+      /* Remove entity from our list */
+      const index = this.entities.indexOf(entity)
+      this.entities[index] = this.entities[this.entities.length - 1]
+      this.entities.pop()
+      this.entitiesSet.delete(entity)
 
-    /* Remove entity from our list */
-    this.entities[index] = this.entities[this.entities.length - 1]
-    this.entities.pop()
+      /* Emit event */
+      this.onEntityRemoved.emit(entity)
+    }
 
-    /* Emit event */
-    this.onEntityRemoved.emit(entity)
+    return entity
   }
 
   /**
@@ -112,8 +126,8 @@ export class Bucket<E> {
    * for each entity, giving derived buckets a chance to remove the entity as well.
    */
   clear() {
-    for (let i = this.entities.length - 1; i >= 0; i--) {
-      this.remove(this.entities[i])
+    for (const entity of this) {
+      this.remove(entity)
     }
   }
 
@@ -129,8 +143,9 @@ export class Bucket<E> {
     predicate: Predicate<E, D> | ((entity: E) => boolean) = () => true
   ): Bucket<D> {
     /* Check if we already have a derived bucket for this predicate */
-    if (this.derivedBuckets.has(predicate)) {
-      return this.derivedBuckets.get(predicate)
+    const existingBucket = this.derivedBuckets.get(predicate)
+    if (existingBucket) {
+      return existingBucket
     }
 
     /* Create bucket */
@@ -140,12 +155,17 @@ export class Bucket<E> {
     this.derivedBuckets.set(predicate, bucket)
 
     /* Add entities that match the predicate */
-    for (const entity of this.entities)
-      if (predicate(entity)) bucket.add(entity)
+    for (const entity of this.entities) {
+      if (predicate(entity)) {
+        bucket.add(entity)
+      }
+    }
 
     /* Listen for new entities */
     this.onEntityAdded.addListener((entity) => {
-      if (predicate(entity)) bucket.add(entity)
+      if (predicate(entity)) {
+        bucket.add(entity)
+      }
     })
 
     /* Listen for removed entities */
@@ -155,8 +175,11 @@ export class Bucket<E> {
 
     /* Listen for changed entities */
     this.onEntityTouched.addListener((entity) => {
-      if (predicate(entity)) bucket.add(entity) && bucket.touch(entity)
-      else bucket.remove(entity as D)
+      if (predicate(entity)) {
+        bucket.add(entity) && bucket.touch(entity)
+      } else {
+        bucket.remove(entity as D)
+      }
     })
 
     return bucket as Bucket<D>
