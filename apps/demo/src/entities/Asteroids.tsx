@@ -1,6 +1,7 @@
 import { WithRequiredKeys } from "miniplex"
 import { plusMinus } from "randomish"
 import { useLayoutEffect } from "react"
+import { Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
 import { ECS, physics, Entity } from "../state"
 
@@ -48,14 +49,16 @@ export const isAsteroid = (entity: Entity): entity is Asteroid =>
 
 const asteroids = ECS.world.derive(isAsteroid)
 
-export const spawnAsteroid = (props: ParticleProps) =>
-  ECS.world.add({
+const tmpVec3 = new Vector3()
+
+export const spawnAsteroid = (props: ParticleProps) => {
+  const entity = ECS.world.add({
     isAsteroid: true,
     physics: physics({
       radius: 0.4,
       restitution: 0.1,
       onContactStart: () => {
-        console.log("collision")
+        entity.physics!.angularVelocity.add(tmpVec3.randomDirection())
       }
     }),
     spatialHashing: {},
@@ -67,3 +70,6 @@ export const spawnAsteroid = (props: ParticleProps) =>
       </ECS.Property>
     )
   })
+
+  return entity
+}
