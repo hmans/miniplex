@@ -1,6 +1,6 @@
 import { World } from "./src"
 
-const count = 1_000_00
+const entityCount = 1_000_00
 
 const profile = (name: string, setup: () => () => void) => {
   const test = setup()
@@ -22,11 +22,13 @@ type Entity = {
   velocity?: Vector
 }
 
+console.log(`Entity count: ${entityCount}\n`)
+
 profile("adding without archetypes", () => {
   const world = new World<Entity>()
 
   return () => {
-    for (let i = 0; i < count; i++)
+    for (let i = 0; i < entityCount; i++)
       world.add({
         position: { x: 0, y: i, z: 0 },
         velocity: { x: 0, y: 0, z: 0 }
@@ -40,7 +42,7 @@ profile("adding with archetypes", () => {
   const withVelocity = world.archetype("velocity")
 
   return () => {
-    for (let i = 0; i < count; i++)
+    for (let i = 0; i < entityCount; i++)
       world.add({
         position: { x: 0, y: i, z: 0 },
         velocity: { x: 0, y: 0, z: 0 }
@@ -50,7 +52,28 @@ profile("adding with archetypes", () => {
 
 profile("removing without archetypes", () => {
   const world = new World<Entity>()
-  for (let i = 0; i < count; i++)
+  for (let i = 0; i < entityCount; i++)
+    world.add({
+      position: { x: 0, y: i, z: 0 },
+      velocity: { x: 0, y: 0, z: 0 }
+    })
+
+  return () => {
+    for (const entity of world) {
+      world.remove(entity)
+    }
+
+    if (world.size > 0)
+      throw new Error("World not empty, reverse iteration is leaky")
+  }
+})
+
+profile("removing with archetypes", () => {
+  const world = new World<Entity>()
+  const withPosition = world.archetype("position")
+  const withVelocity = world.archetype("velocity")
+
+  for (let i = 0; i < entityCount; i++)
     world.add({
       position: { x: 0, y: i, z: 0 },
       velocity: { x: 0, y: 0, z: 0 }
@@ -69,7 +92,7 @@ profile("removing without archetypes", () => {
 profile("simulate without archetype", () => {
   const world = new World<Entity>()
 
-  for (let i = 0; i < count; i++)
+  for (let i = 0; i < entityCount; i++)
     world.add({
       position: { x: 0, y: i, z: 0 },
       velocity: { x: 1, y: 2, z: 3 }
@@ -85,11 +108,12 @@ profile("simulate without archetype", () => {
   }
 })
 
-profile("simulate with archetype", () => {
+profile("simulate with archetypes", () => {
   const world = new World<Entity>()
+  const withPosition = world.archetype("position")
   const withVelocity = world.archetype("velocity")
 
-  for (let i = 0; i < count; i++)
+  for (let i = 0; i < entityCount; i++)
     world.add({
       position: { x: 0, y: i, z: 0 },
       velocity: { x: 1, y: 2, z: 3 }
