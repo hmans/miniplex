@@ -1,5 +1,5 @@
 import { World } from "miniplex"
-import { createComponents, EntityChildren } from "miniplex/react"
+import { createComponents } from "miniplex/react"
 import { ReactNode } from "react"
 import { Object3D, Vector3 } from "three"
 
@@ -11,28 +11,33 @@ export type Entity = {
 
   transform?: Object3D
 
+  /* When set, this entity will be subjected to spatial hashing system. */
   spatialHashing?: {
     currentCell?: Entity[]
   }
 
+  /* When set, a system will fill this array with the entity's neighbors, using
+  the spatial hashing data. */
   neighbors?: Entity[]
 
-  physics?: Physics
+  /* Simulate physics. */
+  physics?: {
+    velocity: Vector3
+    angularVelocity: Vector3
+    linearDamping: number
+    angularDamping: number
+    mass: number
+    radius: number
+    restitution: number
+  }
 
   render?: ReactNode
 }
 
-type Physics = {
-  velocity: Vector3
-  angularVelocity: Vector3
-  linearDamping: number
-  angularDamping: number
-  mass: number
-  radius: number
-  restitution: number
-}
-
-export const physics = (input: Partial<Physics> = {}): Physics => ({
+/* A constructor for physics data. */
+export const physics = (
+  input: Partial<Entity["physics"]> = {}
+): Entity["physics"] => ({
   velocity: new Vector3(0, 0, 0),
   angularVelocity: new Vector3(0, 0, 0),
   linearDamping: 0.99,
