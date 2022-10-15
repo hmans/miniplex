@@ -1,5 +1,5 @@
 import { between } from "randomish"
-import { Quaternion, Vector3 } from "three"
+import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle } from "vfx-composer-r3f"
 import { ECS, lifetime, physics, PhysicsLayers } from "../state"
 import { bitmask } from "../util/bitmask"
@@ -8,7 +8,7 @@ import { RenderableEntity } from "./RenderableEntity"
 export const Bullets = () => (
   <InstancedParticles>
     <planeGeometry args={[0.15, 0.5]} />
-    <meshStandardMaterial color="orange" />
+    <meshStandardMaterial color={new Color("orange").multiplyScalar(5)} />
 
     <ECS.Archetype properties="isBullet" as={RenderableEntity} />
   </InstancedParticles>
