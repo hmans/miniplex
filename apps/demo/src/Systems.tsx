@@ -1,3 +1,4 @@
+import { DestroySystem } from "./systems/DestroySystem"
 import { FindNeighborsSystem } from "./systems/findNeighborsSystem"
 import { PhysicsSystem } from "./systems/physicsSystem"
 import { PlayerSystem } from "./systems/playerSystem"
@@ -9,5 +10,6 @@ export const Systems = () => (
     <FindNeighborsSystem />
     <PhysicsSystem />
     <PlayerSystem />
+    <DestroySystem />
   </>
 )

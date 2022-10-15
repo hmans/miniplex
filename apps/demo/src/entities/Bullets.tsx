@@ -1,30 +1,44 @@
-import { Vector3 } from "three"
-import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
+import { Color, Quaternion, Vector3 } from "three"
+import { InstancedParticles, Particle } from "vfx-composer-r3f"
 import { ECS, physics, PhysicsLayers } from "../state"
 import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
 
 export const Bullets = () => (
   <InstancedParticles>
-    <planeGeometry args={[0.1, 0.1]} />
-    <meshStandardMaterial color="yellow" />
+    <planeGeometry args={[0.2, 0.2]} />
+    <meshStandardMaterial color="orange" />
 
     <ECS.Archetype properties="isBullet" as={RenderableEntity} />
   </InstancedParticles>
 )
 
-export const spawnBullet = (props: ParticleProps) => {
+const players = ECS.world.archetype("isPlayer")
+
+const tmpVec3 = new Vector3()
+
+export const spawnBullet = () => {
+  const [player] = players
+  if (!player) return
+
   const bullet = ECS.world.add({
     isBullet: true,
 
     physics: physics({
-      velocity: new Vector3(0, 1, 0),
+      velocity: new Vector3(0, 10, 0)
+        .applyQuaternion(player.transform!.quaternion)
+        .add(player.physics!.velocity),
       radius: 0.1,
-      restitution: 0,
+      restitution: 1,
       linearDamping: 1,
       angularDamping: 1,
+
       groupMask: bitmask(PhysicsLayers.Bullet),
-      collisionMask: bitmask([PhysicsLayers.Asteroid])
+      collisionMask: bitmask([PhysicsLayers.Asteroid]),
+
+      onContactStart: () => {
+        ECS.world.addProperty(bullet, "destroy", true)
+      }
     }),
 
     spatialHashing: {},
@@ -32,7 +46,10 @@ export const spawnBullet = (props: ParticleProps) => {
 
     render: (
       <ECS.Property name="transform">
-        <Particle {...props} />
+        <Particle
+          position={player.transform!.position}
+          quaternion={player.transform!.quaternion}
+        />
       </ECS.Property>
     )
   })

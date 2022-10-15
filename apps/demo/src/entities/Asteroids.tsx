@@ -53,7 +53,7 @@ export const spawnAsteroid = (props: ParticleProps) => {
   const entity = ECS.world.add({
     isAsteroid: true,
     physics: physics({
-      radius: scale * 0.9,
+      radius: scale * 0.8,
       restitution: 0.1,
       groupMask: bitmask(PhysicsLayers.Asteroid),
       collisionMask: bitmask([

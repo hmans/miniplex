@@ -43,7 +43,7 @@ export const PlayerSystem = () => {
 
     if (input.fire && performance.now() > lastFireTime + 65) {
       lastFireTime = performance.now()
-      spawnBullet({ position: player.transform.position })
+      spawnBullet()
     }
   })
 

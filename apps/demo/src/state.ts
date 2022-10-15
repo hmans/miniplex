@@ -1,3 +1,4 @@
+import { createQueue } from "@hmans/queue"
 import { World } from "miniplex"
 import { createComponents } from "miniplex/react"
 import { ReactNode } from "react"
@@ -17,6 +18,7 @@ export type Entity = {
   isBullet?: true
 
   transform?: Object3D
+  destroy?: true
 
   /* When set, this entity will be subjected to spatial hashing system. */
   spatialHashing?: {
