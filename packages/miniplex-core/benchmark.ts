@@ -1,3 +1,3 @@
-import { World } from "./src/World"
+import { World } from "./src"
 
 console.log("hello")
