@@ -43,8 +43,8 @@ export const SpatialHashingSystem = () => {
       entities.onEntityRemoved.addListener((entity) => {
         const p = entity.transform.position
         const key = cellKey(p.x, p.y)
+        const cell = entity.spatialHashing?.currentCell || cells.get(key)
 
-        const cell = cells.get(key)
         if (cell) {
           const index = cell.indexOf(entity)
           if (index !== -1) {

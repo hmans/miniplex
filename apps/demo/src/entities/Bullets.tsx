@@ -3,6 +3,7 @@ import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle } from "vfx-composer-r3f"
 import { ECS, lifetime, physics, PhysicsLayers } from "../state"
 import { bitmask } from "../util/bitmask"
+import { spawnAsteroid } from "./Asteroids"
 import { RenderableEntity } from "./RenderableEntity"
 
 export const Bullets = () => (
@@ -40,8 +41,40 @@ export const spawnBullet = () => {
       groupMask: bitmask(PhysicsLayers.Bullet),
       collisionMask: bitmask([PhysicsLayers.Asteroid]),
 
-      onContactStart: () => {
+      onContactStart: (other) => {
+        /* Destroy bullet */
         ECS.world.addProperty(bullet, "destroy", true)
+
+        /* If the other entity has health, damage it */
+        if (other.health !== undefined) {
+          other.health -= 400
+          if (other.health <= 0) {
+            ECS.world.addProperty(other, "destroy", true)
+
+            /* If the other entity was an asteroid, spawn new asteroids */
+            if (other.isAsteroid) {
+              const scale = other.transform!.scale.x
+              if (scale > 1) {
+                const count = between(3, 8)
+                for (let i = 0; i < count; i++) {
+                  const direction = new Vector3(
+                    Math.cos((2 * Math.PI) / i),
+                    Math.sin((2 * Math.PI) / i),
+                    0
+                  )
+                  const asteroid = spawnAsteroid({
+                    position: direction.add(other.transform!.position),
+                    scale: scale / count
+                  })
+
+                  asteroid.physics!.velocity = direction
+                    .clone()
+                    .multiplyScalar(5)
+                }
+              }
+            }
+          }
+        }
       }
     }),
 
