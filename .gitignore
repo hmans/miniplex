@@ -2,4 +2,3 @@
 **/node_modules/
 **/dist/
 *.log
-/packages/*/benchmark/
