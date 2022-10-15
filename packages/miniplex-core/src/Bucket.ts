@@ -20,6 +20,8 @@ export class Bucket<E> {
   /** The entities in the bucket. */
   entities = new Array<E>()
 
+  private entitiesSet = new WeakSet<any>()
+
   /**
    * The event that is emitted when an entity is added to this bucket.
    */
@@ -41,13 +43,17 @@ export class Bucket<E> {
    */
   derivedBuckets = new WeakMap()
 
+  get size() {
+    return this.entities.length
+  }
+
   /**
    * Returns true if this bucket is currently tracking the given entity.
    * @param entity The entity to check for.
    * @returns True if the entity is being tracked.
    */
   has(entity: E) {
-    return this.entities.includes(entity)
+    return this.entitiesSet.has(entity)
   }
 
   /**
@@ -58,12 +64,12 @@ export class Bucket<E> {
    * @returns The entity that was added.
    */
   add(entity: E) {
-    const index = this.entities.indexOf(entity)
-
     /* Add the entity if we don't already have it */
-    if (index === -1) {
+    if (!this.has(entity)) {
       this.entities.push(entity)
       this.onEntityAdded.emit(entity)
+
+      this.entitiesSet.add(entity)
     }
 
     return entity
@@ -77,10 +83,7 @@ export class Bucket<E> {
    * @returns The entity that was touched.
    */
   touch(entity: E) {
-    const index = this.entities.indexOf(entity)
-
-    if (index !== -1) {
-      /* Emit an event if the entity changed */
+    if (this.has(entity)) {
       this.onEntityTouched.emit(entity)
     }
 
@@ -96,15 +99,20 @@ export class Bucket<E> {
    */
   remove(entity: E) {
     /* Only act if we know about the entity */
-    const index = this.entities.indexOf(entity)
-    if (index === -1) return
+    if (this.has(entity)) {
+      const index = this.entities.indexOf(entity)
+      if (index === -1) return
 
-    /* Remove entity from our list */
-    this.entities[index] = this.entities[this.entities.length - 1]
-    this.entities.pop()
+      /* Remove entity from our list */
+      this.entities[index] = this.entities[this.entities.length - 1]
+      this.entities.pop()
+      this.entitiesSet.delete(entity)
 
-    /* Emit event */
-    this.onEntityRemoved.emit(entity)
+      /* Emit event */
+      this.onEntityRemoved.emit(entity)
+    }
+
+    return entity
   }
 
   /**
