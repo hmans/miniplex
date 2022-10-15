@@ -3,7 +3,7 @@ import { plusMinus } from "randomish"
 import { useLayoutEffect } from "react"
 import { Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
-import { ECS, physics, Entity } from "../state"
+import { ECS, Entity, physics } from "../state"
 
 const RenderableEntity = ({
   entity

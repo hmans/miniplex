@@ -1,38 +1,9 @@
 import { useFrame } from "@react-three/fiber"
+import { useLayoutEffect } from "react"
 import { Vector3 } from "three"
 import { ECS, Entity } from "../state"
 
 const entities = ECS.world.archetype("transform", "spatialHashing")
-
-export function spatialHashingSystem() {
-  for (const entity of entities) {
-    /* Determine the entity's current cell */
-    const p = entity.transform.position
-    const key = cellKey(p.x, p.y)
-
-    let cell = cells.get(key)
-
-    if (!cell) {
-      cell = new Array<Entity>()
-      cells.set(key, cell)
-    }
-
-    /* If the entity has moved cells, update the spatial hash */
-    const current = entity.spatialHashing.currentCell
-    if (current !== cell) {
-      /* Remove the entity from its previous cell */
-      if (current) {
-        const index = current.indexOf(entity)
-        current[index] = current[current.length - 1]
-        current.pop()
-      }
-
-      /* Add the entity to its new cell */
-      cell.push(entity)
-      entity.spatialHashing.currentCell = cell
-    }
-  }
-}
 
 const cells = new Map<string, Entity[]>()
 
@@ -67,8 +38,47 @@ export function getEntitiesInRadius(
 }
 
 export const SpatialHashingSystem = () => {
+  useLayoutEffect(
+    () =>
+      entities.onEntityRemoved.addListener((entity) => {
+        const cell = entity.spatialHashing?.currentCell
+        if (cell) {
+          const index = cell.indexOf(entity)
+          cell[index] = cell[cell.length - 1]
+          cell.pop()
+        }
+      }),
+    []
+  )
+
   useFrame(() => {
-    spatialHashingSystem()
+    for (const entity of entities) {
+      /* Determine the entity's current cell */
+      const p = entity.transform.position
+      const key = cellKey(p.x, p.y)
+
+      let cell = cells.get(key)
+
+      if (!cell) {
+        cell = new Array<Entity>()
+        cells.set(key, cell)
+      }
+
+      /* If the entity has moved cells, update the spatial hash */
+      const current = entity.spatialHashing.currentCell
+      if (current !== cell) {
+        /* Remove the entity from its previous cell */
+        if (current) {
+          const index = current.indexOf(entity)
+          current[index] = current[current.length - 1]
+          current.pop()
+        }
+
+        /* Add the entity to its new cell */
+        cell.push(entity)
+        entity.spatialHashing.currentCell = cell
+      }
+    }
   })
 
   return null
