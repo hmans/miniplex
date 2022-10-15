@@ -38,7 +38,10 @@ profile("adding with archetypes", () => {
 
   return () => {
     for (let i = 0; i < count; i++)
-      world.add({ position: { x: 0, y: i, z: 0 } })
+      world.add({
+        position: { x: 0, y: i, z: 0 },
+        velocity: { x: 0, y: 0, z: 0 }
+      })
   }
 })
 
