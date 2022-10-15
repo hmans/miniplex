@@ -67,6 +67,7 @@ export const spawnAsteroid = (props: ParticleProps) => {
         )
       }
     }),
+
     spatialHashing: {},
     neighbors: [],
 

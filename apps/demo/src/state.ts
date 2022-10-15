@@ -1,4 +1,3 @@
-import { createQueue } from "@hmans/queue"
 import { World } from "miniplex"
 import { createComponents } from "miniplex/react"
 import { ReactNode } from "react"
@@ -23,6 +22,11 @@ export type Entity = {
   /* When set, this entity will be subjected to spatial hashing system. */
   spatialHashing?: {
     currentCell?: Entity[]
+  }
+
+  lifetime?: {
+    age: number
+    maxAge?: number
   }
 
   /* When set, a system will fill this array with the entity's neighbors, using
@@ -63,6 +67,10 @@ export const physics = (
   collisionMask: 0b1111_1111_1111_1111,
   contacts: new Set(),
   ...input
+})
+
+export const lifetime = (maxAge?: number) => ({
+  lifetime: { age: 0, maxAge }
 })
 
 const world = new World<Entity>()

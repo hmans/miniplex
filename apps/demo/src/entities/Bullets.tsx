@@ -1,7 +1,7 @@
 import { between } from "randomish"
 import { Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle } from "vfx-composer-r3f"
-import { ECS, physics, PhysicsLayers } from "../state"
+import { ECS, lifetime, physics, PhysicsLayers } from "../state"
 import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
 
@@ -25,6 +25,7 @@ export const spawnBullet = () => {
 
   const bullet = ECS.world.add({
     isBullet: true,
+    ...lifetime(1),
 
     physics: physics({
       velocity: new Vector3(0, 25, 0)
