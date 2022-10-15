@@ -10,6 +10,7 @@ import {
 } from "@miniplex/core"
 import React, {
   createContext,
+  FunctionComponent,
   memo,
   ReactElement,
   ReactNode,
@@ -35,10 +36,12 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
 
   const RawEntity = <D extends E>({
     children: givenChildren,
-    entity: givenEntity = {} as D
+    entity: givenEntity = {} as D,
+    as: As
   }: {
     entity?: D
     children?: EntityChildren<D>
+    as?: FunctionComponent<{ entity: D; children?: ReactNode }>
   }) => {
     const entity = useConst(() => givenEntity)
 
@@ -58,7 +61,9 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
         : givenChildren
 
     return (
-      <EntityContext.Provider value={entity}>{children}</EntityContext.Provider>
+      <EntityContext.Provider value={entity}>
+        {As ? <As entity={entity}>{children}</As> : children}
+      </EntityContext.Provider>
     )
   }
 
@@ -66,44 +71,50 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
 
   const Entities = <D extends E>({
     entities,
-    children
+    ...props
   }: {
     entities: D[]
     children?: EntityChildren<D>
+    as?: FunctionComponent<{ entity: D; children?: ReactNode }>
   }) => (
     <>
       {entities.map((entity) => (
-        <Entity key={id(entity)} entity={entity} children={children} />
+        <Entity key={id(entity)} entity={entity} {...props} />
       ))}
     </>
   )
 
   const Bucket = <D extends E>({
     bucket: _bucket,
-    children
+    ...props
   }: {
     bucket: Bucket<D> | Predicate<E, D>
     children?: EntityChildren<D>
+    as?: FunctionComponent<{ entity: D; children?: ReactNode }>
   }) => {
     const source =
       typeof _bucket === "function" ? world.derive(_bucket) : _bucket
 
     const entities = useEntities(source)
-    return <Entities entities={entities} children={children} />
+    return <Entities entities={entities} {...props} />
   }
 
   const Archetype = <A extends keyof E>({
     properties,
-    children
+    ...props
   }: {
     properties: A[] | A
     children?: EntityChildren<WithRequiredKeys<E, A>>
+    as?: FunctionComponent<{
+      entity: WithRequiredKeys<E, A>
+      children?: ReactNode
+    }>
   }) => (
     <Bucket
       bucket={archetype(
         ...(Array.isArray(properties) ? properties : [properties])
       )}
-      children={children}
+      {...props}
     />
   )
 
