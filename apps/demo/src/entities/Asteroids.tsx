@@ -3,7 +3,7 @@ import { between, plusMinus } from "randomish"
 import { useLayoutEffect } from "react"
 import { Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
-import { ECS, Entity, physics } from "../state"
+import { ECS, Entity, physics, PhysicsLayers } from "../state"
 import { RenderableEntity } from "./RenderableEntity"
 
 export const Asteroids = () => {
@@ -54,6 +54,7 @@ export const spawnAsteroid = (props: ParticleProps) => {
     physics: physics({
       radius: scale * 0.9,
       restitution: 0.1,
+      groupMask: 1,
       onContactStart: (other, force) => {
         entity.physics!.angularVelocity.add(
           tmpVec3.randomDirection().multiplyScalar(force / 30)

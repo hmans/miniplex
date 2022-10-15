@@ -5,6 +5,12 @@ import { Object3D, Vector3 } from "three"
 
 export const BOUNDS = 10
 
+export const PhysicsLayers = {
+  Player: 1,
+  Asteroid: 2,
+  Bullet: 3
+}
+
 export type Entity = {
   isPlayer?: true
   isAsteroid?: true
@@ -30,6 +36,8 @@ export type Entity = {
     mass: number
     radius: number
     restitution: number
+    groupMask: number
+    collisionMask: number
     contacts: Set<Entity>
     onContactStart?: (other: Entity, force: number) => void
     onContactEnd?: (other: Entity) => void
@@ -49,6 +57,8 @@ export const physics = (
   mass: 1,
   radius: 1,
   restitution: 0.5,
+  groupMask: 0b1111_1111_1111_1111,
+  collisionMask: 0b1111_1111_1111_1111,
   contacts: new Set(),
   ...input
 })

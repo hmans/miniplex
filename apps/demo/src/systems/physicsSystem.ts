@@ -81,6 +81,14 @@ function handleWallCollision({ physics, transform }: PhysicsEntity) {
 }
 
 function handleBallCollision(a: PhysicsEntity, b: PhysicsEntity) {
+  /* Check groups and masks */
+  const check =
+    a.physics.groupMask & b.physics.collisionMask ||
+    b.physics.groupMask & a.physics.collisionMask
+
+  if (!check) return
+
+  /* Check distance */
   const diff = tmpVec3.subVectors(a.transform.position, b.transform.position)
   const distance = diff.length()
   const penetration = (a.physics.radius + b.physics.radius - distance) / 2.0
