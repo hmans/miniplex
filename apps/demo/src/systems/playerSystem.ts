@@ -1,10 +1,15 @@
 import { useFrame } from "@react-three/fiber"
+import { WithRequiredKeys } from "miniplex"
 import { Vector3 } from "three"
-import { isPlayer } from "../entities/Player"
-import { ECS } from "../state"
+import { ECS, Entity } from "../state"
 import { useKeyboard } from "../util/useKeyboard"
 
 const tmpVec3 = new Vector3()
+
+const isPlayer = (
+  entity: Entity
+): entity is WithRequiredKeys<Entity, "transform" | "physics"> =>
+  !!entity.isPlayer
 
 const players = ECS.world.derive(isPlayer)
 

@@ -22,13 +22,7 @@ export const Asteroids = () => {
       <icosahedronGeometry args={[0.5]} />
       <meshStandardMaterial color="#888" />
 
-      <ECS.Bucket bucket={asteroids}>
-        {(entity) =>
-          typeof entity.render === "function"
-            ? entity.render(entity)
-            : entity.render
-        }
-      </ECS.Bucket>
+      <ECS.Bucket bucket={asteroids}>{(entity) => entity.render}</ECS.Bucket>
     </InstancedParticles>
   )
 }
@@ -55,7 +49,7 @@ export const spawnAsteroid = (props: ParticleProps) =>
     spatialHashing: {},
     neighbors: [],
 
-    render: () => (
+    render: (
       <ECS.Property name="transform">
         <Particle {...props} />
       </ECS.Property>

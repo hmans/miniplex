@@ -1,5 +1,6 @@
 import { World } from "miniplex"
 import { createComponents, EntityChildren } from "miniplex/react"
+import { ReactNode } from "react"
 import { Object3D, Vector3 } from "three"
 
 export const BOUNDS = 10
@@ -18,7 +19,7 @@ export type Entity = {
 
   physics?: Physics
 
-  render?: EntityChildren<Entity>
+  render?: ReactNode
 }
 
 type Physics = {
