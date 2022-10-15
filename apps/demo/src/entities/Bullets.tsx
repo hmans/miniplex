@@ -47,7 +47,7 @@ export const spawnBullet = () => {
 
         /* If the other entity has health, damage it */
         if (other.health !== undefined) {
-          other.health -= 400
+          other.health -= 270
           if (other.health <= 0) {
             ECS.world.addProperty(other, "destroy", true)
 
@@ -55,7 +55,7 @@ export const spawnBullet = () => {
             if (other.isAsteroid) {
               const scale = other.transform!.scale.x
               if (scale > 0.8) {
-                const count = between(2, 10)
+                const count = between(3, 10)
                 for (let i = 0; i < count; i++) {
                   const direction = new Vector3(
                     Math.cos(((2 * Math.PI) / count) * i),
@@ -69,7 +69,7 @@ export const spawnBullet = () => {
                         .copy(direction)
                         .add(other.transform!.position)
                     },
-                    (scale / (count / 4)) * between(0.8, 1.2)
+                    scale * between(0.5, 0.9)
                   )
 
                   asteroid.physics!.velocity = direction
