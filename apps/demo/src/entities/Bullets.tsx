@@ -26,7 +26,7 @@ export const spawnBullet = () => {
 
   const bullet = ECS.world.add({
     isBullet: true,
-    ...lifetime(1),
+    ...lifetime(2),
 
     physics: physics({
       velocity: new Vector3(0, 25, 0)
