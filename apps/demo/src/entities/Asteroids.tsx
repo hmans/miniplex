@@ -4,6 +4,12 @@ import { useLayoutEffect } from "react"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
 import { ECS, physics, Entity } from "../state"
 
+const RenderableEntity = ({
+  entity
+}: {
+  entity: WithRequiredKeys<Entity, "render">
+}) => <>{entity.render}</>
+
 export const Asteroids = () => {
   useLayoutEffect(() => {
     for (let i = 0; i < 20; i++) {
@@ -22,7 +28,7 @@ export const Asteroids = () => {
       <icosahedronGeometry args={[0.5]} />
       <meshStandardMaterial color="#888" />
 
-      <ECS.Bucket bucket={asteroids}>{(entity) => entity.render}</ECS.Bucket>
+      <ECS.Bucket bucket={asteroids} as={RenderableEntity} />
     </InstancedParticles>
   )
 }
