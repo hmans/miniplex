@@ -29,6 +29,8 @@ export type Entity = {
     maxAge?: number
   }
 
+  health?: number
+
   /* When set, a system will fill this array with the entity's neighbors, using
   the spatial hashing data. */
   neighbors?: Entity[]

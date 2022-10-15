@@ -1,5 +1,5 @@
 import { WithRequiredKeys } from "miniplex"
-import { between, plusMinus } from "randomish"
+import { between, plusMinus, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
@@ -9,7 +9,7 @@ import { RenderableEntity } from "./RenderableEntity"
 
 export const Asteroids = () => {
   useLayoutEffect(() => {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 15; i++) {
       spawnAsteroid({ position: [plusMinus(9), plusMinus(9), 0] })
     }
 
@@ -48,10 +48,13 @@ const asteroids = ECS.world.derive(isAsteroid)
 const tmpVec3 = new Vector3()
 
 export const spawnAsteroid = (props: ParticleProps) => {
-  const scale = between(0.8, 1)
+  const scale = 1 + power(2) * 1
 
   const entity = ECS.world.add({
     isAsteroid: true,
+
+    health: 1000 * scale,
+
     physics: physics({
       radius: scale * 0.8,
       restitution: 0.1,
