@@ -30,6 +30,18 @@ describe("World", () => {
       world.addProperty(entity, "name", "foo")
       expect(listener).toHaveBeenCalledWith(entity)
     })
+
+    it("returns true if the entity was updated", () => {
+      const world = new World()
+      const entity = world.add({ count: 1 })
+      expect(world.addProperty(entity, "name", "foo")).toBe(true)
+    })
+
+    it("returns false if the entity was not updated", () => {
+      const world = new World()
+      const entity = world.add({ count: 1 })
+      expect(world.addProperty(entity, "count", 2)).toBe(false)
+    })
   })
 
   describe("removeProperty", () => {
@@ -58,6 +70,59 @@ describe("World", () => {
       world.onEntityTouched.addListener(listener)
       world.removeProperty(entity, "count")
       expect(listener).toHaveBeenCalledWith(entity)
+    })
+
+    it("returns true if the entity was updated", () => {
+      const world = new World()
+      const entity = world.add({ count: 1 })
+      expect(world.removeProperty(entity, "count")).toBe(true)
+    })
+
+    it("returns false if the entity was not updated", () => {
+      const world = new World()
+      const entity = world.add({ count: 1 })
+      expect(world.removeProperty(entity, "name")).toBe(false)
+    })
+  })
+
+  describe("setProperty", () => {
+    it("updates the value of a property on an entity", () => {
+      const world = new World()
+      const entity = world.add({ count: 1 })
+      world.setProperty(entity, "count", 2)
+      expect(entity).toEqual({ count: 2 })
+    })
+
+    it("if the property is not on the entity, it does nothing", () => {
+      const world = new World()
+      const entity = world.add({ count: 1 })
+      const listener = jest.fn()
+
+      world.onEntityTouched.addListener(listener)
+      world.setProperty(entity, "name", "foo")
+      expect(entity).toEqual({ count: 1 })
+      expect(listener).not.toHaveBeenCalledWith(entity)
+    })
+
+    it("touches the entity", () => {
+      const world = new World()
+      const entity = world.add({ count: 1 })
+      const listener = jest.fn()
+      world.onEntityTouched.addListener(listener)
+      world.setProperty(entity, "count", 2)
+      expect(listener).toHaveBeenCalledWith(entity)
+    })
+
+    it("returns true if the entity was updated", () => {
+      const world = new World()
+      const entity = world.add({ count: 1 })
+      expect(world.setProperty(entity, "count", 2)).toBe(true)
+    })
+
+    it("returns false if the entity was not updated", () => {
+      const world = new World()
+      const entity = world.add({ count: 1 })
+      expect(world.setProperty(entity, "name", "foo")).toBe(false)
     })
   })
 

@@ -185,6 +185,20 @@ describe("derive", () => {
   })
 })
 
+describe("size", () => {
+  it("returns the size of the world", () => {
+    const bucket = new Bucket()
+    bucket.add({})
+    expect(bucket.size).toBe(1)
+  })
+
+  it("is equal to the amount of entities stored in the bucket", () => {
+    const bucket = new Bucket()
+    bucket.add({})
+    expect(bucket.size).toBe(bucket.entities.length)
+  })
+})
+
 describe("Symbol.iterator", () => {
   it("iterating through a bucket happens in reverse order", () => {
     const bucket = new Bucket()
@@ -198,6 +212,22 @@ describe("Symbol.iterator", () => {
     }
 
     expect(entities).toEqual([entity3, entity2, entity1])
+  })
+
+  it("allows for safe entity deletions", () => {
+    const bucket = new Bucket()
+    const entity1 = bucket.add({})
+    const entity2 = bucket.add({})
+    const entity3 = bucket.add({})
+
+    const entities = []
+    for (const entity of bucket) {
+      entities.push(entity)
+      bucket.remove(entity)
+    }
+
+    expect(entities).toEqual([entity3, entity2, entity1])
+    expect(bucket.entities).toEqual([])
   })
 })
 
