@@ -126,9 +126,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     /* Handle updates to existing property */
     useIsomorphicLayoutEffect(() => {
       if (props.value === undefined) return
-
-      entity[props.name] = props.value
-      world.touch(entity)
+      world.setProperty(entity, props.name, props.value)
     }, [entity, props.name, props.value])
 
     /* Handle setting of child value */
