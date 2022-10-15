@@ -6,7 +6,8 @@
     "miniplex-react": "1.0.1",
     "demo": "0.0.0",
     "@miniplex/core": "2.0.0-next.3",
-    "@miniplex/react": "2.0.0-next.3"
+    "@miniplex/react": "2.0.0-next.3",
+    "@hmans/queue": "0.0.1"
   },
   "changesets": [
     "afraid-bats-matter",
@@ -18,9 +19,12 @@
     "gorgeous-pets-grab",
     "great-rats-attend",
     "heavy-swans-argue",
+    "itchy-lobsters-protect",
     "lazy-ties-raise",
+    "lovely-terms-occur",
     "modern-gifts-taste",
     "shy-cycles-decide",
-    "swift-radios-decide"
+    "swift-radios-decide",
+    "tiny-bananas-sniff"
   ]
 }
