@@ -41,11 +41,16 @@ export const SpatialHashingSystem = () => {
   useLayoutEffect(
     () =>
       entities.onEntityRemoved.addListener((entity) => {
-        const cell = entity.spatialHashing?.currentCell
+        const p = entity.transform.position
+        const key = cellKey(p.x, p.y)
+
+        const cell = cells.get(key)
         if (cell) {
           const index = cell.indexOf(entity)
-          cell[index] = cell[cell.length - 1]
-          cell.pop()
+          if (index !== -1) {
+            cell[index] = cell[cell.length - 1]
+            cell.pop()
+          }
         }
       }),
     []
