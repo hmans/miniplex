@@ -85,26 +85,46 @@ function handleBallCollision(a: PhysicsEntity, b: PhysicsEntity) {
   const distance = diff.length()
   const penetration = (a.physics.radius + b.physics.radius - distance) / 2.0
 
-  if (penetration <= 0) return
+  if (penetration > 0) {
+    /* Resolve collision */
+    const normal = diff.normalize()
 
-  const normal = diff.normalize()
+    /* Shift objects */
+    a.transform.position.addScaledVector(normal, penetration)
+    b.transform.position.addScaledVector(normal, -penetration)
 
-  /* Shift objects */
-  a.transform.position.addScaledVector(normal, penetration)
-  b.transform.position.addScaledVector(normal, -penetration)
+    /* Adjust velocities */
+    const aVel = a.physics.velocity.dot(normal)
+    const bVel = b.physics.velocity.dot(normal)
 
-  /* Adjust velocities */
-  const aVel = a.physics.velocity.dot(normal)
-  const bVel = b.physics.velocity.dot(normal)
+    const aMass = a.physics.mass
+    const bMass = b.physics.mass
 
-  const aMass = a.physics.mass
-  const bMass = b.physics.mass
+    const aNewVel =
+      (aVel * (aMass - bMass) + 2 * bMass * bVel) / (aMass + bMass)
+    const bNewVel =
+      (bVel * (bMass - aMass) + 2 * aMass * aVel) / (aMass + bMass)
 
-  const aNewVel = (aVel * (aMass - bMass) + 2 * bMass * bVel) / (aMass + bMass)
-  const bNewVel = (bVel * (bMass - aMass) + 2 * aMass * aVel) / (aMass + bMass)
+    a.physics.velocity.addScaledVector(normal, aNewVel - aVel)
+    b.physics.velocity.addScaledVector(normal, bNewVel - bVel)
 
-  a.physics.velocity.addScaledVector(normal, aNewVel - aVel)
-  b.physics.velocity.addScaledVector(normal, bNewVel - bVel)
+    /* Call collision callbacks */
+    if (!a.physics.contacts.has(b)) {
+      a.physics.contacts.add(b)
+      a.physics.onContactStart?.(b)
+    }
+
+    if (!b.physics.contacts.has(a)) {
+      b.physics.contacts.add(a)
+      b.physics.onContactStart?.(a)
+    }
+  } else {
+    /* Remove stale contacts */
+    a.physics.contacts.delete(b)
+    a.physics.onContactEnd?.(b)
+    b.physics.contacts.delete(a)
+    b.physics.onContactEnd?.(a)
+  }
 }
 
 export const PhysicsSystem = () => {

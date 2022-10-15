@@ -29,6 +29,9 @@ export type Entity = {
     mass: number
     radius: number
     restitution: number
+    contacts: Set<Entity>
+    onContactStart?: (other: Entity) => void
+    onContactEnd?: (other: Entity) => void
   }
 
   render?: ReactNode
@@ -45,6 +48,7 @@ export const physics = (
   mass: 1,
   radius: 1,
   restitution: 0.5,
+  contacts: new Set(),
   ...input
 })
 

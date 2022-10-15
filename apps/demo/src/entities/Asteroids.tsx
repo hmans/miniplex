@@ -51,7 +51,13 @@ const asteroids = ECS.world.derive(isAsteroid)
 export const spawnAsteroid = (props: ParticleProps) =>
   ECS.world.add({
     isAsteroid: true,
-    physics: physics({ radius: 0.4, restitution: 0.1 }),
+    physics: physics({
+      radius: 0.4,
+      restitution: 0.1,
+      onContactStart: () => {
+        console.log("collision")
+      }
+    }),
     spatialHashing: {},
     neighbors: [],
 
