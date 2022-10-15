@@ -14,8 +14,13 @@ export const CameraRigSystem = ({
 
   useFrame((_, dt) => {
     if (!player || !camera) return
+
     bodyTarget.copy(player.transform.position).add(offset)
-    camera.transform.position.lerp(bodyTarget, dt * 3)
+
+    /* Zoom out based on player velocity */
+    bodyTarget.z += player.physics!.velocity.length()
+
+    camera.transform.position.lerp(bodyTarget, dt * 2)
   })
 
   return null

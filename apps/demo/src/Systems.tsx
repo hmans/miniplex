@@ -15,7 +15,7 @@ export const Systems = () => (
     <PhysicsSystem />
     <PlayerSystem />
 
-    <CameraRigSystem offset={new Vector3(0, 0, 40)} />
+    <CameraRigSystem offset={new Vector3(0, 0, 20)} />
     <DestroySystem />
   </>
 )
