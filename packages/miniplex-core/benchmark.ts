@@ -102,7 +102,42 @@ profile("remove (with archetypes)", () => {
       world.remove(entity)
     }
 
+    return () =>
+      world.size === 0 && withPosition.size === 0 && withVelocity.size === 0
+  }
+})
+
+profile("clear", () => {
+  const world = new World<Entity>()
+  for (let i = 0; i < entityCount; i++)
+    world.add({
+      position: { x: 0, y: i, z: 0 },
+      velocity: { x: 0, y: 0, z: 0 }
+    })
+
+  return () => {
+    world.clear()
+
     return () => world.size === 0
+  }
+})
+
+profile("clear (with archetypes)", () => {
+  const world = new World<Entity>()
+  const withPosition = world.archetype("position")
+  const withVelocity = world.archetype("velocity")
+
+  for (let i = 0; i < entityCount; i++)
+    world.add({
+      position: { x: 0, y: i, z: 0 },
+      velocity: { x: 0, y: 0, z: 0 }
+    })
+
+  return () => {
+    world.clear()
+
+    return () =>
+      world.size === 0 && withPosition.size === 0 && withVelocity.size === 0
   }
 })
 
