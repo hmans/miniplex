@@ -21,10 +21,9 @@ export class Bucket<E> {
   entities = new Array<E>()
 
   /**
-   * A set of all entities known to this world. This is primarily used
-   * internally to speed up lookups.
+   * An internal map of entities to their positions in the `entities` array.
+   * This is used to quickly find the position of an entity in the array.
    */
-  private entitiesSet = new Set<any>()
   private entityPositions = new Map<E, number>()
 
   /**
@@ -62,7 +61,7 @@ export class Bucket<E> {
    * @returns True if the entity is being tracked.
    */
   has(entity: E) {
-    return this.entitiesSet.has(entity)
+    return this.entityPositions.has(entity)
   }
 
   /**
@@ -76,7 +75,6 @@ export class Bucket<E> {
     /* Add the entity if we don't already have it */
     if (!this.has(entity)) {
       this.entities.push(entity)
-      this.entitiesSet.add(entity)
       this.entityPositions.set(entity, this.entities.length - 1)
 
       this.onEntityAdded.emit(entity)
@@ -119,7 +117,6 @@ export class Bucket<E> {
       this.entityPositions.set(other, index)
 
       this.entities.pop()
-      this.entitiesSet.delete(entity)
 
       /* Emit event */
       this.onEntityRemoved.emit(entity)
