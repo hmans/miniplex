@@ -4,7 +4,7 @@ export const isArchetype = <E extends IEntity, P extends keyof E>(
   entity: E,
   ...properties: P[]
 ): entity is WithRequiredKeys<E, P> => {
-  for (const key of properties) if (!(key in entity)) return false
+  for (const key of properties) if (entity[key] === undefined) return false
   return true
 }
 

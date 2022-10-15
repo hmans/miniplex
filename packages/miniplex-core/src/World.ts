@@ -13,7 +13,7 @@ export class World<E extends IEntity> extends Bucket<E> {
    * @returns `true` if the entity was updated, `false` otherwise.
    */
   addProperty<P extends keyof E>(entity: E, property: P, value: E[P]) {
-    if (property in entity) return false
+    if (entity[property] !== undefined) return false
 
     entity[property] = value
     this.touch(entity)
@@ -30,7 +30,7 @@ export class World<E extends IEntity> extends Bucket<E> {
    * @returns `true` if the entity was updated, `false` otherwise.
    */
   removeProperty<P extends keyof E>(entity: E, property: P) {
-    if (!(property in entity)) return false
+    if (entity[property] === undefined) return false
 
     delete entity[property]
     this.touch(entity)
@@ -48,7 +48,7 @@ export class World<E extends IEntity> extends Bucket<E> {
    * @returns `true` if the entity was updated, `false` otherwise.
    */
   setProperty<P extends keyof E>(entity: E, property: P, value: E[P]) {
-    if (!(property in entity)) return false
+    if (entity[property] === undefined) return false
 
     entity[property] = value
     this.touch(entity)
