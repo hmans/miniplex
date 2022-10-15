@@ -59,8 +59,10 @@ export const spawnAsteroid = (props: ParticleProps) => {
     physics: physics({
       radius: scale * 0.9,
       restitution: 0.1,
-      onContactStart: () => {
-        entity.physics!.angularVelocity.add(tmpVec3.randomDirection())
+      onContactStart: (other, force) => {
+        entity.physics!.angularVelocity.add(
+          tmpVec3.randomDirection().multiplyScalar(force / 30)
+        )
       }
     }),
     spatialHashing: {},

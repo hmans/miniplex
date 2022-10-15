@@ -108,15 +108,18 @@ function handleBallCollision(a: PhysicsEntity, b: PhysicsEntity) {
     a.physics.velocity.addScaledVector(normal, aNewVel - aVel)
     b.physics.velocity.addScaledVector(normal, bNewVel - bVel)
 
+    /* Calculate collision force magnitude */
+    const force = Math.abs(aNewVel - bNewVel) * (aMass + bMass)
+
     /* Call collision callbacks */
     if (!a.physics.contacts.has(b)) {
       a.physics.contacts.add(b)
-      a.physics.onContactStart?.(b)
+      a.physics.onContactStart?.(b, force)
     }
 
     if (!b.physics.contacts.has(a)) {
       b.physics.contacts.add(a)
-      b.physics.onContactStart?.(a)
+      b.physics.onContactStart?.(a, force)
     }
   } else {
     /* Remove stale contacts */

@@ -30,7 +30,7 @@ export type Entity = {
     radius: number
     restitution: number
     contacts: Set<Entity>
-    onContactStart?: (other: Entity) => void
+    onContactStart?: (other: Entity, force: number) => void
     onContactEnd?: (other: Entity) => void
   }
 
