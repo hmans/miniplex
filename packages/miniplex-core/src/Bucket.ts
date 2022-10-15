@@ -20,6 +20,10 @@ export class Bucket<E> {
   /** The entities in the bucket. */
   entities = new Array<E>()
 
+  /**
+   * A set of all entities known to this world. This is primarily used
+   * internally to speed up lookups.
+   */
   private entitiesSet = new Set<any>()
 
   /**
