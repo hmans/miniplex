@@ -1,5 +1,12 @@
 # miniplex
 
+## 2.0.0-next.7
+
+### Patch Changes
+
+- Updated dependencies [8b79340]
+  - @miniplex/react@2.0.0-next.7
+
 ## 2.0.0-next.6
 
 ### Patch Changes

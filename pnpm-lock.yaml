@@ -58,7 +58,7 @@ importers:
       '@types/three': ^0.144.0
       '@vitejs/plugin-react': ^2.1.0
       material-composer: ^0.2.6
-      miniplex: workspace:2.0.0-next.6
+      miniplex: workspace:2.0.0-next.7
       r3f-perf: ^6.5.0
       randomish: ^0.1.4
       react: ^18.2.0
@@ -97,7 +97,7 @@ importers:
   packages/miniplex:
     specifiers:
       '@miniplex/core': 2.0.0-next.6
-      '@miniplex/react': 2.0.0-next.6
+      '@miniplex/react': 2.0.0-next.7
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
