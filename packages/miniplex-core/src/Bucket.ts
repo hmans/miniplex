@@ -20,7 +20,7 @@ export class Bucket<E> {
   /** The entities in the bucket. */
   entities = new Array<E>()
 
-  private entitiesSet = new WeakSet<any>()
+  private entitiesSet = new Set<any>()
 
   /**
    * The event that is emitted when an entity is added to this bucket.
@@ -43,6 +43,9 @@ export class Bucket<E> {
    */
   derivedBuckets = new WeakMap()
 
+  /**
+   * Returns the size of this bucket (the number of entities it contains).
+   */
   get size() {
     return this.entities.length
   }
