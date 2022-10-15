@@ -42,6 +42,11 @@ export class Bucket<E> {
   onEntityTouched = new Event<E>()
 
   /**
+   * The event that is emitted when the bucket is cleared.
+   */
+  onCleared = new Event()
+
+  /**
    * A cache of derived buckets. This is used to ensure that we don't create
    * multiple derived buckets for the same predicate.
    */
@@ -133,6 +138,8 @@ export class Bucket<E> {
     for (const entity of this) {
       this.remove(entity)
     }
+
+    this.onCleared.emit()
   }
 
   /**

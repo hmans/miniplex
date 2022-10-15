@@ -185,6 +185,38 @@ describe("derive", () => {
   })
 })
 
+describe("clear", () => {
+  it("removes all entities from the bucket", () => {
+    const bucket = new Bucket()
+    bucket.add({ count: 1 })
+    bucket.add({ count: 2 })
+    expect(bucket.entities).toEqual([{ count: 1 }, { count: 2 }])
+
+    bucket.clear()
+    expect(bucket.entities).toEqual([])
+  })
+
+  it("emits an event for each entity that is removed", () => {
+    const bucket = new Bucket<{ count: number }>()
+    const listener = jest.fn()
+    bucket.onEntityRemoved.addListener(listener)
+
+    bucket.add({ count: 1 })
+    bucket.add({ count: 2 })
+    bucket.clear()
+    expect(listener).toHaveBeenCalledTimes(2)
+  })
+
+  it("emits the onCleared event", () => {
+    const bucket = new Bucket()
+    const listener = jest.fn()
+    bucket.onCleared.addListener(listener)
+
+    bucket.clear()
+    expect(listener).toHaveBeenCalledTimes(1)
+  })
+})
+
 describe("size", () => {
   it("returns the size of the world", () => {
     const bucket = new Bucket()
