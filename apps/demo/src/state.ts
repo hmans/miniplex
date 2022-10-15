@@ -8,6 +8,7 @@ export const BOUNDS = 10
 export type Entity = {
   isPlayer?: true
   isAsteroid?: true
+  isBullet?: true
 
   transform?: Object3D
 

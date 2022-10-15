@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber"
 import { Perf } from "r3f-perf"
 import { StrictMode, Suspense } from "react"
 import { Asteroids } from "./entities/Asteroids"
+import { Bullets } from "./entities/Bullets"
 import { Player } from "./entities/Player"
 import { Systems } from "./Systems"
 
@@ -34,6 +35,7 @@ function App() {
 
             <Player />
             <Asteroids />
+            <Bullets />
 
             <Systems />
 

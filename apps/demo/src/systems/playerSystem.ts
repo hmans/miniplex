@@ -1,6 +1,7 @@
 import { useFrame } from "@react-three/fiber"
 import { WithRequiredKeys } from "miniplex"
 import { Vector3 } from "three"
+import { spawnBullet } from "../entities/Bullets"
 import { ECS, Entity } from "../state"
 import { useKeyboard } from "../util/useKeyboard"
 
@@ -12,6 +13,8 @@ const isPlayer = (
   !!entity.isPlayer
 
 const players = ECS.world.derive(isPlayer)
+
+let lastFireTime = 0
 
 export const PlayerSystem = () => {
   const keyboard = useKeyboard()
@@ -36,6 +39,11 @@ export const PlayerSystem = () => {
 
     if (input.rotate) {
       player.physics.angularVelocity.z -= input.rotate * 10 * dt
+    }
+
+    if (input.fire && performance.now() > lastFireTime + 65) {
+      lastFireTime = performance.now()
+      spawnBullet({ position: player.transform.position })
     }
   })
 

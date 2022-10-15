@@ -4,12 +4,7 @@ import { useLayoutEffect } from "react"
 import { Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
 import { ECS, Entity, physics } from "../state"
-
-const RenderableEntity = ({
-  entity
-}: {
-  entity: WithRequiredKeys<Entity, "render">
-}) => <>{entity.render}</>
+import { RenderableEntity } from "./RenderableEntity"
 
 export const Asteroids = () => {
   useLayoutEffect(() => {
