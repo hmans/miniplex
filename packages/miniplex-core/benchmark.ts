@@ -118,7 +118,6 @@ profile("simulate", () => {
 
 profile("simulate (with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.archetype("position")
   const withVelocity = world.archetype("velocity")
 
   for (let i = 0; i < entityCount; i++)
