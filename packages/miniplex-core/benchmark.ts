@@ -1,29 +1,81 @@
 import { World } from "./src"
 
-const count = 100_000
+const count = 1_000_000
 
-const profile = <T>(name: string, fn: () => T) => {
-  const before = Date.now()
-  const result = fn()
-  const after = Date.now()
-  console.log(`${name} took ${after - before}ms`)
-  return result
+const profile = (name: string, setup: () => () => void) => {
+  const test = setup()
+  const before = performance.now()
+  test()
+  const after = performance.now()
+  const duration = (after - before).toFixed(2)
+  console.log(`[${name}] ${duration}ms`)
+}
+
+type Vector = {
+  x: number
+  y: number
+  z: number
 }
 
 type Entity = {
-  position: {
-    x: number
-    y: number
-    z: number
+  position: Vector
+  velocity?: Vector
+}
+
+profile("adding without archetypes", () => {
+  const world = new World<Entity>()
+
+  return () => {
+    for (let i = 0; i < count; i++)
+      world.add({ position: { x: 0, y: i, z: 0 } })
   }
-  age?: number
-}
+})
 
-const world = new World<Entity>()
+profile("adding with archetypes", () => {
+  const world = new World<Entity>()
+  const withPosition = world.archetype("position")
+  const withVelocity = world.archetype("velocity")
 
-const createEntities = () => {
+  return () => {
+    for (let i = 0; i < count; i++)
+      world.add({ position: { x: 0, y: i, z: 0 } })
+  }
+})
+
+profile("simulate without archetype", () => {
+  const world = new World<Entity>()
+
   for (let i = 0; i < count; i++)
-    world.add({ position: { x: 0, y: i, z: 0 }, age: i })
-}
+    world.add({
+      position: { x: 0, y: i, z: 0 },
+      velocity: { x: 1, y: 2, z: 3 }
+    })
 
-profile("create", createEntities)
+  return () => {
+    for (const { position, velocity } of world) {
+      if (!velocity) continue
+      position.x += velocity.x
+      position.y += velocity.y
+      position.z += velocity.z
+    }
+  }
+})
+
+profile("simulate with archetype", () => {
+  const world = new World<Entity>()
+  const withVelocity = world.archetype("velocity")
+
+  for (let i = 0; i < count; i++)
+    world.add({
+      position: { x: 0, y: i, z: 0 },
+      velocity: { x: 1, y: 2, z: 3 }
+    })
+
+  return () => {
+    for (const { position, velocity } of withVelocity) {
+      position.x += velocity.x
+      position.y += velocity.y
+      position.z += velocity.z
+    }
+  }
+})
