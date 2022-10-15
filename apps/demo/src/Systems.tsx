@@ -1,4 +1,6 @@
+import { Vector3 } from "three"
 import { AgeSystem } from "./systems/AgeSystem"
+import { CameraRigSystem } from "./systems/CameraRigSystem"
 import { DestroySystem } from "./systems/DestroySystem"
 import { FindNeighborsSystem } from "./systems/findNeighborsSystem"
 import { PhysicsSystem } from "./systems/physicsSystem"
@@ -12,6 +14,8 @@ export const Systems = () => (
     <FindNeighborsSystem />
     <PhysicsSystem />
     <PlayerSystem />
+
+    <CameraRigSystem offset={new Vector3(0, 0, 40)} />
     <DestroySystem />
   </>
 )

@@ -15,6 +15,7 @@ export type Entity = {
   isPlayer?: true
   isAsteroid?: true
   isBullet?: true
+  isCamera?: true
 
   transform?: Object3D
   destroy?: true

@@ -5,6 +5,7 @@ import * as RC from "render-composer"
 import { Asteroids } from "./entities/Asteroids"
 import { Bullets } from "./entities/Bullets"
 import { Player } from "./entities/Player"
+import { ECS } from "./state"
 import { Systems } from "./Systems"
 
 function App() {
@@ -37,7 +38,12 @@ function App() {
                 shadow-camera-bottom={-100}
               />
 
-              <PerspectiveCamera position={[0, 0, 30]} makeDefault />
+              <ECS.Entity>
+                <ECS.Property name="isCamera" value={true} />
+                <ECS.Property name="transform">
+                  <PerspectiveCamera position={[0, 0, 1000]} makeDefault />
+                </ECS.Property>
+              </ECS.Entity>
 
               <Player />
               <Asteroids />
