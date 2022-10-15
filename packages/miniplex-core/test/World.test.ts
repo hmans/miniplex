@@ -30,6 +30,18 @@ describe("World", () => {
       world.addProperty(entity, "name", "foo")
       expect(listener).toHaveBeenCalledWith(entity)
     })
+
+    it("returns true if the entity was updated", () => {
+      const world = new World()
+      const entity = world.add({ count: 1 })
+      expect(world.addProperty(entity, "name", "foo")).toBe(true)
+    })
+
+    it("returns false if the entity was not updated", () => {
+      const world = new World()
+      const entity = world.add({ count: 1 })
+      expect(world.addProperty(entity, "count", 2)).toBe(false)
+    })
   })
 
   describe("removeProperty", () => {
@@ -58,6 +70,18 @@ describe("World", () => {
       world.onEntityTouched.addListener(listener)
       world.removeProperty(entity, "count")
       expect(listener).toHaveBeenCalledWith(entity)
+    })
+
+    it("returns true if the entity was updated", () => {
+      const world = new World()
+      const entity = world.add({ count: 1 })
+      expect(world.removeProperty(entity, "count")).toBe(true)
+    })
+
+    it("returns false if the entity was not updated", () => {
+      const world = new World()
+      const entity = world.add({ count: 1 })
+      expect(world.removeProperty(entity, "name")).toBe(false)
     })
   })
 

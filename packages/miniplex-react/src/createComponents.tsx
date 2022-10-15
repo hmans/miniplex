@@ -120,7 +120,10 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
       if (props.value === undefined) return
 
       world.addProperty(entity, props.name, props.value)
-      return () => world.removeProperty(entity, props.name)
+
+      return () => {
+        world.removeProperty(entity, props.name)
+      }
     }, [entity, props.name])
 
     /* Handle updates to existing property */
