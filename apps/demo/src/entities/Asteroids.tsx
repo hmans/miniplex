@@ -1,11 +1,26 @@
+import { Composable, Modules } from "material-composer-r3f"
 import { WithRequiredKeys } from "miniplex"
-import { insideCircle, plusMinus, power } from "randomish"
+import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
-import { Quaternion, Vector3 } from "three"
+import {
+  $,
+  Input,
+  InstanceID,
+  Lerp,
+  Mul,
+  ScaleAndOffset
+} from "shader-composer"
+import { Random } from "shader-composer-toybox"
+import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
 import { ECS, Entity, physics, PhysicsLayers } from "../state"
 import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
+
+export const InstanceRNG =
+  ({ seed }: { seed?: Input<"float"> } = {}) =>
+  (offset: Input<"float"> = Math.random() * 10) =>
+    Random($`${offset} + float(${InstanceID}) * 1.1005`)
 
 export const Asteroids = () => {
   useLayoutEffect(() => {
@@ -21,10 +36,17 @@ export const Asteroids = () => {
     }
   }, [])
 
+  const rand = InstanceRNG()
+
   return (
     <InstancedParticles capacity={20000}>
       <icosahedronGeometry />
-      <meshStandardMaterial color="#888" />
+
+      <Composable.MeshStandardMaterial>
+        <Modules.Color
+          color={Lerp(new Color("#666"), new Color("#888"), rand(12))}
+        />
+      </Composable.MeshStandardMaterial>
 
       <ECS.Bucket bucket={asteroids} as={RenderableEntity} />
     </InstancedParticles>
