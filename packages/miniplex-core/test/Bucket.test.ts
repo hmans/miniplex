@@ -217,6 +217,39 @@ describe("clear", () => {
   })
 })
 
+describe("dispose", () => {
+  it("removes all entities from the bucket", () => {
+    const bucket = new Bucket()
+    bucket.add({ count: 1 })
+    bucket.add({ count: 2 })
+    expect(bucket.entities).toEqual([{ count: 1 }, { count: 2 }])
+
+    bucket.dispose()
+    expect(bucket.entities).toEqual([])
+  })
+
+  it("also disposes any derived buckets", () => {
+    const bucket = new Bucket()
+    const derivedBucket = bucket.derive()
+    bucket.add({ count: 1 })
+    expect(derivedBucket.entities).toEqual([{ count: 1 }])
+
+    bucket.dispose()
+    expect(derivedBucket.entities).toEqual([])
+  })
+
+  it("also disposes buckets derived from derived buckets", () => {
+    const bucket = new Bucket()
+    const derivedBucket = bucket.derive()
+    const derivedBucket2 = derivedBucket.derive()
+    bucket.add({ count: 1 })
+    expect(derivedBucket2.entities).toEqual([{ count: 1 }])
+
+    bucket.dispose()
+    expect(derivedBucket2.entities).toEqual([])
+  })
+})
+
 describe("size", () => {
   it("returns the size of the world", () => {
     const bucket = new Bucket()

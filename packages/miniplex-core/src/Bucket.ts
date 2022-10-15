@@ -47,10 +47,15 @@ export class Bucket<E> {
   onCleared = new Event()
 
   /**
+   * The event that is emitted when the bucket is being disposed.
+   */
+  onDisposed = new Event()
+
+  /**
    * A cache of derived buckets. This is used to ensure that we don't create
    * multiple derived buckets for the same predicate.
    */
-  derivedBuckets = new WeakMap()
+  derivedBuckets = new Map()
 
   /**
    * Returns the size of this bucket (the number of entities it contains).
@@ -143,6 +148,25 @@ export class Bucket<E> {
   }
 
   /**
+   * Dispose of this bucket. This will remove all entities from the bucket, dispose of all
+   * known derived buckets, and clear all event listeners.
+   */
+  dispose() {
+    /* Emit onDisposed event */
+    this.onDisposed.emit()
+
+    /* Clear all state */
+    this.derivedBuckets.clear()
+    this.entities = []
+    this.entityPositions.clear()
+    this.onCleared.clear()
+    this.onDisposed.clear()
+    this.onEntityAdded.clear()
+    this.onEntityRemoved.clear()
+    this.onEntityTouched.clear()
+  }
+
+  /**
    * Create a new bucket derived from this bucket. The derived bucket will contain
    * only entities that match the given predicate, and will be updated reactively
    * as entities are added, removed, or touched.
@@ -191,6 +215,11 @@ export class Bucket<E> {
       } else {
         bucket.remove(entity as D)
       }
+    })
+
+    /* React to this bucket being disposed */
+    this.onDisposed.addListener(() => {
+      bucket.dispose()
     })
 
     return bucket as Bucket<D>
