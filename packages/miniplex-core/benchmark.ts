@@ -1,14 +1,22 @@
 import { World } from "./src"
 
-const entityCount = 1_000_00
+const entityCount = 1_000_000
 
 const profile = (name: string, setup: () => () => void) => {
   const test = setup()
   const before = performance.now()
   test()
   const after = performance.now()
-  const duration = (after - before).toFixed(2)
-  console.log(`${name.padStart(30)}  ${duration.padStart(8)}ms`)
+
+  /* Results */
+  const duration = after - before
+  const ops = entityCount / (after - before)
+
+  console.log(
+    `${name.padStart(30)}  ${duration.toFixed(2).padStart(8)}ms ${ops
+      .toFixed(1)
+      .padStart(10)} ops/ms`
+  )
 }
 
 type Vector = {
