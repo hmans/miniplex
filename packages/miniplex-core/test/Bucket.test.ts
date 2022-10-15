@@ -248,6 +248,15 @@ describe("dispose", () => {
     bucket.dispose()
     expect(derivedBucket2.entities).toEqual([])
   })
+
+  it("when a derived bucket is disposed, remove its listeners from us", () => {
+    const bucket = new Bucket()
+    const derivedBucket = bucket.derive()
+    expect(bucket.onEntityAdded.listeners.size).toEqual(1)
+
+    derivedBucket.dispose()
+    expect(bucket.onEntityAdded.listeners.size).toEqual(0)
+  })
 })
 
 describe("size", () => {
