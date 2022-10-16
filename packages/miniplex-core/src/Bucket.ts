@@ -82,10 +82,8 @@ export class Bucket<E> {
    * @returns The entity that was added.
    */
   add(entity: E) {
-    if (entity === undefined) return
-
     /* Add the entity if we don't already have it */
-    if (!this.has(entity)) {
+    if (entity !== undefined && !this.has(entity)) {
       this.entities.push(entity)
       this.entityPositions.set(entity, this.entities.length - 1)
 
@@ -103,9 +101,7 @@ export class Bucket<E> {
    * @returns The entity that was touched.
    */
   touch(entity: E) {
-    if (entity === undefined) return
-
-    if (this.has(entity)) {
+    if (entity !== undefined && this.has(entity)) {
       this.onEntityTouched.emit(entity)
     }
 
@@ -120,10 +116,8 @@ export class Bucket<E> {
    * @returns The entity that was removed.
    */
   remove(entity: E) {
-    if (entity === undefined) return
-
     /* Only act if we know about the entity */
-    if (this.has(entity)) {
+    if (entity !== undefined && this.has(entity)) {
       /* Remove entity from our list */
       const index = this.entityPositions.get(entity)!
       this.entityPositions.delete(entity)
