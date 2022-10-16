@@ -20,6 +20,10 @@ function App() {
               <RC.SelectiveBloomEffect intensity={5} />
               <RC.VignetteEffect />
             </RC.EffectPass>
+            <RC.EffectPass>
+              <RC.TiltShiftEffect />
+            </RC.EffectPass>
+
             <color args={["#223"]} attach="background" />
             <Suspense>
               <Environment preset="sunset" />
