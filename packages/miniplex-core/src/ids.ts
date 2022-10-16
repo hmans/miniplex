@@ -1,5 +1,12 @@
 import { IEntity } from "./types"
 
+/*
+FIXME: the following has the problem that even though we are only tracking
+entities through a WeakMap, we are keeping references to entities for all time
+in a normal Map, meaning that they will never get garbage collected. We need a
+way to unregister entities. Maybe `World` can do it for us?
+*/
+
 const entityToId = new WeakMap<IEntity, number>()
 const idToEntity = new Map<number, IEntity>()
 
