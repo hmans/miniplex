@@ -43,6 +43,10 @@ export function physicsSystem(dt: number) {
           handleBallCollision(entity, neighbor as PhysicsEntity)
         }
       }
+
+      /* Update matrix */
+      transform.updateMatrix()
+
       /* Go to sleep if we're not moving */
       if (
         physics.velocity.length() < 0.001 &&
