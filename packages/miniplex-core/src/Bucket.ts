@@ -82,6 +82,8 @@ export class Bucket<E> {
    * @returns The entity that was added.
    */
   add(entity: E) {
+    if (entity === undefined) return
+
     /* Add the entity if we don't already have it */
     if (!this.has(entity)) {
       this.entities.push(entity)
@@ -101,6 +103,8 @@ export class Bucket<E> {
    * @returns The entity that was touched.
    */
   touch(entity: E) {
+    if (entity === undefined) return
+
     if (this.has(entity)) {
       this.onEntityTouched.emit(entity)
     }
@@ -116,6 +120,8 @@ export class Bucket<E> {
    * @returns The entity that was removed.
    */
   remove(entity: E) {
+    if (entity === undefined) return
+
     /* Only act if we know about the entity */
     if (this.has(entity)) {
       /* Remove entity from our list */
@@ -179,9 +185,7 @@ export class Bucket<E> {
   ): Bucket<D> {
     /* Check if we already have a derived bucket for this predicate */
     const existingBucket = this.derivedBuckets.get(predicate)
-    if (existingBucket) {
-      return existingBucket
-    }
+    if (existingBucket) return existingBucket
 
     /* Create bucket */
     const bucket = new Bucket<D>()
