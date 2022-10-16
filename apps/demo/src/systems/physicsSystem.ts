@@ -45,7 +45,7 @@ export function physicsSystem(dt: number) {
       }
 
       /* Update matrix */
-      transform.updateMatrix()
+      if (!transform.matrixAutoUpdate) transform.updateMatrix()
 
       /* Go to sleep if we're not moving */
       if (
