@@ -19,6 +19,10 @@ export function physicsSystem(dt: number) {
     accumulatedTime -= STEP
 
     for (const entity of entities) {
+      /* Make sure automatic matrix transforms are disabled */
+      entity.transform.matrixAutoUpdate = false
+
+      /* Skip if sleeping */
       if (entity.physics.sleeping) continue
 
       const { transform, physics } = entity
@@ -45,7 +49,7 @@ export function physicsSystem(dt: number) {
       }
 
       /* Update matrix */
-      if (!transform.matrixAutoUpdate) transform.updateMatrix()
+      transform.updateMatrix()
 
       /* Go to sleep if we're not moving */
       if (

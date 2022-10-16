@@ -107,7 +107,6 @@ export const spawnAsteroid = (
           {...props}
           scale={scale}
           quaternion={new Quaternion().random()}
-          matrixAutoUpdate={false}
         />
       </ECS.Property>
     )
