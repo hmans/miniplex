@@ -55,7 +55,7 @@ function App() {
 
               <Systems />
 
-              <Perf position="bottom-right" matrixUpdate />
+              {/* <Perf position="bottom-right" matrixUpdate /> */}
             </Suspense>
           </RC.RenderPipeline>
         </StrictMode>
