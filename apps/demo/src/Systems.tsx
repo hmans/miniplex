@@ -1,16 +1,21 @@
-import { useFrame } from "@react-three/fiber"
-import { MathUtils } from "three"
-import { findNeighborsSystem } from "./systems/findNeighborsSystem"
-import { physicsSystem } from "./systems/physicsSystem"
-import { spatialHashingSystem } from "./systems/spatialHashingSystem"
+import { Vector3 } from "three"
+import { AgeSystem } from "./systems/AgeSystem"
+import { CameraRigSystem } from "./systems/CameraRigSystem"
+import { DestroySystem } from "./systems/DestroySystem"
+import { FindNeighborsSystem } from "./systems/findNeighborsSystem"
+import { PhysicsSystem } from "./systems/physicsSystem"
+import { PlayerSystem } from "./systems/playerSystem"
+import { SpatialHashingSystem } from "./systems/spatialHashingSystem"
 
-export const Systems = () => {
-  useFrame(function Systems(_, delta) {
-    const dt = MathUtils.clamp(delta, 0, 0.2)
-    spatialHashingSystem()
-    findNeighborsSystem()
-    physicsSystem(dt)
-  })
+export const Systems = () => (
+  <>
+    <AgeSystem />
+    <SpatialHashingSystem />
+    <FindNeighborsSystem />
+    <PhysicsSystem />
+    <PlayerSystem />
 
-  return null
-}
+    <CameraRigSystem offset={new Vector3(0, -20, 30)} />
+    <DestroySystem />
+  </>
+)
