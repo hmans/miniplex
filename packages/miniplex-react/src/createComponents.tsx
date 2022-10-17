@@ -132,12 +132,16 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     useIsomorphicLayoutEffect(() => {
       if (props.value === undefined) return
 
-      const added = world.addComponent(entity, props.name, props.value)
-      const originalValue = entity[props.name]
+      if (!world.addComponent(entity, props.name, props.value)) {
+        throw new Error(
+          `Tried to add "${String(
+            props.name
+          )}" component to an entity that already has it.`
+        )
+      }
 
       return () => {
-        if (added) world.removeComponent(entity, props.name)
-        else entity[props.name] = originalValue
+        world.removeComponent(entity, props.name)
       }
     }, [entity, props.name])
 

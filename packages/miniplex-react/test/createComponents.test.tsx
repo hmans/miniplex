@@ -161,33 +161,19 @@ describe("<Property>", () => {
   })
 
   describe("when the entity already has the component", () => {
-    it("updates the component", () => {
+    it("throws an error", () => {
       const world = new World()
       const { Entity, Component } = createComponents(world)
+
       const entity = world.add({ foo: "bar" })
 
-      render(
-        <Entity entity={entity}>
-          <Component name="foo" value="baz" />
-        </Entity>
-      )
-
-      expect(world.entities[0].foo).toBe("baz")
-    })
-
-    it("does not remove the component when unmounted", () => {
-      const world = new World()
-      const { Entity, Component } = createComponents(world)
-      const entity = world.add({ foo: "bar" })
-
-      const { unmount } = render(
-        <Entity entity={entity}>
-          <Component name="foo" value="baz" />
-        </Entity>
-      )
-
-      unmount()
-      expect(world.entities[0].foo).toBe("bar")
+      expect(() =>
+        render(
+          <Entity entity={entity}>
+            <Component name="foo" value="baz" />
+          </Entity>
+        )
+      ).toThrowError()
     })
   })
 })
