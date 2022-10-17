@@ -5,16 +5,12 @@ import "./style.css"
 import * as engine from "./systems/engine"
 
 engine.start((world, _runner) => {
-  world.add({
-    transform: new AmbientLight("orange", 0.2)
-  })
-
-  const light = world.add({
-    transform: new THREE.DirectionalLight()
-  })
-
+  /* Add some lights */
+  world.add({ transform: new AmbientLight("orange", 0.2) })
+  const light = world.add({ transform: new THREE.DirectionalLight() })
   light.transform.position.set(10, 20, 30)
 
+  /* Add a bunch of random entities */
   for (let i = 0; i < 100; i++) {
     const e = world.add({
       transform: new THREE.Mesh(
