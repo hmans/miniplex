@@ -1,6 +1,6 @@
 import * as THREE from "three"
 
-const scene = new THREE.Scene()
+export const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
@@ -15,16 +15,6 @@ const renderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
-const mesh = new THREE.Mesh(
-  new THREE.IcosahedronGeometry(),
-  new THREE.MeshBasicMaterial({ color: "red" })
-)
-
-scene.add(mesh)
-
 export function update() {
-  mesh.rotation.x += 0.01
-  mesh.rotation.y += 0.01
-
   renderer.render(scene, camera)
 }
