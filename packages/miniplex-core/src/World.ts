@@ -8,8 +8,10 @@ export class World<E extends IEntity> extends Bucket<E> {
 
     /* Forget the ID again when an entity is removed */
     this.onEntityRemoved.addListener((entity) => {
-      this.idToEntity.delete(this.entityToId.get(entity)!)
-      this.entityToId.delete(entity)
+      if (this.entityToId.has(entity)) {
+        this.idToEntity.delete(this.entityToId.get(entity)!)
+        this.entityToId.delete(entity)
+      }
     })
   }
 
@@ -26,13 +28,12 @@ export class World<E extends IEntity> extends Bucket<E> {
    * @returns The ID of the entity, or `undefined` if the entity is not known to this world.
    */
   id(entity: E) {
-    if (!this.entityToId.has(entity)) {
-      this.entityToId.set(entity, this.nextId)
-      this.idToEntity.set(this.nextId, entity)
-      return this.nextId++
-    }
+    const id = this.entityToId.get(entity)
+    if (!!id) return id
 
-    return this.entityToId.get(entity)
+    this.entityToId.set(entity, this.nextId)
+    this.idToEntity.set(this.nextId, entity)
+    return this.nextId++
   }
 
   /**
