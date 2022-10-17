@@ -1,5 +1,11 @@
 # miniplex
 
+## 2.0.0-next.9
+
+### Patch Changes
+
+- 873381c: Changed type signature of `add` to return the input entity's type. This is an experimental change that may be reverted.
+
 ## 2.0.0-next.8
 
 ### Patch Changes
