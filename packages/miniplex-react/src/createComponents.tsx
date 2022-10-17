@@ -118,7 +118,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     />
   )
 
-  const Property = <P extends keyof E>(props: {
+  const Component = <P extends keyof E>(props: {
     name: P
     value?: E[P]
     children?: ReactNode
@@ -126,7 +126,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     const entity = useContext(EntityContext)
 
     if (!entity) {
-      throw new Error("Property must be a child of Entity")
+      throw new Error("<Component> must be a child of <Entity>")
     }
 
     /* Handle creation and removal of component */
@@ -172,7 +172,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     Entities,
     Bucket,
     Archetype,
-    Property,
+    Component,
     useCurrentEntity,
     useArchetype
   }
