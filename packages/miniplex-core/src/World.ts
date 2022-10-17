@@ -3,32 +3,48 @@ import { Bucket } from "./Bucket"
 import { IEntity } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
-  private nextId = 0
-
-  private entityToId = new Map<E, number>()
-  private idToEntity = new Map<number, E>()
-
-  id(entity: E) {
-    return this.entityToId.get(entity)!
-  }
-
-  entity(id: number) {
-    return this.idToEntity.get(id)!
-  }
-
   constructor(...args: ConstructorParameters<typeof Bucket<E>>) {
     super(...args)
 
+    /* Give newly added entities an ID */
     this.onEntityAdded.addListener((entity) => {
       this.entityToId.set(entity, this.nextId)
       this.idToEntity.set(this.nextId, entity)
       this.nextId++
     })
 
+    /* Forget the ID again when an entity is removed */
     this.onEntityRemoved.addListener((entity) => {
       this.idToEntity.delete(this.entityToId.get(entity)!)
       this.entityToId.delete(entity)
     })
+  }
+
+  /* ID generation */
+  private nextId = 0
+  private entityToId = new Map<E, number>()
+  private idToEntity = new Map<number, E>()
+
+  /**
+   * Returns the ID of the given entity. If the entity is not known to this world,
+   * it returns `undefined`.
+   *
+   * @param entity The entity to get the ID of.
+   * @returns The ID of the entity, or `undefined` if the entity is not known to this world.
+   */
+  id(entity: E) {
+    return this.entityToId.get(entity)
+  }
+
+  /**
+   * Given an ID, returns the entity with that ID. If the ID is not known to this world,
+   * it returns `undefined`.
+   *
+   * @param id The ID of the entity to get.
+   * @returns The entity with the given ID, or `undefined` if the ID is not known to this world.
+   */
+  entity(id: number) {
+    return this.idToEntity.get(id)
   }
 
   /**
