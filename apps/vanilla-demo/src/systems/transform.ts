@@ -4,11 +4,15 @@ import { scene } from "./engine"
 const withTransform = world.archetype("transform")
 
 withTransform.onEntityAdded.addListener((entity) => {
-  scene.add(entity.transform)
+  if (entity.parent?.transform) {
+    entity.parent.transform.add(entity.transform)
+  } else {
+    scene.add(entity.transform)
+  }
 })
 
 withTransform.onEntityRemoved.addListener((entity) => {
-  scene.remove(entity.transform)
+  entity.transform.parent?.remove(entity.transform)
 })
 
 export function update() {}
