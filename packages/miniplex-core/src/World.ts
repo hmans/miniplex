@@ -6,13 +6,6 @@ export class World<E extends IEntity> extends Bucket<E> {
   constructor(...args: ConstructorParameters<typeof Bucket<E>>) {
     super(...args)
 
-    /* Give newly added entities an ID */
-    this.onEntityAdded.addListener((entity) => {
-      this.entityToId.set(entity, this.nextId)
-      this.idToEntity.set(this.nextId, entity)
-      this.nextId++
-    })
-
     /* Forget the ID again when an entity is removed */
     this.onEntityRemoved.addListener((entity) => {
       this.idToEntity.delete(this.entityToId.get(entity)!)
@@ -33,6 +26,12 @@ export class World<E extends IEntity> extends Bucket<E> {
    * @returns The ID of the entity, or `undefined` if the entity is not known to this world.
    */
   id(entity: E) {
+    if (!this.entityToId.has(entity)) {
+      this.entityToId.set(entity, this.nextId)
+      this.idToEntity.set(this.nextId, entity)
+      return this.nextId++
+    }
+
     return this.entityToId.get(entity)
   }
 
