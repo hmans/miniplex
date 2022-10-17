@@ -1,5 +1,13 @@
 # miniplex
 
+## 2.0.0-next.8
+
+### Patch Changes
+
+- 5a5244e: The global `id(entity)` export has been removed, and replaced with a `World`-specific ID mechanism, `world.id(entity)` and `world.entity(id)`.
+- 6808a5d: All buckets can now be instantiated with an initial list of entities.
+- c28a404: From "properties" back to "components". The methods on `World` are now once again called `addComponent`, `setComponent` and `removeComponent`, and the React component has been renamed from `<Property>` to `<Component>`.
+
 ## 2.0.0-next.6
 
 ### Patch Changes
