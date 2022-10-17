@@ -62,7 +62,7 @@ importers:
       add: ^2.0.6
       material-composer: ^0.2.6
       material-composer-r3f: ^0.2.5
-      miniplex: workspace:2.0.0-next.7
+      miniplex: workspace:2.0.0-next.8
       postprocessing: ^6.28.7
       r3f-perf: ^6.5.0
       randomish: ^0.1.6
@@ -118,13 +118,16 @@ importers:
   packages/hmans-id:
     specifiers: {}
 
+  packages/hmans-id:
+    specifiers: {}
+
   packages/hmans-queue:
     specifiers: {}
 
   packages/miniplex:
     specifiers:
-      '@miniplex/core': 2.0.0-next.6
-      '@miniplex/react': 2.0.0-next.7
+      '@miniplex/core': 2.0.0-next.8
+      '@miniplex/react': 2.0.0-next.8
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
@@ -152,7 +155,7 @@ importers:
       '@hmans/id': workspace:^0.0.1
       '@hmans/use-const': ^0.0.1
       '@hmans/use-rerender': ^0.0.2
-      '@miniplex/core': 2.0.0-next.6
+      '@miniplex/core': 2.0.0-next.8
       react: ^18.2.0
       react-dom: ^18.2.0
       react-merge-refs: ^1.1.0
