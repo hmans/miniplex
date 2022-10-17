@@ -18,7 +18,7 @@
     "miniplex": "workspace:2.0.0-next.7",
     "postprocessing": "^6.28.7",
     "r3f-perf": "^6.5.0",
-    "randomish": "^0.1.4",
+    "randomish": "^0.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "render-composer": "^0.2.7",

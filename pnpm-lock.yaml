@@ -63,7 +63,7 @@ importers:
       miniplex: workspace:2.0.0-next.7
       postprocessing: ^6.28.7
       r3f-perf: ^6.5.0
-      randomish: ^0.1.4
+      randomish: ^0.1.5
       react: ^18.2.0
       react-dom: ^18.2.0
       render-composer: ^0.2.7
@@ -85,7 +85,7 @@ importers:
       miniplex: link:../../packages/miniplex
       postprocessing: 6.28.7_three@0.145.0
       r3f-perf: 6.5.0_gpcxvdsfl5xtf7s5g5krcozdg4
-      randomish: 0.1.4
+      randomish: 0.1.5
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       render-composer: 0.2.7_lys5yume4wfgmfw3a6y7perayy
@@ -5695,8 +5695,8 @@ packages:
       zustand: 3.7.2_react@18.2.0
     dev: false
 
-  /randomish/0.1.4:
-    resolution: {integrity: sha512-Apk+kYQjTJPuvg2MvxhmUcdxPjkzUl02LjxOn8UjERW338PQKsn2lFVf/mjSd1UMcRea4eHWrnVzoCBo0wEfrw==}
+  /randomish/0.1.5:
+    resolution: {integrity: sha512-rac3M2SpaMLAwAY6/glJVujAWOyjqc1uu3p9TQEoWrULZik4NhwJbNvO61MgwRXW5rtKvEAwAjMYktXgcWacNA==}
     dev: false
 
   /react-composer/5.0.3_react@18.2.0:
