@@ -19,6 +19,7 @@ import React, {
 } from "react"
 import { useArchetype as useArchetypeGlobal, useEntities } from "./hooks"
 import { mergeRefs } from "./lib/mergeRefs"
+import { id } from "@hmans/id"
 
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect
@@ -78,7 +79,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
   }) => (
     <>
       {entities.map((entity) => (
-        <Entity key={world.id(entity)} entity={entity} {...props} />
+        <Entity key={id(entity)} entity={entity} {...props} />
       ))}
     </>
   )
