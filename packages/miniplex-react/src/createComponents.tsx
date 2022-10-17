@@ -31,8 +31,8 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
 
   const useCurrentEntity = () => useContext(EntityContext)
 
-  const useArchetype = <P extends keyof E>(...properties: P[]) =>
-    useArchetypeGlobal(world, ...properties)
+  const useArchetype = <P extends keyof E>(...components: P[]) =>
+    useArchetypeGlobal(world, ...components)
 
   const RawEntity = <D extends E>({
     children: givenChildren,
@@ -100,10 +100,10 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
   }
 
   const Archetype = <A extends keyof E>({
-    properties,
+    components,
     ...props
   }: {
-    properties: A[] | A
+    components: A[] | A
     children?: EntityChildren<WithRequiredKeys<E, A>>
     as?: FunctionComponent<{
       entity: WithRequiredKeys<E, A>
@@ -112,13 +112,13 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
   }) => (
     <Bucket
       bucket={archetype(
-        ...(Array.isArray(properties) ? properties : [properties])
+        ...(Array.isArray(components) ? components : [components])
       )}
       {...props}
     />
   )
 
-  const Property = <P extends keyof E>(props: {
+  const Component = <P extends keyof E>(props: {
     name: P
     value?: E[P]
     children?: ReactNode
@@ -126,26 +126,26 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     const entity = useContext(EntityContext)
 
     if (!entity) {
-      throw new Error("Property must be a child of Entity")
+      throw new Error("<Component> must be a child of <Entity>")
     }
 
-    /* Handle creation and removal of property */
+    /* Handle creation and removal of component */
     useIsomorphicLayoutEffect(() => {
       if (props.value === undefined) return
 
-      const added = world.addProperty(entity, props.name, props.value)
+      const added = world.addComponent(entity, props.name, props.value)
       const originalValue = entity[props.name]
 
       return () => {
-        if (added) world.removeProperty(entity, props.name)
+        if (added) world.removeComponent(entity, props.name)
         else entity[props.name] = originalValue
       }
     }, [entity, props.name])
 
-    /* Handle updates to existing property */
+    /* Handle updates to existing component */
     useIsomorphicLayoutEffect(() => {
       if (props.value === undefined) return
-      world.setProperty(entity, props.name, props.value)
+      world.setComponent(entity, props.name, props.value)
     }, [entity, props.name, props.value])
 
     /* Handle setting of child value */
@@ -156,7 +156,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
         ref: mergeRefs([
           (child as any).ref,
           (ref: E[P]) => {
-            world.addProperty(entity, props.name, ref)
+            world.addComponent(entity, props.name, ref)
           }
         ])
       })
@@ -172,7 +172,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     Entities,
     Bucket,
     Archetype,
-    Property,
+    Component,
     useCurrentEntity,
     useArchetype
   }

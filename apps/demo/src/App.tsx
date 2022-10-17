@@ -43,10 +43,10 @@ function App() {
               />
 
               <ECS.Entity>
-                <ECS.Property name="isCamera" value={true} />
-                <ECS.Property name="transform">
+                <ECS.Component name="isCamera" value={true} />
+                <ECS.Component name="transform">
                   <PerspectiveCamera position={[0, 0, 1000]} makeDefault />
-                </ECS.Property>
+                </ECS.Component>
               </ECS.Entity>
 
               <Player />

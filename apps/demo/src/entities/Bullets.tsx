@@ -11,7 +11,7 @@ export const Bullets = () => (
     <planeGeometry args={[0.15, 0.5]} />
     <meshStandardMaterial color={new Color("orange").multiplyScalar(5)} />
 
-    <ECS.Archetype properties="isBullet" as={RenderableEntity} />
+    <ECS.Archetype components="isBullet" as={RenderableEntity} />
   </InstancedParticles>
 )
 
@@ -43,13 +43,13 @@ export const spawnBullet = () => {
 
       onContactStart: (other) => {
         /* Destroy bullet */
-        ECS.world.addProperty(bullet, "destroy", true)
+        ECS.world.addComponent(bullet, "destroy", true)
 
         /* If the other entity has health, damage it */
         if (other.health !== undefined) {
           other.health -= 270
           if (other.health <= 0) {
-            ECS.world.addProperty(other, "destroy", true)
+            ECS.world.addComponent(other, "destroy", true)
 
             /* If the other entity was an asteroid, spawn new asteroids */
             if (other.isAsteroid) {
@@ -87,12 +87,12 @@ export const spawnBullet = () => {
     neighbors: [],
 
     render: (
-      <ECS.Property name="transform">
+      <ECS.Component name="transform">
         <Particle
           position={player.transform!.position}
           quaternion={player.transform!.quaternion}
         />
-      </ECS.Property>
+      </ECS.Component>
     )
   })
 

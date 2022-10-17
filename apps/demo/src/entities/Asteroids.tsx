@@ -102,13 +102,13 @@ export const spawnAsteroid = (
     neighbors: [],
 
     render: (
-      <ECS.Property name="transform">
+      <ECS.Component name="transform">
         <Particle
           {...props}
           scale={scale}
           quaternion={new Quaternion().random()}
         />
-      </ECS.Property>
+      </ECS.Component>
     )
   })
 
