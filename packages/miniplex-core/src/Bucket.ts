@@ -130,9 +130,11 @@ export class Bucket<E> {
       const index = this.entityPositions.get(entity)!
       this.entityPositions.delete(entity)
 
-      const other = this.entities[this.entities.length - 1]
-      this.entities[index] = other
-      this.entityPositions.set(other, index)
+      if (this.entities.length > 1) {
+        const other = this.entities[this.entities.length - 1]
+        this.entities[index] = other
+        this.entityPositions.set(other, index)
+      }
 
       this.entities.pop()
 

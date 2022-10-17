@@ -27,6 +27,17 @@ describe("has", () => {
     const entity = { id: 1 }
     expect(bucket.has(entity)).toBe(false)
   })
+
+  it("returns true when the entity was added, and false after it was removed", () => {
+    const bucket = new Bucket()
+    const entity = { id: 1 }
+
+    bucket.add(entity)
+    expect(bucket.has(entity)).toBe(true)
+
+    bucket.remove(entity)
+    expect(bucket.has(entity)).toBe(false)
+  })
 })
 
 describe("add", () => {

@@ -28,8 +28,12 @@ export class World<E extends IEntity> extends Bucket<E> {
    * @returns The ID of the entity, or `undefined` if the entity is not known to this world.
    */
   id(entity: E) {
+    /* Only return IDs for entities we know about */
+    if (!this.has(entity)) return undefined
+
+    /* Return existing ID if we have one */
     const id = this.entityToId.get(entity)
-    if (!!id) return id
+    if (id !== undefined) return id
 
     this.entityToId.set(entity, this.nextId)
     this.idToEntity.set(this.nextId, entity)
