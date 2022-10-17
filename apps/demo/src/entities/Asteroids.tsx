@@ -1,6 +1,7 @@
 import { id } from "@hmans/id"
 import { Composable, Modules } from "material-composer-r3f"
 import { Bucket, WithRequiredKeys } from "miniplex"
+import { useEntities } from "miniplex/react"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { $, Input, InstanceID, Lerp } from "shader-composer"
@@ -32,6 +33,8 @@ export const Asteroids = () => {
 
   const rand = InstanceRNG()
 
+  useEntities(segmentedAsteroids)
+
   return (
     <InstancedParticles capacity={20000}>
       <icosahedronGeometry />
@@ -42,8 +45,8 @@ export const Asteroids = () => {
         />
       </Composable.MeshStandardMaterial>
 
-      {segmentedAsteroids.segments.map((segment, i) => (
-        <ECS.Bucket key={i} bucket={segment} as={RenderableEntity} />
+      {segmentedAsteroids.entities.map((segment, i) => (
+        <ECS.MemoizedBucket key={i} bucket={segment} as={RenderableEntity} />
       ))}
     </InstancedParticles>
   )
@@ -62,53 +65,53 @@ export type Asteroid = WithRequiredKeys<
 export const isAsteroid = (entity: Entity): entity is Asteroid =>
   "isAsteroid" in entity
 
-class Segments<E> {
-  segments: Bucket<E>[] = []
-
+class SegmentedBucket<E> extends Bucket<Bucket<E>> {
   private entityToSegment = new Map<E, Bucket<E>>()
 
   get current() {
-    return this.segments[this.segments.length - 1]
+    return this.entities[this.entities.length - 1]
   }
 
   constructor(public source: Bucket<E>, public segmentSize = 50) {
-    this.segments.push(new Bucket<E>())
+    super()
+
+    this.add(new Bucket<E>())
+
+    const add = (entity: E) => {
+      this.current.add(entity)
+      this.entityToSegment.set(entity, this.current)
+
+      /* Create a new segment if we're over the limit */
+      if (this.current.size >= this.segmentSize) {
+        this.add(new Bucket<E>())
+      }
+    }
+
+    const remove = (entity: E) => {
+      const segment = this.entityToSegment.get(entity)
+      if (segment) {
+        segment.remove(entity)
+        this.entityToSegment.delete(entity)
+      }
+    }
 
     /* Transfer existing entities */
     for (const entity of source) {
-      this.add(entity)
+      add(entity)
     }
 
     source.onEntityAdded.addListener((e) => {
-      this.add(e)
+      add(e)
     })
 
     source.onEntityRemoved.addListener((e) => {
-      this.remove(e)
+      remove(e)
     })
-  }
-
-  add(entity: E) {
-    this.current.add(entity)
-    this.entityToSegment.set(entity, this.current)
-
-    /* Create a new segment if we're over the limit */
-    if (this.current.size >= this.segmentSize) {
-      this.segments.push(new Bucket<E>())
-    }
-  }
-
-  remove(entity: E) {
-    const segment = this.entityToSegment.get(entity)
-    if (segment) {
-      segment.remove(entity)
-      this.entityToSegment.delete(entity)
-    }
   }
 }
 
 const asteroids = ECS.world.derive(isAsteroid)
-const segmentedAsteroids = new Segments(asteroids)
+const segmentedAsteroids = new SegmentedBucket(asteroids)
 
 const tmpVec3 = new Vector3()
 
