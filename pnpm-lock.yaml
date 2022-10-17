@@ -111,11 +111,13 @@ importers:
     specifiers:
       '@types/three': ^0.144.0
       miniplex: workspace:2.0.0-next.8
+      randomish: ^0.1.6
       three: ^0.145.0
       typescript: ^4.6.4
       vite: ^3.1.0
     dependencies:
       miniplex: link:../../packages/miniplex
+      randomish: 0.1.6
       three: 0.145.0
     devDependencies:
       '@types/three': 0.144.0
