@@ -2,11 +2,12 @@ import { World } from "miniplex"
 import { Entity } from "./engine"
 
 export function transformSystem(world: World<Entity>) {
-  const withTransform = world.archetype("transform")
+  const entities = world.archetype("transform")
   const engines = world.archetype("engine")
 
-  withTransform.onEntityAdded.addListener((entity) => {
+  entities.onEntityAdded.addListener((entity) => {
     const [{ engine }] = engines
+
     if (entity.parent?.transform) {
       entity.parent.transform.add(entity.transform)
     } else {
@@ -14,7 +15,7 @@ export function transformSystem(world: World<Entity>) {
     }
   })
 
-  withTransform.onEntityRemoved.addListener((entity) => {
+  entities.onEntityRemoved.addListener((entity) => {
     entity.transform.parent?.remove(entity.transform)
   })
 
