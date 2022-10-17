@@ -3,6 +3,34 @@ import { Bucket } from "./Bucket"
 import { IEntity } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
+  private nextId = 0
+
+  private entityToId = new Map<E, number>()
+  private idToEntity = new Map<number, E>()
+
+  id(entity: E) {
+    return this.entityToId.get(entity)!
+  }
+
+  entity(id: number) {
+    return this.idToEntity.get(id)!
+  }
+
+  constructor(...args: ConstructorParameters<typeof Bucket<E>>) {
+    super(...args)
+
+    this.onEntityAdded.addListener((entity) => {
+      this.entityToId.set(entity, this.nextId)
+      this.idToEntity.set(this.nextId, entity)
+      this.nextId++
+    })
+
+    this.onEntityRemoved.addListener((entity) => {
+      this.idToEntity.delete(this.entityToId.get(entity)!)
+      this.entityToId.delete(entity)
+    })
+  }
+
   /**
    * Adds a component to an entity.
    * If the entity already has the component, this function will do nothing.

@@ -79,7 +79,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
   }) => (
     <>
       {entities.map((entity) => (
-        <Entity key={id(entity)} entity={entity} {...props} />
+        <Entity key={world.id(entity)} entity={entity} {...props} />
       ))}
     </>
   )
