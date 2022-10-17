@@ -1,4 +1,3 @@
-import { id } from "@hmans/id"
 import { Composable, Modules } from "material-composer-r3f"
 import { Bucket, WithRequiredKeys } from "miniplex"
 import { useEntities } from "miniplex/react"
