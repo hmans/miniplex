@@ -1,18 +1,18 @@
 import { world } from "../ecs"
 import { scene } from "./engine"
 
-const withTransform = world.archetype("object3D")
+const withTransform = world.archetype("transform")
 
 withTransform.onEntityAdded.addListener((entity) => {
-  if (entity.parent?.object3D) {
-    entity.parent.object3D.add(entity.object3D)
+  if (entity.parent?.transform) {
+    entity.parent.transform.add(entity.transform)
   } else {
-    scene.add(entity.object3D)
+    scene.add(entity.transform)
   }
 })
 
 withTransform.onEntityRemoved.addListener((entity) => {
-  entity.object3D.parent?.remove(entity.object3D)
+  entity.transform.parent?.remove(entity.transform)
 })
 
 export function update() {}

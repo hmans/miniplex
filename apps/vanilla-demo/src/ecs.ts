@@ -1,7 +1,7 @@
 import { World } from "miniplex"
 
 export type Entity = {
-  object3D?: THREE.Object3D
+  transform?: THREE.Object3D
   parent?: Entity
   autorotate?: THREE.Vector3
 }

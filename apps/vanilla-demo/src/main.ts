@@ -8,18 +8,18 @@ import * as engine from "./systems/engine"
 import * as transform from "./systems/transform"
 
 world.add({
-  object3D: new AmbientLight("orange", 0.2)
+  transform: new AmbientLight("orange", 0.2)
 })
 
 const light = world.add({
-  object3D: new THREE.DirectionalLight()
+  transform: new THREE.DirectionalLight()
 })
 
-light.object3D.position.set(10, 20, 30)
+light.transform.position.set(10, 20, 30)
 
 for (let i = 0; i < 100; i++) {
   const e = world.add({
-    object3D: new THREE.Mesh(
+    transform: new THREE.Mesh(
       chance(0.5) ? new THREE.IcosahedronGeometry() : new THREE.BoxGeometry(),
       new THREE.MeshStandardMaterial({
         color: chance(0.5) ? "yellow" : "orange"
@@ -29,7 +29,7 @@ for (let i = 0; i < 100; i++) {
     autorotate: new THREE.Vector3(plusMinus(2), plusMinus(2), plusMinus(2))
   })
 
-  e.object3D.position.set(plusMinus(10), plusMinus(10), plusMinus(5))
+  e.transform.position.set(plusMinus(10), plusMinus(10), plusMinus(5))
 }
 
 let lastTime = performance.now()
