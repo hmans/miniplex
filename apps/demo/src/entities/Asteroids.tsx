@@ -1,6 +1,6 @@
 import { id } from "@hmans/id"
 import { Composable, Modules } from "material-composer-r3f"
-import { WithRequiredKeys } from "miniplex"
+import { Bucket, WithRequiredKeys } from "miniplex"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { $, Input, InstanceID, Lerp } from "shader-composer"
@@ -42,8 +42,9 @@ export const Asteroids = () => {
         />
       </Composable.MeshStandardMaterial>
 
-      <ECS.Bucket bucket={asteroidsOdd} as={RenderableEntity} />
-      <ECS.Bucket bucket={asteroidsEven} as={RenderableEntity} />
+      {segmentedAsteroids.map((bucket, i) => (
+        <ECS.Bucket key={i} bucket={bucket} as={RenderableEntity} />
+      ))}
     </InstancedParticles>
   )
 }
@@ -61,9 +62,13 @@ export type Asteroid = WithRequiredKeys<
 export const isAsteroid = (entity: Entity): entity is Asteroid =>
   "isAsteroid" in entity
 
+const segment = <E,>(bucket: Bucket<E>, count = 2) =>
+  new Array(count)
+    .fill(0)
+    .map((_, i) => bucket.derive((e) => id(e) % count === i))
+
 const asteroids = ECS.world.derive(isAsteroid)
-const asteroidsOdd = asteroids.derive((e) => id(e) % 2 === 1)
-const asteroidsEven = asteroids.derive((e) => id(e) % 2 === 0)
+const segmentedAsteroids = segment(asteroids, 10)
 
 const tmpVec3 = new Vector3()
 
