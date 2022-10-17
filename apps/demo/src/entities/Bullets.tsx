@@ -83,7 +83,7 @@ export const spawnBullet = () => {
       }
     }),
 
-    spatialHashing: {},
+    spatialHashing: true,
     neighbors: [],
 
     render: (
