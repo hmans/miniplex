@@ -1,4 +1,4 @@
-import { archetype, Bucket, id } from "../src"
+import { archetype, Bucket } from "../src"
 
 describe("new Bucket", () => {
   it("creates a bucket", () => {
@@ -25,6 +25,17 @@ describe("has", () => {
   it("returns false if the bucket does not have the entity", () => {
     const bucket = new Bucket()
     const entity = { id: 1 }
+    expect(bucket.has(entity)).toBe(false)
+  })
+
+  it("returns true when the entity was added, and false after it was removed", () => {
+    const bucket = new Bucket()
+    const entity = { id: 1 }
+
+    bucket.add(entity)
+    expect(bucket.has(entity)).toBe(true)
+
+    bucket.remove(entity)
     expect(bucket.has(entity)).toBe(false)
   })
 })
@@ -309,23 +320,5 @@ describe("Symbol.iterator", () => {
 
     expect(entities).toEqual([entity3, entity2, entity1])
     expect(bucket.entities).toEqual([])
-  })
-})
-
-describe("id", () => {
-  it("returns a numerical ID for the specified entity", () => {
-    const entity = {}
-    expect(id(entity)).toBe(0)
-  })
-
-  it("returns the same ID for the same entity", () => {
-    const entity = {}
-    expect(id(entity)).toBe(id(entity))
-  })
-
-  it("returns a different ID for different entities", () => {
-    const entity1 = {}
-    const entity2 = {}
-    expect(id(entity1)).not.toBe(id(entity2))
   })
 })

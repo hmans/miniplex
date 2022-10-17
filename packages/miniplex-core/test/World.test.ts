@@ -7,6 +7,46 @@ describe("World", () => {
     expect(world).toBeInstanceOf(Bucket)
   })
 
+  describe("id", () => {
+    it("returns a world-unique ID for the given entity", () => {
+      const world = new World()
+      const entity = world.add({})
+      expect(world.id(entity)).toBe(0)
+
+      /* It should always return the same ID for the same entity */
+      expect(world.id(entity)).toBe(0)
+    })
+
+    it("returns undefined for entities that are not known to the world", () => {
+      const world = new World()
+      const entity = {}
+      expect(world.id(entity)).toBeUndefined()
+    })
+
+    it("forgets about IDs when the entity is removed", () => {
+      const world = new World()
+
+      const entity = world.add({})
+      expect(world.id(entity)).toBe(0)
+
+      world.remove(entity)
+      expect(world.id(entity)).toBeUndefined()
+    })
+
+    it("when an entity is removed and re-added, it will receive a new ID", () => {
+      const world = new World()
+
+      const entity = world.add({})
+      expect(world.id(entity)).toBe(0)
+
+      world.remove(entity)
+      expect(world.id(entity)).toBeUndefined()
+
+      world.add(entity)
+      expect(world.id(entity)).toBe(1)
+    })
+  })
+
   describe("addComponent", () => {
     it("adds a component to an entity", () => {
       const world = new World()
