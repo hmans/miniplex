@@ -1,3 +1,4 @@
+import { useConst } from "@hmans/use-const"
 import { Composable, Modules } from "material-composer-r3f"
 import { Bucket, WithRequiredKeys } from "miniplex"
 import { useEntities } from "miniplex/react"
@@ -17,6 +18,8 @@ export const InstanceRNG =
     Random($`${offset} + float(${InstanceID}) * 1.1005`)
 
 export const Asteroids = () => {
+  const segmentedAsteroids = useSegmentedBucket(asteroids)
+
   useLayoutEffect(() => {
     for (let i = 0; i < 1000; i++) {
       const pos = insideCircle(100)
@@ -31,8 +34,6 @@ export const Asteroids = () => {
   }, [])
 
   const rand = InstanceRNG()
-
-  useEntities(segmentedAsteroids)
 
   return (
     <InstancedParticles capacity={20000}>
@@ -109,8 +110,13 @@ class SegmentedBucket<E> extends Bucket<Bucket<E>> {
   }
 }
 
+const useSegmentedBucket = <E extends any>(source: Bucket<E>, size = 50) => {
+  const bucket = useConst(() => new SegmentedBucket(source, size))
+  useEntities(bucket)
+  return bucket
+}
+
 const asteroids = ECS.world.derive(isAsteroid)
-const segmentedAsteroids = new SegmentedBucket(asteroids)
 
 const tmpVec3 = new Vector3()
 
