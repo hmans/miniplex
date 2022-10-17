@@ -4,8 +4,8 @@ import { bitmask } from "../util/bitmask"
 export const Player = () => {
   return (
     <ECS.Entity>
-      <ECS.Property name="isPlayer" value={true} />
-      <ECS.Property
+      <ECS.Component name="isPlayer" value={true} />
+      <ECS.Component
         name="physics"
         value={physics({
           radius: 0.3,
@@ -16,14 +16,14 @@ export const Player = () => {
           collisionMask: bitmask([PhysicsLayers.Asteroid])
         })}
       />
-      <ECS.Property name="spatialHashing" value={{}} />
-      <ECS.Property name="neighbors" value={[]} />
-      <ECS.Property name="transform">
+      <ECS.Component name="spatialHashing" value={{}} />
+      <ECS.Component name="neighbors" value={[]} />
+      <ECS.Component name="transform">
         <mesh>
           <coneGeometry args={[0.5, 1]} />
           <meshStandardMaterial color="hotpink" />
         </mesh>
-      </ECS.Property>
+      </ECS.Component>
     </ECS.Entity>
   )
 }
