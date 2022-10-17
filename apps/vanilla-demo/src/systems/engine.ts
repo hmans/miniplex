@@ -1,9 +1,29 @@
+import { World } from "miniplex"
 import * as THREE from "three"
-import { world } from "../ecs"
+import { MathUtils } from "three"
+import { Runner } from "../lib/runner"
+import { autorotateSystem } from "./autorotate"
+import { transformSystem } from "./transform"
 
-const entities = world.archetype("engine")
+export type Entity = {
+  transform?: THREE.Object3D
+  parent?: Entity
+  autorotate?: THREE.Vector3
 
-export function start() {
+  engine?: {
+    renderer: THREE.WebGLRenderer
+    camera: THREE.PerspectiveCamera
+    scene: THREE.Scene
+  }
+}
+
+export function start(init: (world: World<Entity>, runner: Runner) => void) {
+  const world = new World<Entity>()
+  const runner = new Runner()
+
+  runner.addSystem(transformSystem(world))
+  runner.addSystem(autorotateSystem(world))
+
   const { engine } = world.add({
     engine: {
       renderer: new THREE.WebGLRenderer(),
@@ -22,10 +42,26 @@ export function start() {
 
   engine.renderer.setSize(window.innerWidth, window.innerHeight)
   document.body.appendChild(engine.renderer.domElement)
-}
 
-export function update() {
-  for (const { engine } of entities) {
+  init(world, runner)
+
+  runner.addSystem(() => {
     engine.renderer.render(engine.scene, engine.camera)
+  })
+
+  /* Let's go */
+  let lastTime = performance.now()
+
+  function tick() {
+    /* Determine deltatime */
+    const time = performance.now()
+    const dt = MathUtils.clamp((time - lastTime) / 1000, 0, 0.2)
+    lastTime = time
+
+    runner.update(dt)
+
+    requestAnimationFrame(tick)
   }
+
+  tick()
 }

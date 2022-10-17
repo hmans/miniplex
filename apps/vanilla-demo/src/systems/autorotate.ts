@@ -1,11 +1,14 @@
-import { world } from "../ecs"
+import { World } from "miniplex"
+import { Entity } from "./engine"
 
-const entities = world.archetype("autorotate", "transform")
+export function autorotateSystem(world: World<Entity>) {
+  const entities = world.archetype("autorotate", "transform")
 
-export function update(dt: number) {
-  for (const { transform: transform, autorotate } of entities) {
-    transform.rotation.x += autorotate.x * dt
-    transform.rotation.y += autorotate.y * dt
-    transform.rotation.z += autorotate.z * dt
+  return function (dt: number) {
+    for (const { transform: transform, autorotate } of entities) {
+      transform.rotation.x += autorotate.x * dt
+      transform.rotation.y += autorotate.y * dt
+      transform.rotation.z += autorotate.z * dt
+    }
   }
 }

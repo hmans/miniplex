@@ -1,52 +1,32 @@
 import { chance, plusMinus } from "randomish"
 import * as THREE from "three"
-import { AmbientLight, MathUtils } from "three"
-import { world } from "./ecs"
+import { AmbientLight } from "three"
 import "./style.css"
-import * as autorotate from "./systems/autorotate"
 import * as engine from "./systems/engine"
-import * as transform from "./systems/transform"
 
-engine.start()
-
-world.add({
-  transform: new AmbientLight("orange", 0.2)
-})
-
-const light = world.add({
-  transform: new THREE.DirectionalLight()
-})
-
-light.transform.position.set(10, 20, 30)
-
-for (let i = 0; i < 100; i++) {
-  const e = world.add({
-    transform: new THREE.Mesh(
-      chance(0.5) ? new THREE.IcosahedronGeometry() : new THREE.BoxGeometry(),
-      new THREE.MeshStandardMaterial({
-        color: chance(0.5) ? "yellow" : "orange"
-      })
-    ),
-
-    autorotate: new THREE.Vector3(plusMinus(2), plusMinus(2), plusMinus(2))
+engine.start((world, _runner) => {
+  world.add({
+    transform: new AmbientLight("orange", 0.2)
   })
 
-  e.transform.position.set(plusMinus(10), plusMinus(10), plusMinus(5))
-}
+  const light = world.add({
+    transform: new THREE.DirectionalLight()
+  })
 
-let lastTime = performance.now()
+  light.transform.position.set(10, 20, 30)
 
-function tick() {
-  /* Determine deltatime */
-  const time = performance.now()
-  const dt = MathUtils.clamp((time - lastTime) / 1000, 0, 0.2)
-  lastTime = time
+  for (let i = 0; i < 100; i++) {
+    const e = world.add({
+      transform: new THREE.Mesh(
+        chance(0.5) ? new THREE.IcosahedronGeometry() : new THREE.BoxGeometry(),
+        new THREE.MeshStandardMaterial({
+          color: chance(0.5) ? "yellow" : "orange"
+        })
+      ),
 
-  engine.update()
-  transform.update()
-  autorotate.update(dt)
+      autorotate: new THREE.Vector3(plusMinus(2), plusMinus(2), plusMinus(2))
+    })
 
-  requestAnimationFrame(tick)
-}
-
-tick()
+    e.transform.position.set(plusMinus(10), plusMinus(10), plusMinus(5))
+  }
+})
