@@ -1,10 +1,8 @@
 import "./style.css"
-import { engineSystem } from "./systems/engine"
-
-const update = engineSystem()
+import * as Engine from "./systems/engine"
 
 function tick() {
-  update()
+  Engine.update()
   requestAnimationFrame(tick)
 }
 
