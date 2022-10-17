@@ -10,7 +10,7 @@ const entities = ECS.world.archetype("transform", "physics")
 const tmpVec3 = new Vector3()
 
 export function physicsSystem(dt: number) {
-  accumulatedTime += MathUtils.clamp(dt, 0, 0.2)
+  const step = MathUtils.clamp(dt, 0, 0.2)
 
   for (const entity of entities) {
     /* Make sure automatic matrix transforms are disabled */
@@ -22,12 +22,12 @@ export function physicsSystem(dt: number) {
     const { transform, physics } = entity
 
     /* Apply velocity */
-    transform.position.addScaledVector(physics.velocity, dt)
+    transform.position.addScaledVector(physics.velocity, step)
 
     /* Apply angular velocity */
-    transform.rotation.x += physics.angularVelocity.x * dt
-    transform.rotation.y += physics.angularVelocity.y * dt
-    transform.rotation.z += physics.angularVelocity.z * dt
+    transform.rotation.x += physics.angularVelocity.x * step
+    transform.rotation.y += physics.angularVelocity.y * step
+    transform.rotation.z += physics.angularVelocity.z * step
 
     /* Apply damping */
     physics.velocity.multiplyScalar(physics.linearDamping)
