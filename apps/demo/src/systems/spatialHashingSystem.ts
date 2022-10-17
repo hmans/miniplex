@@ -63,6 +63,7 @@ export const SpatialHashingSystem = () => {
 
       let cell = cells.get(key)
 
+      /* Make sure the cell is initialized */
       if (!cell) {
         cell = new Array<Entity>()
         cells.set(key, cell)
