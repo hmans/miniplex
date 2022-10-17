@@ -2,7 +2,6 @@ import { useConst } from "@hmans/use-const"
 import {
   archetype,
   Bucket,
-  id,
   IEntity,
   Predicate,
   WithRequiredKeys,
