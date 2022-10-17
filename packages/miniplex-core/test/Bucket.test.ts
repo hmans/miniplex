@@ -5,6 +5,13 @@ describe("new Bucket", () => {
     const bucket = new Bucket()
     expect(bucket).toBeDefined()
   })
+
+  it("allows the user to pass an initial list of entities", () => {
+    const entities = [1, 2, 3]
+    const bucket = new Bucket({ entities })
+    expect(bucket.size).toBe(3)
+    expect(bucket.entities).toBe(entities)
+  })
 })
 
 describe("has", () => {

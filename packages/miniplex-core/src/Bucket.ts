@@ -1,6 +1,10 @@
 import { Event } from "@hmans/event"
 import { Predicate } from "./types"
 
+export type BucketOptions<E> = {
+  entities?: E[]
+}
+
 /**
  * A bucket is a collection of entities. Entities can be added, removed, and
  * touched; the bucket exposes events for each of these operations.
@@ -17,8 +21,12 @@ export class Bucket<E> {
     }
   }
 
+  constructor({ entities = [] }: BucketOptions<E> = {}) {
+    this.entities = entities
+  }
+
   /** The entities in the bucket. */
-  entities = new Array<E>()
+  entities: E[]
 
   /**
    * An internal map of entities to their positions in the `entities` array.
