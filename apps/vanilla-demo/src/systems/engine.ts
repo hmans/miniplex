@@ -37,14 +37,18 @@ export function start(init: (world: World<Entity>, runner: Runner) => void) {
     }
   })
 
-  engine.camera.position.z = 10
-  engine.scene.add(engine.camera)
-
+  /* Set up renderer */
   engine.renderer.setSize(window.innerWidth, window.innerHeight)
   document.body.appendChild(engine.renderer.domElement)
 
+  /* Set up camera */
+  engine.camera.position.z = 10
+  engine.scene.add(engine.camera)
+
+  /* Run initializer function */
   init(world, runner)
 
+  /* Add rendering system */
   runner.addSystem(() => {
     engine.renderer.render(engine.scene, engine.camera)
   })
