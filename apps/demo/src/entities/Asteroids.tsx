@@ -1,3 +1,4 @@
+import { id } from "@hmans/id"
 import { Composable, Modules } from "material-composer-r3f"
 import { WithRequiredKeys } from "miniplex"
 import { insideCircle, power } from "randomish"
@@ -41,7 +42,8 @@ export const Asteroids = () => {
         />
       </Composable.MeshStandardMaterial>
 
-      <ECS.Bucket bucket={asteroids} as={RenderableEntity} />
+      <ECS.Bucket bucket={asteroidsOdd} as={RenderableEntity} />
+      <ECS.Bucket bucket={asteroidsEven} as={RenderableEntity} />
     </InstancedParticles>
   )
 }
@@ -60,6 +62,8 @@ export const isAsteroid = (entity: Entity): entity is Asteroid =>
   "isAsteroid" in entity
 
 const asteroids = ECS.world.derive(isAsteroid)
+const asteroidsOdd = asteroids.derive((e) => id(e) % 2 === 1)
+const asteroidsEven = asteroids.derive((e) => id(e) % 2 === 0)
 
 const tmpVec3 = new Vector3()
 

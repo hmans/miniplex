@@ -50,6 +50,7 @@ importers:
 
   apps/demo:
     specifiers:
+      '@hmans/id': workspace:^0.0.1
       '@hmans/r3f-animate': ^0.0.5
       '@hmans/use-const': ^0.0.1
       '@react-three/drei': ^9.34.3
@@ -58,6 +59,7 @@ importers:
       '@types/react-dom': ^18.0.6
       '@types/three': ^0.144.0
       '@vitejs/plugin-react': ^2.1.0
+      add: ^2.0.6
       material-composer: ^0.2.6
       material-composer-r3f: ^0.2.5
       miniplex: workspace:2.0.0-next.7
@@ -76,10 +78,12 @@ importers:
       vfx-composer-r3f: ^0.4.0
       vite: ^3.1.0
     dependencies:
+      '@hmans/id': link:../../packages/hmans-id
       '@hmans/r3f-animate': 0.0.5_cpod6d3cr76qxhqbh6bdljlrqm
       '@hmans/use-const': 0.0.1_react@18.2.0
       '@react-three/drei': 9.34.3_cpod6d3cr76qxhqbh6bdljlrqm
       '@react-three/fiber': 8.8.10_ee34sidbpuk5ebd4phepfgxxdi
+      add: 2.0.6
       material-composer: 0.2.6_three@0.145.0
       material-composer-r3f: 0.2.5_lkhdok7kqythgfjoas36b6ejf4
       miniplex: link:../../packages/miniplex
@@ -2726,6 +2730,10 @@ packages:
     resolution: {integrity: sha512-QOxyigPVrpZ2GXT+PFyZTl6TtOFc5egxHIP9IlQ+RbupQuX4RkT/Bee4/kQuC02Xkzg84JcT7oLYtDIQxp+v7w==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  /add/2.0.6:
+    resolution: {integrity: sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==}
+    dev: false
 
   /agent-base/6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
