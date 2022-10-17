@@ -6,6 +6,7 @@ import { ECS, Entity } from "../state"
 const entities = ECS.world.archetype("transform", "spatialHashing")
 
 const cells = new Map<string, Entity[]>()
+const entityCells = new WeakMap<Entity, Entity[]>()
 
 export function cellKey(x: number, y: number) {
   return `${Math.floor(x)}|${Math.floor(y)}`
@@ -41,9 +42,7 @@ export const SpatialHashingSystem = () => {
   useLayoutEffect(
     () =>
       entities.onEntityRemoved.addListener((entity) => {
-        const p = entity.transform.position
-        const key = cellKey(p.x, p.y)
-        const cell = entity.spatialHashing?.currentCell || cells.get(key)
+        const cell = entityCells.get(entity)
 
         if (cell) {
           const index = cell.indexOf(entity)
@@ -70,7 +69,7 @@ export const SpatialHashingSystem = () => {
       }
 
       /* If the entity has moved cells, update the spatial hash */
-      const current = entity.spatialHashing.currentCell
+      const current = entityCells.get(entity)
       if (current !== cell) {
         /* Remove the entity from its previous cell */
         if (current) {
@@ -81,7 +80,7 @@ export const SpatialHashingSystem = () => {
 
         /* Add the entity to its new cell */
         cell.push(entity)
-        entity.spatialHashing.currentCell = cell
+        entityCells.set(entity, cell)
       }
     }
   })

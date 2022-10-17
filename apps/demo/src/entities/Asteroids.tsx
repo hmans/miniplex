@@ -98,7 +98,7 @@ export const spawnAsteroid = (
       }
     }),
 
-    spatialHashing: {},
+    spatialHashing: true,
     neighbors: [],
 
     render: (

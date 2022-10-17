@@ -16,7 +16,7 @@ export const Player = () => {
           collisionMask: bitmask([PhysicsLayers.Asteroid])
         })}
       />
-      <ECS.Component name="spatialHashing" value={{}} />
+      <ECS.Component name="spatialHashing" value={true} />
       <ECS.Component name="neighbors" value={[]} />
       <ECS.Component name="transform">
         <mesh>

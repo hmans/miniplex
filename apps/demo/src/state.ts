@@ -21,9 +21,7 @@ export type Entity = {
   destroy?: true
 
   /* When set, this entity will be subjected to spatial hashing system. */
-  spatialHashing?: {
-    currentCell?: Entity[]
-  }
+  spatialHashing?: true
 
   lifetime?: {
     age: number
