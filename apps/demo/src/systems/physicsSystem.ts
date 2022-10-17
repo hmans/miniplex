@@ -9,56 +9,48 @@ const entities = ECS.world.archetype("transform", "physics")
 
 const tmpVec3 = new Vector3()
 
-let accumulatedTime = 0
-const STEP = 1 / 100
-
 export function physicsSystem(dt: number) {
   accumulatedTime += MathUtils.clamp(dt, 0, 0.2)
 
-  while (accumulatedTime >= STEP) {
-    accumulatedTime -= STEP
+  for (const entity of entities) {
+    /* Make sure automatic matrix transforms are disabled */
+    entity.transform.matrixAutoUpdate = false
 
-    for (const entity of entities) {
-      /* Make sure automatic matrix transforms are disabled */
-      entity.transform.matrixAutoUpdate = false
+    /* Skip if sleeping */
+    if (entity.physics.sleeping) continue
 
-      /* Skip if sleeping */
-      if (entity.physics.sleeping) continue
+    const { transform, physics } = entity
 
-      const { transform, physics } = entity
+    /* Apply velocity */
+    transform.position.addScaledVector(physics.velocity, dt)
 
-      /* Apply velocity */
-      transform.position.addScaledVector(physics.velocity, STEP)
+    /* Apply angular velocity */
+    transform.rotation.x += physics.angularVelocity.x * dt
+    transform.rotation.y += physics.angularVelocity.y * dt
+    transform.rotation.z += physics.angularVelocity.z * dt
 
-      /* Apply angular velocity */
-      transform.rotation.x += physics.angularVelocity.x * STEP
-      transform.rotation.y += physics.angularVelocity.y * STEP
-      transform.rotation.z += physics.angularVelocity.z * STEP
+    /* Apply damping */
+    physics.velocity.multiplyScalar(physics.linearDamping)
+    physics.angularVelocity.multiplyScalar(physics.angularDamping)
 
-      /* Apply damping */
-      physics.velocity.multiplyScalar(physics.linearDamping)
-      physics.angularVelocity.multiplyScalar(physics.angularDamping)
-
-      /* Ball collisions */
-      if (entity.neighbors) {
-        for (const neighbor of entity.neighbors) {
-          if (!neighbor.physics) continue
-          if (neighbor === entity) continue
-          handleBallCollision(entity, neighbor as PhysicsEntity)
-        }
+    /* Ball collisions */
+    if (entity.neighbors) {
+      for (const neighbor of entity.neighbors) {
+        if (!neighbor.physics) continue
+        if (neighbor === entity) continue
+        handleBallCollision(entity, neighbor as PhysicsEntity)
       }
+    }
 
-      /* Update matrix */
-      transform.updateMatrix()
+    /* Update matrix */
+    transform.updateMatrix()
 
-      /* Go to sleep if we're not moving */
-      if (
-        physics.velocity.length() < 0.001 &&
-        physics.angularVelocity.length() < 0.001
-      ) {
-        // console.log("going to sleep")
-        physics.sleeping = true
-      }
+    /* Go to sleep if we're not moving */
+    if (
+      physics.velocity.length() < 0.001 &&
+      physics.angularVelocity.length() < 0.001
+    ) {
+      physics.sleeping = true
     }
   }
 }
