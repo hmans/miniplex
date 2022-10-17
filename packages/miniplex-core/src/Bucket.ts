@@ -89,7 +89,7 @@ export class Bucket<E> {
    * @param entity The entity to add.
    * @returns The entity that was added.
    */
-  add<D extends E>(entity: D) {
+  add<D extends E>(entity: D): E & D {
     /* Add the entity if we don't already have it */
     if (entity !== undefined && !this.has(entity)) {
       this.entities.push(entity)
