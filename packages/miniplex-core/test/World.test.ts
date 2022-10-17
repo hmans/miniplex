@@ -7,7 +7,7 @@ describe("World", () => {
     expect(world).toBeInstanceOf(Bucket)
   })
 
-  describe("addProperty", () => {
+  describe("addComponent", () => {
     it("adds a component to an entity", () => {
       const world = new World()
       const entity = world.add({ count: 1 })
@@ -44,7 +44,7 @@ describe("World", () => {
     })
   })
 
-  describe("removeProperty", () => {
+  describe("removeComponent", () => {
     it("removes a component from an entity", () => {
       const world = new World()
       const entity = world.add({ count: 1, name: "foo" })
@@ -85,7 +85,7 @@ describe("World", () => {
     })
   })
 
-  describe("setProperty", () => {
+  describe("setComponent", () => {
     it("updates the value of a component on an entity", () => {
       const world = new World()
       const entity = world.add({ count: 1 })
