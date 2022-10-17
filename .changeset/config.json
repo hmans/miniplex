@@ -3,7 +3,7 @@
   "changelog": "@changesets/cli/changelog",
   "commit": false,
   "fixed": [],
-  "linked": [],
+  "linked": [["miniplex", "@miniplex/core", "@miniplex/react"]],
   "access": "public",
   "baseBranch": "next",
   "updateInternalDependencies": "patch",
