@@ -95,7 +95,7 @@ describe("<Entity>", () => {
 })
 
 describe("<Property>", () => {
-  it("assigns the specified property", () => {
+  it("assigns the specified component", () => {
     const world = new World()
     const { Entity, Property } = createComponents(world)
 
@@ -108,7 +108,7 @@ describe("<Property>", () => {
     expect(world.entities[0].foo).toBe("bar")
   })
 
-  it("updates the specified property on re-rendering", () => {
+  it("updates the specified component on re-rendering", () => {
     const world = new World()
     const { Entity, Property } = createComponents(world)
 
@@ -127,7 +127,7 @@ describe("<Property>", () => {
     expect(world.entities[0].foo).toBe("baz")
   })
 
-  it("removes the property when the component is unmounted", () => {
+  it("removes the component when the component is unmounted", () => {
     const world = new World()
     const entity = world.add({})
     const { Entity, Property } = createComponents(world)
@@ -160,8 +160,8 @@ describe("<Property>", () => {
     expect(world.entities[0].foo).toBe(ref.current)
   })
 
-  describe("when the entity already has the property", () => {
-    it("updates the property", () => {
+  describe("when the entity already has the component", () => {
+    it("updates the component", () => {
       const world = new World()
       const { Entity, Property } = createComponents(world)
       const entity = world.add({ foo: "bar" })
@@ -175,7 +175,7 @@ describe("<Property>", () => {
       expect(world.entities[0].foo).toBe("baz")
     })
 
-    it("does not remove the property when unmounted", () => {
+    it("does not remove the component when unmounted", () => {
       const world = new World()
       const { Entity, Property } = createComponents(world)
       const entity = world.add({ foo: "bar" })
@@ -292,7 +292,7 @@ describe("<Archetype>", () => {
     world.add({ name: "Bob" })
 
     render(
-      <Archetype properties="name">
+      <Archetype components="name">
         {(entity) => <p>{entity.name}</p>}
       </Archetype>
     )
@@ -309,7 +309,7 @@ describe("<Archetype>", () => {
     world.add({ name: "Bob" })
 
     const { rerender } = render(
-      <Archetype properties="name">
+      <Archetype components="name">
         {(entity) => <p>{entity.name}</p>}
       </Archetype>
     )
@@ -337,7 +337,7 @@ describe("<Archetype>", () => {
 
       const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
 
-      render(<Archetype as={User} properties="name" />)
+      render(<Archetype as={User} components="name" />)
 
       expect(screen.getByText("Alice")).toBeInTheDocument()
       expect(screen.getByText("Bob")).toBeInTheDocument()

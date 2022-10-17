@@ -4,59 +4,59 @@ import { IEntity } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
   /**
-   * Adds a property to an entity.
-   * If the entity already has the property, this function will do nothing.
+   * Adds a component to an entity.
+   * If the entity already has the component, this function will do nothing.
    *
    * @param entity The entity to add the property to.
-   * @param property The property to add.
-   * @param value The value of the property.
+   * @param component The component to add.
+   * @param value The value of the component.
    * @returns `true` if the entity was updated, `false` otherwise.
    */
-  addProperty<P extends keyof E>(entity: E, property: P, value: E[P]) {
-    if (entity[property] !== undefined) return false
+  addComponent<P extends keyof E>(entity: E, component: P, value: E[P]) {
+    if (entity[component] !== undefined) return false
 
-    entity[property] = value
+    entity[component] = value
     this.touch(entity)
 
     return true
   }
 
   /**
-   * Removes a property from an entity. If the entity does not have the property,
+   * Removes a component from an entity. If the entity does not have the component,
    * this function will do nothing.
    *
-   * @param entity The entity to remove the property from.
-   * @param property The property to remove.
+   * @param entity The entity to remove the component from.
+   * @param component The component to remove.
    * @returns `true` if the entity was updated, `false` otherwise.
    */
-  removeProperty<P extends keyof E>(entity: E, property: P) {
-    if (entity[property] === undefined) return false
+  removeComponent<P extends keyof E>(entity: E, component: P) {
+    if (entity[component] === undefined) return false
 
-    delete entity[property]
+    delete entity[component]
     this.touch(entity)
 
     return true
   }
 
   /**
-   * Updates the value of a property on the given entity.
-   * If the entity does not have the property, this function will do nothing.
+   * Updates the value of a component on the given entity.
+   * If the entity does not have the component, this function will do nothing.
    *
    * @param entity The entity to update.
-   * @param property The property to update.
-   * @param value The new value of the property.
+   * @param component The component to update.
+   * @param value The new value of the component.
    * @returns `true` if the entity was updated, `false` otherwise.
    */
-  setProperty<P extends keyof E>(entity: E, property: P, value: E[P]) {
-    if (entity[property] === undefined) return false
+  setComponent<P extends keyof E>(entity: E, component: P, value: E[P]) {
+    if (entity[component] === undefined) return false
 
-    entity[property] = value
+    entity[component] = value
     this.touch(entity)
 
     return true
   }
 
-  archetype<P extends keyof E>(...properties: P[]) {
-    return this.derive(archetype(...properties))
+  archetype<P extends keyof E>(...components: P[]) {
+    return this.derive(archetype(...components))
   }
 }
