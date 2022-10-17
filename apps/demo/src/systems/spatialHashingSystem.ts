@@ -23,14 +23,12 @@ export function getEntitiesInRadius(
 
   for (let i = -r; i <= r; i++) {
     for (let j = -r; j <= r; j++) {
-      for (let k = -r; k <= r; k++) {
-        const key = cellKey(p.x + i, p.y + j)
-        const cell = cells.get(key)
+      const key = cellKey(p.x + i, p.y + j)
+      const cell = cells.get(key)
 
-        if (cell) {
-          entities.push(...cell)
-          if (entities.length >= max) return entities
-        }
+      if (cell) {
+        entities.push(...cell)
+        if (entities.length >= max) return entities
       }
     }
   }
