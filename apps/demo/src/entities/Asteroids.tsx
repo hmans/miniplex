@@ -2,14 +2,7 @@ import { Composable, Modules } from "material-composer-r3f"
 import { WithRequiredKeys } from "miniplex"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
-import {
-  $,
-  Input,
-  InstanceID,
-  Lerp,
-  Mul,
-  ScaleAndOffset
-} from "shader-composer"
+import { $, Input, InstanceID, Lerp } from "shader-composer"
 import { Random } from "shader-composer-toybox"
 import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
@@ -25,8 +18,8 @@ export const InstanceRNG =
 export const Asteroids = () => {
   useLayoutEffect(() => {
     for (let i = 0; i < 1000; i++) {
-      const pos = insideCircle()
-      spawnAsteroid({ position: [pos.x * 100, pos.y * 100, 0] })
+      const pos = insideCircle(100)
+      spawnAsteroid({ position: [pos.x, pos.y, 0] })
     }
 
     return () => {
