@@ -110,12 +110,14 @@ importers:
   apps/vanilla-demo:
     specifiers:
       '@types/three': ^0.144.0
+      fp-ts: ^2.13.0
       miniplex: workspace:2.0.0-next.9
       randomish: ^0.1.6
       three: ^0.145.0
       typescript: ^4.6.4
       vite: ^3.1.0
     dependencies:
+      fp-ts: 2.13.0
       miniplex: link:../../packages/miniplex
       randomish: 0.1.6
       three: 0.145.0
@@ -3917,6 +3919,10 @@ packages:
 
   /fp-ts/2.12.3:
     resolution: {integrity: sha512-8m0XvW8kZbfnJOA4NvSVXu95mLbPf4LQGwQyqVukIYS4KzSNJiyKSmuZUmbVHteUi6MGkAJGPb0goPZqI+Tsqg==}
+    dev: false
+
+  /fp-ts/2.13.0:
+    resolution: {integrity: sha512-3pkkmRDdA3CBQPDfr7vhNomiHOu7eQZDmGeFsD19gTKpUNy0eqvO3yN1LsSCenkDAXlqJSIDd6wtM7qqrR++UQ==}
     dev: false
 
   /fs-extra/7.0.1:
