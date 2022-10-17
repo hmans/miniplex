@@ -1,20 +1,31 @@
 import * as THREE from "three"
+import { world } from "../ecs"
 
-export const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-)
+const entities = world.archetype("engine")
 
-camera.position.z = 10
-scene.add(camera)
+export function start() {
+  const { engine } = world.add({
+    engine: {
+      renderer: new THREE.WebGLRenderer(),
+      scene: new THREE.Scene(),
+      camera: new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      )
+    }
+  })
 
-const renderer = new THREE.WebGLRenderer()
-renderer.setSize(window.innerWidth, window.innerHeight)
-document.body.appendChild(renderer.domElement)
+  engine.camera.position.z = 10
+  engine.scene.add(engine.camera)
+
+  engine.renderer.setSize(window.innerWidth, window.innerHeight)
+  document.body.appendChild(engine.renderer.domElement)
+}
 
 export function update() {
-  renderer.render(scene, camera)
+  for (const { engine } of entities) {
+    engine.renderer.render(engine.scene, engine.camera)
+  }
 }

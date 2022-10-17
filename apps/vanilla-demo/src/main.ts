@@ -7,6 +7,8 @@ import * as autorotate from "./systems/autorotate"
 import * as engine from "./systems/engine"
 import * as transform from "./systems/transform"
 
+engine.start()
+
 world.add({
   transform: new AmbientLight("orange", 0.2)
 })

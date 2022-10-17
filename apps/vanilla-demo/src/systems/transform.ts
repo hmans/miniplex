@@ -1,13 +1,14 @@
 import { world } from "../ecs"
-import { scene } from "./engine"
 
 const withTransform = world.archetype("transform")
+const engines = world.archetype("engine")
 
 withTransform.onEntityAdded.addListener((entity) => {
+  const [{ engine }] = engines
   if (entity.parent?.transform) {
     entity.parent.transform.add(entity.transform)
   } else {
-    scene.add(entity.transform)
+    engine.scene.add(entity.transform)
   }
 })
 
