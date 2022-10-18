@@ -10,9 +10,10 @@ export function createInstancingSystem(world: World<Entity>) {
     /* Clear counts */
     imeshState.clear()
 
-    for (const { instance, transform } of entities) {
-      const imesh = instance.transform as THREE.InstancedMesh
-
+    for (const {
+      instance: { imesh },
+      transform
+    } of entities) {
       /* Get the current instance count */
       const index = imeshState.get(imesh) ?? 0
 

@@ -1,4 +1,4 @@
-import { Bucket, WithRequiredKeys, World } from "miniplex"
+import { Bucket, World } from "miniplex"
 import * as THREE from "three"
 import { MathUtils } from "three"
 import { createAutorotateSystem } from "./autorotate"
@@ -10,7 +10,9 @@ export type Entity = {
   parent?: Entity
   autorotate?: THREE.Vector3
 
-  instance?: WithRequiredKeys<Entity, "transform">
+  instance?: {
+    imesh: THREE.InstancedMesh
+  }
 
   engine?: {
     renderer: THREE.WebGLRenderer
