@@ -1,6 +1,5 @@
-import { id } from "@hmans/id"
 import { Composable, Modules } from "material-composer-r3f"
-import { Bucket, WithRequiredKeys } from "miniplex"
+import { WithRequiredKeys } from "miniplex"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { $, Input, InstanceID, Lerp } from "shader-composer"
@@ -10,6 +9,7 @@ import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
 import { ECS, Entity, physics, PhysicsLayers } from "../state"
 import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
+import { useSegmentedBucket } from "../lib/SegmentedBucket"
 
 export const InstanceRNG =
   ({ seed }: { seed?: Input<"float"> } = {}) =>
@@ -17,6 +17,10 @@ export const InstanceRNG =
     Random($`${offset} + float(${InstanceID}) * 1.1005`)
 
 export const Asteroids = () => {
+  const segmentedAsteroids = useSegmentedBucket(asteroids)
+
+  console.log("Rerendering Asteroids component. You should only see this once.")
+
   useLayoutEffect(() => {
     for (let i = 0; i < 1000; i++) {
       const pos = insideCircle(100)
@@ -42,8 +46,8 @@ export const Asteroids = () => {
         />
       </Composable.MeshStandardMaterial>
 
-      {segmentedAsteroids.map((bucket, i) => (
-        <ECS.Bucket key={i} bucket={bucket} as={RenderableEntity} />
+      {segmentedAsteroids.entities.map((segment, i) => (
+        <ECS.Bucket key={i} bucket={segment} as={RenderableEntity} />
       ))}
     </InstancedParticles>
   )
@@ -62,13 +66,7 @@ export type Asteroid = WithRequiredKeys<
 export const isAsteroid = (entity: Entity): entity is Asteroid =>
   "isAsteroid" in entity
 
-const segment = <E,>(bucket: Bucket<E>, count = 2) =>
-  new Array(count)
-    .fill(0)
-    .map((_, i) => bucket.derive((e) => id(e) % count === i))
-
 const asteroids = ECS.world.derive(isAsteroid)
-const segmentedAsteroids = segment(asteroids, 10)
 
 const tmpVec3 = new Vector3()
 

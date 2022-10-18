@@ -84,7 +84,7 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     </>
   )
 
-  const Bucket = <D extends E>({
+  const RawBucket = <D extends E>({
     bucket: _bucket,
     ...props
   }: {
@@ -98,6 +98,8 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     const entities = useEntities(source)
     return <Entities entities={entities} {...props} />
   }
+
+  const Bucket = memo(RawBucket) as typeof RawBucket
 
   const Archetype = <A extends keyof E>({
     components,
