@@ -19,7 +19,7 @@ export const InstanceRNG =
 export const Asteroids = () => {
   useLayoutEffect(() => {
     for (let i = 0; i < 1000; i++) {
-      const pos = insideCircle(300)
+      const pos = insideCircle(100)
       spawnAsteroid({ position: [pos.x, pos.y, 0] })
     }
 
