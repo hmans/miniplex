@@ -47,60 +47,19 @@ describe("World", () => {
     })
   })
 
-  describe("addComponent", () => {
-    it("adds a component to an entity", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      world.addComponent(entity, "name", "foo")
-      expect(entity).toEqual({ count: 1, name: "foo" })
-    })
-
-    it("if the component is already on the entity, it does nothing", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      world.addComponent(entity, "count", 2)
-      expect(entity).toEqual({ count: 1 })
-    })
-
-    it("touches the entity", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      const listener = jest.fn()
-      world.onEntityTouched.addListener(listener)
-      world.addComponent(entity, "name", "foo")
-      expect(listener).toHaveBeenCalledWith(entity)
-    })
-
-    it("returns true if the entity was updated", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      expect(world.addComponent(entity, "name", "foo")).toBe(true)
-    })
-
-    it("returns false if the entity was not updated", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      expect(world.addComponent(entity, "count", 2)).toBe(false)
-    })
-  })
-
-  describe("removeComponent", () => {
+  describe("clearComponent", () => {
     it("removes a component from an entity", () => {
       const world = new World()
       const entity = world.add({ count: 1, name: "foo" })
-      world.removeComponent(entity, "name")
+      world.clearComponent(entity, "name")
       expect(entity).toEqual({ count: 1 })
     })
 
-    it("if the component is not on the entity, it does nothing", () => {
+    it("does nothing if the component was not present on the entity", () => {
       const world = new World()
       const entity = world.add({ count: 1 })
-      const listener = jest.fn()
-
-      world.onEntityTouched.addListener(listener)
-      world.removeComponent(entity, "name")
+      world.clearComponent(entity, "name")
       expect(entity).toEqual({ count: 1 })
-      expect(listener).not.toHaveBeenCalledWith(entity)
     })
 
     it("touches the entity", () => {
@@ -108,20 +67,8 @@ describe("World", () => {
       const entity = world.add({ count: 1 })
       const listener = jest.fn()
       world.onEntityTouched.addListener(listener)
-      world.removeComponent(entity, "count")
+      world.clearComponent(entity, "count")
       expect(listener).toHaveBeenCalledWith(entity)
-    })
-
-    it("returns true if the entity was updated", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      expect(world.removeComponent(entity, "count")).toBe(true)
-    })
-
-    it("returns false if the entity was not updated", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      expect(world.removeComponent(entity, "name")).toBe(false)
     })
   })
 
@@ -133,15 +80,11 @@ describe("World", () => {
       expect(entity).toEqual({ count: 2 })
     })
 
-    it("if the component is not on the entity, it does nothing", () => {
+    it("adds the component if it was previously missing", () => {
       const world = new World()
-      const entity = world.add({ count: 1 })
-      const listener = jest.fn()
-
-      world.onEntityTouched.addListener(listener)
-      world.setComponent(entity, "name", "foo")
+      const entity = world.add({})
+      world.setComponent(entity, "count", 1)
       expect(entity).toEqual({ count: 1 })
-      expect(listener).not.toHaveBeenCalledWith(entity)
     })
 
     it("touches the entity", () => {
@@ -151,18 +94,6 @@ describe("World", () => {
       world.onEntityTouched.addListener(listener)
       world.setComponent(entity, "count", 2)
       expect(listener).toHaveBeenCalledWith(entity)
-    })
-
-    it("returns true if the entity was updated", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      expect(world.setComponent(entity, "count", 2)).toBe(true)
-    })
-
-    it("returns false if the entity was not updated", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      expect(world.setComponent(entity, "name", "foo")).toBe(false)
     })
   })
 

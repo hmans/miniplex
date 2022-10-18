@@ -133,10 +133,10 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
     useIsomorphicLayoutEffect(() => {
       if (props.value === undefined) return
 
-      world.addComponent(entity, props.name, props.value)
+      world.setComponent(entity, props.name, props.value)
 
       return () => {
-        world.removeComponent(entity, props.name)
+        world.clearComponent(entity, props.name)
       }
     }, [entity, props.name])
 
@@ -155,9 +155,9 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
           (child as any).ref,
           (object: E[P]) => {
             if (object) {
-              world.addComponent(entity, props.name, object)
+              world.setComponent(entity, props.name, object)
             } else {
-              world.removeComponent(entity, props.name)
+              world.clearComponent(entity, props.name)
             }
           }
         ])

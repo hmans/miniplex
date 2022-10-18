@@ -43,13 +43,13 @@ export const spawnBullet = () => {
 
       onContactStart: (other) => {
         /* Destroy bullet */
-        ECS.world.addComponent(bullet, "destroy", true)
+        ECS.world.setComponent(bullet, "destroy", true)
 
         /* If the other entity has health, damage it */
         if (other.health !== undefined) {
           other.health -= 270
           if (other.health <= 0) {
-            ECS.world.addComponent(other, "destroy", true)
+            ECS.world.setComponent(other, "destroy", true)
 
             /* If the other entity was an asteroid, spawn new asteroids */
             if (other.isAsteroid) {
