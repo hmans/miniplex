@@ -1,5 +1,6 @@
 import { useFrame } from "@react-three/fiber"
 import { ECS } from "../state"
+import { queueDestroy } from "./DestroySystem"
 
 export const AgeSystem = () => {
   useFrame((_, dt) => {
@@ -8,9 +9,10 @@ export const AgeSystem = () => {
 
       if (
         entity.lifetime.maxAge &&
-        entity.lifetime.age >= entity.lifetime.maxAge
+        entity.lifetime.age >= entity.lifetime.maxAge &&
+        !entity.destroy
       ) {
-        ECS.world.remove(entity)
+        queueDestroy(entity)
       }
     }
   })

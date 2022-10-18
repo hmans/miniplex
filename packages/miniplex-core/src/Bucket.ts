@@ -89,9 +89,9 @@ export class Bucket<E> {
    * @param entity The entity to add.
    * @returns The entity that was added.
    */
-  add(entity: E) {
+  add<D extends E>(entity: D): E & D {
     /* Add the entity if we don't already have it */
-    if (entity !== undefined && !this.has(entity)) {
+    if (entity && !this.has(entity)) {
       this.entities.push(entity)
       this.entityPositions.set(entity, this.entities.length - 1)
 
@@ -109,7 +109,7 @@ export class Bucket<E> {
    * @returns The entity that was touched.
    */
   touch(entity: E) {
-    if (entity !== undefined && this.has(entity)) {
+    if (entity && this.has(entity)) {
       this.onEntityTouched.emit(entity)
     }
 
@@ -125,13 +125,14 @@ export class Bucket<E> {
    */
   remove(entity: E) {
     /* Only act if we know about the entity */
-    if (entity !== undefined && this.has(entity)) {
+    if (entity && this.has(entity)) {
       /* Remove entity from our list */
       const index = this.entityPositions.get(entity)!
       this.entityPositions.delete(entity)
 
-      if (this.entities.length > 1) {
-        const other = this.entities[this.entities.length - 1]
+      const other = this.entities[this.entities.length - 1]
+
+      if (other !== entity) {
         this.entities[index] = other
         this.entityPositions.set(other, index)
       }
@@ -224,7 +225,8 @@ export class Bucket<E> {
     bucket.onDisposed.addListener(
       this.onEntityTouched.addListener((entity) => {
         if (predicate(entity)) {
-          bucket.add(entity) && bucket.touch(entity)
+          bucket.add(entity)
+          bucket.touch(entity)
         } else {
           bucket.remove(entity as D)
         }

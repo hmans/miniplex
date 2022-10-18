@@ -1,5 +1,22 @@
 # miniplex
 
+## 2.0.0-next.9
+
+### Patch Changes
+
+- Updated dependencies [873381c]
+  - @miniplex/core@2.0.0-next.9
+
+## 2.0.0-next.8
+
+### Patch Changes
+
+- Updated dependencies [5a5244e]
+- Updated dependencies [6808a5d]
+- Updated dependencies [c28a404]
+  - @miniplex/core@2.0.0-next.8
+  - @miniplex/react@2.0.0-next.8
+
 ## 2.0.0-next.7
 
 ### Patch Changes

@@ -37,6 +37,7 @@ export function physicsSystem(dt: number) {
     if (entity.neighbors) {
       for (const neighbor of entity.neighbors) {
         if (!neighbor.physics) continue
+        if (!neighbor.transform) continue
         if (neighbor === entity) continue
         handleBallCollision(entity, neighbor as PhysicsEntity)
       }

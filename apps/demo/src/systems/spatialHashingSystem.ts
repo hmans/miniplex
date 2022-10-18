@@ -47,6 +47,7 @@ export const SpatialHashingSystem = () => {
           if (index !== -1) {
             cell[index] = cell[cell.length - 1]
             cell.pop()
+            entityCells.delete(entity)
           }
         }
       }),

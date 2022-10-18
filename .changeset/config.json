@@ -7,7 +7,7 @@
   "access": "public",
   "baseBranch": "next",
   "updateInternalDependencies": "patch",
-  "ignore": ["demo"],
+  "ignore": ["demo", "vanilla-demo"],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "onlyUpdatePeerDependentsWhenOutOfRange": true
   }
