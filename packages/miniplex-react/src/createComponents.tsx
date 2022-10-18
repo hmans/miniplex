@@ -156,7 +156,13 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
         ref: mergeRefs([
           (child as any).ref,
           (ref: E[P]) => {
-            world.addComponent(entity, props.name, ref)
+            if (ref) {
+              // console.log("adding ref", ref)
+              world.addComponent(entity, props.name, ref)
+            } else {
+              // console.log("removing ref", ref)
+              world.removeComponent(entity, props.name)
+            }
           }
         ])
       })
