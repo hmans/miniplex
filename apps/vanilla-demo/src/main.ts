@@ -20,6 +20,7 @@ engine.start((world, _runner) => {
         })
       ),
 
+      /* Let them autorotate */
       autorotate: new THREE.Vector3(plusMinus(2), plusMinus(2), plusMinus(2))
     })
 
