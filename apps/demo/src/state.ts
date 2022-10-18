@@ -22,6 +22,8 @@ export type Entity = {
 
   mouseInput?: {
     point: Vector3
+    leftButton: boolean
+    rightButton: boolean
   }
 
   /* When set, this entity will be subjected to spatial hashing system. */
