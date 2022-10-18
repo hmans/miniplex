@@ -62,7 +62,7 @@ export class World<E extends IEntity> extends Bucket<E> {
    */
   addComponent<P extends keyof E>(entity: E, component: P, value: E[P]) {
     if (entity[component] !== undefined) {
-      console.log(
+      console.warn(
         "Tried to add a component, but it was already present:",
         component
       )
@@ -86,7 +86,7 @@ export class World<E extends IEntity> extends Bucket<E> {
    */
   removeComponent<P extends keyof E>(entity: E, component: P) {
     if (entity[component] === undefined) {
-      console.error(
+      console.warn(
         "Tried to remove a component, but it was missing:",
         component
       )
@@ -111,7 +111,7 @@ export class World<E extends IEntity> extends Bucket<E> {
    */
   setComponent<P extends keyof E>(entity: E, component: P, value: E[P]) {
     if (entity[component] === undefined) {
-      console.log("Tried to set a component, but it was missing:", component)
+      console.warn("Tried to set a component, but it was missing:", component)
       return false
     }
 
