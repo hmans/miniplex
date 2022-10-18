@@ -69,8 +69,10 @@ export const isAsteroid = (entity: Entity): entity is Asteroid =>
 
 class SegmentedBucket<E> extends Bucket<Bucket<E>> {
   private entityToSegment = new Map<E, Bucket<E>>()
+  private counter = 0
+  private current = 0
 
-  constructor(public source: Bucket<E>, public segments = 10) {
+  constructor(public source: Bucket<E>, public segments = 30) {
     super()
 
     /* Create segments */
@@ -79,10 +81,16 @@ class SegmentedBucket<E> extends Bucket<Bucket<E>> {
     }
 
     const add = (entity: E) => {
-      const segment = this.entities[Math.floor(Math.random() * segments)]
+      const segment = this.entities[this.current]
 
       segment.add(entity)
       this.entityToSegment.set(entity, segment)
+      this.counter++
+
+      if (this.counter >= 100) {
+        this.counter = 0
+        this.current = (this.current + 1) % this.segments
+      }
     }
 
     const remove = (entity: E) => {
