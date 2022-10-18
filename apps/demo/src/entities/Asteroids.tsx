@@ -1,7 +1,5 @@
-import { useConst } from "@hmans/use-const"
 import { Composable, Modules } from "material-composer-r3f"
-import { Bucket, WithRequiredKeys } from "miniplex"
-import { useEntities } from "miniplex/react"
+import { WithRequiredKeys } from "miniplex"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { $, Input, InstanceID, Lerp } from "shader-composer"
@@ -11,6 +9,7 @@ import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
 import { ECS, Entity, physics, PhysicsLayers } from "../state"
 import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
+import { useSegmentedBucket } from "../lib/SegmentedBucket"
 
 export const InstanceRNG =
   ({ seed }: { seed?: Input<"float"> } = {}) =>
@@ -66,51 +65,6 @@ export type Asteroid = WithRequiredKeys<
 
 export const isAsteroid = (entity: Entity): entity is Asteroid =>
   "isAsteroid" in entity
-
-class SegmentedBucket<E> extends Bucket<Bucket<E>> {
-  private entityToSegment = new Map<E, Bucket<E>>()
-  private counter = 0
-  private current = 0
-
-  constructor(public source: Bucket<E>, public segments = 30) {
-    super()
-
-    /* Create segments */
-    for (let i = 0; i < segments; i++) {
-      this.add(new Bucket<E>())
-    }
-
-    const add = (entity: E) => {
-      const segment = this.entities[this.current]
-
-      segment.add(entity)
-      this.entityToSegment.set(entity, segment)
-      this.counter++
-
-      if (this.counter >= 100) {
-        this.counter = 0
-        this.current = (this.current + 1) % this.segments
-      }
-    }
-
-    const remove = (entity: E) => {
-      const segment = this.entityToSegment.get(entity)
-      if (segment) {
-        segment.remove(entity)
-        this.entityToSegment.delete(entity)
-      }
-    }
-
-    /* Transfer existing entities */
-    for (const entity of source) add(entity)
-
-    source.onEntityAdded.addListener(add)
-    source.onEntityRemoved.addListener(remove)
-  }
-}
-
-const useSegmentedBucket = <E extends any>(source: Bucket<E>, size = 50) =>
-  useConst(() => new SegmentedBucket(source, size))
 
 const asteroids = ECS.world.derive(isAsteroid)
 
