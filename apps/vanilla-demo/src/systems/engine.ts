@@ -29,7 +29,7 @@ export function start(
 
   const { engine } = world.add({
     engine: {
-      renderer: new THREE.WebGLRenderer(),
+      renderer: new THREE.WebGLRenderer({ antialias: true }),
       scene: new THREE.Scene(),
       camera: new THREE.PerspectiveCamera(
         75,
