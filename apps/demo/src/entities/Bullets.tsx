@@ -2,6 +2,7 @@ import { between } from "randomish"
 import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle } from "vfx-composer-r3f"
 import { ECS, lifetime, physics, PhysicsLayers } from "../state"
+import { queueDestroy } from "../systems/DestroySystem"
 import { bitmask } from "../util/bitmask"
 import { spawnAsteroid } from "./Asteroids"
 import { RenderableEntity } from "./RenderableEntity"
@@ -43,13 +44,13 @@ export const spawnBullet = () => {
 
       onContactStart: (other) => {
         /* Destroy bullet */
-        ECS.world.addComponent(bullet, "destroy", true)
+        queueDestroy(bullet)
 
         /* If the other entity has health, damage it */
         if (other.health !== undefined) {
           other.health -= 270
           if (other.health <= 0) {
-            ECS.world.addComponent(other, "destroy", true)
+            queueDestroy(other)
 
             /* If the other entity was an asteroid, spawn new asteroids */
             if (other.isAsteroid) {
