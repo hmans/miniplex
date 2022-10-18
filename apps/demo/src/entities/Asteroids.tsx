@@ -20,6 +20,8 @@ export const InstanceRNG =
 export const Asteroids = () => {
   const segmentedAsteroids = useSegmentedBucket(asteroids)
 
+  console.log("Rerendering Asteroids component. You should only see this once.")
+
   useLayoutEffect(() => {
     for (let i = 0; i < 1000; i++) {
       const pos = insideCircle(100)
@@ -68,23 +70,19 @@ export const isAsteroid = (entity: Entity): entity is Asteroid =>
 class SegmentedBucket<E> extends Bucket<Bucket<E>> {
   private entityToSegment = new Map<E, Bucket<E>>()
 
-  get current() {
-    return this.entities[this.entities.length - 1]
-  }
-
-  constructor(public source: Bucket<E>, public segmentSize = 50) {
+  constructor(public source: Bucket<E>, public segments = 10) {
     super()
 
-    this.add(new Bucket<E>())
+    /* Create segments */
+    for (let i = 0; i < segments; i++) {
+      this.add(new Bucket<E>())
+    }
 
     const add = (entity: E) => {
-      this.current.add(entity)
-      this.entityToSegment.set(entity, this.current)
+      const segment = this.entities[Math.floor(Math.random() * segments)]
 
-      /* Create a new segment if we're over the limit */
-      if (this.current.size >= this.segmentSize) {
-        this.add(new Bucket<E>())
-      }
+      segment.add(entity)
+      this.entityToSegment.set(entity, segment)
     }
 
     const remove = (entity: E) => {
@@ -96,25 +94,15 @@ class SegmentedBucket<E> extends Bucket<Bucket<E>> {
     }
 
     /* Transfer existing entities */
-    for (const entity of source) {
-      add(entity)
-    }
+    for (const entity of source) add(entity)
 
-    source.onEntityAdded.addListener((e) => {
-      add(e)
-    })
-
-    source.onEntityRemoved.addListener((e) => {
-      remove(e)
-    })
+    source.onEntityAdded.addListener(add)
+    source.onEntityRemoved.addListener(remove)
   }
 }
 
-const useSegmentedBucket = <E extends any>(source: Bucket<E>, size = 50) => {
-  const bucket = useConst(() => new SegmentedBucket(source, size))
-  useEntities(bucket)
-  return bucket
-}
+const useSegmentedBucket = <E extends any>(source: Bucket<E>, size = 50) =>
+  useConst(() => new SegmentedBucket(source, size))
 
 const asteroids = ECS.world.derive(isAsteroid)
 
