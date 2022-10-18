@@ -1,7 +1,6 @@
-import { World } from "miniplex"
+import { Bucket, World } from "miniplex"
 import * as THREE from "three"
 import { MathUtils } from "three"
-import { Runner } from "../lib/runner"
 import { autorotateSystem } from "./autorotate"
 import { transformSystem } from "./transform"
 
@@ -17,12 +16,16 @@ export type Entity = {
   }
 }
 
-export function start(init: (world: World<Entity>, runner: Runner) => void) {
-  const world = new World<Entity>()
-  const runner = new Runner()
+export type System = (dt: number) => void
 
-  runner.addSystem(transformSystem(world))
-  runner.addSystem(autorotateSystem(world))
+export function start(
+  init: (world: World<Entity>, systems: Bucket<System>) => void
+) {
+  const world = new World<Entity>()
+  const systems = new Bucket<System>()
+
+  systems.add(transformSystem(world))
+  systems.add(autorotateSystem(world))
 
   const { engine } = world.add({
     engine: {
@@ -46,10 +49,10 @@ export function start(init: (world: World<Entity>, runner: Runner) => void) {
   engine.scene.add(engine.camera)
 
   /* Run initializer function */
-  init(world, runner)
+  init(world, systems)
 
   /* Add rendering system */
-  runner.addSystem(() => {
+  systems.add(() => {
     engine.renderer.render(engine.scene, engine.camera)
   })
 
@@ -62,7 +65,9 @@ export function start(init: (world: World<Entity>, runner: Runner) => void) {
     const dt = MathUtils.clamp((time - lastTime) / 1000, 0, 0.2)
     lastTime = time
 
-    runner.update(dt)
+    for (const system of systems) {
+      system(dt)
+    }
 
     requestAnimationFrame(tick)
   }
