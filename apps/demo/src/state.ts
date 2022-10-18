@@ -20,6 +20,10 @@ export type Entity = {
   transform?: Object3D
   destroy?: true
 
+  mouseInput?: {
+    point: Vector3
+  }
+
   /* When set, this entity will be subjected to spatial hashing system. */
   spatialHashing?: true
 
@@ -44,7 +48,10 @@ export type Entity = {
     radius: number
     restitution: number
     groupMask: number
+
+    allowSleep: boolean
     sleeping: boolean
+
     collisionMask: number
     contacts: Set<Entity>
     onContactStart?: (other: Entity, force: number) => void
@@ -58,6 +65,7 @@ export type Entity = {
 export const physics = (
   input: Partial<Entity["physics"]> = {}
 ): Entity["physics"] => ({
+  allowSleep: true,
   sleeping: false,
   velocity: new Vector3(0, 0, 0),
   angularVelocity: new Vector3(0, 0, 0),

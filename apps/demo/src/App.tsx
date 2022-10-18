@@ -1,10 +1,11 @@
 import { Environment, Loader, PerspectiveCamera } from "@react-three/drei"
 import { Perf } from "r3f-perf"
-import { StrictMode, Suspense } from "react"
+import { StrictMode, Suspense, useLayoutEffect } from "react"
 import * as RC from "render-composer"
 import { Asteroids } from "./entities/Asteroids"
 import { Bullets } from "./entities/Bullets"
 import { Player } from "./entities/Player"
+import { MouseInput } from "./entities/MouseInput"
 import { ECS } from "./state"
 import { Systems } from "./Systems"
 
@@ -49,6 +50,7 @@ function App() {
                 </ECS.Component>
               </ECS.Entity>
 
+              <MouseInput />
               <Player />
               <Asteroids />
               <Bullets />

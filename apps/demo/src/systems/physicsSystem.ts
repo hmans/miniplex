@@ -48,6 +48,7 @@ export function physicsSystem(dt: number) {
 
     /* Go to sleep if we're not moving */
     if (
+      physics.allowSleep &&
       physics.velocity.length() < 0.001 &&
       physics.angularVelocity.length() < 0.001
     ) {

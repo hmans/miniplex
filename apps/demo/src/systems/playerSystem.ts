@@ -1,33 +1,39 @@
 import { useFrame } from "@react-three/fiber"
-import { WithRequiredKeys } from "miniplex"
+import { Bucket, WithRequiredKeys } from "miniplex"
 import { Vector3 } from "three"
+import { moveSyntheticComments } from "typescript"
 import { spawnBullet } from "../entities/Bullets"
 import { ECS, Entity } from "../state"
 import { useKeyboard } from "../util/useKeyboard"
 
 const tmpVec3 = new Vector3()
 
-const isPlayer = (
-  entity: Entity
-): entity is WithRequiredKeys<Entity, "transform" | "physics"> =>
-  !!entity.isPlayer
-
-const players = ECS.world.derive(isPlayer)
+const players = ECS.world.archetype("isPlayer") as Bucket<
+  WithRequiredKeys<Entity, "transform" | "physics">
+>
+const mouseInputs = ECS.world.archetype("mouseInput")
 
 let lastFireTime = 0
 
 export const PlayerSystem = () => {
   const keyboard = useKeyboard()
 
-  useFrame((_, dt) => {
+  useFrame(({ camera }, dt) => {
     const [player] = players
-    if (!player) return
+    const [{ mouseInput }] = mouseInputs
+
+    if (!player || !mouseInput) return
 
     const input = {
       thrust: keyboard.getAxis("KeyS", "KeyW"),
       rotate: keyboard.getAxis("KeyA", "KeyD"),
       fire: keyboard.getKey("Space")
     }
+
+    /* Orient ship towards mouseInput.point */
+    const forwardAxis = new Vector3(0, 1, 0)
+    const direction = mouseInput.point.clone().normalize()
+    player.transform.quaternion.setFromUnitVectors(forwardAxis, direction)
 
     if (input.thrust) {
       tmpVec3

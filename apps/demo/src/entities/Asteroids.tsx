@@ -19,8 +19,6 @@ export const InstanceRNG =
 export const Asteroids = () => {
   const segmentedAsteroids = useSegmentedBucket(asteroids)
 
-  console.log("Rerendering Asteroids component. You should only see this once.")
-
   useLayoutEffect(() => {
     for (let i = 0; i < 1000; i++) {
       const pos = insideCircle(100)

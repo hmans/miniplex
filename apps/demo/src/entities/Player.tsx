@@ -8,6 +8,7 @@ export const Player = () => {
       <ECS.Component
         name="physics"
         value={physics({
+          allowSleep: false,
           radius: 0.3,
           mass: 10,
           linearDamping: 0.98,
