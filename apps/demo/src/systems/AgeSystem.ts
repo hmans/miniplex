@@ -8,9 +8,10 @@ export const AgeSystem = () => {
 
       if (
         entity.lifetime.maxAge &&
-        entity.lifetime.age >= entity.lifetime.maxAge
+        entity.lifetime.age >= entity.lifetime.maxAge &&
+        !entity.destroy
       ) {
-        ECS.world.remove(entity)
+        ECS.world.addComponent(entity, "destroy", true)
       }
     }
   })

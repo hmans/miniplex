@@ -61,7 +61,14 @@ export class World<E extends IEntity> extends Bucket<E> {
    * @returns `true` if the entity was updated, `false` otherwise.
    */
   addComponent<P extends keyof E>(entity: E, component: P, value: E[P]) {
-    if (entity[component] !== undefined) return false
+    if (entity[component] !== undefined) {
+      console.warn(
+        "Tried to add a component, but it was already present:",
+        component
+      )
+
+      return false
+    }
 
     entity[component] = value
     this.touch(entity)
@@ -78,7 +85,14 @@ export class World<E extends IEntity> extends Bucket<E> {
    * @returns `true` if the entity was updated, `false` otherwise.
    */
   removeComponent<P extends keyof E>(entity: E, component: P) {
-    if (entity[component] === undefined) return false
+    if (entity[component] === undefined) {
+      console.warn(
+        "Tried to remove a component, but it was missing:",
+        component
+      )
+
+      return false
+    }
 
     delete entity[component]
     this.touch(entity)
@@ -96,7 +110,10 @@ export class World<E extends IEntity> extends Bucket<E> {
    * @returns `true` if the entity was updated, `false` otherwise.
    */
   setComponent<P extends keyof E>(entity: E, component: P, value: E[P]) {
-    if (entity[component] === undefined) return false
+    if (entity[component] === undefined) {
+      console.warn("Tried to set a component, but it was missing:", component)
+      return false
+    }
 
     entity[component] = value
     this.touch(entity)

@@ -13,7 +13,7 @@ export const useEntities = <E extends IEntity>(bucket: Bucket<E>) => {
       bucket.onEntityAdded.removeListener(rerender)
       bucket.onEntityRemoved.removeListener(rerender)
     }
-  }, [])
+  }, [rerender])
 
   useIsomorphicLayoutEffect(rerender, [])
 

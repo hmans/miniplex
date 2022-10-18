@@ -1,3 +1,4 @@
+import { id } from "@hmans/id"
 import { useConst } from "@hmans/use-const"
 import {
   archetype,
@@ -19,7 +20,6 @@ import React, {
 } from "react"
 import { useArchetype as useArchetypeGlobal, useEntities } from "./hooks"
 import { mergeRefs } from "./lib/mergeRefs"
-import { id } from "@hmans/id"
 
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect
@@ -129,16 +129,14 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
       throw new Error("<Component> must be a child of <Entity>")
     }
 
-    /* Handle creation and removal of component */
+    /* Handle creation and removal of component with a value prop */
     useIsomorphicLayoutEffect(() => {
       if (props.value === undefined) return
 
-      const added = world.addComponent(entity, props.name, props.value)
-      const originalValue = entity[props.name]
+      world.addComponent(entity, props.name, props.value)
 
       return () => {
-        if (added) world.removeComponent(entity, props.name)
-        else entity[props.name] = originalValue
+        world.removeComponent(entity, props.name)
       }
     }, [entity, props.name])
 
@@ -155,8 +153,12 @@ export const createComponents = <E extends IEntity>(world: World<E>) => {
       const children = React.cloneElement(child, {
         ref: mergeRefs([
           (child as any).ref,
-          (ref: E[P]) => {
-            world.addComponent(entity, props.name, ref)
+          (object: E[P]) => {
+            if (object) {
+              world.addComponent(entity, props.name, object)
+            } else {
+              world.removeComponent(entity, props.name)
+            }
           }
         ])
       })
