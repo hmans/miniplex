@@ -29,6 +29,7 @@ export const PlayerSystem = () => {
     const direction = mouseInput.point
       .clone()
       .sub(player.transform.position)
+      .setZ(0)
       .normalize()
     player.transform.quaternion.setFromUnitVectors(forwardAxis, direction)
 
