@@ -1,13 +1,16 @@
-import { Bucket, World } from "miniplex"
+import { Bucket, WithRequiredKeys, World } from "miniplex"
 import * as THREE from "three"
 import { MathUtils } from "three"
-import { autorotateSystem } from "./autorotate"
-import { transformSystem } from "./transform"
+import { createAutorotateSystem } from "./autorotate"
+import { createInstancingSystem } from "./instancing"
+import { createTransformSystem } from "./transform"
 
 export type Entity = {
   transform?: THREE.Object3D
   parent?: Entity
   autorotate?: THREE.Vector3
+
+  instance?: WithRequiredKeys<Entity, "transform">
 
   engine?: {
     renderer: THREE.WebGLRenderer
@@ -24,8 +27,9 @@ export function start(
   const world = new World<Entity>()
   const systems = new Bucket<System>()
 
-  systems.add(transformSystem(world))
-  systems.add(autorotateSystem(world))
+  systems.add(createTransformSystem(world))
+  systems.add(createAutorotateSystem(world))
+  systems.add(createInstancingSystem(world))
 
   const { engine } = world.add({
     engine: {
@@ -45,7 +49,7 @@ export function start(
   document.body.appendChild(engine.renderer.domElement)
 
   /* Set up camera */
-  engine.camera.position.z = 10
+  engine.camera.position.z = 50
   engine.scene.add(engine.camera)
 
   /* Run initializer function */

@@ -1,6 +1,6 @@
-import { chance, plusMinus } from "randomish"
+import { plusMinus } from "randomish"
 import * as THREE from "three"
-import { AmbientLight } from "three"
+import { AmbientLight, InstancedMesh, Vector3 } from "three"
 import "./style.css"
 import * as engine from "./systems/engine"
 
@@ -10,20 +10,23 @@ engine.start((world, _runner) => {
   const light = world.add({ transform: new THREE.DirectionalLight() })
   light.transform.position.set(10, 20, 30)
 
-  /* Add a bunch of random entities */
-  for (let i = 0; i < 100; i++) {
-    const e = world.add({
-      transform: new THREE.Mesh(
-        chance(0.5) ? new THREE.IcosahedronGeometry() : new THREE.BoxGeometry(),
-        new THREE.MeshStandardMaterial({
-          color: chance(0.5) ? "yellow" : "orange"
-        })
-      ),
+  /* Add an instanced mesh */
+  const imesh = world.add({
+    transform: new InstancedMesh(
+      new THREE.IcosahedronGeometry(),
+      new THREE.MeshStandardMaterial(),
+      1000
+    )
+  })
 
-      /* Let them autorotate */
-      autorotate: new THREE.Vector3(plusMinus(2), plusMinus(2), plusMinus(2))
+  /* Add a few instances */
+  for (let i = 0; i < 1000; i++) {
+    const entity = world.add({
+      transform: new THREE.Group(),
+      instance: imesh,
+      autorotate: new Vector3(plusMinus(1), plusMinus(1), plusMinus(1))
     })
 
-    e.transform.position.set(plusMinus(10), plusMinus(10), plusMinus(5))
+    entity.transform.position.set(plusMinus(10), plusMinus(10), plusMinus(10))
   }
 })

@@ -1,7 +1,7 @@
 import { World } from "miniplex"
 import { Entity } from "./engine"
 
-export function transformSystem(world: World<Entity>) {
+export function createTransformSystem(world: World<Entity>) {
   const entities = world.archetype("transform")
   const engines = world.archetype("engine")
 

@@ -1,7 +1,7 @@
 import { World } from "miniplex"
 import { Entity } from "./engine"
 
-export function autorotateSystem(world: World<Entity>) {
+export function createAutorotateSystem(world: World<Entity>) {
   const entities = world.archetype("autorotate", "transform")
 
   return function (dt: number) {
