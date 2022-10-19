@@ -1,9 +1,7 @@
 import { IEntity, WithOptionalKeys, WithRequiredKeys } from "./types"
 
-type MemoizeStore<A extends Function, B extends Function> = WeakMap<A, B>
-
-export const memoize = <A extends Function, B extends Function>(
-  store: MemoizeStore<A, B>,
+export const memoize = <A extends object, B>(
+  store: WeakMap<A, B>,
   from: A,
   to: B
 ): B => {
@@ -14,7 +12,7 @@ export const memoize = <A extends Function, B extends Function>(
 
 const stores = {
   not: new WeakMap<Function, Function>(),
-  all: new WeakMap<Function, Function>()
+  all: new WeakMap<string[], Function>()
 }
 
 export const not = <E extends IEntity>(predicate: (entity: E) => boolean) =>
