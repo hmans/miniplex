@@ -1,5 +1,12 @@
 # miniplex
 
+## 2.0.0-next.10
+
+### Patch Changes
+
+- 504086b: Miniplex will now log errors (but not throw) when trying to add components that already exist on the entity, or remove or update components that don't.
+- 504086b: Fixed a bug around removal of entities from buckets.
+
 ## 2.0.0-next.9
 
 ### Patch Changes
