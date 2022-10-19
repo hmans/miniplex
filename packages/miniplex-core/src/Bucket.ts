@@ -1,8 +1,8 @@
 import { Event } from "@hmans/event"
 import { all, none, not } from "./predicates"
-import { IEntity, Predicate, WithRequiredKeys } from "./types"
+import { Predicate, WithRequiredKeys } from "./types"
 
-export type BucketOptions<E extends IEntity> = {
+export type BucketOptions<E> = {
   entities?: E[]
 }
 
@@ -10,7 +10,7 @@ export type BucketOptions<E extends IEntity> = {
  * A bucket is a collection of entities. Entities can be added, removed, and
  * touched; the bucket exposes events for each of these operations.
  */
-export class Bucket<E extends IEntity> {
+export class Bucket<E> {
   [Symbol.iterator]() {
     let index = this.entities.length
 

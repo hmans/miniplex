@@ -1,4 +1,4 @@
-import { IEntity, Predicate, WithOptionalKeys, WithRequiredKeys } from "./types"
+import { Predicate, WithOptionalKeys, WithRequiredKeys } from "./types"
 
 export function memoize<A, B>(
   store: A extends object ? Map<A, B> | WeakMap<A, B> : Map<A, B>,
@@ -20,7 +20,7 @@ const stores = {
 export const key = (components: any[]) =>
   JSON.stringify([...new Set(components.sort().filter((p) => !!p && p !== ""))])
 
-export function not<E extends IEntity>(predicate: (entity: E) => boolean) {
+export function not<E>(predicate: (entity: E) => boolean) {
   return memoize(
     stores.not,
     predicate,
@@ -28,19 +28,19 @@ export function not<E extends IEntity>(predicate: (entity: E) => boolean) {
   ) as typeof predicate
 }
 
-export function all<E extends IEntity, C extends keyof E>(...components: C[]) {
+export function all<E = any, C extends keyof E = any>(...components: C[]) {
   return memoize(stores.all, key(components), (entity: E) =>
     components.every((c) => entity[c] !== undefined)
   ) as Predicate<E, WithRequiredKeys<E, C>>
 }
 
-export function any<E extends IEntity, C extends keyof E>(...components: C[]) {
+export function any<E = any, C extends keyof E = any>(...components: C[]) {
   return memoize(stores.any, key(components), (entity: E) =>
     components.some((c) => entity[c] !== undefined)
   ) as Predicate<E, WithOptionalKeys<E, C>>
 }
 
-export function none<E extends IEntity, C extends keyof E>(...components: C[]) {
+export function none<E = any, C extends keyof E = any>(...components: C[]) {
   return memoize(stores.none, key(components), (entity: E) =>
     components.every((c) => entity[c] === undefined)
   ) as Predicate<E, WithOptionalKeys<E, C>>
