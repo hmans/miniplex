@@ -2,6 +2,13 @@ import { archetype } from "./archetypes"
 import { Bucket } from "./Bucket"
 import { IEntity } from "./types"
 
+/**
+ * `World` is a special type of `Bucket` that manages ECS-like entities.
+ * It provides an API for adding and removing components to and from entities,
+ * as well as an `archetype` function that will return a derived bucket
+ * containing all entities of the specified archetype (ie. that have all of
+ * the specified components.)
+ */
 export class World<E extends IEntity> extends Bucket<E> {
   constructor(...args: ConstructorParameters<typeof Bucket<E>>) {
     super(...args)
@@ -53,7 +60,8 @@ export class World<E extends IEntity> extends Bucket<E> {
 
   /**
    * Adds a component to an entity.
-   * If the entity already has the component, this function will do nothing.
+   * If the entity already has the component, this function will log a warning
+   * and return `false`. Otherwise, it will add the component and return `true`.
    *
    * @param entity The entity to add the property to.
    * @param component The component to add.
