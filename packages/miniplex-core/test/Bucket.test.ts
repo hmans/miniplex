@@ -1,4 +1,4 @@
-import { all, archetype, Bucket } from "../src"
+import { all, Bucket } from "../src"
 
 describe("new Bucket", () => {
   it("creates a bucket", () => {
@@ -147,7 +147,7 @@ describe("derive", () => {
     type Entity = { name?: string; age?: number }
 
     const world = new Bucket<Entity>()
-    const withName = world.derive(archetype("name"))
+    const withName = world.derive(all("name"))
 
     const entity = world.add({ name: "Bob", age: 20 })
     expect(withName.entities).toEqual([entity])
@@ -181,8 +181,8 @@ describe("derive", () => {
     type Entity = { count: number }
 
     const bucket = new Bucket<Entity>()
-    const derivedBucket = bucket.derive(archetype("count"))
-    const derivedBucket2 = bucket.derive(archetype("count"))
+    const derivedBucket = bucket.derive(all("count"))
+    const derivedBucket2 = bucket.derive(all("count"))
 
     expect(derivedBucket).toBe(derivedBucket2)
   })
@@ -317,7 +317,7 @@ describe("dispose", () => {
 
   it("also disposes any derived buckets", () => {
     const bucket = new Bucket<{ count: number }>()
-    const derivedBucket = bucket.derive(archetype("count"))
+    const derivedBucket = bucket.derive(all("count"))
     bucket.add({ count: 1 })
     expect(derivedBucket.entities).toEqual([{ count: 1 }])
 
@@ -327,8 +327,8 @@ describe("dispose", () => {
 
   it("also disposes buckets derived from derived buckets", () => {
     const bucket = new Bucket<{ count: number }>()
-    const derivedBucket = bucket.derive(archetype("count"))
-    const derivedBucket2 = derivedBucket.derive(archetype("count"))
+    const derivedBucket = bucket.derive(all("count"))
+    const derivedBucket2 = derivedBucket.derive(all("count"))
     bucket.add({ count: 1 })
     expect(derivedBucket2.entities).toEqual([{ count: 1 }])
 
@@ -338,7 +338,7 @@ describe("dispose", () => {
 
   it("when a derived bucket is disposed, remove its listeners from us", () => {
     const bucket = new Bucket<{ count: number }>()
-    const derivedBucket = bucket.derive(archetype("count"))
+    const derivedBucket = bucket.derive(all("count"))
     expect(bucket.onEntityAdded.listeners.size).toEqual(1)
 
     derivedBucket.dispose()

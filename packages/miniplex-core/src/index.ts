@@ -1,4 +1,3 @@
-export * from "./archetypes"
 export * from "./Bucket"
 export * from "./predicates"
 export * from "./types"

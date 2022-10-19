@@ -21,7 +21,11 @@ export const key = (components: any[]) =>
   JSON.stringify([...new Set(components.sort().filter((p) => !!p && p !== ""))])
 
 export function not<E extends IEntity>(predicate: (entity: E) => boolean) {
-  return memoize(stores.not, predicate, (entity: E) => !predicate(entity))
+  return memoize(
+    stores.not,
+    predicate,
+    (entity: E) => !predicate(entity)
+  ) as typeof predicate
 }
 
 export function all<E extends IEntity, C extends keyof E>(...components: C[]) {

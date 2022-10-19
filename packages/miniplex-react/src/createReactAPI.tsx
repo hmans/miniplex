@@ -1,6 +1,6 @@
 import { useConst } from "@hmans/use-const"
 import {
-  archetype,
+  all,
   Bucket,
   IEntity,
   Predicate,
@@ -112,9 +112,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     }>
   }) => (
     <Bucket
-      bucket={archetype(
-        ...(Array.isArray(components) ? components : [components])
-      )}
+      bucket={all(...(Array.isArray(components) ? components : [components]))}
       {...props}
     />
   )
