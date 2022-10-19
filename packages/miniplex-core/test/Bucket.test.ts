@@ -1,4 +1,4 @@
-import { archetype, Bucket } from "../src"
+import { all, archetype, Bucket } from "../src"
 
 describe("new Bucket", () => {
   it("creates a bucket", () => {
@@ -217,7 +217,7 @@ describe("with", () => {
     type Entity = { count?: number; name?: string }
 
     const bucket = new Bucket<Entity>()
-    const derivedBucket = bucket.with("count", "name")
+    const derivedBucket = bucket.with(all("count", "name"))
 
     bucket.add({ count: 1 })
     expect(derivedBucket.entities).toEqual([])
@@ -227,6 +227,48 @@ describe("with", () => {
 
     bucket.add({ count: 2, name: "Bob" })
     expect(derivedBucket.entities).toEqual([{ count: 2, name: "Bob" }])
+  })
+})
+
+describe("without", () => {
+  it("given a predicate function, it returns a derived bucket containing all entities where the function does not match", () => {
+    const bucket = new Bucket<{ count: number }>()
+    const derivedBucket = bucket.without((entity) => entity.count > 1)
+
+    bucket.add({ count: 1 })
+    expect(derivedBucket.entities).toEqual([{ count: 1 }])
+
+    bucket.add({ count: 2 })
+    expect(derivedBucket.entities).toEqual([{ count: 1 }])
+  })
+
+  it("given a component name, it returns a derived bucket containing all entities that do not have that component", () => {
+    type Entity = { count?: number }
+
+    const bucket = new Bucket<Entity>()
+    const derivedBucket = bucket.without("count")
+
+    bucket.add({ count: 1 })
+    expect(derivedBucket.entities).toEqual([])
+
+    bucket.add({})
+    expect(derivedBucket.entities).toEqual([{}])
+  })
+
+  it("given multiple component names, it returns a derived bucket containing all entities that do not have any of the specified components", () => {
+    type Entity = { count?: number; name?: string }
+
+    const bucket = new Bucket<Entity>()
+    const derivedBucket = bucket.without("count", "name")
+
+    bucket.add({ count: 1 })
+    expect(derivedBucket.entities).toEqual([])
+
+    bucket.add({ name: "Bob" })
+    expect(derivedBucket.entities).toEqual([])
+
+    bucket.add({ count: 2, name: "Bob" })
+    expect(derivedBucket.entities).toEqual([])
   })
 })
 
