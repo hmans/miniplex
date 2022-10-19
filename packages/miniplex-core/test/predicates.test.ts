@@ -31,8 +31,8 @@ describe("all", () => {
   })
 
   it("memoizes the returned predicate", () => {
-    const a = all("a", "b")
-    const b = all("a", "b")
+    const a = all("a", "", "b")
+    const b = all("a", "a", "", "b")
     expect(a === b).toBeTruthy()
   })
 })
@@ -48,5 +48,11 @@ describe("none", () => {
     const p = none("a", "b")
     const entity = { a: 1 }
     expect(p(entity)).toBe(false)
+  })
+
+  it("memoizes the returned predicate", () => {
+    const a = none("a", "b")
+    const b = none("b", "a", "")
+    expect(a === b).toBeTruthy()
   })
 })
