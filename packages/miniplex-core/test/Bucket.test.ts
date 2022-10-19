@@ -7,10 +7,8 @@ describe("new Bucket", () => {
   })
 
   it("allows the user to pass an initial list of entities", () => {
-    const entities = [1, 2, 3]
-    const bucket = new Bucket({ entities })
-    expect(bucket.size).toBe(3)
-    expect(bucket.entities).toBe(entities)
+    const bucket = new Bucket({ entities: [{ id: 1 }, { id: 2 }] })
+    expect(bucket.entities).toEqual([{ id: 1 }, { id: 2 }])
   })
 })
 
