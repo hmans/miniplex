@@ -1,0 +1,29 @@
+{
+  "name": "@hmans/queue",
+  "author": {
+    "name": "Hendrik Mans",
+    "email": "hendrik@mans.de",
+    "url": "https://hendrik.mans.de"
+  },
+  "description": "A tiny queue.",
+  "homepage": "https://github.com/hmans/things",
+  "keywords": [
+    "queue"
+  ],
+  "sideEffects": false,
+  "version": "0.0.1",
+  "main": "dist/hmans-queue.cjs.js",
+  "module": "dist/hmans-queue.esm.js",
+  "types": "dist/hmans-queue.cjs.d.ts",
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts"
+    ]
+  },
+  "files": [
+    "dist/**",
+    "LICENSE",
+    "README.md"
+  ],
+  "license": "MIT"
+}

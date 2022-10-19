@@ -4,53 +4,35 @@
 
 ### Patch Changes
 
-- Updated dependencies [873381c]
-  - @miniplex/core@2.0.0-next.9
+- 873381c: Changed type signature of `add` to return the input entity's type. This is an experimental change that may be reverted.
 
 ## 2.0.0-next.8
 
 ### Patch Changes
 
-- Updated dependencies [5a5244e]
-- Updated dependencies [6808a5d]
-- Updated dependencies [c28a404]
-  - @miniplex/core@2.0.0-next.8
-  - @miniplex/react@2.0.0-next.8
-
-## 2.0.0-next.7
-
-### Patch Changes
-
-- Updated dependencies [8b79340]
-  - @miniplex/react@2.0.0-next.7
+- 5a5244e: The global `id(entity)` export has been removed, and replaced with a `World`-specific ID mechanism, `world.id(entity)` and `world.entity(id)`.
+- 6808a5d: All buckets can now be instantiated with an initial list of entities.
+- c28a404: From "properties" back to "components". The methods on `World` are now once again called `addComponent`, `setComponent` and `removeComponent`, and the React component has been renamed from `<Property>` to `<Component>`.
 
 ## 2.0.0-next.6
 
 ### Patch Changes
 
-- Updated dependencies [3fcc79a]
-- Updated dependencies [10c60f8]
-- Updated dependencies [f92b5f7]
-  - @miniplex/react@2.0.0-next.6
-  - @miniplex/core@2.0.0-next.6
+- 10c60f8: Implemented `Bucket.dispose`, which will also dispose of derived buckets properly.
+- f92b5f7: Added the `Bucket.onCleared` event, which is emitted when the bucket's `clear` function is invoked.
 
 ## 2.0.0-next.5
 
 ### Patch Changes
 
-- Updated dependencies [16cef4e]
-- Updated dependencies [1c63f90]
-  - @miniplex/core@2.0.0-next.5
-  - @miniplex/react@2.0.0-next.5
+- 16cef4e: Massive performance improvements!
+- 1c63f90: Added `World.setProperty`.
 
 ## 2.0.0-next.4
 
 ### Patch Changes
 
 - 1d26060: Restructured the packages into `@miniplex/core` and `@miniplex/react`, with a main `miniplex` package re-exporting these.
-- Updated dependencies [1d26060]
-  - @miniplex/core@2.0.0-next.4
-  - @miniplex/react@2.0.0-next.4
 
 ## 2.0.0-next.3
 

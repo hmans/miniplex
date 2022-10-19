@@ -1,5 +1,5 @@
 {
-  "name": "miniplex-react",
+  "name": "@miniplex/react",
   "author": {
     "name": "Hendrik Mans",
     "email": "hendrik@mans.de",
@@ -17,7 +17,7 @@
     "hooks"
   ],
   "sideEffects": false,
-  "version": "1.0.1",
+  "version": "2.0.0-next.8",
   "main": "dist/miniplex-react.cjs.js",
   "module": "dist/miniplex-react.esm.js",
   "types": "dist/miniplex-react.cjs.d.ts",
@@ -28,17 +28,18 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "miniplex": "1.0.0",
+    "@miniplex/core": "2.0.0-next.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "dependencies": {
+    "@hmans/id": "workspace:^0.0.1",
     "@hmans/use-const": "^0.0.1",
     "@hmans/use-rerender": "^0.0.2",
     "react-merge-refs": "^1.1.0"
   },
   "peerDependencies": {
-    "miniplex": "^1.0.0-next.1",
+    "@miniplex/core": "^2.0.0-next.0",
     "react": ">=16.8"
   }
 }

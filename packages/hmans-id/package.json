@@ -1,0 +1,24 @@
+{
+  "name": "@hmans/id",
+  "author": {
+    "name": "Hendrik Mans",
+    "email": "hendrik@mans.de",
+    "url": "https://hendrik.mans.de"
+  },
+  "description": "A tiny object identity generator.",
+  "homepage": "https://github.com/hmans/things",
+  "keywords": [
+    "id"
+  ],
+  "sideEffects": false,
+  "version": "0.0.1",
+  "main": "dist/hmans-id.cjs.js",
+  "module": "dist/hmans-id.esm.js",
+  "types": "dist/hmans-id.cjs.d.ts",
+  "files": [
+    "dist/**",
+    "LICENSE",
+    "README.md"
+  ],
+  "license": "MIT"
+}

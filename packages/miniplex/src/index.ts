@@ -1,2 +1,1 @@
-export * from "./World"
-export * from "./Archetype"
+export * from "@miniplex/core"

@@ -1,5 +1,68 @@
 # Changelog
 
+## 2.0.0-next.8
+
+### Patch Changes
+
+- 5a5244e: The global `id(entity)` export has been removed, and replaced with a `World`-specific ID mechanism, `world.id(entity)` and `world.entity(id)`.
+- c28a404: From "properties" back to "components". The methods on `World` are now once again called `addComponent`, `setComponent` and `removeComponent`, and the React component has been renamed from `<Property>` to `<Component>`.
+
+## 2.0.0-next.7
+
+### Patch Changes
+
+- 8b79340: Added the `as` prop to `Entity`, `Entities`, `Bucket` and `Archetype`. (#145)
+
+## 2.0.0-next.6
+
+### Patch Changes
+
+- 3fcc79a: When `<Property>` encounters an entity that has the property already set, it will not add or remove the proprty on mount or unmount, but it will still update the property if the value changes. When unmounting, it will restore the property to the value it had before the component was mounted.
+
+## 2.0.0-next.5
+
+### Patch Changes
+
+- 1c63f90: Added `World.setProperty`.
+
+## 2.0.0-next.4
+
+### Patch Changes
+
+- 1d26060: Restructured the packages into `@miniplex/core` and `@miniplex/react`, with a main `miniplex` package re-exporting these.
+
+## 2.0.0-next.3
+
+### Patch Changes
+
+- f81bf3e: The `EntityPredicate` type has been renamed to just `Predicate`.
+- 2af57a6: The `EntityWith` type has been renamed to `WithRequiredKeys`.
+
+## 2.0.0-next.2
+
+### Patch Changes
+
+- 87a8b8c: Added a global `useArchetype` export that takes a world as its first argument.
+
+## 2.0.0-next.1
+
+### Patch Changes
+
+- 41ccab7: <Property> now reactively changes a property's value without removing and re-adding the property.
+- 86c2fdb: Added `useArchetype`.
+- 40cf138: Removed `useBucket`, it didn't do anything useful. Just use `useEntities`.
+
+## 2.0.0-next.0
+
+### Major Changes
+
+- f2406db: 2.0!
+
+### Patch Changes
+
+- Updated dependencies [f2406db]
+  - miniplex@2.0.0-next.0
+
 ## 1.0.1
 
 ### Patch Changes
