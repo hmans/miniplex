@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@hmans/id": "workspace:^0.0.1",
     "@hmans/r3f-animate": "^0.0.5",
     "@hmans/use-const": "^0.0.1",
     "@react-three/drei": "^9.34.3",
