@@ -282,10 +282,24 @@ export class Bucket<E extends IEntity> {
   }
 }
 
+type MemoizeStore<A extends Function, B extends Function> = WeakMap<A, B>
+
+export const memoize = <A extends Function, B extends Function>(
+  store: MemoizeStore<A, B>,
+  from: A,
+  to: B
+): B => {
+  if (store.has(from)) return store.get(from)!
+  store.set(from, to)
+  return to
+}
+
+const notStore = new WeakMap<Function, Function>()
+
 export const not =
   <E extends IEntity>(predicate: (entity: E) => boolean) =>
   (entity: E): entity is E =>
-    !predicate(entity)
+    memoize(notStore, predicate, (entity: E) => !predicate(entity))(entity)
 
 export const all =
   <E extends IEntity, C extends keyof E>(...components: C[]) =>
