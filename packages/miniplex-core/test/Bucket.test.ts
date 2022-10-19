@@ -1,4 +1,4 @@
-import { all, Bucket } from "../src"
+import { all, any, Bucket, none } from "../src"
 
 describe("new Bucket", () => {
   it("creates a bucket", () => {
@@ -217,7 +217,7 @@ describe("with", () => {
     type Entity = { count?: number; name?: string }
 
     const bucket = new Bucket<Entity>()
-    const derivedBucket = bucket.with(all("count", "name"))
+    const derivedBucket = bucket.with("count", "name")
 
     bucket.add({ count: 1 })
     expect(derivedBucket.entities).toEqual([])
@@ -227,6 +227,38 @@ describe("with", () => {
 
     bucket.add({ count: 2, name: "Bob" })
     expect(derivedBucket.entities).toEqual([{ count: 2, name: "Bob" }])
+  })
+
+  it("supports the 'any' predicate modifier", () => {
+    type Entity = { count?: number; name?: string }
+
+    const bucket = new Bucket<Entity>()
+    const derivedBucket = bucket.with(any("count", "name"))
+
+    bucket.add({})
+    expect(derivedBucket.entities).toEqual([])
+
+    bucket.add({ count: 1 })
+    expect(derivedBucket.entities).toEqual([{ count: 1 }])
+
+    bucket.add({ name: "Bob" })
+    expect(derivedBucket.entities).toEqual([{ count: 1 }, { name: "Bob" }])
+  })
+
+  it("supports the 'none' predicate modifier", () => {
+    type Entity = { count?: number; name?: string }
+
+    const bucket = new Bucket<Entity>()
+    const derivedBucket = bucket.with(none("count", "name"))
+
+    bucket.add({})
+    expect(derivedBucket.entities).toEqual([{}])
+
+    bucket.add({ count: 1 })
+    expect(derivedBucket.entities).toEqual([{}])
+
+    bucket.add({ name: "Bob" })
+    expect(derivedBucket.entities).toEqual([{}])
   })
 })
 

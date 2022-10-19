@@ -37,7 +37,7 @@ export function all<E extends IEntity, C extends keyof E>(...components: C[]) {
 export function any<E extends IEntity, C extends keyof E>(...components: C[]) {
   return memoize(stores.any, key(components), (entity: E) =>
     components.some((c) => entity[c] !== undefined)
-  )
+  ) as Predicate<E, WithOptionalKeys<E, C>>
 }
 
 export function none<E extends IEntity, C extends keyof E>(...components: C[]) {
