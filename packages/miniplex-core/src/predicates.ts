@@ -13,6 +13,7 @@ export const memoize = <A, B>(
 const stores = {
   not: new WeakMap<Function, Function>(),
   all: new Map<string, Function>(),
+  any: new Map<string, Function>(),
   none: new Map<string, Function>()
 }
 
@@ -30,10 +31,13 @@ export const all = <E extends IEntity, C extends keyof E>(
   ) as Predicate<E, WithRequiredKeys<E, C>>
 }
 
-export const any =
-  <E extends IEntity, C extends keyof E>(...components: C[]) =>
-  (entity: E) =>
+export const any = <E extends IEntity, C extends keyof E>(
+  ...components: C[]
+) => {
+  return memoize(stores.any, key(components), (entity: E) =>
     components.some((c) => entity[c] !== undefined)
+  )
+}
 
 export const none = <E extends IEntity, C extends keyof E>(
   ...components: C[]
