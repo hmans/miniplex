@@ -2,12 +2,12 @@ import "@testing-library/jest-dom"
 import { act, render, renderHook, screen } from "@testing-library/react"
 import { World } from "@miniplex/core"
 import React from "react"
-import { createComponents } from "../src"
+import createReactAPI from "../src"
 
 describe("<Entity>", () => {
   it("creates an entity", () => {
     const world = new World()
-    const { Entity } = createComponents(world)
+    const { Entity } = createReactAPI(world)
 
     expect(world.entities.length).toBe(0)
     render(<Entity />)
@@ -16,7 +16,7 @@ describe("<Entity>", () => {
 
   it("removes the entity on unmount", () => {
     const world = new World()
-    const { Entity } = createComponents(world)
+    const { Entity } = createReactAPI(world)
 
     const { unmount } = render(<Entity />)
     expect(world.entities.length).toBe(1)
@@ -26,7 +26,7 @@ describe("<Entity>", () => {
 
   it("accepts a function as its child", () => {
     const world = new World<{ foo: string }>()
-    const { Entity } = createComponents(world)
+    const { Entity } = createReactAPI(world)
 
     const entity = world.add({ foo: "bar" })
 
@@ -41,7 +41,7 @@ describe("<Entity>", () => {
   it("accepts a React function component as a child", () => {
     type Entity = { name: string; age: number }
     const world = new World<Entity>()
-    const { Entity } = createComponents(world)
+    const { Entity } = createReactAPI(world)
 
     const entity = world.add({ name: "Alice", age: 30 })
 
@@ -55,7 +55,7 @@ describe("<Entity>", () => {
   describe("with a given entity that is not yet part of the bucket", () => {
     it("adds the entity to the bucket", () => {
       const world = new World()
-      const { Entity } = createComponents(world)
+      const { Entity } = createReactAPI(world)
       const entity = {}
 
       expect(world.entities.length).toBe(0)
@@ -66,7 +66,7 @@ describe("<Entity>", () => {
 
     it("removes the entity on unmount", () => {
       const world = new World()
-      const { Entity } = createComponents(world)
+      const { Entity } = createReactAPI(world)
       const entity = {}
 
       const { unmount } = render(<Entity entity={entity} />)
@@ -79,7 +79,7 @@ describe("<Entity>", () => {
   describe("given an `as` prop", () => {
     it("renders the entity using that component, passing the entity to it", () => {
       const world = new World<{ foo: string }>()
-      const { Entity } = createComponents(world)
+      const { Entity } = createReactAPI(world)
 
       const entity = world.add({ foo: "bar" })
 
@@ -97,7 +97,7 @@ describe("<Entity>", () => {
 describe("<Property>", () => {
   it("assigns the specified component", () => {
     const world = new World()
-    const { Entity, Component } = createComponents(world)
+    const { Entity, Component } = createReactAPI(world)
 
     render(
       <Entity>
@@ -110,7 +110,7 @@ describe("<Property>", () => {
 
   it("updates the specified component on re-rendering", () => {
     const world = new World()
-    const { Entity, Component } = createComponents(world)
+    const { Entity, Component } = createReactAPI(world)
 
     const { rerender } = render(
       <Entity>
@@ -130,7 +130,7 @@ describe("<Property>", () => {
   it("removes the component when the component is unmounted", () => {
     const world = new World()
     const entity = world.add({})
-    const { Entity, Component } = createComponents(world)
+    const { Entity, Component } = createReactAPI(world)
 
     const { unmount } = render(
       <Entity entity={entity}>
@@ -145,7 +145,7 @@ describe("<Property>", () => {
 
   it("captures the ref of the child when it has one", () => {
     const world = new World()
-    const { Entity, Component } = createComponents(world)
+    const { Entity, Component } = createReactAPI(world)
 
     const ref = React.createRef<HTMLDivElement>()
 
@@ -163,7 +163,7 @@ describe("<Property>", () => {
   describe("when the entity already has the component", () => {
     it("updates the component", () => {
       const world = new World()
-      const { Entity, Component } = createComponents(world)
+      const { Entity, Component } = createReactAPI(world)
       const entity = world.add({ foo: "bar" })
 
       render(
@@ -180,7 +180,7 @@ describe("<Property>", () => {
 describe("<Entities>", () => {
   it("renders a list of entities", () => {
     const world = new World<{ name: string }>()
-    const { Entities } = createComponents(world)
+    const { Entities } = createReactAPI(world)
 
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })
@@ -199,7 +199,7 @@ describe("<Entities>", () => {
     it("renders the entities using the given component, passing the entity to it", () => {
       type Entity = { name: string }
       const world = new World<Entity>()
-      const { Entities } = createComponents(world)
+      const { Entities } = createReactAPI(world)
 
       world.add({ name: "Alice" })
       world.add({ name: "Bob" })
@@ -217,7 +217,7 @@ describe("<Entities>", () => {
 describe("<Bucket>", () => {
   it("renders the entities within the given bucket", () => {
     const world = new World<{ name: string }>()
-    const { Bucket } = createComponents(world)
+    const { Bucket } = createReactAPI(world)
 
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })
@@ -230,7 +230,7 @@ describe("<Bucket>", () => {
 
   it("re-renders the entities when the bucket contents change", () => {
     const world = new World<{ name: string }>()
-    const { Bucket } = createComponents(world)
+    const { Bucket } = createReactAPI(world)
 
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })
@@ -253,7 +253,7 @@ describe("<Bucket>", () => {
     it("renders the entities using the given component, passing the entity to it", () => {
       type Entity = { name: string }
       const world = new World<Entity>()
-      const { Bucket } = createComponents(world)
+      const { Bucket } = createReactAPI(world)
 
       world.add({ name: "Alice" })
       world.add({ name: "Bob" })
@@ -271,7 +271,7 @@ describe("<Bucket>", () => {
 describe("<Archetype>", () => {
   it("renders the entities within the given archetype bucket", () => {
     const world = new World<{ name: string }>()
-    const { Archetype } = createComponents(world)
+    const { Archetype } = createReactAPI(world)
 
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })
@@ -288,7 +288,7 @@ describe("<Archetype>", () => {
 
   it("re-renders the entities when the bucket contents change", () => {
     const world = new World<{ name: string }>()
-    const { Archetype } = createComponents(world)
+    const { Archetype } = createReactAPI(world)
 
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })
@@ -315,7 +315,7 @@ describe("<Archetype>", () => {
     it("renders the entities using the given component, passing the entity to it", () => {
       type Entity = { name: string }
       const world = new World<Entity>()
-      const { Archetype } = createComponents(world)
+      const { Archetype } = createReactAPI(world)
 
       world.add({ name: "Alice" })
       world.add({ name: "Bob" })
@@ -333,7 +333,7 @@ describe("<Archetype>", () => {
 describe("useArchetype", () => {
   it("returns the entities of the specified archetype and re-renders the component when the archetype updates", () => {
     const world = new World<{ name: string }>()
-    const { useArchetype } = createComponents(world)
+    const { useArchetype } = createReactAPI(world)
 
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })

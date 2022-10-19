@@ -1,5 +1,5 @@
 import { World } from "miniplex"
-import { createComponents } from "miniplex/react"
+import createReactAPI from "miniplex/react"
 import { ReactNode } from "react"
 import { Object3D, Vector3 } from "three"
 
@@ -79,6 +79,6 @@ export const lifetime = (maxAge?: number) => ({
 const world = new World<Entity>()
 
 export const ECS = {
-  ...createComponents(world),
+  ...createReactAPI(world),
   world
 }

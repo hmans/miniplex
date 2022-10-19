@@ -25,7 +25,7 @@ const useIsomorphicLayoutEffect =
 
 export type EntityChildren<E> = ReactNode | ((entity: E) => ReactNode)
 
-export const createComponents = <E extends IEntity>(world: World<E>) => {
+export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   const EntityContext = createContext<E | null>(null)
 
   const useCurrentEntity = () => useContext(EntityContext)
