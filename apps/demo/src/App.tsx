@@ -21,7 +21,7 @@ function App() {
               <RC.VignetteEffect />
             </RC.EffectPass>
             <RC.EffectPass>
-              <RC.TiltShiftEffect />
+              <RC.TiltShiftEffect focusArea={1} kernelSize={2} feather={10} />
             </RC.EffectPass>
 
             <color args={["#223"]} attach="background" />
