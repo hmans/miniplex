@@ -256,7 +256,7 @@ export class Bucket<E extends IEntity> {
     ...rest: K[]
   ) {
     if (typeof predicate === "string") {
-      return this.derive(archetype(predicate, ...rest))
+      return this.derive(all(predicate, ...rest))
     } else if (typeof predicate === "function") {
       return this.derive(predicate)
     } else {
@@ -273,7 +273,7 @@ export class Bucket<E extends IEntity> {
     ...rest: K[]
   ) {
     if (typeof predicate === "string") {
-      return this.derive(not(archetype(predicate, ...rest)))
+      return this.derive(none(predicate, ...rest))
     } else if (typeof predicate === "function") {
       return this.derive(not(predicate))
     } else {
