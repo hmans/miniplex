@@ -129,9 +129,6 @@ importers:
   packages/hmans-id:
     specifiers: {}
 
-  packages/hmans-queue:
-    specifiers: {}
-
   packages/miniplex:
     specifiers:
       '@miniplex/core': 2.0.0-next.10
