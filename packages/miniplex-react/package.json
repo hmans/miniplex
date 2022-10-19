@@ -33,7 +33,6 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "@hmans/id": "workspace:^0.0.1",
     "@hmans/use-const": "^0.0.1",
     "@hmans/use-rerender": "^0.0.2",
     "react-merge-refs": "^1.1.0"
