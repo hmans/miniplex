@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0-next.10
+
+### Patch Changes
+
+- 504086b: Strict Mode fixes.
+
 ## 2.0.0-next.8
 
 ### Patch Changes

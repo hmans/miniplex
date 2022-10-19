@@ -1,5 +1,15 @@
 # miniplex
 
+## 2.0.0-next.10
+
+### Patch Changes
+
+- Updated dependencies [504086b]
+- Updated dependencies [504086b]
+- Updated dependencies [504086b]
+  - @miniplex/core@2.0.0-next.10
+  - @miniplex/react@2.0.0-next.10
+
 ## 2.0.0-next.9
 
 ### Patch Changes
