@@ -186,7 +186,7 @@ export class Bucket<E> {
    * @param predicate The predicate to use to filter entities.
    * @returns The new derived bucket.
    */
-  derive<D extends E>(
+  private derive<D extends E>(
     predicate: Predicate<E, D> | ((entity: E) => boolean)
   ): Bucket<D> {
     /* Check if we already have a derived bucket for this predicate */

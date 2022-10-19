@@ -130,64 +130,6 @@ describe("remove", () => {
   })
 })
 
-describe("derive", () => {
-  it("if a predicate is given the derived bucket will only receive entities that match the predicate", () => {
-    const bucket = new Bucket<{ count: number }>()
-
-    const derivedBucket = bucket.derive((entity) => entity.count > 1)
-
-    bucket.add({ count: 1 })
-    expect(derivedBucket.entities).toEqual([])
-
-    bucket.add({ count: 2 })
-    expect(derivedBucket.entities).toEqual([{ count: 2 }])
-  })
-
-  it("it properly captures predicate type guards", () => {
-    type Entity = { name?: string; age?: number }
-
-    const world = new Bucket<Entity>()
-    const withName = world.derive(all("name"))
-
-    const entity = world.add({ name: "Bob", age: 20 })
-    expect(withName.entities).toEqual([entity])
-
-    withName.entities[0].name.length
-    /* No real test, just making sure the type is correct */
-  })
-
-  it("given equal predicates, it returns the same bucket", () => {
-    type Entity = { count: number }
-
-    const bucket = new Bucket<Entity>()
-    const predicate = (entity: Entity) => entity.count > 1
-
-    const derivedBucket = bucket.derive(predicate)
-    const derivedBucket2 = bucket.derive(predicate)
-    expect(derivedBucket).toBe(derivedBucket2)
-  })
-
-  it("given different predicates, it returns different buckets", () => {
-    type Entity = { count: number }
-
-    const bucket = new Bucket<Entity>()
-    const derivedBucket = bucket.derive((entity) => entity.count > 1)
-    const derivedBucket2 = bucket.derive((entity) => entity.count > 2)
-
-    expect(derivedBucket).not.toBe(derivedBucket2)
-  })
-
-  it("given the same two archetype predicates, it returns the same bucket", () => {
-    type Entity = { count: number }
-
-    const bucket = new Bucket<Entity>()
-    const derivedBucket = bucket.derive(all("count"))
-    const derivedBucket2 = bucket.derive(all("count"))
-
-    expect(derivedBucket).toBe(derivedBucket2)
-  })
-})
-
 describe("with", () => {
   it("given a predicate function, it returns a derived bucket containing all entities where the function matches", () => {
     const bucket = new Bucket<{ count: number }>()
@@ -200,7 +142,7 @@ describe("with", () => {
     expect(derivedBucket.entities).toEqual([{ count: 2 }])
   })
 
-  it("given a component nane, it returns a derived bucket containing all entities that have that component", () => {
+  it("given a component name, it returns a derived bucket containing all entities that have that component", () => {
     type Entity = { count?: number }
 
     const bucket = new Bucket<Entity>()
@@ -227,6 +169,50 @@ describe("with", () => {
 
     bucket.add({ count: 2, name: "Bob" })
     expect(derivedBucket.entities).toEqual([{ count: 2, name: "Bob" }])
+  })
+
+  it("it properly captures predicate type guards", () => {
+    type Entity = { name?: string; age?: number }
+
+    const world = new Bucket<Entity>()
+    const withName = world.with(all("name"))
+
+    const entity = world.add({ name: "Bob", age: 20 })
+    expect(withName.entities).toEqual([entity])
+
+    withName.entities[0].name.length
+    /* No real test, just making sure the type is correct */
+  })
+
+  it("given equal predicates, it returns the same bucket", () => {
+    type Entity = { count: number }
+
+    const bucket = new Bucket<Entity>()
+    const predicate = (entity: Entity) => entity.count > 1
+
+    const derivedBucket = bucket.with(predicate)
+    const derivedBucket2 = bucket.with(predicate)
+    expect(derivedBucket).toBe(derivedBucket2)
+  })
+
+  it("given different predicates, it returns different buckets", () => {
+    type Entity = { count: number }
+
+    const bucket = new Bucket<Entity>()
+    const derivedBucket = bucket.with((entity) => entity.count > 1)
+    const derivedBucket2 = bucket.with((entity) => entity.count > 2)
+
+    expect(derivedBucket).not.toBe(derivedBucket2)
+  })
+
+  it("given the same two archetype predicates, it returns the same bucket", () => {
+    type Entity = { count: number }
+
+    const bucket = new Bucket<Entity>()
+    const derivedBucket = bucket.with("count")
+    const derivedBucket2 = bucket.with("count")
+
+    expect(derivedBucket).toBe(derivedBucket2)
   })
 
   it("supports the 'any' predicate modifier", () => {
@@ -349,7 +335,7 @@ describe("dispose", () => {
 
   it("also disposes any derived buckets", () => {
     const bucket = new Bucket<{ count: number }>()
-    const derivedBucket = bucket.derive(all("count"))
+    const derivedBucket = bucket.with(all("count"))
     bucket.add({ count: 1 })
     expect(derivedBucket.entities).toEqual([{ count: 1 }])
 
@@ -359,8 +345,8 @@ describe("dispose", () => {
 
   it("also disposes buckets derived from derived buckets", () => {
     const bucket = new Bucket<{ count: number }>()
-    const derivedBucket = bucket.derive(all("count"))
-    const derivedBucket2 = derivedBucket.derive(all("count"))
+    const derivedBucket = bucket.with(all("count"))
+    const derivedBucket2 = derivedBucket.with(all("count"))
     bucket.add({ count: 1 })
     expect(derivedBucket2.entities).toEqual([{ count: 1 }])
 
@@ -370,7 +356,7 @@ describe("dispose", () => {
 
   it("when a derived bucket is disposed, remove its listeners from us", () => {
     const bucket = new Bucket<{ count: number }>()
-    const derivedBucket = bucket.derive(all("count"))
+    const derivedBucket = bucket.with(all("count"))
     expect(bucket.onEntityAdded.listeners.size).toEqual(1)
 
     derivedBucket.dispose()
