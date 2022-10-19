@@ -91,8 +91,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     children?: EntityChildren<D>
     as?: FunctionComponent<{ entity: D; children?: ReactNode }>
   }) => {
-    const source =
-      typeof _bucket === "function" ? world.derive(_bucket) : _bucket
+    const source = typeof _bucket === "function" ? world.with(_bucket) : _bucket
 
     const entities = useEntities(source)
     return <Entities entities={entities} {...props} />

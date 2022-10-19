@@ -3,7 +3,7 @@ import { useLayoutEffect } from "react"
 import { Vector3 } from "three"
 import { ECS, Entity } from "../state"
 
-const entities = ECS.world.archetype("transform", "spatialHashing")
+const entities = ECS.world.with("transform", "spatialHashing")
 
 const cells = new Map<string, Entity[]>()
 const entityCells = new WeakMap<Entity, Entity[]>()

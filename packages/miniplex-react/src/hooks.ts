@@ -23,4 +23,4 @@ export const useEntities = <E extends IEntity>(bucket: Bucket<E>) => {
 export const useArchetype = <E extends IEntity, P extends keyof E>(
   world: World<E>,
   ...properties: P[]
-) => useEntities(world.derive(all(...properties)))
+) => useEntities(world.with(all(...properties)))

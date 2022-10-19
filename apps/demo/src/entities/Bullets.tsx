@@ -16,7 +16,7 @@ export const Bullets = () => (
   </InstancedParticles>
 )
 
-const players = ECS.world.archetype("isPlayer")
+const players = ECS.world.with("isPlayer")
 
 const jitter = new Quaternion()
 const axisZ = new Vector3(0, 0, 1)

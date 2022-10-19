@@ -4,7 +4,7 @@ import { queueDestroy } from "./DestroySystem"
 
 export const AgeSystem = () => {
   useFrame((_, dt) => {
-    for (const entity of ECS.world.archetype("lifetime")) {
+    for (const entity of ECS.world.with("lifetime")) {
       entity.lifetime.age += dt
 
       if (

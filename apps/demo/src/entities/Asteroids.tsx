@@ -66,7 +66,7 @@ export type Asteroid = WithRequiredKeys<
 export const isAsteroid = (entity: Entity): entity is Asteroid =>
   "isAsteroid" in entity
 
-const asteroids = ECS.world.derive(isAsteroid)
+const asteroids = ECS.world.with(isAsteroid)
 
 const tmpVec3 = new Vector3()
 

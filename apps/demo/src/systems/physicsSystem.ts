@@ -5,7 +5,7 @@ import { ECS, Entity } from "../state"
 
 type PhysicsEntity = WithRequiredKeys<Entity, "transform" | "physics">
 
-const entities = ECS.world.archetype("transform", "physics")
+const entities = ECS.world.with("transform", "physics")
 
 const tmpVec3 = new Vector3()
 

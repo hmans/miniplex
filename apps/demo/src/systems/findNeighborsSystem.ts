@@ -2,7 +2,7 @@ import { useFrame } from "@react-three/fiber"
 import { ECS } from "../state"
 import { getEntitiesInRadius } from "./spatialHashingSystem"
 
-const entities = ECS.world.archetype(
+const entities = ECS.world.with(
   "transform",
   "physics",
   "neighbors",

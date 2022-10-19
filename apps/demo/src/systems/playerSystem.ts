@@ -12,7 +12,7 @@ const isPlayer = (
 ): entity is WithRequiredKeys<Entity, "transform" | "physics"> =>
   !!entity.isPlayer
 
-const players = ECS.world.derive(isPlayer)
+const players = ECS.world.with(isPlayer)
 
 let lastFireTime = 0
 

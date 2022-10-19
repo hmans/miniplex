@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber"
 import { ECS, Entity } from "../state"
 
-const entities = ECS.world.archetype("destroy")
+const entities = ECS.world.with("destroy")
 
 export const DestroySystem = () => {
   useFrame(() => {

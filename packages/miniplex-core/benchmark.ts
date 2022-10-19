@@ -54,8 +54,8 @@ profile("add", () => {
 
 profile("add (with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.archetype("position")
-  const withVelocity = world.archetype("velocity")
+  const withPosition = world.with("position")
+  const withVelocity = world.with("velocity")
 
   return () => {
     for (let i = 0; i < entityCount; i++) {
@@ -88,8 +88,8 @@ profile("remove", () => {
 
 profile("remove (with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.archetype("position")
-  const withVelocity = world.archetype("velocity")
+  const withPosition = world.with("position")
+  const withVelocity = world.with("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -124,8 +124,8 @@ profile("clear", () => {
 
 profile("clear (with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.archetype("position")
-  const withVelocity = world.archetype("velocity")
+  const withPosition = world.with("position")
+  const withVelocity = world.with("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -166,7 +166,7 @@ profile("simulate", () => {
 
 profile("simulate (with archetypes)", () => {
   const world = new World<Entity>()
-  const withVelocity = world.archetype("velocity")
+  const withVelocity = world.with("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({

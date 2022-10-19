@@ -2,8 +2,8 @@ import { World } from "miniplex"
 import { Entity } from "./engine"
 
 export function createTransformSystem(world: World<Entity>) {
-  const entities = world.archetype("transform")
-  const engines = world.archetype("engine")
+  const entities = world.with("transform")
+  const engines = world.with("engine")
 
   entities.onEntityAdded.add((entity) => {
     const [{ engine }] = engines
