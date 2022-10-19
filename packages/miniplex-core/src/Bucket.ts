@@ -245,12 +245,18 @@ export class Bucket<E extends IEntity> {
   with<D extends E>(
     predicate: Predicate<E, D> | ((entity: E) => boolean)
   ): Bucket<D>
+
   with<D extends WithRequiredKeys<E, K>, K extends keyof E>(
-    predicate: K,
+    component: K,
     ...rest: K[]
-  ): Bucket<D> {
+  ): Bucket<D>
+
+  with<D extends WithRequiredKeys<E, K>, K extends keyof E>(
+    predicate: K | Predicate<E, D> | ((entity: E) => boolean),
+    ...rest: K[]
+  ) {
     if (typeof predicate === "string") {
-      return this.derive(archetype(predicate, ...rest)) as unknown as Bucket<D>
+      return this.derive(archetype(predicate, ...rest))
     } else if (typeof predicate === "function") {
       return this.derive(predicate)
     } else {

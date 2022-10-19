@@ -188,6 +188,48 @@ describe("derive", () => {
   })
 })
 
+describe("with", () => {
+  it("given a predicate function, it returns a derived bucket containing all entities where the function matches", () => {
+    const bucket = new Bucket<{ count: number }>()
+    const derivedBucket = bucket.with((entity) => entity.count > 1)
+
+    bucket.add({ count: 1 })
+    expect(derivedBucket.entities).toEqual([])
+
+    bucket.add({ count: 2 })
+    expect(derivedBucket.entities).toEqual([{ count: 2 }])
+  })
+
+  it("given a component nane, it returns a derived bucket containing all entities that have that component", () => {
+    type Entity = { count?: number }
+
+    const bucket = new Bucket<Entity>()
+    const derivedBucket = bucket.with("count")
+
+    bucket.add({ count: 1 })
+    expect(derivedBucket.entities).toEqual([{ count: 1 }])
+
+    bucket.add({})
+    expect(derivedBucket.entities).toEqual([{ count: 1 }])
+  })
+
+  it("given multiple component names, it returns a derived bucket containing all entities that have all of the specified components", () => {
+    type Entity = { count?: number; name?: string }
+
+    const bucket = new Bucket<Entity>()
+    const derivedBucket = bucket.with("count", "name")
+
+    bucket.add({ count: 1 })
+    expect(derivedBucket.entities).toEqual([])
+
+    bucket.add({ name: "Bob" })
+    expect(derivedBucket.entities).toEqual([])
+
+    bucket.add({ count: 2, name: "Bob" })
+    expect(derivedBucket.entities).toEqual([{ count: 2, name: "Bob" }])
+  })
+})
+
 describe("clear", () => {
   it("removes all entities from the bucket", () => {
     const bucket = new Bucket()
