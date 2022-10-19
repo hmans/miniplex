@@ -12,12 +12,13 @@ export const memoize = <A extends Function, B extends Function>(
   return to
 }
 
-const notStore = new WeakMap<Function, Function>()
+const stores = {
+  not: new WeakMap<Function, Function>(),
+  all: new WeakMap<Function, Function>()
+}
 
-export const not =
-  <E extends IEntity>(predicate: (entity: E) => boolean) =>
-  (entity: E): entity is E =>
-    memoize(notStore, predicate, (entity: E) => !predicate(entity))(entity)
+export const not = <E extends IEntity>(predicate: (entity: E) => boolean) =>
+  memoize(stores.not, predicate, (entity: E) => !predicate(entity))
 
 export const all =
   <E extends IEntity, C extends keyof E>(...components: C[]) =>
