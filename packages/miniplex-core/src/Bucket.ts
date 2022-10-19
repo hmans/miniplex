@@ -1,5 +1,6 @@
 import { Event } from "@hmans/event"
-import { IEntity, Predicate } from "./types"
+import { archetype } from "./archetypes"
+import { IEntity, Predicate, WithRequiredKeys } from "./types"
 
 export type BucketOptions<E extends IEntity> = {
   entities?: E[]
@@ -185,8 +186,8 @@ export class Bucket<E extends IEntity> {
    * @param predicate The predicate to use to filter entities.
    * @returns The new derived bucket.
    */
-  derive<D extends E = E>(
-    predicate: Predicate<E, D> | ((entity: E) => boolean) = () => true
+  derive<D extends E>(
+    predicate: Predicate<E, D> | ((entity: E) => boolean)
   ): Bucket<D> {
     /* Check if we already have a derived bucket for this predicate */
     const existingBucket = this.derivedBuckets.get(predicate)
@@ -239,5 +240,21 @@ export class Bucket<E extends IEntity> {
     })
 
     return bucket as Bucket<D>
+  }
+
+  with<D extends E>(
+    predicate: Predicate<E, D> | ((entity: E) => boolean)
+  ): Bucket<D>
+  with<D extends WithRequiredKeys<E, K>, K extends keyof E>(
+    predicate: K,
+    ...rest: K[]
+  ): Bucket<D> {
+    if (typeof predicate === "string") {
+      return this.derive(archetype(predicate, ...rest)) as unknown as Bucket<D>
+    } else if (typeof predicate === "function") {
+      return this.derive(predicate)
+    } else {
+      throw new Error("Invalid predicate")
+    }
   }
 }

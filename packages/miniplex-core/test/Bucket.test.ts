@@ -131,19 +131,6 @@ describe("remove", () => {
 })
 
 describe("derive", () => {
-  it("creates a new bucket", () => {
-    const bucket = new Bucket()
-    const derivedBucket = bucket.derive()
-    expect(derivedBucket).toBeDefined()
-  })
-
-  it("if no predicate is given the derived bucket will receive the same entities", () => {
-    const bucket = new Bucket()
-    const derivedBucket = bucket.derive()
-    bucket.add({ count: 1 })
-    expect(derivedBucket.entities).toEqual([{ count: 1 }])
-  })
-
   it("if a predicate is given the derived bucket will only receive entities that match the predicate", () => {
     const bucket = new Bucket<{ count: number }>()
 
@@ -245,8 +232,8 @@ describe("dispose", () => {
   })
 
   it("also disposes any derived buckets", () => {
-    const bucket = new Bucket()
-    const derivedBucket = bucket.derive()
+    const bucket = new Bucket<{ count: number }>()
+    const derivedBucket = bucket.derive(archetype("count"))
     bucket.add({ count: 1 })
     expect(derivedBucket.entities).toEqual([{ count: 1 }])
 
@@ -255,9 +242,9 @@ describe("dispose", () => {
   })
 
   it("also disposes buckets derived from derived buckets", () => {
-    const bucket = new Bucket()
-    const derivedBucket = bucket.derive()
-    const derivedBucket2 = derivedBucket.derive()
+    const bucket = new Bucket<{ count: number }>()
+    const derivedBucket = bucket.derive(archetype("count"))
+    const derivedBucket2 = derivedBucket.derive(archetype("count"))
     bucket.add({ count: 1 })
     expect(derivedBucket2.entities).toEqual([{ count: 1 }])
 
@@ -266,8 +253,8 @@ describe("dispose", () => {
   })
 
   it("when a derived bucket is disposed, remove its listeners from us", () => {
-    const bucket = new Bucket()
-    const derivedBucket = bucket.derive()
+    const bucket = new Bucket<{ count: number }>()
+    const derivedBucket = bucket.derive(archetype("count"))
     expect(bucket.onEntityAdded.listeners.size).toEqual(1)
 
     derivedBucket.dispose()
