@@ -1,4 +1,4 @@
-import { all, IEntity, not } from "../src"
+import { all, IEntity, none, not } from "../src"
 
 describe("not", () => {
   it("invertes the given predicate", () => {
@@ -34,5 +34,19 @@ describe("all", () => {
     const a = all("a", "b")
     const b = all("a", "b")
     expect(a === b).toBeTruthy()
+  })
+})
+
+describe("none", () => {
+  it("returns true if all components are missing", () => {
+    const p = none("a", "b")
+    const entity = {}
+    expect(p(entity)).toBe(true)
+  })
+
+  it("returns false if any component is present", () => {
+    const p = none("a", "b")
+    const entity = { a: 1 }
+    expect(p(entity)).toBe(false)
   })
 })
