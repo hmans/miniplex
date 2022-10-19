@@ -5,7 +5,7 @@ export function createTransformSystem(world: World<Entity>) {
   const entities = world.archetype("transform")
   const engines = world.archetype("engine")
 
-  entities.onEntityAdded.addListener((entity) => {
+  entities.onEntityAdded.add((entity) => {
     const [{ engine }] = engines
 
     if (entity.parent?.transform) {
@@ -15,7 +15,7 @@ export function createTransformSystem(world: World<Entity>) {
     }
   })
 
-  entities.onEntityRemoved.addListener((entity) => {
+  entities.onEntityRemoved.add((entity) => {
     entity.transform.parent?.remove(entity.transform)
   })
 

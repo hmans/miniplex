@@ -206,8 +206,8 @@ export class Bucket<E> {
     }
 
     /* Listen for new entities */
-    bucket.onDisposed.addListener(
-      this.onEntityAdded.addListener((entity) => {
+    bucket.onDisposed.add(
+      this.onEntityAdded.add((entity) => {
         if (predicate(entity)) {
           bucket.add(entity)
         }
@@ -215,15 +215,15 @@ export class Bucket<E> {
     )
 
     /* Listen for removed entities */
-    bucket.onDisposed.addListener(
-      this.onEntityRemoved.addListener((entity) => {
+    bucket.onDisposed.add(
+      this.onEntityRemoved.add((entity) => {
         bucket.remove(entity as D)
       })
     )
 
     /* Listen for changed entities */
-    bucket.onDisposed.addListener(
-      this.onEntityTouched.addListener((entity) => {
+    bucket.onDisposed.add(
+      this.onEntityTouched.add((entity) => {
         if (predicate(entity)) {
           bucket.add(entity)
           bucket.touch(entity)
@@ -234,7 +234,7 @@ export class Bucket<E> {
     )
 
     /* React to this bucket being disposed */
-    this.onDisposed.addListener(() => {
+    this.onDisposed.add(() => {
       bucket.dispose()
     })
 

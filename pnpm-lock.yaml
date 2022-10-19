@@ -139,12 +139,12 @@ importers:
 
   packages/miniplex-core:
     specifiers:
-      '@hmans/event': ^0.0.1
+      '@hmans/event': ^0.2.0
       '@types/node': ^18.11.0
       ts-node: ^10.9.1
       typescript: ^4.8.4
     dependencies:
-      '@hmans/event': 0.0.1
+      '@hmans/event': 0.2.0
     devDependencies:
       '@types/node': 18.11.0
       ts-node: 10.9.1_o6ib7qqltxpe7qrskddglns2ga
@@ -1738,8 +1738,8 @@ packages:
     dev: true
     optional: true
 
-  /@hmans/event/0.0.1:
-    resolution: {integrity: sha512-3PHdcAc1gOn6AsUOVzdOGYPWwso4LQsNvty0y/moKdLXx+uJ7wS9ZBKLiXjZljkOrQOngtGY/VhccI0cKe0twA==}
+  /@hmans/event/0.2.0:
+    resolution: {integrity: sha512-VrDaUafGrcT2yuC59yTxpxT7KsWoST6zNd/JdATgU4y/jEHghL5yqY9sNftNajo5VpzJkF9XxwxBixz6UlGNfg==}
     dev: false
 
   /@hmans/r3f-animate/0.0.5_cpod6d3cr76qxhqbh6bdljlrqm:

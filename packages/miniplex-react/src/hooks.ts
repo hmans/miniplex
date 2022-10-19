@@ -6,12 +6,12 @@ export const useEntities = <E extends IEntity>(bucket: Bucket<E>) => {
   const rerender = useRerender()
 
   useIsomorphicLayoutEffect(() => {
-    bucket.onEntityAdded.addListener(rerender)
-    bucket.onEntityRemoved.addListener(rerender)
+    bucket.onEntityAdded.add(rerender)
+    bucket.onEntityRemoved.add(rerender)
 
     return () => {
-      bucket.onEntityAdded.removeListener(rerender)
-      bucket.onEntityRemoved.removeListener(rerender)
+      bucket.onEntityAdded.remove(rerender)
+      bucket.onEntityRemoved.remove(rerender)
     }
   }, [rerender])
 

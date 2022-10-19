@@ -14,7 +14,7 @@ export class World<E extends IEntity> extends Bucket<E> {
     super(...args)
 
     /* Forget the ID again when an entity is removed */
-    this.onEntityRemoved.addListener((entity) => {
+    this.onEntityRemoved.add((entity) => {
       if (this.entityToId.has(entity)) {
         this.idToEntity.delete(this.entityToId.get(entity)!)
         this.entityToId.delete(entity)

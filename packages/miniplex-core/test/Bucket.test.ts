@@ -70,7 +70,7 @@ describe("add", () => {
   it("emits an event", () => {
     const bucket = new Bucket<{ count: number }>()
     const listener = jest.fn()
-    bucket.onEntityAdded.addListener(listener)
+    bucket.onEntityAdded.add(listener)
 
     const entity = bucket.add({ count: 1 })
     expect(listener).toHaveBeenCalledWith(entity)
@@ -80,7 +80,7 @@ describe("add", () => {
     const entity = { count: 1 }
     const bucket = new Bucket<{ count: number }>()
     const listener = jest.fn()
-    bucket.onEntityAdded.addListener(listener)
+    bucket.onEntityAdded.add(listener)
 
     bucket.add(entity)
     bucket.add(entity)
@@ -92,7 +92,7 @@ describe("update", () => {
   it("emits an event", () => {
     const bucket = new Bucket<{ count: number }>()
     const listener = jest.fn()
-    bucket.onEntityTouched.addListener(listener)
+    bucket.onEntityTouched.add(listener)
 
     const entity = bucket.add({ count: 1 })
     bucket.touch(entity)
@@ -124,7 +124,7 @@ describe("remove", () => {
   it("emits an event when the entity is removed", () => {
     const bucket = new Bucket<{ count: number }>()
     const listener = jest.fn()
-    bucket.onEntityRemoved.addListener(listener)
+    bucket.onEntityRemoved.add(listener)
 
     const entity = bucket.add({ count: 1 })
     bucket.remove(entity)
@@ -217,7 +217,7 @@ describe("clear", () => {
   it("emits an event for each entity that is removed", () => {
     const bucket = new Bucket<{ count: number }>()
     const listener = jest.fn()
-    bucket.onEntityRemoved.addListener(listener)
+    bucket.onEntityRemoved.add(listener)
 
     bucket.add({ count: 1 })
     bucket.add({ count: 2 })
@@ -228,7 +228,7 @@ describe("clear", () => {
   it("emits the onCleared event", () => {
     const bucket = new Bucket()
     const listener = jest.fn()
-    bucket.onCleared.addListener(listener)
+    bucket.onCleared.add(listener)
 
     bucket.clear()
     expect(listener).toHaveBeenCalledTimes(1)

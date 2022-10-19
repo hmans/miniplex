@@ -38,8 +38,8 @@ export class SegmentedBucket<E> extends Bucket<Bucket<E>> {
     /* Transfer existing entities */
     for (const entity of source) add(entity)
 
-    source.onEntityAdded.addListener(add)
-    source.onEntityRemoved.addListener(remove)
+    source.onEntityAdded.add(add)
+    source.onEntityRemoved.add(remove)
   }
 }
 

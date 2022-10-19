@@ -39,7 +39,7 @@ export function getEntitiesInRadius(
 export const SpatialHashingSystem = () => {
   useLayoutEffect(
     () =>
-      entities.onEntityRemoved.addListener((entity) => {
+      entities.onEntityRemoved.add((entity) => {
         const cell = entityCells.get(entity)
 
         if (cell) {
