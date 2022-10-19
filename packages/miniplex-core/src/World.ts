@@ -1,4 +1,3 @@
-import { archetype } from "./archetypes"
 import { Bucket } from "./Bucket"
 import { IEntity } from "./types"
 
@@ -127,9 +126,5 @@ export class World<E extends IEntity> extends Bucket<E> {
     this.touch(entity)
 
     return true
-  }
-
-  archetype<P extends keyof E>(...components: P[]) {
-    return this.derive(archetype(...components))
   }
 }
