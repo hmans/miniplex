@@ -5,7 +5,7 @@
   "fixed": [],
   "linked": [["miniplex", "@miniplex/core", "@miniplex/react"]],
   "access": "public",
-  "baseBranch": "next",
+  "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": ["demo", "vanilla-demo"],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
