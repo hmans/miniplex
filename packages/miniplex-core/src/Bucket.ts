@@ -7,9 +7,9 @@ export type BucketOptions<E> = {
   entities?: E[]
 }
 
-export enum BucketEvent {
-  EntityAdded,
-  EntityRemoved
+export const BucketEvent = {
+  EntityAdded: "entity-added",
+  EntityRemoved: "entity-removed"
 }
 
 /**
