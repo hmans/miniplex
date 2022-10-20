@@ -1,6 +1,6 @@
 import { Predicate, WithOptionalKeys, WithRequiredKeys } from "./types"
 
-export function memoize<A, B>(
+function memoize<A, B>(
   store: A extends object ? Map<A, B> | WeakMap<A, B> : Map<A, B>,
   from: A,
   to: B
@@ -21,11 +21,7 @@ export const key = (components: any[]) =>
   JSON.stringify([...new Set(components.sort().filter((p) => !!p && p !== ""))])
 
 export function not<E>(predicate: (entity: E) => boolean) {
-  return memoize(
-    stores.not,
-    predicate,
-    (entity: E) => !predicate(entity)
-  ) as typeof predicate
+  return memoize(stores.not, predicate, (entity: E) => !predicate(entity))
 }
 
 export function all<E = any, C extends keyof E = any>(...components: C[]) {
