@@ -281,3 +281,16 @@ export class Bucket<E> {
     }
   }
 }
+
+/* Playground */
+{
+  type Entity = { name: string; age?: number }
+  const bucket = new Bucket<Entity>()
+
+  function hasName(e: Entity): e is { name: string } {
+    return e.name !== undefined
+  }
+
+  bucket.with("age", "name").entities
+  bucket.with(hasName).entities
+}
