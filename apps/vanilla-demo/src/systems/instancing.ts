@@ -8,7 +8,7 @@ import { Entity } from "./engine"
 */
 
 export function createInstancingSystem(world: World<Entity>) {
-  const entities = world.with("mesh", "instanced", "transform")
+  const entities = world.with("mesh", "transform").with("instanced")
   const engines = world.with("engine")
 
   const imeshes = new Map<BufferGeometry, Map<Material, THREE.InstancedMesh>>()
