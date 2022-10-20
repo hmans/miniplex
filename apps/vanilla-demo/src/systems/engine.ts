@@ -56,7 +56,7 @@ export function start(
   document.body.appendChild(engine.renderer.domElement)
 
   /* Set up camera */
-  engine.camera.position.z = 10
+  engine.camera.position.z = 30
   engine.scene.add(engine.camera)
 
   /* Run initializer function */

@@ -37,16 +37,18 @@ export function createInstancingSystem(world: World<Entity>) {
     if (!imeshEntities.has(imesh)) {
       imeshEntities.set(imesh, new Bucket())
     }
-    imeshEntities.get(imesh)?.add(entity)
+
+    imeshEntities.get(imesh)!.add(entity)
     imesh.setMatrixAt(0, new Matrix4())
-    imesh.count = 1
   })
 
   return () => {
     for (const [imesh, entities] of imeshEntities) {
-      entities.entities.forEach((entity, i) => {
-        imesh.setMatrixAt(i, entity.transform.matrix)
-      })
+      let index = 0
+      for (const entity of entities) {
+        imesh.setMatrixAt(index++, entity.transform.matrix)
+      }
+      imesh.count = index
       imesh.instanceMatrix.needsUpdate = true
     }
   }
