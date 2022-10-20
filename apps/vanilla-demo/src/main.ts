@@ -1,8 +1,13 @@
-import { plusMinus } from "randomish"
+import { number, plusMinus } from "randomish"
 import * as THREE from "three"
 import { AmbientLight, Vector3 } from "three"
 import "./style.css"
 import * as engine from "./systems/engine"
+
+/* TODO: extract to randomish */
+function pick<T>(from: T[]) {
+  return from[Math.floor(number(from.length))]
+}
 
 engine.start((world, _runner) => {
   /* Add some lights */
@@ -28,8 +33,8 @@ engine.start((world, _runner) => {
     const entity = world.add({
       transform: new THREE.Group(),
       mesh: {
-        geometry: geometries[Math.floor(Math.random() * geometries.length)],
-        material: materials[Math.floor(Math.random() * materials.length)]
+        geometry: pick(geometries),
+        material: pick(materials)
       },
       instanced: true,
       autorotate: new Vector3(plusMinus(0.5), plusMinus(0.5), plusMinus(0.5))
