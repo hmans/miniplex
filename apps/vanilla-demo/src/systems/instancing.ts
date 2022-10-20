@@ -4,7 +4,6 @@ import { Entity } from "./engine"
 
 /*
 - [ ] Implement the actual imesh as an entity?
-- [ ] Keep a list of entities per imesh to iterate over every frame
 */
 
 export function createInstancingSystem(world: World<Entity>) {
