@@ -3,22 +3,17 @@ import { Entity } from "./engine"
 import * as THREE from "three"
 
 export function createMeshSystem(world: World<Entity>) {
-  const entities = world.with("mesh")
+  const entities = world.with("mesh", "transform")
 
   entities.onEntityAdded.add((e) => {
-    if (!e.transform) {
-      world.addComponent(
-        e,
-        "transform",
-        new THREE.Mesh(e.mesh.geometry, e.mesh.material)
-      )
-    }
+    e.transform.add(new THREE.Mesh(e.mesh.geometry, e.mesh.material))
   })
 
   entities.onEntityRemoved.add((e) => {
-    if (e.transform) {
-      world.removeComponent(e, "transform")
-    }
+    /* Here's where we need the callback to happen before the
+    components are actually removed */
+
+    e.transform.clear() /* transform may be undefined */
   })
 
   return function () {}

@@ -11,6 +11,7 @@ engine.start((world, _runner) => {
 
   /* Add an instanced mesh */
   world.add({
+    transform: new THREE.Group(),
     mesh: {
       geometry: new THREE.IcosahedronGeometry(),
       material: new THREE.MeshStandardMaterial()
