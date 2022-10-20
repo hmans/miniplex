@@ -16,6 +16,7 @@ export function createTransformSystem(world: World<Entity>) {
   })
 
   entities.onEntityRemoved.add((entity) => {
+    /* Transform *will* be undefined here, because it's removed */
     entity.transform.parent?.remove(entity.transform)
   })
 
