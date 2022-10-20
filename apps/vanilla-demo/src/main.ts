@@ -3,6 +3,7 @@ import { AmbientLight, Vector3 } from "three"
 import "./style.css"
 import * as engine from "./systems/engine"
 import { plusMinus } from "randomish"
+import { DefaultThemeRenderContext } from "typedoc"
 
 engine.start((world, _runner) => {
   /* Add some lights */
@@ -11,15 +12,25 @@ engine.start((world, _runner) => {
   light.transform.position.set(10, 20, 30)
 
   /* Add an instanced mesh */
-  const geometry = new THREE.IcosahedronGeometry()
-  const material = new THREE.MeshStandardMaterial()
+  const geometries = [
+    new THREE.IcosahedronGeometry(),
+    new THREE.DodecahedronGeometry(),
+    new THREE.BoxGeometry(),
+    new THREE.SphereGeometry()
+  ]
 
-  for (let i = 0; i < 1000; i++) {
+  const materials = [
+    new THREE.MeshStandardMaterial({ color: "hotpink" }),
+    new THREE.MeshStandardMaterial({ color: "orange" }),
+    new THREE.MeshStandardMaterial({ color: "green" })
+  ]
+
+  for (let i = 0; i < 2000; i++) {
     const entity = world.add({
       transform: new THREE.Group(),
       mesh: {
-        geometry,
-        material
+        geometry: geometries[Math.floor(Math.random() * geometries.length)],
+        material: materials[Math.floor(Math.random() * materials.length)]
       },
       instanced: true,
       autorotate: new Vector3(plusMinus(0.5), plusMinus(0.5), plusMinus(0.5))
