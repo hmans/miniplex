@@ -2,6 +2,7 @@ import { Bucket, World } from "miniplex"
 import * as THREE from "three"
 import { MathUtils } from "three"
 import { createAutorotateSystem } from "./autorotate"
+import { createInstancingSystem } from "./instancing"
 import { createMeshSystem } from "./mesh"
 import { createTransformSystem } from "./transform"
 
@@ -35,6 +36,7 @@ export function start(
   systems.add(createTransformSystem(world))
   systems.add(createAutorotateSystem(world))
   systems.add(createMeshSystem(world))
+  systems.add(createInstancingSystem(world))
 
   const { engine } = world.add({
     engine: {

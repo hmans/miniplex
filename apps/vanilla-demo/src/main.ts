@@ -16,6 +16,7 @@ engine.start((world, _runner) => {
       geometry: new THREE.IcosahedronGeometry(),
       material: new THREE.MeshStandardMaterial()
     },
+    instanced: true,
     autorotate: new Vector3(0.1, 0.2, 0.3)
   })
 })
