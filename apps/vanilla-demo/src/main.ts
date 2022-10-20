@@ -1,9 +1,8 @@
+import { plusMinus } from "randomish"
 import * as THREE from "three"
 import { AmbientLight, Vector3 } from "three"
 import "./style.css"
 import * as engine from "./systems/engine"
-import { plusMinus } from "randomish"
-import { DefaultThemeRenderContext } from "typedoc"
 
 engine.start((world, _runner) => {
   /* Add some lights */
