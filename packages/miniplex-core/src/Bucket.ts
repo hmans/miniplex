@@ -1,4 +1,4 @@
-import { Event } from "@hmans/event"
+import { Event } from "./lib/Event"
 import { all, none, not } from "./predicates"
 import { Predicate, WithRequiredKeys } from "./types"
 

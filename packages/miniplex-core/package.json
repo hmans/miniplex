@@ -29,9 +29,6 @@
     "benchmark": "ts-node -O '{\"module\": \"commonjs\"}' benchmark.ts",
     "build": "preconstruct build"
   },
-  "dependencies": {
-    "@hmans/event": "^0.2.0"
-  },
   "devDependencies": {
     "@types/node": "^18.11.0",
     "ts-node": "^10.9.1",
