@@ -2,6 +2,7 @@ import { Bucket, World } from "miniplex"
 import * as THREE from "three"
 import { MathUtils } from "three"
 import { createAutorotateSystem } from "./autorotate"
+import { createMeshSystem } from "./mesh"
 import { createTransformSystem } from "./transform"
 
 export type Entity = {
@@ -9,8 +10,10 @@ export type Entity = {
   parent?: Entity
   autorotate?: THREE.Vector3
 
-  instance?: {
-    imesh: THREE.InstancedMesh
+  mesh?: {
+    geometry: THREE.BufferGeometry
+    material: THREE.Material
+    instanced?: true
   }
 
   engine?: {
@@ -30,6 +33,7 @@ export function start(
 
   systems.add(createTransformSystem(world))
   systems.add(createAutorotateSystem(world))
+  systems.add(createMeshSystem(world))
 
   const { engine } = world.add({
     engine: {

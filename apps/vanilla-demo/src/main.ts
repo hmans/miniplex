@@ -11,10 +11,10 @@ engine.start((world, _runner) => {
 
   /* Add an instanced mesh */
   world.add({
-    transform: new THREE.Mesh(
-      new THREE.IcosahedronGeometry(),
-      new THREE.MeshStandardMaterial()
-    ),
-    autorotate: new Vector3(0.01, 0.02, 0.03)
+    mesh: {
+      geometry: new THREE.IcosahedronGeometry(),
+      material: new THREE.MeshStandardMaterial()
+    },
+    autorotate: new Vector3(0.1, 0.2, 0.3)
   })
 })
