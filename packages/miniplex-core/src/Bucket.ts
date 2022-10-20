@@ -1,9 +1,15 @@
 import { Event } from "./lib/Event"
+import { EventEmitter } from "./lib/EventEmitter"
 import { all, none, not } from "./predicates"
 import { Predicate, WithRequiredKeys } from "./types"
 
 export type BucketOptions<E> = {
   entities?: E[]
+}
+
+export enum BucketEvent {
+  EntityAdded,
+  EntityRemoved
 }
 
 /**
@@ -34,6 +40,8 @@ export class Bucket<E> {
    * This is used to quickly find the position of an entity in the array.
    */
   private entityPositions = new Map<E, number>()
+
+  events = new EventEmitter()
 
   /**
    * The event that is emitted when an entity is added to this bucket.
