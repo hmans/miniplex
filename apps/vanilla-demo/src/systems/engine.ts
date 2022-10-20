@@ -13,8 +13,9 @@ export type Entity = {
   mesh?: {
     geometry: THREE.BufferGeometry
     material: THREE.Material
-    instanced?: true
   }
+
+  instanced?: true
 
   engine?: {
     renderer: THREE.WebGLRenderer

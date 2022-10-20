@@ -3,7 +3,7 @@ import { Entity } from "./engine"
 import * as THREE from "three"
 
 export function createMeshSystem(world: World<Entity>) {
-  const entities = world.with("mesh", "transform")
+  const entities = world.with("mesh", "transform").without("instanced")
 
   entities.onEntityAdded.add((e) => {
     e.transform.add(new THREE.Mesh(e.mesh.geometry, e.mesh.material))
