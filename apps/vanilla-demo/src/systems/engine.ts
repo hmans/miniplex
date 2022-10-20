@@ -2,7 +2,6 @@ import { Bucket, World } from "miniplex"
 import * as THREE from "three"
 import { MathUtils } from "three"
 import { createAutorotateSystem } from "./autorotate"
-import { createInstancingSystem } from "./instancing"
 import { createTransformSystem } from "./transform"
 
 export type Entity = {
@@ -31,7 +30,6 @@ export function start(
 
   systems.add(createTransformSystem(world))
   systems.add(createAutorotateSystem(world))
-  systems.add(createInstancingSystem(world))
 
   const { engine } = world.add({
     engine: {
@@ -51,7 +49,7 @@ export function start(
   document.body.appendChild(engine.renderer.domElement)
 
   /* Set up camera */
-  engine.camera.position.z = 50
+  engine.camera.position.z = 10
   engine.scene.add(engine.camera)
 
   /* Run initializer function */
