@@ -20,6 +20,14 @@ const stores = {
 export const key = (components: any[]) =>
   JSON.stringify([...new Set(components.sort().filter((p) => !!p && p !== ""))])
 
+/**
+ * Returns a predicate function that inverts the given predicate function.
+ * The returned function is memoized, so this function will always return
+ * the same function (by identity) for the same predicate passed into it.
+ *
+ * @param predicate The predicate function to invert.
+ * @returns A new predicate function reversing the given function.
+ */
 export function not<E>(predicate: (entity: E) => boolean) {
   return memoize(
     stores.not,
