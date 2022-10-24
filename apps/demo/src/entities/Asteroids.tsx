@@ -91,6 +91,10 @@ export const spawnAsteroid = (
         PhysicsLayers.Asteroid
       ]),
 
+      /*
+      When something collides with the asteroid, randomize
+      its angular velocity a little
+      */
       onContactStart: (other, force) => {
         entity.physics!.angularVelocity.add(
           tmpVec3.randomDirection().multiplyScalar(force / 500)
