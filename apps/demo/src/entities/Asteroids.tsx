@@ -12,9 +12,9 @@ import { RenderableEntity } from "./RenderableEntity"
 import { useSegmentedBucket } from "../lib/SegmentedBucket"
 
 export const InstanceRNG =
-  ({ seed }: { seed?: Input<"float"> } = {}) =>
+  ({ seed = 1.13406 }: { seed?: Input<"float"> } = {}) =>
   (offset: Input<"float"> = Math.random() * 10) =>
-    Random($`${offset} + float(${InstanceID}) * 1.1005`)
+    Random($`${offset} + float(${InstanceID}) * ${seed}`)
 
 export const Asteroids = () => {
   const segmentedAsteroids = useSegmentedBucket(asteroids)
