@@ -93,14 +93,7 @@ export class World<E extends IEntity> extends Bucket<E> {
    * @returns `true` if the entity was updated, `false` otherwise.
    */
   removeComponent<P extends keyof E>(entity: E, component: P) {
-    if (entity[component] === undefined) {
-      console.warn(
-        "Tried to remove a component, but it was missing:",
-        component
-      )
-
-      return false
-    }
+    if (entity[component] === undefined) return false
 
     delete entity[component]
     this.touch(entity)
