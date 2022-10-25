@@ -193,17 +193,12 @@ export class Bucket<E> {
     if (existingBucket) return existingBucket
 
     /* Create bucket */
-    const bucket = new Bucket<D>()
+    const bucket = new Bucket<D>({
+      entities: this.entities.filter(predicate) as D[]
+    })
 
     /* Add to cache */
     this.derivedBuckets.set(predicate, bucket)
-
-    /* Add entities that match the predicate */
-    for (const entity of this.entities) {
-      if (predicate(entity)) {
-        bucket.add(entity)
-      }
-    }
 
     /* Listen for new entities */
     bucket.onDisposed.add(
