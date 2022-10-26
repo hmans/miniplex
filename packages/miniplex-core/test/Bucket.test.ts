@@ -15,6 +15,25 @@ describe("Bucket", () => {
 
       expect(world.entities).toEqual([entity])
     })
+
+    it("doesn't add the same entity twice", () => {
+      const world = new Bucket()
+      const entity = { id: 0 }
+
+      world.add(entity)
+      world.add(entity)
+
+      expect(world.entities).toEqual([entity])
+    })
+
+    it("returns the entity", () => {
+      const world = new Bucket()
+      const entity = { id: 0 }
+
+      const result = world.add(entity)
+
+      expect(result).toBe(entity)
+    })
   })
 
   describe("remove", () => {
@@ -24,6 +43,14 @@ describe("Bucket", () => {
       expect(world.entities).toEqual([entity])
 
       world.remove(entity)
+      expect(world.entities).toEqual([])
+    })
+
+    it("no-ops if it doesn't have the entity", () => {
+      const world = new Bucket()
+      expect(world.entities).toEqual([])
+
+      world.remove({ id: 0 })
       expect(world.entities).toEqual([])
     })
   })

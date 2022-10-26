@@ -16,8 +16,11 @@ export class Bucket<E extends IEntity> {
   }
 
   add(entity: E) {
-    this.entities.push(entity)
-    this.onEntityAdded.emit(entity)
+    if (!this.has(entity)) {
+      this.entities.push(entity)
+      this.onEntityAdded.emit(entity)
+    }
+
     return entity
   }
 
