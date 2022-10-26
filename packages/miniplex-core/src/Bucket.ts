@@ -1,4 +1,5 @@
 import { IEntity } from "./types"
+import { Event } from "@hmans/event"
 
 export type BucketOptions<E extends IEntity> = {
   entities?: E[]
@@ -7,12 +8,16 @@ export type BucketOptions<E extends IEntity> = {
 export class Bucket<E extends IEntity> {
   entities: E[]
 
+  onEntityAdded = new Event<E>()
+  onEntityRemoved = new Event<E>()
+
   constructor(opts: BucketOptions<E> = {}) {
     this.entities = opts.entities || []
   }
 
   add(entity: E) {
     this.entities.push(entity)
+    this.onEntityAdded.emit(entity)
   }
 
   remove(entity: E) {
@@ -21,6 +26,12 @@ export class Bucket<E extends IEntity> {
     if (index !== -1) {
       this.entities[index] = this.entities[this.entities.length - 1]
       this.entities.pop()
+
+      this.onEntityRemoved.emit(entity)
     }
+  }
+
+  has(entity: E) {
+    return this.entities.includes(entity)
   }
 }

@@ -1,3 +1,4 @@
+import { Archetype } from "./Archetype"
 import { Bucket } from "./Bucket"
 import { IEntity, Query } from "./types"
 
@@ -6,6 +7,16 @@ export type WorldOptions<E extends IEntity> = {
 }
 
 export class World<E extends IEntity> extends Bucket<E> {
+  private archetypes = new Map<Query<E>, Archetype<E>>()
+
+  add(entity: E) {
+    super.add(entity)
+  }
+
+  remove(entity: E) {
+    super.remove(entity)
+  }
+
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
     entity[component] = value
   }
@@ -14,5 +25,18 @@ export class World<E extends IEntity> extends Bucket<E> {
     delete entity[component]
   }
 
-  archetype(query: Query<E>) {}
+  archetype(query: Query<E>): Archetype<E> {
+    // TODO: normalize query
+
+    /* Create archetype and remember it for later */
+    const archetype = new Archetype<E>()
+    this.archetypes.set(query, archetype)
+
+    /* Check existing entities for matches */
+    for (const entity of this.entities) {
+    }
+
+    /* We're done, return the archetype */
+    return archetype
+  }
 }
