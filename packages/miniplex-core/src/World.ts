@@ -19,11 +19,6 @@ export class World<E extends IEntity> extends Bucket<E> {
   add<D extends E>(entity: D): E & D {
     super.add(entity)
 
-    /* Generate an ID */
-    const id = this.nextID++
-    this.entityToID.set(entity, id)
-    this.idToEntity.set(id, entity)
-
     /* Add entity to matching archetypes */
     for (const archetype of this.archetypes.values()) {
       if (archetype.matchesEntity(entity)) {
@@ -49,6 +44,14 @@ export class World<E extends IEntity> extends Bucket<E> {
   }
 
   id(entity: E) {
+    if (!this.entityToID.has(entity) && this.has(entity)) {
+      const id = this.nextID++
+      this.entityToID.set(entity, id)
+      this.idToEntity.set(id, entity)
+
+      return id
+    }
+
     return this.entityToID.get(entity)
   }
 
