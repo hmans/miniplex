@@ -1,6 +1,6 @@
 import { With, World } from "./src"
 
-const entityCount = 1_000_000
+const entityCount = 10_000
 
 const profile = (name: string, setup: () => () => () => boolean) => {
   const test = setup()
