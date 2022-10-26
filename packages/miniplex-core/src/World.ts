@@ -91,11 +91,11 @@ export class World<E extends IEntity> extends Bucket<E> {
     ...components: C[]
   ): Archetype<WithRequiredComponents<E, C>>
 
-  archetype<D extends E = E>(query: Query<E>): Archetype<D>
+  archetype<D extends E>(query: Query<E>): Archetype<D>
 
-  archetype<D extends E = E>(
-    query: Query<E> | keyof E,
-    ...rest: (keyof E)[]
+  archetype<D extends E, C extends keyof E>(
+    query: Query<E> | C,
+    ...rest: C[]
   ): Archetype<D> {
     if (typeof query !== "object") {
       return this.archetype({ all: [query, ...rest] })
