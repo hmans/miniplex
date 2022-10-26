@@ -18,5 +18,24 @@ describe("World", () => {
       const archetype = world.archetype({ all: ["age"] })
       expect(archetype.entities).toEqual([entity])
     })
+
+    it("automatically receives new matching entities as they are added to the world", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype = world.archetype({ all: ["age"] })
+
+      const entity = world.add({ name: "John", age: 42 })
+      expect(archetype.entities).toEqual([entity])
+    })
+
+    it("automatically loses entities that are removed from the world", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype = world.archetype({ all: ["age"] })
+
+      const entity = world.add({ name: "John", age: 42 })
+      expect(archetype.entities).toEqual([entity])
+
+      world.remove(entity)
+      expect(archetype.entities).toEqual([])
+    })
   })
 })

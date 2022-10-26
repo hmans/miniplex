@@ -13,13 +13,23 @@ export class World<E extends IEntity> extends Bucket<E> {
   add(entity: E) {
     super.add(entity)
 
+    /* Add entity to matching archetypes */
+    for (const [query, archetype] of this.archetypes) {
+      if (entityMatches(entity, query)) {
+        archetype.add(entity)
+      }
+    }
+
     return entity
   }
 
   remove(entity: E) {
-    super.remove(entity)
+    /* Remove entity from all archetypes */
+    for (const archetype of this.archetypes.values()) {
+      archetype.remove(entity)
+    }
 
-    return entity
+    return super.remove(entity)
   }
 
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
