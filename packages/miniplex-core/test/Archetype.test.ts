@@ -65,20 +65,22 @@ describe("Archetype", () => {
 
     it("is invoked before the component is actually removed from the entity", () => {
       const world = new World<Entity>()
-
-      let age: number | undefined
-
       const archetype = world.archetype({ all: ["age"] })
 
+      /* Set up a callback */
+      let age: number | undefined
       const callback = jest.fn((entity: Entity) => {
         age = entity.age
       })
-
       archetype.onEntityRemoved.add(callback)
 
+      /* Add an entity */
       const entity = world.add({ name: "John", age: 42 })
+
+      /* Remove the 'age' component */
       world.removeComponent(entity, "age")
 
+      /* Verify that the callback was invoked before the component was removed */
       expect(callback).toHaveBeenCalledWith(entity)
       expect(age).toBe(42)
     })
