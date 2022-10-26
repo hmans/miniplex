@@ -1,6 +1,6 @@
 import { Archetype } from "./Archetype"
 import { Bucket } from "./Bucket"
-import { entityMatches } from "./queries"
+import { componentsMatch, entityMatches } from "./queries"
 import { IEntity, Query } from "./types"
 
 export type WorldOptions<E extends IEntity> = {
@@ -46,16 +46,18 @@ export class World<E extends IEntity> extends Bucket<E> {
   }
 
   removeComponent<C extends keyof E>(entity: E, component: C) {
-    delete entity[component]
+    const components = Object.keys(entity).filter((c) => c !== component)
 
     /* Re-check known archetypes */
-    for (const [query, archetype] of this.archetypes) {
-      if (entityMatches(entity, query)) {
-        archetype.add(entity)
-      } else {
-        archetype.remove(entity)
-      }
-    }
+    for (const [query, archetype] of this.archetypes)
+      componentsMatch(components, query)
+        ? archetype.add(entity)
+        : archetype.remove(entity)
+
+    /* At this point, all relevant callbacks will have executed. Now it's
+    safe to remove the component. */
+
+    delete entity[component]
   }
 
   archetype(query: Query<E>): Archetype<E> {
