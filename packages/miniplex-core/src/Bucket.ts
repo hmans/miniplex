@@ -19,6 +19,8 @@ export class Bucket<E extends IEntity> {
 
   entities: E[]
 
+  private entityPositions = new Map<E, number>()
+
   onEntityAdded = new Event<E>()
   onEntityRemoved = new Event<E>()
 
@@ -32,7 +34,8 @@ export class Bucket<E extends IEntity> {
 
   add(entity: E) {
     if (!this.has(entity)) {
-      this.entities.push(entity)
+      const position = this.entities.push(entity)
+      this.entityPositions.set(entity, position - 1)
       this.onEntityAdded.emit(entity)
     }
 
@@ -40,11 +43,17 @@ export class Bucket<E extends IEntity> {
   }
 
   remove(entity: E) {
-    const index = this.entities.indexOf(entity)
+    const index = this.entityPositions.get(entity)
 
-    if (index !== -1) {
-      this.entities[index] = this.entities[this.entities.length - 1]
+    if (index !== undefined) {
+      /* shuffle-pop */
+      const last = this.entities[this.entities.length - 1]
+      this.entities[index] = last
       this.entities.pop()
+
+      /* Update entity positions */
+      this.entityPositions.set(last, index)
+      this.entityPositions.delete(entity)
 
       this.onEntityRemoved.emit(entity)
     }
@@ -56,9 +65,11 @@ export class Bucket<E extends IEntity> {
     for (const entity of this) {
       this.remove(entity)
     }
+
+    this.entityPositions.clear()
   }
 
   has(entity: E) {
-    return this.entities.includes(entity)
+    return this.entityPositions.has(entity)
   }
 }
