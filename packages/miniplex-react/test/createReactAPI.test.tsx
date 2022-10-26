@@ -232,7 +232,7 @@ describe("<Bucket>", () => {
     const world = new World<{ name: string }>()
     const { Bucket } = createReactAPI(world)
 
-    world.add({ name: "Alice" })
+    const alice = world.add({ name: "Alice" })
     world.add({ name: "Bob" })
 
     render(<Bucket bucket={world}>{(entity) => <p>{entity.name}</p>}</Bucket>)
@@ -245,6 +245,14 @@ describe("<Bucket>", () => {
     })
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
+    expect(screen.getByText("Bob")).toBeInTheDocument()
+    expect(screen.getByText("Charlie")).toBeInTheDocument()
+
+    act(() => {
+      world.remove(alice)
+    })
+
+    expect(screen.queryByText("Alice")).toBeNull()
     expect(screen.getByText("Bob")).toBeInTheDocument()
     expect(screen.getByText("Charlie")).toBeInTheDocument()
   })
