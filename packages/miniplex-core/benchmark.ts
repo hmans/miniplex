@@ -1,4 +1,4 @@
-import { With, World } from "./src"
+import { World } from "./src"
 
 const entityCount = 10_000
 
