@@ -63,20 +63,23 @@ export class World<E extends IEntity> extends Bucket<E> {
     entity[component] = value
 
     /* Re-check known archetypes */
-    for (const archetype of this.archetypes.values())
-      archetype.matchesEntity(entity)
-        ? archetype.add(entity)
-        : archetype.remove(entity)
+    if (this.has(entity))
+      for (const archetype of this.archetypes.values())
+        archetype.matchesEntity(entity)
+          ? archetype.add(entity)
+          : archetype.remove(entity)
   }
 
   removeComponent<C extends keyof E>(entity: E, component: C) {
-    const components = Object.keys(entity).filter((c) => c !== component)
-
     /* Re-check known archetypes */
-    for (const archetype of this.archetypes.values())
-      archetype.matchesComponents(components)
-        ? archetype.add(entity)
-        : archetype.remove(entity)
+    if (this.has(entity)) {
+      const components = Object.keys(entity).filter((c) => c !== component)
+
+      for (const archetype of this.archetypes.values())
+        archetype.matchesComponents(components)
+          ? archetype.add(entity)
+          : archetype.remove(entity)
+    }
 
     /* At this point, all relevant callbacks will have executed. Now it's
     safe to remove the component. */
