@@ -166,7 +166,7 @@ profile("simulate", () => {
 
 profile("simulate (with archetypes)", () => {
   const world = new World<Entity>()
-  const withVelocity = world.archetype<With<Entity, "velocity">>("velocity")
+  const withVelocity = world.archetype("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({
