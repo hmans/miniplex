@@ -113,7 +113,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
       ? world.archetype(query)
       : world.archetype(query)
 
-    return <Bucket bucket={archetype as any} {...props} />
+    return <Bucket bucket={archetype} {...props} />
   }
 
   const Component = <P extends keyof E>(props: {

@@ -293,7 +293,7 @@ describe("<Archetype>", () => {
   })
 
   it("re-renders the entities when the bucket contents change", () => {
-    const world = new World<{ name: string }>()
+    const world = new World<{ name: string; age?: number }>()
     const { Archetype } = createReactAPI(world)
 
     world.add({ name: "Alice" })
