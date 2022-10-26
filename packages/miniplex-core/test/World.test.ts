@@ -42,4 +42,22 @@ describe("World", () => {
       expect(archetype.entities).toEqual([])
     })
   })
+
+  describe("addComponent", () => {
+    it("adds the component to the entity", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const entity = world.add({ name: "John" })
+      world.addComponent(entity, "age", 42)
+      expect(entity).toEqual({ name: "John", age: 42 })
+    })
+  })
+
+  describe("removeComponent", () => {
+    it("removes the component from the entity", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const entity = world.add({ name: "John", age: 42 })
+      world.removeComponent(entity, "age")
+      expect(entity).toEqual({ name: "John" })
+    })
+  })
 })
