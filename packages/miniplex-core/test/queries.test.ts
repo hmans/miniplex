@@ -1,4 +1,8 @@
-import { normalizeComponents, normalizeQuery } from "../src/queries"
+import {
+  normalizeComponents,
+  normalizeQuery,
+  serializeQuery
+} from "../src/queries"
 
 describe("normalizeComponents", () => {
   it("sorts the given list of components alphabetically", () => {
@@ -43,5 +47,17 @@ describe("normalizeQuery", () => {
       any: ["c", "d"],
       none: ["e", "f"]
     })
+  })
+})
+
+describe("serializeQuery", () => {
+  it("serializes the query as JSON", () => {
+    const query = {
+      all: ["a", "b"],
+      any: ["c", "d"],
+      none: ["e", "f"]
+    }
+
+    expect(serializeQuery(query)).toEqual(JSON.stringify(query))
   })
 })
