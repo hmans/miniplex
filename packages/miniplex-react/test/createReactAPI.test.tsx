@@ -285,9 +285,7 @@ describe("<Archetype>", () => {
     world.add({ name: "Bob" })
 
     render(
-      <Archetype components="name">
-        {(entity) => <p>{entity.name}</p>}
-      </Archetype>
+      <Archetype query="name">{(entity) => <p>{entity.name}</p>}</Archetype>
     )
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
@@ -301,10 +299,8 @@ describe("<Archetype>", () => {
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })
 
-    const { rerender } = render(
-      <Archetype components="name">
-        {(entity) => <p>{entity.name}</p>}
-      </Archetype>
+    render(
+      <Archetype query="name">{(entity) => <p>{entity.name}</p>}</Archetype>
     )
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
@@ -330,11 +326,28 @@ describe("<Archetype>", () => {
 
       const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
 
-      render(<Archetype as={User} components="name" />)
+      render(<Archetype as={User} query="name" />)
 
       expect(screen.getByText("Alice")).toBeInTheDocument()
       expect(screen.getByText("Bob")).toBeInTheDocument()
     })
+  })
+
+  it("accepts a query object as its `query` prop", () => {
+    const world = new World<{ name: string; age?: number }>()
+    const { Archetype } = createReactAPI(world)
+
+    world.add({ name: "Alice" })
+    world.add({ name: "Bob" })
+
+    render(
+      <Archetype query={{ all: ["name"] }}>
+        {(entity) => <p>{entity.name}</p>}
+      </Archetype>
+    )
+
+    expect(screen.getByText("Alice")).toBeInTheDocument()
+    expect(screen.getByText("Bob")).toBeInTheDocument()
   })
 })
 
