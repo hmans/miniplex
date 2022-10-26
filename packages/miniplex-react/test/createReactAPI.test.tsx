@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom"
 import { act, render, renderHook, screen } from "@testing-library/react"
-import { World } from "@miniplex/core"
+import { all, World } from "@miniplex/core"
 import React from "react"
 import createReactAPI from "../src"
 
@@ -340,16 +340,15 @@ describe("<Archetype>", () => {
 
 describe("<Query>", () => {
   it("accepts a query object as its `query` prop", () => {
-    const world = new World<{ name: string; age?: number }>()
+    type Entity = { name: string; age?: number }
+    const world = new World<Entity>()
     const { Query } = createReactAPI(world)
 
     world.add({ name: "Alice" })
     world.add({ name: "Bob", age: 100 })
 
     render(
-      <Query query={{ all: ["name"] }}>
-        {(entity) => <p>{entity.name}</p>}
-      </Query>
+      <Query query={all("name")}>{(entity) => <p>{entity.name}</p>}</Query>
     )
 
     expect(screen.getByText("Alice")).toBeInTheDocument()

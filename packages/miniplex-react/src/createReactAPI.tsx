@@ -115,7 +115,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     />
   )
 
-  const Query = <D extends keyof E>({
+  const Query = ({
     query,
     ...props
   }: {

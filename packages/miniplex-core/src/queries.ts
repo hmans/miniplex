@@ -12,3 +12,7 @@ export const normalizeQuery = <E extends IEntity>(query: Query<E>) => ({
 
 export const serializeQuery = <E extends IEntity>(query: Query<E>) =>
   JSON.stringify(query)
+
+export const all = <E>(...components: (keyof E)[]) => ({
+  all: components
+})
