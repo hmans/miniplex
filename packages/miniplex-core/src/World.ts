@@ -63,13 +63,10 @@ export class World<E extends IEntity> extends Bucket<E> {
     entity[component] = value
 
     /* Re-check known archetypes */
-    for (const archetype of this.archetypes.values()) {
-      if (archetype.matchesEntity(entity)) {
-        archetype.add(entity)
-      } else {
-        archetype.remove(entity)
-      }
-    }
+    for (const archetype of this.archetypes.values())
+      archetype.matchesEntity(entity)
+        ? archetype.add(entity)
+        : archetype.remove(entity)
   }
 
   removeComponent<C extends keyof E>(entity: E, component: C) {
