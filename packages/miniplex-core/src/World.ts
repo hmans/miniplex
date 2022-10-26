@@ -60,6 +60,12 @@ export class World<E extends IEntity> extends Bucket<E> {
     delete entity[component]
   }
 
+  clear() {
+    for (const entity of this) {
+      this.remove(entity)
+    }
+  }
+
   archetype(first: keyof E, ...rest: (keyof E)[]): Archetype<E>
   archetype(query: Query<E>): Archetype<E>
   archetype(query: Query<E> | keyof E, ...rest: (keyof E)[]): Archetype<E> {

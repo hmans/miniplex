@@ -103,4 +103,24 @@ describe("World", () => {
       expect(archetype.entities).toEqual([])
     })
   })
+
+  describe("clear", () => {
+    it("removes all known entities from the world", () => {
+      const world = new World<{ name: string; age?: number }>()
+      world.add({ name: "John", age: 42 })
+      world.add({ name: "Alice" })
+      world.clear()
+      expect(world.entities).toEqual([])
+    })
+
+    it("also removes all entities from known archetypes", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype = world.archetype({ all: ["age"] })
+      const john = world.add({ name: "John", age: 42 })
+      world.add({ name: "Alice" })
+      expect(archetype.entities).toEqual([john])
+      world.clear()
+      expect(archetype.entities).toEqual([])
+    })
+  })
 })
