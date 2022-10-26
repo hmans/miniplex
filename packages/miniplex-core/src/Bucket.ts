@@ -6,6 +6,17 @@ export type BucketOptions<E extends IEntity> = {
 }
 
 export class Bucket<E extends IEntity> {
+  [Symbol.iterator]() {
+    let index = this.entities.length
+
+    return {
+      next: () => {
+        const value = this.entities[--index]
+        return { value, done: index < 0 }
+      }
+    }
+  }
+
   entities: E[]
 
   onEntityAdded = new Event<E>()

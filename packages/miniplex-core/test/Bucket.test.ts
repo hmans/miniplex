@@ -61,4 +61,11 @@ describe("Bucket", () => {
       expect(bucket.size).toBe(2)
     })
   })
+
+  describe("Symbol.iterator", () => {
+    it("iterates over entities in a reversed order", () => {
+      const bucket = new Bucket({ entities: [{ id: 0 }, { id: 1 }] })
+      expect([...bucket]).toEqual([{ id: 1 }, { id: 0 }])
+    })
+  })
 })
