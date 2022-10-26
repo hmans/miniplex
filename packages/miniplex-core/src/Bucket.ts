@@ -52,6 +52,12 @@ export class Bucket<E extends IEntity> {
     return entity
   }
 
+  clear() {
+    for (const entity of this) {
+      this.remove(entity)
+    }
+  }
+
   has(entity: E) {
     return this.entities.includes(entity)
   }
