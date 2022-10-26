@@ -348,7 +348,9 @@ describe("<Query>", () => {
     world.add({ name: "Bob", age: 100 })
 
     render(
-      <Query query={all("name")}>{(entity) => <p>{entity.name}</p>}</Query>
+      <Query query={all("name").query}>
+        {(entity) => <p>{entity.name}</p>}
+      </Query>
     )
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
