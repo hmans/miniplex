@@ -50,6 +50,17 @@ describe("World", () => {
       world.addComponent(entity, "age", 42)
       expect(entity).toEqual({ name: "John", age: 42 })
     })
+
+    it("adds the entity to matching archetypes", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype = world.archetype({ all: ["age"] })
+      const entity = world.add({ name: "John" })
+
+      expect(archetype.entities).toEqual([])
+
+      world.addComponent(entity, "age", 42)
+      expect(archetype.entities).toEqual([entity])
+    })
   })
 
   describe("removeComponent", () => {
@@ -58,6 +69,17 @@ describe("World", () => {
       const entity = world.add({ name: "John", age: 42 })
       world.removeComponent(entity, "age")
       expect(entity).toEqual({ name: "John" })
+    })
+
+    it("removes the entity from archetype it no longer matches with", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype = world.archetype({ all: ["age"] })
+      const entity = world.add({ name: "John", age: 42 })
+
+      expect(archetype.entities).toEqual([entity])
+
+      world.removeComponent(entity, "age")
+      expect(archetype.entities).toEqual([])
     })
   })
 })
