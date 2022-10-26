@@ -1,4 +1,4 @@
-import { World } from "./src"
+import { With, World } from "./src"
 
 const entityCount = 1_000_000
 
@@ -166,7 +166,7 @@ profile("simulate", () => {
 
 profile("simulate (with archetypes)", () => {
   const world = new World<Entity>()
-  const withVelocity = world.archetype("velocity")
+  const withVelocity = world.archetype<With<Entity, "velocity">>("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({

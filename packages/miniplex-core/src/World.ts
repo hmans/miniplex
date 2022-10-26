@@ -60,9 +60,12 @@ export class World<E extends IEntity> extends Bucket<E> {
     delete entity[component]
   }
 
-  archetype(first: keyof E, ...rest: (keyof E)[]): Archetype<E>
-  archetype(query: Query<E>): Archetype<E>
-  archetype(query: Query<E> | keyof E, ...rest: (keyof E)[]): Archetype<E> {
+  archetype<D extends E = E>(first: keyof E, ...rest: (keyof E)[]): Archetype<D>
+  archetype<D extends E = E>(query: Query<E>): Archetype<D>
+  archetype<D extends E = E>(
+    query: Query<E> | keyof E,
+    ...rest: (keyof E)[]
+  ): Archetype<D> {
     if (typeof query !== "object") {
       return this.archetype({ all: [query, ...rest] })
     }
@@ -71,7 +74,7 @@ export class World<E extends IEntity> extends Bucket<E> {
     const key = serializeQuery(normalizedQuery)
 
     if (this.archetypes.has(key)) {
-      return this.archetypes.get(key)!
+      return this.archetypes.get(key)! as unknown as Archetype<D>
     }
 
     /* Create archetype and remember it for later */
@@ -86,6 +89,6 @@ export class World<E extends IEntity> extends Bucket<E> {
     }
 
     /* We're done, return the archetype */
-    return archetype
+    return archetype as unknown as Archetype<D>
   }
 }
