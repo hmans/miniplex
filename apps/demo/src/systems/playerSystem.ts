@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { WithRequiredKeys } from "miniplex"
+import { WithRequiredComponents } from "miniplex"
 import { Vector3 } from "three"
 import { spawnBullet } from "../entities/Bullets"
 import { ECS, Entity } from "../state"
@@ -9,10 +9,11 @@ const tmpVec3 = new Vector3()
 
 const isPlayer = (
   entity: Entity
-): entity is WithRequiredKeys<Entity, "transform" | "physics"> =>
+): entity is WithRequiredComponents<Entity, "transform" | "physics"> =>
   !!entity.isPlayer
 
-const players = ECS.world.derive(isPlayer)
+// const players = ECS.world.archetype(isPlayer)
+const players = ECS.world.archetype("isPlayer", "transform", "physics")
 
 let lastFireTime = 0
 
