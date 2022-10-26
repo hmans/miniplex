@@ -3,11 +3,18 @@ import { World } from "../src/World"
 
 describe("World", () => {
   describe("archetype", () => {
-    it("creates an archetype", () => {
+    it("creates an archetype for the given query", () => {
       const world = new World<{ name: string; age?: number }>()
       const archetype = world.archetype({ all: ["name"] })
       expect(archetype).toBeDefined()
       expect(archetype).toBeInstanceOf(Archetype)
+    })
+
+    it("supports a list of components as a shortcut", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype1 = world.archetype("name")
+      const archetype2 = world.archetype({ all: ["name"] })
+      expect(archetype1).toBe(archetype2)
     })
 
     it("returns the same archetype if it already exists", () => {
