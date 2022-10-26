@@ -344,7 +344,7 @@ describe("<Query>", () => {
     const { Query } = createReactAPI(world)
 
     world.add({ name: "Alice" })
-    world.add({ name: "Bob" })
+    world.add({ name: "Bob", age: 100 })
 
     render(
       <Query query={{ all: ["name"] }}>
