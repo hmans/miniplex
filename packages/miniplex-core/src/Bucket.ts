@@ -15,6 +15,10 @@ export class Bucket<E extends IEntity> {
     this.entities = opts.entities || []
   }
 
+  get size() {
+    return this.entities.length
+  }
+
   add(entity: E) {
     if (!this.has(entity)) {
       this.entities.push(entity)

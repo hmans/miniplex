@@ -54,4 +54,11 @@ describe("Bucket", () => {
       expect(world.entities).toEqual([])
     })
   })
+
+  describe("size", () => {
+    it("returns the number of entities in the bucket", () => {
+      const bucket = new Bucket({ entities: [{ id: 0 }, { id: 1 }] })
+      expect(bucket.size).toBe(2)
+    })
+  })
 })
