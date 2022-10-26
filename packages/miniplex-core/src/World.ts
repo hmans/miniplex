@@ -1,6 +1,6 @@
 import { Archetype } from "./Archetype"
 import { Bucket } from "./Bucket"
-import { serializeQuery } from "./queries"
+import { normalizeQuery, serializeQuery } from "./queries"
 import { IEntity, Query } from "./types"
 
 export type WorldOptions<E extends IEntity> = {
@@ -61,11 +61,16 @@ export class World<E extends IEntity> extends Bucket<E> {
   }
 
   archetype(query: Query<E>): Archetype<E> {
-    // TODO: normalize query
+    const normalizedQuery = normalizeQuery(query)
+    const key = serializeQuery(normalizedQuery)
+
+    if (this.archetypes.has(key)) {
+      return this.archetypes.get(key)!
+    }
 
     /* Create archetype and remember it for later */
-    const archetype = new Archetype(query)
-    this.archetypes.set(serializeQuery(query), archetype)
+    const archetype = new Archetype(normalizedQuery)
+    this.archetypes.set(key, archetype)
 
     /* Check existing entities for matches */
     for (const entity of this.entities) {

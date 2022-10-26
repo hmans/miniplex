@@ -10,6 +10,20 @@ describe("World", () => {
       expect(archetype).toBeInstanceOf(Archetype)
     })
 
+    it("returns the same archetype if it already exists", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype1 = world.archetype({ all: ["name"] })
+      const archetype2 = world.archetype({ all: ["name"] })
+      expect(archetype1).toBe(archetype2)
+    })
+
+    it("properly normalizes queries before matching against existing archetypes", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype1 = world.archetype({ all: ["age", "name"] })
+      const archetype2 = world.archetype({ all: ["name", "age"] })
+      expect(archetype1).toBe(archetype2)
+    })
+
     it("adds existing entities that match the query to the archetype", () => {
       const world = new World<{ name: string; age?: number }>()
       const entity = world.add({ name: "John", age: 42 })
