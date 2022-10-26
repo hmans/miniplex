@@ -1,5 +1,6 @@
 import { Archetype } from "./Archetype"
 import { Bucket } from "./Bucket"
+import { serializeQuery } from "./queries"
 import { IEntity, Query } from "./types"
 
 export type WorldOptions<E extends IEntity> = {
@@ -7,13 +8,13 @@ export type WorldOptions<E extends IEntity> = {
 }
 
 export class World<E extends IEntity> extends Bucket<E> {
-  private archetypes = new Map<Query<E>, Archetype<E>>()
+  private archetypes = new Map<string, Archetype<E>>()
 
   add(entity: E) {
     super.add(entity)
 
     /* Add entity to matching archetypes */
-    for (const [query, archetype] of this.archetypes) {
+    for (const archetype of this.archetypes.values()) {
       if (archetype.matchesEntity(entity)) {
         archetype.add(entity)
       }
@@ -35,7 +36,7 @@ export class World<E extends IEntity> extends Bucket<E> {
     entity[component] = value
 
     /* Re-check known archetypes */
-    for (const [query, archetype] of this.archetypes) {
+    for (const archetype of this.archetypes.values()) {
       if (archetype.matchesEntity(entity)) {
         archetype.add(entity)
       } else {
@@ -48,7 +49,7 @@ export class World<E extends IEntity> extends Bucket<E> {
     const components = Object.keys(entity).filter((c) => c !== component)
 
     /* Re-check known archetypes */
-    for (const [query, archetype] of this.archetypes)
+    for (const archetype of this.archetypes.values())
       archetype.matchesComponents(components)
         ? archetype.add(entity)
         : archetype.remove(entity)
@@ -63,8 +64,8 @@ export class World<E extends IEntity> extends Bucket<E> {
     // TODO: normalize query
 
     /* Create archetype and remember it for later */
-    const archetype = new Archetype<E>(query)
-    this.archetypes.set(query, archetype)
+    const archetype = new Archetype(query)
+    this.archetypes.set(serializeQuery(query), archetype)
 
     /* Check existing entities for matches */
     for (const entity of this.entities) {
