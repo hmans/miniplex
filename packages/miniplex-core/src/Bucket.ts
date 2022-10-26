@@ -18,6 +18,7 @@ export class Bucket<E extends IEntity> {
   add(entity: E) {
     this.entities.push(entity)
     this.onEntityAdded.emit(entity)
+    return entity
   }
 
   remove(entity: E) {
@@ -29,6 +30,8 @@ export class Bucket<E extends IEntity> {
 
       this.onEntityRemoved.emit(entity)
     }
+
+    return entity
   }
 
   has(entity: E) {

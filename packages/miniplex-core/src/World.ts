@@ -1,5 +1,6 @@
 import { Archetype } from "./Archetype"
 import { Bucket } from "./Bucket"
+import { entityMatches } from "./queries"
 import { IEntity, Query } from "./types"
 
 export type WorldOptions<E extends IEntity> = {
@@ -11,10 +12,14 @@ export class World<E extends IEntity> extends Bucket<E> {
 
   add(entity: E) {
     super.add(entity)
+
+    return entity
   }
 
   remove(entity: E) {
     super.remove(entity)
+
+    return entity
   }
 
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
@@ -34,6 +39,9 @@ export class World<E extends IEntity> extends Bucket<E> {
 
     /* Check existing entities for matches */
     for (const entity of this.entities) {
+      if (entityMatches(entity, query)) {
+        archetype.add(entity)
+      }
     }
 
     /* We're done, return the archetype */
