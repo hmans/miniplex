@@ -24,18 +24,23 @@ export class Bucket<E extends IEntity> {
   onEntityAdded = new Event<E>()
   onEntityRemoved = new Event<E>()
 
-  constructor(opts: BucketOptions<E> = {}) {
-    this.entities = opts.entities || []
+  constructor({ entities = [] }: BucketOptions<E> = {}) {
+    this.entities = entities
+
+    /* Fill entity positions */
+    for (let i = 0; i < entities.length; i++) {
+      this.entityPositions.set(entities[i], i)
+    }
   }
 
   get size() {
     return this.entities.length
   }
 
-  add(entity: E) {
+  add<D extends E>(entity: D): E & D {
     if (!this.has(entity)) {
-      const position = this.entities.push(entity)
-      this.entityPositions.set(entity, position - 1)
+      this.entities.push(entity)
+      this.entityPositions.set(entity, this.entities.length - 1)
       this.onEntityAdded.emit(entity)
     }
 
@@ -46,14 +51,17 @@ export class Bucket<E extends IEntity> {
     const index = this.entityPositions.get(entity)
 
     if (index !== undefined) {
-      /* shuffle-pop */
-      const last = this.entities[this.entities.length - 1]
-      this.entities[index] = last
-      this.entities.pop()
-
-      /* Update entity positions */
-      this.entityPositions.set(last, index)
+      /* Remove entity from our list */
       this.entityPositions.delete(entity)
+
+      const other = this.entities[this.entities.length - 1]
+
+      if (other !== entity) {
+        this.entities[index] = other
+        this.entityPositions.set(other, index)
+      }
+
+      this.entities.pop()
 
       this.onEntityRemoved.emit(entity)
     }

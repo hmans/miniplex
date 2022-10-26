@@ -1,12 +1,5 @@
 import { useConst } from "@hmans/use-const"
-import {
-  archetype,
-  Bucket,
-  IEntity,
-  Predicate,
-  WithRequiredKeys,
-  World
-} from "@miniplex/core"
+import { Bucket, IEntity, WithRequiredComponents, World } from "@miniplex/core"
 import React, {
   createContext,
   FunctionComponent,
@@ -84,17 +77,14 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   )
 
   const RawBucket = <D extends E>({
-    bucket: _bucket,
+    bucket,
     ...props
   }: {
-    bucket: Bucket<D> | Predicate<E, D>
+    bucket: Bucket<D>
     children?: EntityChildren<D>
     as?: FunctionComponent<{ entity: D; children?: ReactNode }>
   }) => {
-    const source =
-      typeof _bucket === "function" ? world.derive(_bucket) : _bucket
-
-    const entities = useEntities(source)
+    const entities = useEntities(bucket)
     return <Entities entities={entities} {...props} />
   }
 
@@ -105,14 +95,14 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     ...props
   }: {
     components: A[] | A
-    children?: EntityChildren<WithRequiredKeys<E, A>>
+    children?: EntityChildren<WithRequiredComponents<E, A>>
     as?: FunctionComponent<{
-      entity: WithRequiredKeys<E, A>
+      entity: WithRequiredComponents<E, A>
       children?: ReactNode
     }>
   }) => (
     <Bucket
-      bucket={archetype(
+      bucket={world.archetype(
         ...(Array.isArray(components) ? components : [components])
       )}
       {...props}
@@ -144,7 +134,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     /* Handle updates to existing component */
     useIsomorphicLayoutEffect(() => {
       if (props.value === undefined) return
-      world.setComponent(entity, props.name, props.value)
+      entity[props.name] = props.value
     }, [entity, props.name, props.value])
 
     /* Handle setting of child value */

@@ -1,17 +1,28 @@
 import { Archetype } from "./Archetype"
 import { Bucket } from "./Bucket"
 import { normalizeQuery, serializeQuery } from "./queries"
-import { IEntity, Query, With } from "./types"
+import { IEntity, Query, WithRequiredComponents } from "./types"
 
 export type WorldOptions<E extends IEntity> = {
   entities?: E[]
 }
 
 export class World<E extends IEntity> extends Bucket<E> {
+  /* Archetypes */
   private archetypes = new Map<string, Archetype<E>>()
 
-  add(entity: E) {
+  /* Entity IDs */
+  private nextID = 0
+  private entityToID = new Map<E, number>()
+  private idToEntity = new Map<number, E>()
+
+  add<D extends E>(entity: D): E & D {
     super.add(entity)
+
+    /* Generate an ID */
+    const id = this.nextID++
+    this.entityToID.set(entity, id)
+    this.idToEntity.set(id, entity)
 
     /* Add entity to matching archetypes */
     for (const archetype of this.archetypes.values()) {
@@ -29,7 +40,20 @@ export class World<E extends IEntity> extends Bucket<E> {
       archetype.remove(entity)
     }
 
+    /* Remove IDs */
+    const id = this.entityToID.get(entity)!
+    this.idToEntity.delete(id)
+    this.entityToID.delete(entity)
+
     return super.remove(entity)
+  }
+
+  id(entity: E) {
+    return this.entityToID.get(entity)
+  }
+
+  entity(id: number) {
+    return this.idToEntity.get(id)
   }
 
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
@@ -62,7 +86,7 @@ export class World<E extends IEntity> extends Bucket<E> {
 
   archetype<D extends E, C extends keyof E>(
     ...components: C[]
-  ): Archetype<With<E, C>>
+  ): Archetype<WithRequiredComponents<E, C>>
 
   archetype<D extends E = E>(query: Query<E>): Archetype<D>
 

@@ -38,12 +38,12 @@ describe("Bucket", () => {
 
   describe("remove", () => {
     it("removes an entity from the world", () => {
-      const entity = { id: 0 }
-      const world = new Bucket({ entities: [entity] })
-      expect(world.entities).toEqual([entity])
+      const entity = { name: "John" }
+      const bucket = new Bucket({ entities: [entity] })
+      expect(bucket.entities).toEqual([entity])
 
-      world.remove(entity)
-      expect(world.entities).toEqual([])
+      bucket.remove(entity)
+      expect(bucket.entities).toEqual([])
     })
 
     it("no-ops if it doesn't have the entity", () => {

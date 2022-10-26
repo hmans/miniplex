@@ -104,6 +104,32 @@ describe("World", () => {
     })
   })
 
+  describe("id", () => {
+    it("returns a unique ID for the given entity", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const entity = world.add({ name: "John" })
+      expect(world.id(entity)).toEqual(0)
+
+      const entity2 = world.add({ name: "Alice" })
+      expect(world.id(entity2)).toEqual(1)
+    })
+
+    it("returns undefined if the entity is not part of the world", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const entity = { name: "John" }
+      expect(world.id(entity)).toBeUndefined()
+    })
+  })
+
+  describe("entity", () => {
+    it("returns the entity matching the given ID", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const entity = world.add({ name: "John" })
+      const id = world.id(entity)!
+      expect(world.entity(id)).toEqual(entity)
+    })
+  })
+
   describe("clear", () => {
     it("removes all known entities from the world", () => {
       const world = new World<{ name: string; age?: number }>()
