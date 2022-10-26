@@ -34,10 +34,28 @@ export class World<E extends IEntity> extends Bucket<E> {
 
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
     entity[component] = value
+
+    /* Re-check known archetypes */
+    for (const [query, archetype] of this.archetypes) {
+      if (entityMatches(entity, query)) {
+        archetype.add(entity)
+      } else {
+        archetype.remove(entity)
+      }
+    }
   }
 
   removeComponent<C extends keyof E>(entity: E, component: C) {
     delete entity[component]
+
+    /* Re-check known archetypes */
+    for (const [query, archetype] of this.archetypes) {
+      if (entityMatches(entity, query)) {
+        archetype.add(entity)
+      } else {
+        archetype.remove(entity)
+      }
+    }
   }
 
   archetype(query: Query<E>): Archetype<E> {
