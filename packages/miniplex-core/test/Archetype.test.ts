@@ -1,3 +1,4 @@
+import { World } from "../src"
 import { Archetype } from "../src/Archetype"
 
 describe("Archetype", () => {
@@ -43,6 +44,43 @@ describe("Archetype", () => {
       const archetype = new Archetype<Entity>({ none: ["age"] })
       const entity = { name: "John", age: 42 }
       expect(archetype.matchesEntity(entity)).toBe(false)
+    })
+  })
+
+  describe("onEntityRemoved", () => {
+    it("is invoked when an entity leaves the archetype", () => {
+      const world = new World<Entity>()
+
+      const archetype = world.archetype({ all: ["age"] })
+      const callback = jest.fn()
+      archetype.onEntityRemoved.add(callback)
+
+      const entity = world.add({ name: "John", age: 42 })
+      expect(callback).not.toHaveBeenCalled()
+
+      world.removeComponent(entity, "age")
+
+      expect(callback).toHaveBeenCalledWith(entity)
+    })
+
+    it("is invoked before the component is actually removed from the entity", () => {
+      const world = new World<Entity>()
+
+      let age: number | undefined
+
+      const archetype = world.archetype({ all: ["age"] })
+
+      const callback = jest.fn((entity: Entity) => {
+        age = entity.age
+      })
+
+      archetype.onEntityRemoved.add(callback)
+
+      const entity = world.add({ name: "John", age: 42 })
+      world.removeComponent(entity, "age")
+
+      expect(callback).toHaveBeenCalledWith(entity)
+      expect(age).toBe(42)
     })
   })
 })
