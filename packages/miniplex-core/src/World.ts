@@ -97,10 +97,27 @@ export class World<E extends IEntity> extends Bucket<E> {
     delete entity[component]
   }
 
+  /**
+   * Returns an archetype bucket holding all entities that have all of the specified
+   * components.
+   *
+   * @param components One or multiple components to query for
+   */
   archetype<C extends keyof E>(
     ...components: C[]
   ): Archetype<WithComponents<E, C>>
 
+  /**
+   * Returns an archetype bucket holding all entities that match the specified
+   * query. The query is a simple object with optional `all`, `any` and `none`
+   * keys. Each key should be an array of component names.
+   *
+   * The `all` key specifies that all of the components in the array must be present.
+   * The `any` key specifies that at least one of the components in the array must be present.
+   * The `none` key specifies that none of the components in the array must be present.
+   *
+   * @param query
+   */
   archetype<C extends keyof E>(query: {
     all?: C[]
     any?: (keyof E)[]
