@@ -232,7 +232,7 @@ describe("<Bucket>", () => {
     const world = new World<{ name: string }>()
     const { Bucket } = createReactAPI(world)
 
-    world.add({ name: "Alice" })
+    const alice = world.add({ name: "Alice" })
     world.add({ name: "Bob" })
 
     render(<Bucket bucket={world}>{(entity) => <p>{entity.name}</p>}</Bucket>)
@@ -245,6 +245,14 @@ describe("<Bucket>", () => {
     })
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
+    expect(screen.getByText("Bob")).toBeInTheDocument()
+    expect(screen.getByText("Charlie")).toBeInTheDocument()
+
+    act(() => {
+      world.remove(alice)
+    })
+
+    expect(screen.queryByText("Alice")).toBeNull()
     expect(screen.getByText("Bob")).toBeInTheDocument()
     expect(screen.getByText("Charlie")).toBeInTheDocument()
   })
@@ -277,9 +285,7 @@ describe("<Archetype>", () => {
     world.add({ name: "Bob" })
 
     render(
-      <Archetype components="name">
-        {(entity) => <p>{entity.name}</p>}
-      </Archetype>
+      <Archetype query="name">{(entity) => <p>{entity.name}</p>}</Archetype>
     )
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
@@ -287,16 +293,14 @@ describe("<Archetype>", () => {
   })
 
   it("re-renders the entities when the bucket contents change", () => {
-    const world = new World<{ name: string }>()
+    const world = new World<{ name: string; age?: number }>()
     const { Archetype } = createReactAPI(world)
 
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })
 
-    const { rerender } = render(
-      <Archetype components="name">
-        {(entity) => <p>{entity.name}</p>}
-      </Archetype>
+    render(
+      <Archetype query="name">{(entity) => <p>{entity.name}</p>}</Archetype>
     )
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
@@ -322,11 +326,29 @@ describe("<Archetype>", () => {
 
       const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
 
-      render(<Archetype as={User} components="name" />)
+      render(<Archetype as={User} query="name" />)
 
       expect(screen.getByText("Alice")).toBeInTheDocument()
       expect(screen.getByText("Bob")).toBeInTheDocument()
     })
+  })
+
+  it("accepts a query object as its `query` prop", () => {
+    type Entity = { name: string; age?: number }
+    const world = new World<Entity>()
+    const { Archetype } = createReactAPI(world)
+
+    world.add({ name: "Alice" })
+    world.add({ name: "Bob", age: 100 })
+
+    render(
+      <Archetype query={{ all: ["name"] }}>
+        {(entity) => <p>{entity.name}</p>}
+      </Archetype>
+    )
+
+    expect(screen.getByText("Alice")).toBeInTheDocument()
+    expect(screen.getByText("Bob")).toBeInTheDocument()
   })
 })
 

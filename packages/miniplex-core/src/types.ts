@@ -2,6 +2,12 @@ export interface IEntity {
   [key: string]: any
 }
 
-export type WithRequiredKeys<E, P extends keyof E> = E & { [K in P]-?: E[K] }
+export type WithComponents<E, P extends keyof E> = E & {
+  [K in P]-?: E[K]
+}
 
-export type Predicate<E, D extends E> = (entity: E) => entity is D
+export interface Query<E extends IEntity, All extends keyof E = keyof E> {
+  all?: All[]
+  any?: (keyof E)[]
+  none?: (keyof E)[]
+}

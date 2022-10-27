@@ -1,128 +1,152 @@
-import { archetype } from "./archetypes"
-import { Bucket } from "./Bucket"
-import { IEntity } from "./types"
+import { Archetype } from "./Archetype"
+import { Bucket, BucketOptions } from "./Bucket"
+import { normalizeQuery, serializeQuery } from "./queries"
+import { IEntity, Query, WithComponents } from "./types"
 
-/**
- * `World` is a special type of `Bucket` that manages ECS-like entities.
- * It provides an API for adding and removing components to and from entities,
- * as well as an `archetype` function that will return a derived bucket
- * containing all entities of the specified archetype (ie. that have all of
- * the specified components.)
- */
+export type WorldOptions<E extends IEntity> = BucketOptions<E>
+
 export class World<E extends IEntity> extends Bucket<E> {
-  constructor(...args: ConstructorParameters<typeof Bucket<E>>) {
-    super(...args)
+  /* Archetypes */
+  private archetypes = new Map<string, Archetype<any>>()
 
-    /* Forget the ID again when an entity is removed */
-    this.onEntityRemoved.add((entity) => {
-      if (this.entityToId.has(entity)) {
-        this.idToEntity.delete(this.entityToId.get(entity)!)
-        this.entityToId.delete(entity)
+  /* Entity IDs */
+  private nextID = 0
+  private entityToID = new Map<E, number>()
+  private idToEntity = new Map<number, E>()
+
+  constructor(options: WorldOptions<E> = {}) {
+    super(options)
+
+    this.onEntityAdded.add((entity) => {
+      /* Add entity to matching archetypes */
+      for (const archetype of this.archetypes.values()) {
+        if (archetype.matchesEntity(entity)) {
+          archetype.add(entity)
+        }
       }
+    })
+
+    this.onEntityRemoved.add((entity) => {
+      /* Remove entity from all archetypes */
+      for (const archetype of this.archetypes.values()) {
+        archetype.remove(entity)
+      }
+
+      /* Remove IDs */
+      const id = this.entityToID.get(entity)!
+      this.idToEntity.delete(id)
+      this.entityToID.delete(entity)
     })
   }
 
-  /* ID generation */
-  private nextId = 0
-  private entityToId = new Map<E, number>()
-  private idToEntity = new Map<number, E>()
-
-  /**
-   * Returns the ID of the given entity. If the entity is not known to this world,
-   * it returns `undefined`.
-   *
-   * @param entity The entity to get the ID of.
-   * @returns The ID of the entity, or `undefined` if the entity is not known to this world.
-   */
   id(entity: E) {
-    /* Only return IDs for entities we know about */
-    if (!this.has(entity)) return undefined
+    if (!this.has(entity)) return
 
-    /* Return existing ID if we have one */
-    const id = this.entityToId.get(entity)
-    if (id !== undefined) return id
+    if (!this.entityToID.has(entity)) {
+      const id = this.nextID++
+      this.entityToID.set(entity, id)
+      this.idToEntity.set(id, entity)
 
-    this.entityToId.set(entity, this.nextId)
-    this.idToEntity.set(this.nextId, entity)
-    return this.nextId++
+      return id
+    }
+
+    return this.entityToID.get(entity)
   }
 
-  /**
-   * Given an ID, returns the entity with that ID. If the ID is not known to this world,
-   * it returns `undefined`.
-   *
-   * @param id The ID of the entity to get.
-   * @returns The entity with the given ID, or `undefined` if the ID is not known to this world.
-   */
   entity(id: number) {
     return this.idToEntity.get(id)
   }
 
-  /**
-   * Adds a component to an entity.
-   * If the entity already has the component, this function will log a warning
-   * and return `false`. Otherwise, it will add the component and return `true`.
-   *
-   * @param entity The entity to add the property to.
-   * @param component The component to add.
-   * @param value The value of the component.
-   * @returns `true` if the entity was updated, `false` otherwise.
-   */
-  addComponent<P extends keyof E>(entity: E, component: P, value: E[P]) {
-    if (entity[component] !== undefined) {
-      console.warn(
-        "Tried to add a component, but it was already present:",
-        component
-      )
-
-      return false
-    }
+  addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
+    /* Don't overwrite existing components */
+    if (entity[component] !== undefined) return
 
     entity[component] = value
-    this.touch(entity)
 
-    return true
+    /* Re-check known archetypes */
+    if (this.has(entity))
+      for (const archetype of this.archetypes.values())
+        archetype.matchesEntity(entity)
+          ? archetype.add(entity)
+          : archetype.remove(entity)
   }
 
-  /**
-   * Removes a component from an entity. If the entity does not have the component,
-   * this function will do nothing.
-   *
-   * @param entity The entity to remove the component from.
-   * @param component The component to remove.
-   * @returns `true` if the entity was updated, `false` otherwise.
-   */
-  removeComponent<P extends keyof E>(entity: E, component: P) {
-    if (entity[component] === undefined) return false
+  removeComponent<C extends keyof E>(entity: E, component: C) {
+    /* Return early if component doesn't exist on entity */
+    if (entity[component] === undefined) return
+
+    /* Re-check known archetypes */
+    if (this.has(entity)) {
+      const copy = { ...entity }
+      delete copy[component]
+
+      for (const archetype of this.archetypes.values())
+        archetype.matchesEntity(copy)
+          ? archetype.add(entity)
+          : archetype.remove(entity)
+    }
+
+    /* At this point, all relevant callbacks will have executed. Now it's
+    safe to remove the component. */
 
     delete entity[component]
-    this.touch(entity)
-
-    return true
   }
 
   /**
-   * Updates the value of a component on the given entity.
-   * If the entity does not have the component, this function will do nothing.
+   * Returns an archetype bucket holding all entities that have all of the specified
+   * components.
    *
-   * @param entity The entity to update.
-   * @param component The component to update.
-   * @param value The new value of the component.
-   * @returns `true` if the entity was updated, `false` otherwise.
+   * @param components One or multiple components to query for
    */
-  setComponent<P extends keyof E>(entity: E, component: P, value: E[P]) {
-    if (entity[component] === undefined) {
-      console.warn("Tried to set a component, but it was missing:", component)
-      return false
+  archetype<C extends keyof E>(
+    ...components: C[]
+  ): Archetype<WithComponents<E, C>>
+
+  /**
+   * Returns an archetype bucket holding all entities that match the specified
+   * query. The query is a simple object with optional `all`, `any` and `none`
+   * keys. Each key should be an array of component names.
+   *
+   * The `all` key specifies that all of the components in the array must be present.
+   * The `any` key specifies that at least one of the components in the array must be present.
+   * The `none` key specifies that none of the components in the array must be present.
+   *
+   * @param query
+   */
+  archetype<C extends keyof E>(query: {
+    all?: C[]
+    any?: (keyof E)[]
+    none?: (keyof E)[]
+  }): Archetype<WithComponents<E, C>>
+
+  archetype<C extends keyof E>(
+    query: Query<E, C> | C,
+    ...extra: C[]
+  ): Archetype<WithComponents<E, C>> {
+    /* If the query is not a query object, turn it into one and call
+    ourselves. Yay overloading in TypeScript! */
+    if (typeof query !== "object") {
+      return this.archetype({ all: [query, ...extra] })
     }
 
-    entity[component] = value
-    this.touch(entity)
+    /* Build a normalized query object and key */
+    const normalizedQuery = normalizeQuery(query)
+    const key = serializeQuery(normalizedQuery)
 
-    return true
-  }
+    /* If we haven't seen this query before, create a new archetype */
+    if (!this.archetypes.has(key)) {
+      const archetype = new Archetype(normalizedQuery)
+      this.archetypes.set(key, archetype)
 
-  archetype<P extends keyof E>(...components: P[]) {
-    return this.derive(archetype(...components))
+      /* Check existing entities for matches */
+      for (const entity of this.entities) {
+        if (archetype.matchesEntity(entity)) {
+          archetype.add(entity)
+        }
+      }
+    }
+
+    /* We're done, return the archetype! */
+    return this.archetypes.get(key)! as Archetype<WithComponents<E, C>>
   }
 }

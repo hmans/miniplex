@@ -1,191 +1,159 @@
-import { World, Bucket } from "../src"
+import { Archetype } from "../src/Archetype"
+import { World } from "../src/World"
 
 describe("World", () => {
-  it("inherits from Bucket", () => {
-    const world = new World()
-    expect(world).toBeDefined()
-    expect(world).toBeInstanceOf(Bucket)
+  describe("archetype", () => {
+    it("creates an archetype for the given query", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype = world.archetype("name")
+      expect(archetype).toBeDefined()
+      expect(archetype).toBeInstanceOf(Archetype)
+    })
+
+    it("supports a list of components as a shortcut", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype1 = world.archetype("name")
+      const archetype2 = world.archetype({ all: ["name"] })
+      expect(archetype1).toBe(archetype2)
+    })
+
+    it("returns the same archetype if it already exists", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype1 = world.archetype({ all: ["name"] })
+      const archetype2 = world.archetype({ all: ["name"] })
+      expect(archetype1).toBe(archetype2)
+    })
+
+    it("properly normalizes queries before matching against existing archetypes", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype1 = world.archetype({ all: ["age", "name"] })
+      const archetype2 = world.archetype({ all: ["name", "age"] })
+      expect(archetype1).toBe(archetype2)
+    })
+
+    it("adds existing entities that match the query to the archetype", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const entity = world.add({ name: "John", age: 42 })
+      world.add({ name: "Alice" })
+
+      const archetype = world.archetype({ all: ["age"] })
+      expect(archetype.entities).toEqual([entity])
+    })
   })
 
-  describe("id", () => {
-    it("returns a world-unique ID for the given entity", () => {
-      const world = new World()
-      const entity = world.add({})
-      expect(world.id(entity)).toBe(0)
+  describe("add", () => {
+    it("adds the entity to matching archetypes", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype = world.archetype({ all: ["age"] })
 
-      /* It should always return the same ID for the same entity */
-      expect(world.id(entity)).toBe(0)
+      const entity = world.add({ name: "John", age: 42 })
+      expect(archetype.entities).toEqual([entity])
     })
+  })
 
-    it("returns undefined for entities that are not known to the world", () => {
-      const world = new World()
-      const entity = {}
-      expect(world.id(entity)).toBeUndefined()
-    })
+  describe("remove", () => {
+    it("removes the entity from all archetypes", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype = world.archetype({ all: ["age"] })
 
-    it("forgets about IDs when the entity is removed", () => {
-      const world = new World()
-
-      const entity = world.add({})
-      expect(world.id(entity)).toBe(0)
+      const entity = world.add({ name: "John", age: 42 })
+      expect(archetype.entities).toEqual([entity])
 
       world.remove(entity)
-      expect(world.id(entity)).toBeUndefined()
-    })
-
-    it("when an entity is removed and re-added, it will receive a new ID", () => {
-      const world = new World()
-
-      const entity = world.add({})
-      expect(world.id(entity)).toBe(0)
-
-      world.remove(entity)
-      expect(world.id(entity)).toBeUndefined()
-
-      world.add(entity)
-      expect(world.id(entity)).toBe(1)
+      expect(archetype.entities).toEqual([])
     })
   })
 
   describe("addComponent", () => {
-    it("adds a component to an entity", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      world.addComponent(entity, "name", "foo")
-      expect(entity).toEqual({ count: 1, name: "foo" })
+    it("adds the component to the entity", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const entity = world.add({ name: "John" })
+      world.addComponent(entity, "age", 42)
+      expect(entity).toEqual({ name: "John", age: 42 })
     })
 
-    it("if the component is already on the entity, it does nothing", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      world.addComponent(entity, "count", 2)
-      expect(entity).toEqual({ count: 1 })
+    it("it doesn't overwrite the component if it already exists", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const entity = world.add({ name: "John", age: 42 })
+      world.addComponent(entity, "age", 43)
+      expect(entity).toEqual({ name: "John", age: 42 })
     })
 
-    it("touches the entity", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      const listener = jest.fn()
-      world.onEntityTouched.add(listener)
-      world.addComponent(entity, "name", "foo")
-      expect(listener).toHaveBeenCalledWith(entity)
-    })
+    it("adds the entity to matching archetypes", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype = world.archetype({ all: ["age"] })
+      const entity = world.add({ name: "John" })
 
-    it("returns true if the entity was updated", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      expect(world.addComponent(entity, "name", "foo")).toBe(true)
-    })
+      expect(archetype.entities).toEqual([])
 
-    it("returns false if the entity was not updated", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      expect(world.addComponent(entity, "count", 2)).toBe(false)
+      world.addComponent(entity, "age", 42)
+      expect(archetype.entities).toEqual([entity])
     })
   })
 
   describe("removeComponent", () => {
-    it("removes a component from an entity", () => {
-      const world = new World()
-      const entity = world.add({ count: 1, name: "foo" })
-      world.removeComponent(entity, "name")
-      expect(entity).toEqual({ count: 1 })
+    it("removes the component from the entity", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const entity = world.add({ name: "John", age: 42 })
+      world.removeComponent(entity, "age")
+      expect(entity).toEqual({ name: "John" })
     })
 
-    it("if the component is not on the entity, it does nothing", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      const listener = jest.fn()
+    it("removes the entity from archetype it no longer matches with", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype = world.archetype({ all: ["age"] })
+      const entity = world.add({ name: "John", age: 42 })
 
-      world.onEntityTouched.add(listener)
-      world.removeComponent(entity, "name")
-      expect(entity).toEqual({ count: 1 })
-      expect(listener).not.toHaveBeenCalledWith(entity)
-    })
+      expect(archetype.entities).toEqual([entity])
 
-    it("touches the entity", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      const listener = jest.fn()
-      world.onEntityTouched.add(listener)
-      world.removeComponent(entity, "count")
-      expect(listener).toHaveBeenCalledWith(entity)
-    })
-
-    it("returns true if the entity was updated", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      expect(world.removeComponent(entity, "count")).toBe(true)
-    })
-
-    it("returns false if the entity was not updated", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      expect(world.removeComponent(entity, "name")).toBe(false)
+      world.removeComponent(entity, "age")
+      expect(archetype.entities).toEqual([])
     })
   })
 
-  describe("setComponent", () => {
-    it("updates the value of a component on an entity", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      world.setComponent(entity, "count", 2)
-      expect(entity).toEqual({ count: 2 })
+  describe("id", () => {
+    it("returns a unique ID for the given entity", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const entity = world.add({ name: "John" })
+      expect(world.id(entity)).toEqual(0)
+
+      const entity2 = world.add({ name: "Alice" })
+      expect(world.id(entity2)).toEqual(1)
     })
 
-    it("if the component is not on the entity, it does nothing", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      const listener = jest.fn()
-
-      world.onEntityTouched.add(listener)
-      world.setComponent(entity, "name", "foo")
-      expect(entity).toEqual({ count: 1 })
-      expect(listener).not.toHaveBeenCalledWith(entity)
-    })
-
-    it("touches the entity", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      const listener = jest.fn()
-      world.onEntityTouched.add(listener)
-      world.setComponent(entity, "count", 2)
-      expect(listener).toHaveBeenCalledWith(entity)
-    })
-
-    it("returns true if the entity was updated", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      expect(world.setComponent(entity, "count", 2)).toBe(true)
-    })
-
-    it("returns false if the entity was not updated", () => {
-      const world = new World()
-      const entity = world.add({ count: 1 })
-      expect(world.setComponent(entity, "name", "foo")).toBe(false)
+    it("returns undefined if the entity is not part of the world", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const entity = { name: "John" }
+      expect(world.id(entity)).toBeUndefined()
     })
   })
 
-  describe("archetype", () => {
-    it("creates a derived bucket that holds entities with a specific set of components", () => {
-      const world = new World()
-      const entity = world.add({ count: 1, name: "foo" })
-      const bucket = world.archetype("count")
-      expect(bucket.entities).toEqual([entity])
+  describe("entity", () => {
+    it("returns the entity matching the given ID", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const entity = world.add({ name: "John" })
+      const id = world.id(entity)!
+      expect(world.entity(id)).toEqual(entity)
+    })
+  })
+
+  describe("clear", () => {
+    it("removes all known entities from the world", () => {
+      const world = new World<{ name: string; age?: number }>()
+      world.add({ name: "John", age: 42 })
+      world.add({ name: "Alice" })
+      world.clear()
+      expect(world.entities).toEqual([])
     })
 
-    it("returns the same bucket object for the same components", () => {
-      const world = new World()
-      const bucket1 = world.archetype("count")
-      const bucket2 = world.archetype("count")
-      expect(bucket1).toBe(bucket2)
-    })
-
-    it("normalizes the specified components for the equality check", () => {
-      const world = new World()
-      const bucket1 = world.archetype("name", "count", "")
-      const bucket2 = world.archetype("count", undefined!, "name")
-      expect(bucket1).toBe(bucket2)
+    it("also removes all entities from known archetypes", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const archetype = world.archetype({ all: ["age"] })
+      const john = world.add({ name: "John", age: 42 })
+      world.add({ name: "Alice" })
+      expect(archetype.entities).toEqual([john])
+      world.clear()
+      expect(archetype.entities).toEqual([])
     })
   })
 })
