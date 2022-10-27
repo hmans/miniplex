@@ -97,20 +97,13 @@ export class World<E extends IEntity> extends Bucket<E> {
     delete entity[component]
   }
 
-  archetype<D extends E, C extends keyof E>(
+  archetype<D extends WithRequiredComponents<E, C>, C extends keyof E>(
     ...components: C[]
-  ): Archetype<WithRequiredComponents<E, C>>
-
-  archetype<D extends E>(query: Query<E>): Archetype<D>
-
-  archetype<D extends E, C extends keyof E>(
-    query: Query<E> | C,
-    ...rest: C[]
   ): Archetype<D> {
-    if (typeof query !== "object") {
-      return this.archetype({ all: [query, ...rest] })
-    }
+    return this.query({ all: components })
+  }
 
+  query<D extends E>(query: Query<E>): Archetype<D> {
     const normalizedQuery = normalizeQuery(query)
     const key = serializeQuery(normalizedQuery)
 

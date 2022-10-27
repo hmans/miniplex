@@ -5,7 +5,7 @@ describe("World", () => {
   describe("archetype", () => {
     it("creates an archetype for the given query", () => {
       const world = new World<{ name: string; age?: number }>()
-      const archetype = world.archetype({ all: ["name"] })
+      const archetype = world.archetype("name")
       expect(archetype).toBeDefined()
       expect(archetype).toBeInstanceOf(Archetype)
     })
@@ -13,21 +13,21 @@ describe("World", () => {
     it("supports a list of components as a shortcut", () => {
       const world = new World<{ name: string; age?: number }>()
       const archetype1 = world.archetype("name")
-      const archetype2 = world.archetype({ all: ["name"] })
+      const archetype2 = world.query({ all: ["name"] })
       expect(archetype1).toBe(archetype2)
     })
 
     it("returns the same archetype if it already exists", () => {
       const world = new World<{ name: string; age?: number }>()
-      const archetype1 = world.archetype({ all: ["name"] })
-      const archetype2 = world.archetype({ all: ["name"] })
+      const archetype1 = world.query({ all: ["name"] })
+      const archetype2 = world.query({ all: ["name"] })
       expect(archetype1).toBe(archetype2)
     })
 
     it("properly normalizes queries before matching against existing archetypes", () => {
       const world = new World<{ name: string; age?: number }>()
-      const archetype1 = world.archetype({ all: ["age", "name"] })
-      const archetype2 = world.archetype({ all: ["name", "age"] })
+      const archetype1 = world.query({ all: ["age", "name"] })
+      const archetype2 = world.query({ all: ["name", "age"] })
       expect(archetype1).toBe(archetype2)
     })
 
@@ -36,7 +36,7 @@ describe("World", () => {
       const entity = world.add({ name: "John", age: 42 })
       world.add({ name: "Alice" })
 
-      const archetype = world.archetype({ all: ["age"] })
+      const archetype = world.query({ all: ["age"] })
       expect(archetype.entities).toEqual([entity])
     })
   })
@@ -44,7 +44,7 @@ describe("World", () => {
   describe("add", () => {
     it("adds the entity to matching archetypes", () => {
       const world = new World<{ name: string; age?: number }>()
-      const archetype = world.archetype({ all: ["age"] })
+      const archetype = world.query({ all: ["age"] })
 
       const entity = world.add({ name: "John", age: 42 })
       expect(archetype.entities).toEqual([entity])
@@ -54,7 +54,7 @@ describe("World", () => {
   describe("remove", () => {
     it("removes the entity from all archetypes", () => {
       const world = new World<{ name: string; age?: number }>()
-      const archetype = world.archetype({ all: ["age"] })
+      const archetype = world.query({ all: ["age"] })
 
       const entity = world.add({ name: "John", age: 42 })
       expect(archetype.entities).toEqual([entity])
@@ -81,7 +81,7 @@ describe("World", () => {
 
     it("adds the entity to matching archetypes", () => {
       const world = new World<{ name: string; age?: number }>()
-      const archetype = world.archetype({ all: ["age"] })
+      const archetype = world.query({ all: ["age"] })
       const entity = world.add({ name: "John" })
 
       expect(archetype.entities).toEqual([])
@@ -101,7 +101,7 @@ describe("World", () => {
 
     it("removes the entity from archetype it no longer matches with", () => {
       const world = new World<{ name: string; age?: number }>()
-      const archetype = world.archetype({ all: ["age"] })
+      const archetype = world.query({ all: ["age"] })
       const entity = world.add({ name: "John", age: 42 })
 
       expect(archetype.entities).toEqual([entity])
@@ -148,7 +148,7 @@ describe("World", () => {
 
     it("also removes all entities from known archetypes", () => {
       const world = new World<{ name: string; age?: number }>()
-      const archetype = world.archetype({ all: ["age"] })
+      const archetype = world.query({ all: ["age"] })
       const john = world.add({ name: "John", age: 42 })
       world.add({ name: "Alice" })
       expect(archetype.entities).toEqual([john])
