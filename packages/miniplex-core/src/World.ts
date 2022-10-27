@@ -30,6 +30,8 @@ export class World<E extends IEntity> extends Bucket<E> {
   }
 
   remove(entity: E) {
+    if (!this.has(entity)) return entity
+
     /* Remove entity from all archetypes */
     for (const archetype of this.archetypes.values()) {
       archetype.remove(entity)
@@ -44,7 +46,9 @@ export class World<E extends IEntity> extends Bucket<E> {
   }
 
   id(entity: E) {
-    if (!this.entityToID.has(entity) && this.has(entity)) {
+    if (!this.has(entity)) return
+
+    if (!this.entityToID.has(entity)) {
       const id = this.nextID++
       this.entityToID.set(entity, id)
       this.idToEntity.set(id, entity)
