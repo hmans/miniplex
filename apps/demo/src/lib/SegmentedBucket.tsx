@@ -1,7 +1,7 @@
 import { useConst } from "@hmans/use-const"
-import { Bucket } from "miniplex"
+import { Bucket, IEntity } from "miniplex"
 
-export class SegmentedBucket<E> extends Bucket<Bucket<E>> {
+export class SegmentedBucket<E extends IEntity> extends Bucket<Bucket<E>> {
   private entityToSegment = new Map<E, Bucket<E>>()
   private counter = 0
   private current = 0
@@ -43,7 +43,7 @@ export class SegmentedBucket<E> extends Bucket<Bucket<E>> {
   }
 }
 
-export const useSegmentedBucket = <E extends any>(
+export const useSegmentedBucket = <E extends IEntity>(
   source: Bucket<E>,
   size = 50
 ) => useConst(() => new SegmentedBucket(source, size))
