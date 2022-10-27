@@ -9,7 +9,7 @@ export type WorldOptions<E extends IEntity> = {
 
 export class World<E extends IEntity> extends Bucket<E> {
   /* Archetypes */
-  private archetypes = new Map<string, Archetype<E>>()
+  private archetypes = new Map<string, Archetype<any>>()
 
   /* Entity IDs */
   private nextID = 0
@@ -125,6 +125,6 @@ export class World<E extends IEntity> extends Bucket<E> {
     }
 
     /* We're done, return the archetype */
-    return this.archetypes.get(key)! as unknown as Archetype<D>
+    return this.archetypes.get(key)! as Archetype<D>
   }
 }
