@@ -7,19 +7,19 @@ export type BucketOptions<E> = {
 
 export class Bucket<E> {
   [Symbol.iterator]() {
-    let index = this.#entities.length
+    let index = this.entities.length
 
     return {
       next: () => {
-        const value = this.#entities[--index]
+        const value = this.entities[--index]
         return { value, done: index < 0 }
       }
     }
   }
 
-  #entities: E[]
-  #predicate: (entity: E) => boolean
-  #derivedBuckets = new Map<Function, Bucket<any>>()
+  entities: E[]
+  predicate: (entity: E) => boolean
+  protected derivedBuckets = new Map<Function, Bucket<any>>()
 
   onEntityAdded = new Event<E>()
   onEntityRemoved = new Event<E>()
@@ -28,26 +28,26 @@ export class Bucket<E> {
     entities = [],
     predicate = () => true
   }: BucketOptions<E> = {}) {
-    this.#entities = entities
-    this.#predicate = predicate
+    this.entities = entities
+    this.predicate = predicate
   }
 
   get size() {
-    return this.#entities.length
+    return this.entities.length
   }
 
   has(entity: E) {
-    return this.#entities.includes(entity)
+    return this.entities.includes(entity)
   }
 
-  add(entity: E) {
-    if (entity && !this.has(entity) && this.#predicate(entity)) {
+  add<D extends E>(entity: D): E & D {
+    if (entity && !this.has(entity) && this.predicate(entity)) {
       /* Add to list of entities */
-      this.#entities.push(entity)
+      this.entities.push(entity)
       this.onEntityAdded.emit(entity)
 
       /* Add to derived buckets */
-      for (const bucket of this.#derivedBuckets.values()) {
+      for (const bucket of this.derivedBuckets.values()) {
         bucket.add(entity)
       }
     }
@@ -58,15 +58,15 @@ export class Bucket<E> {
   remove(entity: E) {
     if (!entity) return entity
 
-    const index = this.#entities.indexOf(entity)
+    const index = this.entities.indexOf(entity)
 
     if (index !== -1) {
       /* Remove from list of entities */
-      this.#entities.splice(index, 1)
+      this.entities.splice(index, 1)
       this.onEntityRemoved.emit(entity)
 
       /* Remove from derived buckets */
-      for (const bucket of this.#derivedBuckets.values()) {
+      for (const bucket of this.derivedBuckets.values()) {
         bucket.remove(entity)
       }
     }
@@ -75,17 +75,17 @@ export class Bucket<E> {
   }
 
   derive(predicate: (entity: E) => boolean) {
-    if (!this.#derivedBuckets.has(predicate)) {
+    if (!this.derivedBuckets.has(predicate)) {
       /* Create and store new bucket */
       const bucket = new Bucket<E>({ predicate })
-      this.#derivedBuckets.set(predicate, bucket)
+      this.derivedBuckets.set(predicate, bucket)
 
       /* Add existing entities to new bucket */
-      for (const entity of this.#entities) {
+      for (const entity of this.entities) {
         bucket.add(entity)
       }
     }
 
-    return this.#derivedBuckets.get(predicate)!
+    return this.derivedBuckets.get(predicate)!
   }
 }
