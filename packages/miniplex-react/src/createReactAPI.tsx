@@ -97,27 +97,24 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
 
   const Bucket = memo(RawBucket) as typeof RawBucket
 
-  const Archetype = <
-    D extends WithRequiredComponents<E, C>,
-    C extends keyof E
-  >({
+  const Archetype = <C extends keyof E>({
     query,
     ...props
   }: {
     query: Query<E, C> | C | C[]
-    children?: EntityChildren<D>
+    children?: EntityChildren<WithRequiredComponents<E, C>>
     as?: FunctionComponent<{
-      entity: D
+      entity: WithRequiredComponents<E, C>
       children?: ReactNode
     }>
   }) => (
     <Bucket
       bucket={
-        (Array.isArray(query)
+        Array.isArray(query)
           ? world.archetype(...query)
           : typeof query === "object"
           ? world.archetype(query)
-          : world.archetype(query)) as Archetype<D>
+          : world.archetype(query)
       }
       {...props}
     />
