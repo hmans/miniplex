@@ -42,8 +42,14 @@ export class Bucket<E> {
 
   add(entity: E) {
     if (entity && !this.has(entity) && this.#predicate(entity)) {
+      /* Add to list of entities */
       this.#entities.push(entity)
       this.onEntityAdded.emit(entity)
+
+      /* Add to derived buckets */
+      for (const bucket of this.#derivedBuckets.values()) {
+        bucket.add(entity)
+      }
     }
 
     return entity
@@ -55,17 +61,31 @@ export class Bucket<E> {
     const index = this.#entities.indexOf(entity)
 
     if (index !== -1) {
+      /* Remove from list of entities */
       this.#entities.splice(index, 1)
       this.onEntityRemoved.emit(entity)
+
+      /* Remove from derived buckets */
+      for (const bucket of this.#derivedBuckets.values()) {
+        bucket.remove(entity)
+      }
     }
 
     return entity
   }
 
   derive(predicate: (entity: E) => boolean) {
-    // const bucket = new PredicateBucket(predicate)
-    // this.onEntityAdded.add((entity) => bucket.add(entity))
-    // this.onEntityRemoved.add((entity) => bucket.remove(entity))
-    // return bucket
+    if (!this.#derivedBuckets.has(predicate)) {
+      /* Create and store new bucket */
+      const bucket = new Bucket<E>({ predicate })
+      this.#derivedBuckets.set(predicate, bucket)
+
+      /* Add existing entities to new bucket */
+      for (const entity of this.#entities) {
+        bucket.add(entity)
+      }
+    }
+
+    return this.#derivedBuckets.get(predicate)!
   }
 }

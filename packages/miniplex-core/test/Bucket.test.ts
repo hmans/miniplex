@@ -100,6 +100,36 @@ describe("Bucket", () => {
     })
   })
 
+  describe("derive", () => {
+    it("creates a derived bucket that receives this bucket's entities filtered by a predicate", () => {
+      const bucket = new Bucket<{ id: number }>()
+      const derived = bucket.derive((entity) => entity.id % 2 === 0)
+
+      const odd = { id: 1 }
+      const even = { id: 2 }
+
+      bucket.add(odd)
+      bucket.add(even)
+
+      expect(derived.has(odd)).toBe(false)
+      expect(derived.has(even)).toBe(true)
+    })
+
+    it("automatically puts entities that are already present into the derived bucket", () => {
+      const bucket = new Bucket<{ id: number }>()
+      const odd = { id: 1 }
+      const even = { id: 2 }
+
+      bucket.add(odd)
+      bucket.add(even)
+
+      const derived = bucket.derive((entity) => entity.id % 2 === 0)
+
+      expect(derived.has(odd)).toBe(false)
+      expect(derived.has(even)).toBe(true)
+    })
+  })
+
   it("iterates over its entities in the reverse order", () => {
     const bucket = new Bucket()
     const entity1 = { id: 1 }
