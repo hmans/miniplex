@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.0.0-next.11
+
+### Patch Changes
+
+- a886264: `createComponents` has been renamed to `createReactAPI` and is now the default export of both `@miniplex/react` and `miniplex/react`, in order to allow the user to pick a less terrible name. :-)
+- 43f9cae: Upgraded to a newer `@hmans/event` that uses `.add` and `.remove` instead of `.addListener` and `.removeListener`.
+- b11083d: `<Archetype>` has been changed to match the new query capabilities of the core library's `world.archetype` function. All of these are now valid:
+
+  ```tsx
+  <Archetype query="position" />
+  <Archetype query={["position", "velocity"]} />
+  <Archetype query={{ all: ["position", "velocity"], none: ["dead"] }} />
+  ```
+
 ## 2.0.0-next.10
 
 ### Patch Changes
