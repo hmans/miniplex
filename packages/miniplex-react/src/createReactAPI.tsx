@@ -1,12 +1,5 @@
 import { useConst } from "@hmans/use-const"
-import {
-  Archetype,
-  Bucket,
-  IEntity,
-  Query,
-  WithComponents,
-  World
-} from "@miniplex/core"
+import { Bucket, IEntity, Query, WithComponents, World } from "@miniplex/core"
 import React, {
   createContext,
   FunctionComponent,
