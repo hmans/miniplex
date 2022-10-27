@@ -120,13 +120,24 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     query,
     ...props
   }: {
-    query: Query<E, C>
+    query: Query<E, C> | C | C[]
     children?: EntityChildren<D>
     as?: FunctionComponent<{
       entity: D
       children?: ReactNode
     }>
-  }) => <Bucket bucket={world.archetype(query) as Archetype<D>} {...props} />
+  }) => (
+    <Bucket
+      bucket={
+        (Array.isArray(query)
+          ? world.archetype(...query)
+          : typeof query === "object"
+          ? world.archetype(query)
+          : world.archetype(query)) as Archetype<D>
+      }
+      {...props}
+    />
+  )
 
   const Component = <P extends keyof E>(props: {
     name: P
