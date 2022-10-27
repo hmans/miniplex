@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom"
 import { act, render, renderHook, screen } from "@testing-library/react"
-import { all, World } from "@miniplex/core"
+import { World } from "@miniplex/core"
 import React from "react"
 import createReactAPI from "../src"
 
@@ -348,7 +348,7 @@ describe("<Query>", () => {
     world.add({ name: "Bob", age: 100 })
 
     render(
-      <Query query={all("name").query}>
+      <Query query={{ all: ["name"] }}>
         {(entity) => <p>{entity.name}</p>}
       </Query>
     )
