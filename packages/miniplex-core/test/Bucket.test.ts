@@ -1,3 +1,4 @@
+import { WithComponents } from "../dist/declarations/src"
 import { Bucket } from "../src/Bucket"
 
 describe("Bucket", () => {
@@ -127,6 +128,21 @@ describe("Bucket", () => {
 
       expect(derived.has(odd)).toBe(false)
       expect(derived.has(even)).toBe(true)
+    })
+
+    it("captures the predicate's type guard if it has one", () => {
+      type Entity = { name: string; age?: number }
+      const bucket = new Bucket<Entity>()
+
+      const hasAge = (
+        entity: Entity
+      ): entity is WithComponents<Entity, "age"> => entity.age !== undefined
+
+      bucket.add({ name: "Alice", age: 25 })
+
+      const derived = bucket.derive(hasAge)
+      derived.entities[0].age.toString()
+      /* test is no-op, we just don't want type errors above in the line above */
     })
   })
 

@@ -2,7 +2,7 @@ import { Event } from "@hmans/event"
 
 export type BucketOptions<E> = {
   entities?: E[]
-  predicate?: (entity: E) => boolean
+  predicate?: (entity: E) => entity is E
 }
 
 export class Bucket<E> {
@@ -18,7 +18,7 @@ export class Bucket<E> {
   }
 
   entities: E[]
-  predicate: (entity: E) => boolean
+  predicate: (entity: E) => entity is E
   protected derivedBuckets = new Map<Function, Bucket<any>>()
 
   onEntityAdded = new Event<E>()
@@ -26,7 +26,7 @@ export class Bucket<E> {
 
   constructor({
     entities = [],
-    predicate = () => true
+    predicate = (entity): entity is E => true
   }: BucketOptions<E> = {}) {
     this.entities = entities
     this.predicate = predicate
@@ -74,18 +74,23 @@ export class Bucket<E> {
     return entity
   }
 
-  derive(predicate: (entity: E) => boolean) {
+  derive<D extends E>(
+    predicate: ((entity: E) => entity is D) | ((entity: E) => boolean)
+  ) {
     if (!this.derivedBuckets.has(predicate)) {
       /* Create and store new bucket */
-      const bucket = new Bucket<E>({ predicate })
+      const bucket = new Bucket({
+        predicate: predicate as (entity: E) => entity is D
+      })
+
       this.derivedBuckets.set(predicate, bucket)
 
       /* Add existing entities to new bucket */
       for (const entity of this.entities) {
-        bucket.add(entity)
+        bucket.add(entity as D)
       }
     }
 
-    return this.derivedBuckets.get(predicate)!
+    return this.derivedBuckets.get(predicate)! as Bucket<D>
   }
 }
