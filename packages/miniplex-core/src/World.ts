@@ -111,15 +111,18 @@ export class World<E extends IEntity> extends Bucket<E> {
     query: Query<E, C> | C,
     ...extra: C[]
   ): Archetype<WithComponents<E, C>> {
+    /* If the query is not a query object, turn it into one and call
+    ourselves. Yay overloading in TypeScript! */
     if (typeof query !== "object") {
       return this.archetype({ all: [query, ...extra] })
     }
 
+    /* Build a normalized query object and key */
     const normalizedQuery = normalizeQuery(query)
     const key = serializeQuery(normalizedQuery)
 
+    /* If we haven't seen this query before, create a new archetype */
     if (!this.archetypes.has(key)) {
-      /* Create archetype and remember it for later */
       const archetype = new Archetype(normalizedQuery)
       this.archetypes.set(key, archetype)
 
@@ -131,7 +134,7 @@ export class World<E extends IEntity> extends Bucket<E> {
       }
     }
 
-    /* We're done, return the archetype */
+    /* We're done, return the archetype! */
     return this.archetypes.get(key)! as Archetype<WithComponents<E, C>>
   }
 }
