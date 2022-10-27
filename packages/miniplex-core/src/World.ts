@@ -26,4 +26,24 @@ export class World<E extends IEntity> extends Bucket<E> {
       }
     }
   }
+
+  removeComponent<C extends keyof E>(entity: E, component: C) {
+    if (!entity) return
+
+    if (this.has(entity)) {
+      /* Update derived buckets */
+      const copy = { ...entity }
+      delete copy[component]
+
+      for (const bucket of this.derivedBuckets.values()) {
+        if (bucket.predicate(copy)) {
+          bucket.add(entity)
+        } else {
+          bucket.remove(entity)
+        }
+      }
+    }
+
+    delete entity[component]
+  }
 }
