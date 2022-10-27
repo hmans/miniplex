@@ -61,7 +61,7 @@ export class Bucket<E> {
    * @returns The entity that was added.
    */
   add<D extends E>(entity: D): E & D {
-    if (!this.has(entity)) {
+    if (entity && !this.has(entity)) {
       this.entities.push(entity)
       this.entityPositions.set(entity, this.entities.length - 1)
       this.onEntityAdded.emit(entity)
