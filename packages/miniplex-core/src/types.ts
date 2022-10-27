@@ -6,7 +6,7 @@ export type WithRequiredComponents<E, P extends keyof E> = E & {
   [K in P]-?: E[K]
 }
 
-export type Query<E extends IEntity> = {
+export interface Query<E extends IEntity> {
   all?: (keyof E)[]
   any?: (keyof E)[]
   none?: (keyof E)[]

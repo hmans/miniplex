@@ -103,7 +103,11 @@ export class World<E extends IEntity> extends Bucket<E> {
     return this.query({ all: components })
   }
 
-  query<D extends E>(query: Query<E>): Archetype<D> {
+  query<D extends WithRequiredComponents<E, C>, C extends keyof E>(query: {
+    all?: C[]
+    any?: (keyof E)[]
+    none?: (keyof E)[]
+  }): Archetype<D> {
     const normalizedQuery = normalizeQuery(query)
     const key = serializeQuery(normalizedQuery)
 
