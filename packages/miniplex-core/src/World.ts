@@ -97,20 +97,20 @@ export class World<E extends IEntity> extends Bucket<E> {
     delete entity[component]
   }
 
-  archetype<D extends WithComponents<E, C>, C extends keyof E>(
+  archetype<C extends keyof E>(
     ...components: C[]
-  ): Archetype<D>
+  ): Archetype<WithComponents<E, C>>
 
-  archetype<D extends WithComponents<E, C>, C extends keyof E>(query: {
+  archetype<C extends keyof E>(query: {
     all?: C[]
     any?: (keyof E)[]
     none?: (keyof E)[]
-  }): Archetype<D>
+  }): Archetype<WithComponents<E, C>>
 
-  archetype<D extends WithComponents<E, C>, C extends keyof E>(
+  archetype<C extends keyof E>(
     query: Query<E, C> | C,
     ...extra: C[]
-  ): Archetype<D> {
+  ): Archetype<WithComponents<E, C>> {
     if (typeof query !== "object") {
       return this.archetype({ all: [query, ...extra] })
     }
@@ -132,6 +132,6 @@ export class World<E extends IEntity> extends Bucket<E> {
     }
 
     /* We're done, return the archetype */
-    return this.archetypes.get(key)! as Archetype<D>
+    return this.archetypes.get(key)! as Archetype<WithComponents<E, C>>
   }
 }
