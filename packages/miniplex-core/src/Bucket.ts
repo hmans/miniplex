@@ -17,11 +17,25 @@ export class Bucket<E extends IEntity> {
     }
   }
 
+  /**
+   * All entities stored in this bucket.
+   */
   entities: E[]
 
+  /**
+   * A map of entities to their positions within the `entities` array.
+   * Used internally for performance optimizations.
+   */
   private entityPositions = new Map<E, number>()
 
+  /**
+   * An event that is emitted when an entity is added to this bucket.
+   */
   onEntityAdded = new Event<E>()
+
+  /**
+   * An event that is emitted when an entity is removed from this bucket.
+   */
   onEntityRemoved = new Event<E>()
 
   constructor({ entities = [] }: BucketOptions<E> = {}) {
@@ -33,10 +47,20 @@ export class Bucket<E extends IEntity> {
     }
   }
 
+  /**
+   * Returns the size of this bucket (equal to the number of entities stored
+   * within it.)
+   */
   get size() {
     return this.entities.length
   }
 
+  /**
+   * Adds an entity to this bucket.
+   *
+   * @param entity The entity to add to this bucket.
+   * @returns The entity that was added.
+   */
   add<D extends E>(entity: D): E & D {
     if (!this.has(entity)) {
       this.entities.push(entity)
@@ -77,6 +101,12 @@ export class Bucket<E extends IEntity> {
     this.entityPositions.clear()
   }
 
+  /**
+   * Returns `true` if the given entity is stored within this bucket.
+   *
+   * @param entity The entity to check for.
+   * @returns `true` if the given entity is stored within this bucket.
+   */
   has(entity: E) {
     return this.entityPositions.has(entity)
   }
