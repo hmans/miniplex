@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { Archetype, WithRequiredComponents } from "miniplex"
+import { Archetype, WithComponents } from "miniplex"
 import { Vector3 } from "three"
 import { spawnBullet } from "../entities/Bullets"
 import { ECS, Entity } from "../state"
@@ -7,10 +7,7 @@ import { useKeyboard } from "../util/useKeyboard"
 
 const tmpVec3 = new Vector3()
 
-type Player = WithRequiredComponents<
-  Entity,
-  "isPlayer" | "transform" | "physics"
->
+type Player = WithComponents<Entity, "isPlayer" | "transform" | "physics">
 
 // const players = ECS.world.archetype(isPlayer)
 const players = ECS.world.archetype("isPlayer") as Archetype<Player>
