@@ -1,9 +1,9 @@
 import { useFrame } from "@react-three/fiber"
-import { WithRequiredKeys } from "miniplex"
+import { WithComponents } from "miniplex"
 import { MathUtils, Vector3 } from "three"
 import { ECS, Entity } from "../state"
 
-type PhysicsEntity = WithRequiredKeys<Entity, "transform" | "physics">
+type PhysicsEntity = WithComponents<Entity, "transform" | "physics">
 
 const entities = ECS.world.archetype("transform", "physics")
 

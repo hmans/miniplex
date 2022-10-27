@@ -1,8 +1,8 @@
-import { WithRequiredKeys } from "miniplex"
+import { WithComponents } from "miniplex"
 import { Entity } from "../state"
 
 export const RenderableEntity = ({
   entity
 }: {
-  entity: WithRequiredKeys<Entity, "render">
+  entity: WithComponents<Entity, "render">
 }) => <>{entity.render}</>
