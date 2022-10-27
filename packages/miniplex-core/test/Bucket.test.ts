@@ -1,4 +1,5 @@
 import { Bucket } from "../src/Bucket"
+import { query } from "../src/queries"
 import { WithComponents } from "../src/types"
 
 describe("Bucket", () => {
@@ -128,6 +129,23 @@ describe("Bucket", () => {
 
       expect(derived.has(odd)).toBe(false)
       expect(derived.has(even)).toBe(true)
+    })
+
+    it("returns the same derived buckets for the same predicates", () => {
+      const bucket = new Bucket()
+      const predicate = () => true
+      const derived1 = bucket.derive(predicate)
+      const derived2 = bucket.derive(predicate)
+
+      expect(derived1).toBe(derived2)
+    })
+
+    it("returns the same derived buckets for the same queries", () => {
+      const bucket = new Bucket()
+      const derived1 = bucket.derive(query({ all: ["moo"] }))
+      const derived2 = bucket.derive(query({ all: ["moo"] }))
+
+      expect(derived1).toBe(derived2)
     })
 
     it("captures the predicate's type guard if it has one", () => {
