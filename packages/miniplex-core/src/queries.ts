@@ -13,35 +13,42 @@ export const normalizeQuery = <E extends IEntity>(query: IQuery<E>) => ({
 export const serializeQuery = <E extends IEntity>(query: IQuery<E>) =>
   JSON.stringify(query)
 
+const queries = new Map<string, any>()
+
 export function query<E extends IEntity, Q extends IQuery<E>>(
   query: Q
 ): (
   entity: E
 ) => entity is Q["all"] extends [] ? WithComponents<E, Q["all"][number]> : E {
-  /* TODO: memoize */
+  const normalized = normalizeQuery(query)
+  const serialized = serializeQuery(normalized)
 
-  const predicate = (
-    entity: E
-  ): entity is Q["all"] extends []
-    ? WithComponents<E, Q["all"][number]>
-    : E => {
-    const components = Object.keys(entity) as (keyof E)[]
+  if (!queries.has(serialized)) {
+    const predicate = (
+      entity: E
+    ): entity is Q["all"] extends []
+      ? WithComponents<E, Q["all"][number]>
+      : E => {
+      const components = Object.keys(entity) as (keyof E)[]
 
-    const all =
-      query.all === undefined ||
-      query.all.every((key) => components.includes(key))
+      const all =
+        query.all === undefined ||
+        query.all.every((key) => components.includes(key))
 
-    const any =
-      query.any === undefined ||
-      query.any.length === 0 ||
-      query.any.some((key) => components.includes(key))
+      const any =
+        query.any === undefined ||
+        query.any.length === 0 ||
+        query.any.some((key) => components.includes(key))
 
-    const none =
-      query.none === undefined ||
-      query.none.every((key) => !components.includes(key))
+      const none =
+        query.none === undefined ||
+        query.none.every((key) => !components.includes(key))
 
-    return all && any && none
+      return all && any && none
+    }
+
+    queries.set(serialized, predicate)
   }
 
-  return predicate
+  return queries.get(serialized)
 }

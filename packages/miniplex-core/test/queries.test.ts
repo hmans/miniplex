@@ -34,4 +34,11 @@ describe("query", () => {
 
     expect(derived.has(entity)).toBe(true)
   })
+
+  it("always returns the same predicate object for the same input", () => {
+    const predicate1 = query({ all: ["name", "age"] })
+    const predicate2 = query({ all: ["name", "age"] })
+
+    expect(predicate1).toBe(predicate2)
+  })
 })
