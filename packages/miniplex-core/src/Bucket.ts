@@ -2,6 +2,7 @@ import { Event } from "@hmans/event"
 
 export type BucketOptions<E> = {
   entities?: E[]
+  predicate?: (entity: E) => boolean
 }
 
 export class Bucket<E> {
@@ -17,12 +18,18 @@ export class Bucket<E> {
   }
 
   #entities: E[]
+  #predicate: (entity: E) => boolean
+  #derivedBuckets = new Map<Function, Bucket<any>>()
 
   onEntityAdded = new Event<E>()
   onEntityRemoved = new Event<E>()
 
-  constructor({ entities = [] }: BucketOptions<E> = {}) {
+  constructor({
+    entities = [],
+    predicate = () => true
+  }: BucketOptions<E> = {}) {
     this.#entities = entities
+    this.#predicate = predicate
   }
 
   get size() {
@@ -34,7 +41,7 @@ export class Bucket<E> {
   }
 
   add(entity: E) {
-    if (entity && !this.has(entity)) {
+    if (entity && !this.has(entity) && this.#predicate(entity)) {
       this.#entities.push(entity)
       this.onEntityAdded.emit(entity)
     }
@@ -53,5 +60,12 @@ export class Bucket<E> {
     }
 
     return entity
+  }
+
+  derive(predicate: (entity: E) => boolean) {
+    // const bucket = new PredicateBucket(predicate)
+    // this.onEntityAdded.add((entity) => bucket.add(entity))
+    // this.onEntityRemoved.add((entity) => bucket.remove(entity))
+    // return bucket
   }
 }

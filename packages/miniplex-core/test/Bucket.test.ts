@@ -40,6 +40,21 @@ describe("Bucket", () => {
 
       expect(spy).toHaveBeenCalledWith(entity)
     })
+
+    it("respects the bucket's predicate", () => {
+      const bucket = new Bucket<{ id: number }>({
+        predicate: (entity) => entity.id % 2 === 0
+      })
+
+      const odd = { id: 1 }
+      const even = { id: 2 }
+
+      bucket.add(odd)
+      bucket.add(even)
+
+      expect(bucket.has(odd)).toBe(false)
+      expect(bucket.has(even)).toBe(true)
+    })
   })
 
   describe("remove", () => {
