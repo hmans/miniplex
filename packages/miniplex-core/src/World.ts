@@ -114,22 +114,20 @@ export class World<E extends IEntity> extends Bucket<E> {
     const normalizedQuery = normalizeQuery(query)
     const key = serializeQuery(normalizedQuery)
 
-    if (this.archetypes.has(key)) {
-      return this.archetypes.get(key)! as unknown as Archetype<D>
-    }
+    if (!this.archetypes.has(key)) {
+      /* Create archetype and remember it for later */
+      const archetype = new Archetype(normalizedQuery)
+      this.archetypes.set(key, archetype)
 
-    /* Create archetype and remember it for later */
-    const archetype = new Archetype(normalizedQuery)
-    this.archetypes.set(key, archetype)
-
-    /* Check existing entities for matches */
-    for (const entity of this.entities) {
-      if (archetype.matchesEntity(entity)) {
-        archetype.add(entity)
+      /* Check existing entities for matches */
+      for (const entity of this.entities) {
+        if (archetype.matchesEntity(entity)) {
+          archetype.add(entity)
+        }
       }
     }
 
     /* We're done, return the archetype */
-    return archetype as unknown as Archetype<D>
+    return this.archetypes.get(key)! as unknown as Archetype<D>
   }
 }
