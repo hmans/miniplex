@@ -1,5 +1,17 @@
 # miniplex
 
+## 2.0.0-next.11
+
+### Patch Changes
+
+- a886264: `createComponents` has been renamed to `createReactAPI` and is now the default export of both `@miniplex/react` and `miniplex/react`, in order to allow the user to pick a less terrible name. :-)
+- Updated dependencies [a886264]
+- Updated dependencies [b11083d]
+- Updated dependencies [43f9cae]
+- Updated dependencies [b11083d]
+  - @miniplex/react@2.0.0-next.11
+  - @miniplex/core@2.0.0-next.11
+
 ## 2.0.0-next.10
 
 ### Patch Changes
