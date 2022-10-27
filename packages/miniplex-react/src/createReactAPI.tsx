@@ -1,5 +1,6 @@
 import { useConst } from "@hmans/use-const"
 import {
+  Archetype,
   Bucket,
   IEntity,
   Query,
@@ -115,17 +116,17 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     />
   )
 
-  const Query = ({
+  const Query = <D extends WithRequiredComponents<E, C>, C extends keyof E>({
     query,
     ...props
   }: {
-    query: Query<E>
-    children?: EntityChildren<E>
+    query: Query<E, C>
+    children?: EntityChildren<D>
     as?: FunctionComponent<{
-      entity: E
+      entity: D
       children?: ReactNode
     }>
-  }) => <Bucket bucket={world.archetype(query)} {...props} />
+  }) => <Bucket bucket={world.archetype(query) as Archetype<D>} {...props} />
 
   const Component = <P extends keyof E>(props: {
     name: P
