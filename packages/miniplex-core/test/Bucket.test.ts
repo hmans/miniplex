@@ -144,8 +144,10 @@ describe("Bucket", () => {
       const bucket = new Bucket()
       const derived1 = bucket.derive(query({ all: ["moo"] }))
       const derived2 = bucket.derive(query({ all: ["moo"] }))
+      const derived3 = bucket.derive(query({ all: ["quack"] }))
 
       expect(derived1).toBe(derived2)
+      expect(derived2).not.toBe(derived3)
     })
 
     it("captures the predicate's type guard if it has one", () => {
