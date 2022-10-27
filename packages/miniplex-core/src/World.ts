@@ -1,11 +1,9 @@
 import { Archetype } from "./Archetype"
-import { Bucket } from "./Bucket"
+import { Bucket, BucketOptions } from "./Bucket"
 import { normalizeQuery, serializeQuery } from "./queries"
 import { IEntity, Query, WithComponents } from "./types"
 
-export type WorldOptions<E extends IEntity> = {
-  entities?: E[]
-}
+export type WorldOptions<E extends IEntity> = BucketOptions<E>
 
 export class World<E extends IEntity> extends Bucket<E> {
   /* Archetypes */
@@ -16,33 +14,29 @@ export class World<E extends IEntity> extends Bucket<E> {
   private entityToID = new Map<E, number>()
   private idToEntity = new Map<number, E>()
 
-  add<D extends E>(entity: D): E & D {
-    super.add(entity)
+  constructor(options: WorldOptions<E> = {}) {
+    super(options)
 
-    /* Add entity to matching archetypes */
-    for (const archetype of this.archetypes.values()) {
-      if (archetype.matchesEntity(entity)) {
-        archetype.add(entity)
+    this.onEntityAdded.add((entity) => {
+      /* Add entity to matching archetypes */
+      for (const archetype of this.archetypes.values()) {
+        if (archetype.matchesEntity(entity)) {
+          archetype.add(entity)
+        }
       }
-    }
+    })
 
-    return entity
-  }
+    this.onEntityRemoved.add((entity) => {
+      /* Remove entity from all archetypes */
+      for (const archetype of this.archetypes.values()) {
+        archetype.remove(entity)
+      }
 
-  remove(entity: E) {
-    if (!this.has(entity)) return entity
-
-    /* Remove entity from all archetypes */
-    for (const archetype of this.archetypes.values()) {
-      archetype.remove(entity)
-    }
-
-    /* Remove IDs */
-    const id = this.entityToID.get(entity)!
-    this.idToEntity.delete(id)
-    this.entityToID.delete(entity)
-
-    return super.remove(entity)
+      /* Remove IDs */
+      const id = this.entityToID.get(entity)!
+      this.idToEntity.delete(id)
+      this.entityToID.delete(entity)
+    })
   }
 
   id(entity: E) {
