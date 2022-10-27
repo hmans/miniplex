@@ -60,6 +60,9 @@ export class World<E extends IEntity> extends Bucket<E> {
   }
 
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
+    /* Don't overwrite existing components */
+    if (entity[component] !== undefined) return
+
     entity[component] = value
 
     /* Re-check known archetypes */
@@ -71,6 +74,9 @@ export class World<E extends IEntity> extends Bucket<E> {
   }
 
   removeComponent<C extends keyof E>(entity: E, component: C) {
+    /* Return early if component doesn't exist on entity */
+    if (entity[component] === undefined) return
+
     /* Re-check known archetypes */
     if (this.has(entity)) {
       const components = Object.keys(entity).filter((c) => c !== component)

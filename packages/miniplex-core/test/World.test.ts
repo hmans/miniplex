@@ -72,6 +72,13 @@ describe("World", () => {
       expect(entity).toEqual({ name: "John", age: 42 })
     })
 
+    it("it doesn't overwrite the component if it already exists", () => {
+      const world = new World<{ name: string; age?: number }>()
+      const entity = world.add({ name: "John", age: 42 })
+      world.addComponent(entity, "age", 43)
+      expect(entity).toEqual({ name: "John", age: 42 })
+    })
+
     it("adds the entity to matching archetypes", () => {
       const world = new World<{ name: string; age?: number }>()
       const archetype = world.archetype({ all: ["age"] })
