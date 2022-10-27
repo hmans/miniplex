@@ -17,7 +17,7 @@ export type Predicate<E, D extends E = E> =
 // }
 
 export interface IQuery<E extends IEntity> {
-  all: (keyof E)[]
-  any: (keyof E)[]
-  none: (keyof E)[]
+  all?: (keyof E)[]
+  any?: (keyof E)[]
+  none?: (keyof E)[]
 }

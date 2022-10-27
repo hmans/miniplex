@@ -15,12 +15,16 @@ export const serializeQuery = <E extends IEntity>(query: IQuery<E>) =>
 
 export function query<E extends IEntity, Q extends IQuery<E>>(
   query: Q
-): (entity: E) => entity is WithComponents<E, Q["all"][number]> {
+): (
+  entity: E
+) => entity is Q["all"] extends [] ? WithComponents<E, Q["all"][number]> : E {
   /* TODO: memoize */
 
   const predicate = (
     entity: E
-  ): entity is WithComponents<E, Q["all"][number]> => {
+  ): entity is Q["all"] extends []
+    ? WithComponents<E, Q["all"][number]>
+    : E => {
     const components = Object.keys(entity) as (keyof E)[]
 
     const all =

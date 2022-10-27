@@ -20,7 +20,7 @@ describe("query", () => {
 
   it("can be used in a bucket's derive function to create a derived bucket based on a query", () => {
     const bucket = new Bucket<{ name: string; age?: number }>()
-    const predicate = query({ all: ["name", "age"], any: [], none: [] })
+    const predicate = query({ all: ["name", "age"] })
     const derived = bucket.derive(predicate)
 
     const entity = {
