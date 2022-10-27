@@ -17,16 +17,4 @@ export class PredicateBucket<E> extends Bucket<E> {
 
     return entity
   }
-
-  touch(entity: E) {
-    if (!entity) return entity
-
-    if (this.predicate(entity)) {
-      this.add(entity)
-    } else {
-      this.remove(entity)
-    }
-
-    return entity
-  }
 }
