@@ -1,5 +1,5 @@
 import { Composable, Modules } from "material-composer-r3f"
-import { Archetype, WithRequiredComponents } from "miniplex"
+import { Archetype, WithComponents } from "miniplex"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { $, Input, InstanceID, Lerp } from "shader-composer"
@@ -55,7 +55,7 @@ export const Asteroids = () => {
   )
 }
 
-export type Asteroid = WithRequiredComponents<
+export type Asteroid = WithComponents<
   Entity,
   | "isAsteroid"
   | "transform"
@@ -64,9 +64,6 @@ export type Asteroid = WithRequiredComponents<
   | "neighbors"
   | "render"
 >
-
-export const isAsteroid = (entity: Entity): entity is Asteroid =>
-  "isAsteroid" in entity
 
 const asteroids = ECS.world.archetype("isAsteroid") as Archetype<Asteroid>
 
