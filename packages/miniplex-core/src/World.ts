@@ -1,7 +1,7 @@
 import { Archetype } from "./Archetype"
 import { Bucket } from "./Bucket"
 import { normalizeQuery, serializeQuery } from "./queries"
-import { IEntity, Query, WithRequiredComponents } from "./types"
+import { IEntity, Query, WithComponents } from "./types"
 
 export type WorldOptions<E extends IEntity> = {
   entities?: E[]
@@ -97,17 +97,17 @@ export class World<E extends IEntity> extends Bucket<E> {
     delete entity[component]
   }
 
-  archetype<D extends WithRequiredComponents<E, C>, C extends keyof E>(
+  archetype<D extends WithComponents<E, C>, C extends keyof E>(
     ...components: C[]
   ): Archetype<D>
 
-  archetype<D extends WithRequiredComponents<E, C>, C extends keyof E>(query: {
+  archetype<D extends WithComponents<E, C>, C extends keyof E>(query: {
     all?: C[]
     any?: (keyof E)[]
     none?: (keyof E)[]
   }): Archetype<D>
 
-  archetype<D extends WithRequiredComponents<E, C>, C extends keyof E>(
+  archetype<D extends WithComponents<E, C>, C extends keyof E>(
     query: Query<E, C> | C,
     ...extra: C[]
   ): Archetype<D> {

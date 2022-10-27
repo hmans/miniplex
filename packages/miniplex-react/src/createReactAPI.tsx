@@ -4,7 +4,7 @@ import {
   Bucket,
   IEntity,
   Query,
-  WithRequiredComponents,
+  WithComponents,
   World
 } from "@miniplex/core"
 import React, {
@@ -102,9 +102,9 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     ...props
   }: {
     query: Query<E, C> | C | C[]
-    children?: EntityChildren<WithRequiredComponents<E, C>>
+    children?: EntityChildren<WithComponents<E, C>>
     as?: FunctionComponent<{
-      entity: WithRequiredComponents<E, C>
+      entity: WithComponents<E, C>
       children?: ReactNode
     }>
   }) => (
