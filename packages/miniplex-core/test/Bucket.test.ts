@@ -29,6 +29,17 @@ describe("Bucket", () => {
 
       expect(bucket.size).toBe(0)
     })
+
+    it("emits the onEntityAdded event", () => {
+      const bucket = new Bucket()
+      const entity = { id: 1 }
+      const spy = jest.fn()
+
+      bucket.onEntityAdded.add(spy)
+      bucket.add(entity)
+
+      expect(spy).toHaveBeenCalledWith(entity)
+    })
   })
 
   describe("remove", () => {
@@ -59,6 +70,18 @@ describe("Bucket", () => {
       bucket.remove(entity)
       bucket.remove(entity)
       expect(bucket.size).toBe(0)
+    })
+
+    it("emits the onEntityRemoved event", () => {
+      const bucket = new Bucket()
+      const entity = { id: 1 }
+      const spy = jest.fn()
+
+      bucket.add(entity)
+      bucket.onEntityRemoved.add(spy)
+      bucket.remove(entity)
+
+      expect(spy).toHaveBeenCalledWith(entity)
     })
   })
 

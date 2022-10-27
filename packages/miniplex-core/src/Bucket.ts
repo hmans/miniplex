@@ -1,3 +1,5 @@
+import { Event } from "@hmans/event"
+
 export type BucketOptions<E> = {
   entities?: E[]
 }
@@ -16,6 +18,9 @@ export class Bucket<E> {
 
   #entities: E[]
 
+  onEntityAdded = new Event<E>()
+  onEntityRemoved = new Event<E>()
+
   constructor({ entities = [] }: BucketOptions<E> = {}) {
     this.#entities = entities
   }
@@ -31,6 +36,7 @@ export class Bucket<E> {
   add(entity: E) {
     if (entity && !this.has(entity)) {
       this.#entities.push(entity)
+      this.onEntityAdded.emit(entity)
     }
 
     return entity
@@ -43,6 +49,7 @@ export class Bucket<E> {
 
     if (index !== -1) {
       this.#entities.splice(index, 1)
+      this.onEntityRemoved.emit(entity)
     }
 
     return entity
