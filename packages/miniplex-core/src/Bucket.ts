@@ -1,12 +1,14 @@
 import { Event } from "@hmans/event"
-import { Predicate } from "./types"
+import { EntityChildren } from "../../miniplex/src/react"
+import { query } from "./queries"
+import { IEntity, Predicate, WithComponents } from "./types"
 
-export type BucketOptions<E> = {
+export type BucketOptions<E extends IEntity> = {
   entities?: E[]
   predicate?: Predicate<E, E>
 }
 
-export class Bucket<E> {
+export class Bucket<E extends IEntity> {
   [Symbol.iterator]() {
     let index = this.entities.length
 
@@ -91,5 +93,17 @@ export class Bucket<E> {
     }
 
     return this.derivedBuckets.get(predicate)! as Bucket<D>
+  }
+
+  all<C extends keyof E>(...all: C[]) {
+    return this.derive(query({ all }) as Predicate<E, WithComponents<E, C>>)
+  }
+
+  none<C extends keyof E>(...none: C[]) {
+    return this.derive(query({ none }))
+  }
+
+  any<C extends keyof E>(...any: C[]) {
+    return this.derive(query({ any }))
   }
 }

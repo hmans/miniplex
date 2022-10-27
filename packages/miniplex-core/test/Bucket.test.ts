@@ -166,6 +166,22 @@ describe("Bucket", () => {
     })
   })
 
+  describe("all/any/none", () => {
+    it("creates a derived bucket", () => {
+      type Entity = { name?: string; age?: number }
+      const bucket = new Bucket<Entity>()
+      const withAge = bucket.all("age")
+      const withAgeAndName = withAge.all("name")
+      const withAgeButNoName = withAge.none("name")
+
+      const alice = bucket.add({ name: "Alice", age: 25 })
+
+      expect(withAge.entities).toEqual([alice])
+      expect(withAgeAndName.entities).toEqual([alice])
+      expect(withAgeButNoName.entities).toEqual([])
+    })
+  })
+
   it("iterates over its entities in the reverse order", () => {
     const bucket = new Bucket()
     const entity1 = { id: 1 }
