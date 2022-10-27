@@ -1,5 +1,5 @@
-import { IEntity } from "../dist/declarations/src"
 import { Bucket } from "./Bucket"
+import { IEntity } from "./types"
 
 export type WorldOptions<E extends IEntity> = {
   entities?: E[]

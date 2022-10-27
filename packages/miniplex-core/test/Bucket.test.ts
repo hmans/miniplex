@@ -1,5 +1,5 @@
-import { WithComponents } from "../dist/declarations/src"
 import { Bucket } from "../src/Bucket"
+import { WithComponents } from "../src/types"
 
 describe("Bucket", () => {
   describe("add", () => {
