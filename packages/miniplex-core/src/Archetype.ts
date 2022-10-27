@@ -1,5 +1,6 @@
 import { Bucket } from "./Bucket"
 import { IEntity, Query } from "./types"
+import { World } from "./World"
 
 /**
  * A bucket type that stores entities belonging to a specific archetype.
@@ -7,7 +8,7 @@ import { IEntity, Query } from "./types"
  * `query` property.
  */
 export class Archetype<E extends IEntity> extends Bucket<E> {
-  constructor(public query: Query<E>) {
+  constructor(public world: World<E>, public query: Query<E>) {
     super()
   }
 

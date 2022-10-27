@@ -135,7 +135,7 @@ export class World<E extends IEntity> extends Bucket<E> {
 
     /* If we haven't seen this query before, create a new archetype */
     if (!this.archetypes.has(key)) {
-      const archetype = new Archetype(normalizedQuery)
+      const archetype = new Archetype(this, normalizedQuery)
       this.archetypes.set(key, archetype)
 
       /* Check existing entities for matches */
