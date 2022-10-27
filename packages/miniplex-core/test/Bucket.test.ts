@@ -1,82 +1,75 @@
 import { Bucket } from "../src/Bucket"
 
 describe("Bucket", () => {
-  it("can be constructed with a list of entities", () => {
-    const world = new Bucket({ entities: [{ id: 1 }, { id: 2 }] })
-    expect(world.entities).toHaveLength(2)
-  })
-
   describe("add", () => {
-    it("adds an entity to the world", () => {
-      const world = new Bucket()
-      const entity = { id: 0 }
+    it("adds an entity to the bucket", () => {
+      const bucket = new Bucket()
+      const entity = { id: 1 }
 
-      world.add(entity)
+      bucket.add(entity)
 
-      expect(world.entities).toEqual([entity])
+      expect(bucket.has(entity)).toBe(true)
     })
 
-    it("doesn't add the same entity twice", () => {
-      const world = new Bucket()
-      const entity = { id: 0 }
+    it("does not add an entity twice", () => {
+      const bucket = new Bucket()
+      const entity = { id: 1 }
 
-      world.add(entity)
-      world.add(entity)
+      bucket.add(entity)
+      bucket.add(entity)
 
-      expect(world.entities).toEqual([entity])
+      expect(bucket.has(entity)).toBe(true)
+      expect(bucket.size).toBe(1)
     })
 
-    it("returns the entity", () => {
-      const world = new Bucket()
-      const entity = { id: 0 }
+    it("no-ops when entity is undefined", () => {
+      const bucket = new Bucket()
 
-      const result = world.add(entity)
+      bucket.add(undefined)
 
-      expect(result).toBe(entity)
+      expect(bucket.size).toBe(0)
     })
   })
 
   describe("remove", () => {
-    it("removes an entity from the world", () => {
-      const entity = { name: "John" }
-      const bucket = new Bucket({ entities: [entity] })
-      expect(bucket.entities).toEqual([entity])
+    it("removes an entity from the bucket", () => {
+      const bucket = new Bucket()
+      const entity = { id: 1 }
+
+      bucket.add(entity)
+      expect(bucket.has(entity)).toBe(true)
 
       bucket.remove(entity)
-      expect(bucket.entities).toEqual([])
+      expect(bucket.has(entity)).toBe(false)
     })
 
-    it("no-ops if it doesn't have the entity", () => {
-      const world = new Bucket()
-      expect(world.entities).toEqual([])
-
-      world.remove({ id: 0 })
-      expect(world.entities).toEqual([])
+    it("no-ops when the entity is undefined", () => {
+      const bucket = new Bucket()
+      bucket.remove(undefined)
+      expect(bucket.size).toBe(0)
     })
 
-    it("is bound to the bucket", () => {
-      const world = new Bucket()
+    it("doesn't crash when removing the same entity twice", () => {
+      const bucket = new Bucket()
+      const entity = { id: 1 }
 
-      world.add({ id: 0 })
-      world.add({ id: 1 })
-      expect(world.entities).toEqual([{ id: 0 }, { id: 1 }])
+      bucket.add(entity)
+      expect(bucket.size).toBe(1)
 
-      world.forEach(world.remove)
-      expect(world.entities).toEqual([])
-    })
-  })
-
-  describe("size", () => {
-    it("returns the number of entities in the bucket", () => {
-      const bucket = new Bucket({ entities: [{ id: 0 }, { id: 1 }] })
-      expect(bucket.size).toBe(2)
+      bucket.remove(entity)
+      bucket.remove(entity)
+      expect(bucket.size).toBe(0)
     })
   })
 
-  describe("Symbol.iterator", () => {
-    it("iterates over entities in a reversed order", () => {
-      const bucket = new Bucket({ entities: [{ id: 0 }, { id: 1 }] })
-      expect([...bucket]).toEqual([{ id: 1 }, { id: 0 }])
-    })
+  it("iterates over its entities in the reverse order", () => {
+    const bucket = new Bucket()
+    const entity1 = { id: 1 }
+    const entity2 = { id: 2 }
+
+    bucket.add(entity1)
+    bucket.add(entity2)
+
+    expect([...bucket]).toEqual([entity2, entity1])
   })
 })
