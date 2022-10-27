@@ -70,6 +70,12 @@ export class Bucket<E> {
     return entity
   }
 
+  /**
+   * Removes an entity from this bucket.
+   *
+   * @param entity The entity to remove from this bucket.
+   * @returns The entity.
+   */
   remove(entity: E) {
     const index = this.entityPositions.get(entity)
 
