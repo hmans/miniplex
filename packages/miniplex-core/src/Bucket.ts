@@ -1,11 +1,10 @@
-import { IEntity } from "./types"
 import { Event } from "@hmans/event"
 
-export type BucketOptions<E extends IEntity> = {
+export type BucketOptions<E> = {
   entities?: E[]
 }
 
-export class Bucket<E extends IEntity> {
+export class Bucket<E> {
   [Symbol.iterator]() {
     let index = this.entities.length
 
