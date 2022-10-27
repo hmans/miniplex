@@ -2,7 +2,7 @@ import { Event } from "@hmans/event"
 
 export type BucketOptions<E> = {
   entities?: E[]
-  predicate?: (entity: E) => entity is E
+  predicate?: ((entity: E) => entity is E) | ((entity: E) => boolean)
 }
 
 export class Bucket<E> {
@@ -18,7 +18,7 @@ export class Bucket<E> {
   }
 
   entities: E[]
-  predicate: (entity: E) => entity is E
+  predicate: ((entity: E) => entity is E) | ((entity: E) => boolean)
   protected derivedBuckets = new Map<Function, Bucket<any>>()
 
   onEntityAdded = new Event<E>()
