@@ -40,6 +40,10 @@ export class Bucket<E> {
   constructor({ entities = [] }: BucketOptions<E> = {}) {
     this.entities = entities
 
+    /* Bind some functions for convenience */
+    this.add = this.add.bind(this)
+    this.remove = this.remove.bind(this)
+
     /* Fill entity positions */
     for (let i = 0; i < entities.length; i++) {
       this.entityPositions.set(entities[i], i)
@@ -114,5 +118,11 @@ export class Bucket<E> {
    */
   has(entity: E) {
     return this.entityPositions.has(entity)
+  }
+
+  forEach(fun: (entity: E) => void) {
+    for (const entity of this) {
+      fun(entity)
+    }
   }
 }

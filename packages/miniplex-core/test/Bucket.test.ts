@@ -53,6 +53,17 @@ describe("Bucket", () => {
       world.remove({ id: 0 })
       expect(world.entities).toEqual([])
     })
+
+    it("is bound to the bucket", () => {
+      const world = new Bucket()
+
+      world.add({ id: 0 })
+      world.add({ id: 1 })
+      expect(world.entities).toEqual([{ id: 0 }, { id: 1 }])
+
+      world.forEach(world.remove)
+      expect(world.entities).toEqual([])
+    })
   })
 
   describe("size", () => {
