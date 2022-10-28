@@ -10,7 +10,7 @@ describe(has, () => {
   })
 
   it("returns the same predicate for the same input values", () => {
-    expect(has("name", "age")).toBe(has("name", "age"))
+    expect(has("name", "age")).toBe(has("age", undefined!, "name"))
   })
 })
 
@@ -21,6 +21,10 @@ describe(hasSome, () => {
 
   it("returns false if the entity has none of the specified components", () => {
     expect(hasSome("name", "age")({} as any)).toBe(false)
+  })
+
+  it("returns the same predicate for the same input values", () => {
+    expect(hasSome("name", "age")).toBe(hasSome("age", undefined!, "name"))
   })
 })
 

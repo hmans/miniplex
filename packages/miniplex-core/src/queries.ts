@@ -34,7 +34,7 @@ export type ComponentQuery<
   none: None[]
 }
 
-/* NEW */
+/* has */
 
 type HasPredicate<E extends IEntity, All extends keyof E> = (
   entity: E
@@ -46,17 +46,22 @@ export const has = <E extends IEntity, C extends keyof E>(
   ...components: C[]
 ): HasPredicate<E, C> =>
   hasCache.get(
-    JSON.stringify(components),
+    JSON.stringify(["has", ...normalizeComponents<E>(components)]),
     (entity: E): entity is WithComponents<E, C> =>
       components.every((c) => entity[c] !== undefined)
   )
 
 export const hasAll = has
 
-export const hasSome =
-  <E extends IEntity>(...components: (keyof E)[]) =>
-  (entity: E) =>
-    components.some((c) => entity[c] !== undefined)
+/* hasSome */
+
+const hasSomeCache = new PredicateCache()
+
+export const hasSome = <E extends IEntity>(...components: (keyof E)[]) =>
+  hasSomeCache.get(
+    JSON.stringify(["hasSome", ...normalizeComponents<E>(components)]),
+    (entity: E) => components.some((c) => entity[c] !== undefined)
+  )
 
 export const hasNone =
   <E extends IEntity>(...components: (keyof E)[]) =>
