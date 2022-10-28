@@ -72,4 +72,15 @@ describe(Bucket, () => {
       expect(listener).toHaveBeenCalledWith(entity)
     })
   })
+
+  describe("size", () => {
+    it("returns the number of entities in the bucket", () => {
+      const bucket = new Bucket()
+
+      bucket.add({ id: "1" })
+      bucket.add({ id: "2" })
+
+      expect(bucket.size).toBe(2)
+    })
+  })
 })

@@ -17,6 +17,10 @@ export class Bucket<E> {
   onEntityAdded = new Event<E>()
   onEntityRemoved = new Event<E>()
 
+  get size() {
+    return this.entities.length
+  }
+
   has(entity: any): entity is E {
     return this.entities.includes(entity)
   }
