@@ -40,8 +40,16 @@ export class Bucket<E> {
   remove(entity: E) {
     if (this.has(entity)) {
       const index = this.entityPositions.get(entity)!
-      this.entities.splice(index, 1)
+
+      const other = this.entities[this.entities.length - 1]
+      if (other !== entity) {
+        this.entities[index] = other
+        this.entityPositions.set(other, index)
+      }
+
+      this.entities.pop()
       this.entityPositions.delete(entity)
+
       this.onEntityRemoved.emit(entity)
     }
 
