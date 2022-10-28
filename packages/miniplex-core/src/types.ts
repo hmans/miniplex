@@ -6,6 +6,6 @@ export type WithComponents<E, P extends keyof E> = E & {
 
 export type Predicate<E, D extends E> = (v: E) => v is D
 
-export type ArchetypeQuery<E, D extends E> =
+export type QueryPredicate<E, D extends E> =
   | Predicate<E, D>
   | ((entity: E) => boolean)

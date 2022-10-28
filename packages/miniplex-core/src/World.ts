@@ -5,6 +5,24 @@ import { IEntity } from "./types"
 export class World<E extends IEntity> extends Bucket<E> {
   queries = new Bucket<Query<any, E>>()
 
+  constructor() {
+    super()
+
+    this.onEntityAdded.add((entity) => {
+      for (const query of this.queries) {
+        if (query.predicate(entity)) {
+          query.add(entity)
+        }
+      }
+    })
+
+    this.onEntityRemoved.add((entity) => {
+      for (const query of this.queries) {
+        query.remove(entity)
+      }
+    })
+  }
+
   registerQuery(query: Query<any, E>) {
     this.queries.add(query)
   }
