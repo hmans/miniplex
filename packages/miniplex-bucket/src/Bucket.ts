@@ -43,4 +43,10 @@ export class Bucket<E> {
 
     return entity
   }
+
+  clear() {
+    for (const entity of this) {
+      this.remove(entity)
+    }
+  }
 }

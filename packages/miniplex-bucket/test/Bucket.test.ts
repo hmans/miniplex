@@ -94,4 +94,29 @@ describe(Bucket, () => {
       expect(bucket.size).toBe(2)
     })
   })
+
+  describe("clear", () => {
+    it("removes all entities from the bucket", () => {
+      const bucket = new Bucket()
+
+      bucket.add({ id: "1" })
+      bucket.add({ id: "2" })
+      bucket.clear()
+
+      expect(bucket.size).toBe(0)
+    })
+
+    it("emits the onEntityRemoved event for each entity", () => {
+      const bucket = new Bucket()
+      const entity1 = bucket.add({ id: "1" })
+      const entity2 = bucket.add({ id: "2" })
+      const listener = jest.fn()
+
+      bucket.onEntityRemoved.add(listener)
+      bucket.clear()
+
+      expect(listener).toHaveBeenCalledWith(entity1)
+      expect(listener).toHaveBeenCalledWith(entity2)
+    })
+  })
 })
