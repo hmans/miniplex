@@ -87,4 +87,24 @@ describe(World, () => {
       expect(age).toBe(123)
     })
   })
+
+  describe("predicate", () => {
+    it("returns a predicate that can be used to query the world", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John", age: 123 })
+
+      const predicate = world.predicate(hasAge)
+
+      expect(predicate).toBeInstanceOf(Predicate)
+      expect(predicate.has(john)).toBe(true)
+    })
+
+    it("returns the same predicate instance given the same predicate function", () => {
+      const world = new World<Entity>()
+      const predicate1 = world.predicate(hasAge)
+      const predicate2 = world.predicate(hasAge)
+
+      expect(predicate1).toBe(predicate2)
+    })
+  })
 })

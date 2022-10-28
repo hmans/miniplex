@@ -1,15 +1,15 @@
 import { Bucket } from "@miniplex/bucket"
 import { Predicate } from "./Predicate"
-import { IEntity } from "./types"
+import { IEntity, PredicateFunction } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
-  queries = new Bucket<Predicate<any, E>>()
+  queries = new Map<PredicateFunction<E, any>, Predicate<any, E>>()
 
   constructor() {
     super()
 
     this.onEntityAdded.add((entity) => {
-      for (const query of this.queries) {
+      for (const query of this.queries.values()) {
         if (query.predicate(entity)) {
           query.add(entity)
         }
@@ -17,18 +17,29 @@ export class World<E extends IEntity> extends Bucket<E> {
     })
 
     this.onEntityRemoved.add((entity) => {
-      for (const query of this.queries) {
+      for (const query of this.queries.values()) {
         query.remove(entity)
       }
     })
   }
 
   registerQuery(query: Predicate<any, E>) {
-    this.queries.add(query)
+    this.queries.set(query.predicate, query)
   }
 
   unregisterQuery(query: Predicate<any, E>) {
-    this.queries.remove(query)
+    this.queries.delete(query.predicate)
+  }
+
+  predicate<D extends E>(fun: PredicateFunction<E, D>): Predicate<D, E> {
+    let predicate = this.queries.get(fun)
+
+    if (!predicate) {
+      predicate = new Predicate(this, fun)
+      this.registerQuery(predicate)
+    }
+
+    return predicate
   }
 
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
@@ -39,7 +50,7 @@ export class World<E extends IEntity> extends Bucket<E> {
     entity[component] = value
 
     /* Update queries */
-    for (const query of this.queries) {
+    for (const query of this.queries.values()) {
       if (query.predicate(entity)) {
         query.add(entity)
       }
@@ -58,7 +69,7 @@ export class World<E extends IEntity> extends Bucket<E> {
       const future = { ...entity }
       delete future[component]
 
-      for (const query of this.queries) {
+      for (const query of this.queries.values()) {
         if (query.predicate(future)) {
           query.add(entity)
         } else {
