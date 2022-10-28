@@ -53,10 +53,11 @@ export const hasSome = <E extends IEntity>(...components: (keyof E)[]) =>
     (entity: E) => components.some((c) => entity[c] !== undefined)
   ) as Predicate<E, E>
 
-export const hasNone =
-  <E extends IEntity>(...components: (keyof E)[]) =>
-  (entity: E) =>
-    components.every((c) => entity[c] === undefined)
+export const hasNone = <E extends IEntity>(...components: (keyof E)[]) =>
+  cache.get(
+    JSON.stringify(["hasNone", ...normalizeComponents<E>(components)]),
+    (entity: E) => components.every((c) => entity[c] === undefined)
+  ) as Predicate<E, E>
 
 export const not =
   <E extends IEntity, D extends E>(predicate: Predicate<E, D>) =>

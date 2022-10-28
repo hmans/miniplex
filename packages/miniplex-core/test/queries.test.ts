@@ -36,6 +36,10 @@ describe(hasNone, () => {
   it("returns false if the entity has at least one of the specified components", () => {
     expect(hasNone("name", "age")({ name: "John" } as any)).toBe(false)
   })
+
+  it("returns the same predicate for the same input values", () => {
+    expect(hasNone("name", "age")).toBe(hasNone("age", undefined!, "name"))
+  })
 })
 
 describe(not, () => {
