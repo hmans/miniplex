@@ -7,7 +7,7 @@ export type Predicate<E, D extends E> =
 export class DerivableBucket<E> extends Bucket<E> {
   derivedBuckets = new Map<Predicate<E, any>, DerivableBucket<any>>()
 
-  derive<D extends E>(predicate: Predicate<E, D>): DerivableBucket<D> {
+  where<D extends E>(predicate: Predicate<E, D>): DerivableBucket<D> {
     if (this.derivedBuckets.has(predicate)) {
       return this.derivedBuckets.get(predicate)!
     }

@@ -33,7 +33,7 @@ describe(World, () => {
 
     it("adds the entity to relevant queries", () => {
       const world = new World<Entity>()
-      const archetype = world.derive(hasAge)
+      const archetype = world.where(hasAge)
       const john = world.add({ name: "John" })
 
       world.addComponent(john, "age", 123)
@@ -64,7 +64,7 @@ describe(World, () => {
     it("removes the entity from relevant archetypes", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
-      const archetype = world.derive(hasAge)
+      const archetype = world.where(hasAge)
       expect(archetype.has(john)).toBe(true)
 
       world.removeComponent(john, "age")
@@ -74,7 +74,7 @@ describe(World, () => {
     it("only removes the component from the entity after the archetypes' onEntityRemoved events have fired", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
-      const archetype = world.derive(hasAge)
+      const archetype = world.where(hasAge)
 
       let age: number | undefined
       archetype.onEntityRemoved.add((entity) => {
@@ -93,7 +93,7 @@ describe(World, () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
 
-      const archetype = world.derive(hasAge)
+      const archetype = world.where(hasAge)
 
       expect(archetype).toBeInstanceOf(DerivableBucket)
       expect(archetype.has(john)).toBe(true)
@@ -101,8 +101,8 @@ describe(World, () => {
 
     it("returns the same query bucket given the same predicate function", () => {
       const world = new World<Entity>()
-      const archetype1 = world.derive(hasAge)
-      const archetype2 = world.derive(hasAge)
+      const archetype1 = world.where(hasAge)
+      const archetype2 = world.where(hasAge)
 
       expect(archetype1).toBe(archetype2)
     })
@@ -111,7 +111,7 @@ describe(World, () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
 
-      const archetype = world.derive(has({ all: ["age"], any: [], none: [] }))
+      const archetype = world.where(has({ all: ["age"], any: [], none: [] }))
 
       expect(archetype.has(john)).toBe(true)
     })
