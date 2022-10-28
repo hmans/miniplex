@@ -1,5 +1,5 @@
 import { DerivableBucket } from "@miniplex/bucket"
-import { has, World } from "../src"
+import { has, not, World } from "../src"
 import { WithComponents } from "../src/types"
 
 type Entity = {
@@ -111,7 +111,7 @@ describe(World, () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
 
-      const archetype = world.where(has({ all: ["age"], any: [], none: [] }))
+      const archetype = world.where(has("age"))
 
       expect(archetype.has(john)).toBe(true)
     })

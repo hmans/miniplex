@@ -33,31 +33,26 @@ export type ComponentQuery<
   none: None[]
 }
 
-export function has<
-  E extends IEntity,
-  All extends keyof E,
-  Any extends keyof E,
-  None extends keyof E
->(
-  query: ComponentQuery<E, All, Any, None>
-): Predicate<E, WithComponents<E, All>> {
-  /* TODO: memoize */
+/* NEW */
 
-  const normalizedQuery = normalizeQuery(query)
+export const has =
+  <E extends IEntity, C extends keyof E>(...components: C[]) =>
+  (entity: E): entity is WithComponents<E, C> =>
+    components.every((c) => entity[c] !== undefined)
 
-  return (entity: E): entity is E => {
-    const all =
-      normalizedQuery.all.length === 0 ||
-      normalizedQuery.all.every((c) => entity[c] !== undefined)
+export const hasAll = has
 
-    const any =
-      normalizedQuery.any.length === 0 ||
-      normalizedQuery.any.some((c) => entity[c] !== undefined)
+export const hasSome =
+  <E extends IEntity>(...components: (keyof E)[]) =>
+  (entity: E) =>
+    components.some((c) => entity[c] !== undefined)
 
-    const none =
-      normalizedQuery.none.length === 0 ||
-      normalizedQuery.none.every((c) => entity[c] !== undefined)
+export const hasNone =
+  <E extends IEntity>(...components: (keyof E)[]) =>
+  (entity: E) =>
+    components.every((c) => entity[c] === undefined)
 
-    return all && any && none
-  }
-}
+export const not =
+  <E extends IEntity, D extends E>(predicate: Predicate<E, D>) =>
+  (entity: E) =>
+    !predicate(entity)
