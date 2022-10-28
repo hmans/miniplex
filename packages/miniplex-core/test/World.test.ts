@@ -60,4 +60,50 @@ describe(World, () => {
       expect(archetype.has(john)).toBe(true)
     })
   })
+
+  describe("removeComponent", () => {
+    it("removes the component from the entity", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John", age: 123 })
+
+      world.removeComponent(john, "age")
+
+      expect(john.age).toBe(undefined)
+    })
+
+    it("does nothing if the component does not exist on the entity", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John" })
+
+      world.removeComponent(john, "age")
+
+      expect(john.age).toBe(undefined)
+    })
+
+    it("removes the entity from relevant archetypes", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John", age: 123 })
+      const archetype = world.archetype(hasAge)
+      expect(archetype.has(john)).toBe(true)
+
+      world.removeComponent(john, "age")
+      expect(archetype.has(john)).toBe(false)
+    })
+
+    it("only removes the component from the entity after the archetypes' onEntityRemoved events have fired", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John", age: 123 })
+      const archetype = world.archetype(hasAge)
+
+      let age: number | undefined
+      archetype.onEntityRemoved.add((entity) => {
+        age = entity.age
+      })
+
+      world.removeComponent(john, "age")
+
+      expect(john.age).toBe(undefined)
+      expect(age).toBe(123)
+    })
+  })
 })

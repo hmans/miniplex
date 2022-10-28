@@ -33,6 +33,28 @@ export class World<E extends IEntity> extends Bucket<E> {
     }
   }
 
+  removeComponent(entity: E, component: keyof E) {
+    /* Return early if the entity doesn't have the component. */
+    if (entity[component] === undefined) return
+
+    /* Update archetypes */
+    if (this.has(entity)) {
+      const copy = { ...entity }
+      delete copy[component]
+
+      for (const [predicate, archetype] of this.archetypes) {
+        if (predicate(copy)) {
+          archetype.add(entity)
+        } else {
+          archetype.remove(entity)
+        }
+      }
+    }
+
+    /* Remove the component */
+    delete entity[component]
+  }
+
   private archetypes = new Map<Predicate<E>, Bucket<any>>()
 
   archetype<D extends E>(predicate: Predicate<D>) {
