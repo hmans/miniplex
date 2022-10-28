@@ -23,7 +23,7 @@ export class World<E extends IEntity> extends Bucket<E> {
 
   archetypes = new Map<PredicateFunction<E, any>, Archetype<any>>()
 
-  query<D extends E>(predicate: PredicateFunction<E, D>): Archetype<D> {
+  derive<D extends E>(predicate: PredicateFunction<E, D>): Archetype<D> {
     if (this.archetypes.has(predicate)) {
       return this.archetypes.get(predicate)!
     }
