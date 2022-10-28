@@ -1,4 +1,4 @@
-import { Bucket } from "./bucketeer/Bucket"
+import { Bucket } from "@miniplex/bucket"
 import { ArchetypeQuery, IEntity } from "./types"
 import { World } from "./World"
 

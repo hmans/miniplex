@@ -1,11 +1,11 @@
 {
-  "name": "@miniplex/core",
+  "name": "@miniplex/bucket",
   "author": {
     "name": "Hendrik Mans",
     "email": "hendrik@mans.de",
     "url": "https://hendrik.mans.de"
   },
-  "description": "A developer-friendly entity management system for games and similarly demanding applications, based on ECS architecture.",
+  "description": "",
   "homepage": "https://github.com/hmans/miniplex",
   "keywords": [
     "gamedev",
@@ -16,9 +16,9 @@
   ],
   "sideEffects": false,
   "version": "2.0.0-next.11",
-  "main": "dist/miniplex-core.cjs.js",
-  "module": "dist/miniplex-core.esm.js",
-  "types": "dist/miniplex-core.cjs.d.ts",
+  "main": "dist/miniplex-bucket.cjs.js",
+  "module": "dist/miniplex-bucket.esm.js",
+  "types": "dist/miniplex-bucket.cjs.d.ts",
   "files": [
     "dist/**",
     "LICENSE",
@@ -26,12 +26,10 @@
   ],
   "license": "MIT",
   "scripts": {
-    "benchmark": "ts-node -O '{\"module\": \"commonjs\"}' benchmark.ts",
     "build": "preconstruct build"
   },
   "dependencies": {
-    "@hmans/event": "^0.2.0",
-    "@miniplex/bucket": "workspace:2.0.0-next.11"
+    "@hmans/event": "^0.2.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.0",
