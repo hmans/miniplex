@@ -6,11 +6,11 @@ export class Bucket<E> {
   onEntityAdded = new Event<E>()
   onEntityRemoved = new Event<E>()
 
-  has(entity: E) {
+  has(entity: any) {
     return this.entities.includes(entity)
   }
 
-  add(entity: E) {
+  add<D extends E>(entity: D): D & E {
     if (entity && !this.has(entity)) {
       this.entities.push(entity)
       this.onEntityAdded.emit(entity)
