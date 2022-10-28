@@ -6,34 +6,6 @@ export const normalizeComponents = <E extends IEntity>(
   components: (keyof E)[]
 ) => [...new Set(components.sort().filter((c) => !!c && c !== ""))]
 
-export const normalizeQuery = <
-  E extends IEntity,
-  All extends keyof E,
-  Any extends keyof E,
-  None extends keyof E
->(
-  query: ComponentQuery<E, All, Any, None>
-) => ({
-  all: query.all && normalizeComponents<E>(query.all),
-  any: query.any && normalizeComponents<E>(query.any),
-  none: query.none && normalizeComponents<E>(query.none)
-})
-
-export const serializeQuery = <E extends IEntity>(
-  query: ComponentQuery<E, any, any, any>
-) => JSON.stringify(query)
-
-export type ComponentQuery<
-  E extends IEntity,
-  All extends keyof E,
-  Any extends keyof E,
-  None extends keyof E
-> = {
-  all: All[]
-  any: Any[]
-  none: None[]
-}
-
 /* has */
 
 const cache = new PredicateCache<string, Function>()
