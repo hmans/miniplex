@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom"
 import { act, render, renderHook, screen } from "@testing-library/react"
-import { World } from "@miniplex/core"
+import { has, World } from "@miniplex/core"
 import React from "react"
 import createReactAPI from "../src"
 
@@ -285,7 +285,9 @@ describe("<Archetype>", () => {
     world.add({ name: "Bob" })
 
     render(
-      <Archetype query="name">{(entity) => <p>{entity.name}</p>}</Archetype>
+      <Archetype query={has("name")}>
+        {(entity) => <p>{entity.name}</p>}
+      </Archetype>
     )
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
@@ -300,7 +302,9 @@ describe("<Archetype>", () => {
     world.add({ name: "Bob" })
 
     render(
-      <Archetype query="name">{(entity) => <p>{entity.name}</p>}</Archetype>
+      <Archetype query={has("name")}>
+        {(entity) => <p>{entity.name}</p>}
+      </Archetype>
     )
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
@@ -326,7 +330,7 @@ describe("<Archetype>", () => {
 
       const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
 
-      render(<Archetype as={User} query="name" />)
+      render(<Archetype as={User} query={has("name")} />)
 
       expect(screen.getByText("Alice")).toBeInTheDocument()
       expect(screen.getByText("Bob")).toBeInTheDocument()
@@ -342,7 +346,7 @@ describe("<Archetype>", () => {
     world.add({ name: "Bob", age: 100 })
 
     render(
-      <Archetype query={{ all: ["name"] }}>
+      <Archetype query={has("name")}>
         {(entity) => <p>{entity.name}</p>}
       </Archetype>
     )

@@ -1,5 +1,11 @@
 import { useConst } from "@hmans/use-const"
-import { Bucket, IEntity, WithComponents, World } from "@miniplex/core"
+import {
+  Bucket,
+  IEntity,
+  Predicate,
+  WithComponents,
+  World
+} from "@miniplex/core"
 import React, {
   createContext,
   FunctionComponent,
@@ -90,28 +96,21 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
 
   const Bucket = memo(RawBucket) as typeof RawBucket
 
-  const Archetype = <C extends keyof E>({
+  const Archetype = <D extends E>({
     query,
     ...props
   }: {
-    query: Query<E, C> | C | C[]
-    children?: EntityChildren<WithComponents<E, C>>
+    query: Predicate<E, D>
+    children?: EntityChildren<D>
     as?: FunctionComponent<{
-      entity: WithComponents<E, C>
+      entity: D
       children?: ReactNode
     }>
-  }) => (
-    <Bucket
-      bucket={
-        Array.isArray(query)
-          ? world.archetype(...query)
-          : typeof query === "object"
-          ? world.archetype(query)
-          : world.archetype(query)
-      }
-      {...props}
-    />
-  )
+  }) => {
+    const bucket = world.where(query)
+
+    return <Bucket bucket={bucket} {...props} />
+  }
 
   const Component = <P extends keyof E>(props: {
     name: P
