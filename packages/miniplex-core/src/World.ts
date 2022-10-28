@@ -1,13 +1,12 @@
-import { Bucket } from "@miniplex/bucket"
-import { Archetype } from "./Archetype"
-import { IEntity, PredicateFunction } from "./types"
+import { DerivableBucket } from "@miniplex/bucket/src"
+import { IEntity } from "./types"
 
-export class World<E extends IEntity> extends Bucket<E> {
+export class World<E extends IEntity> extends DerivableBucket<E> {
   constructor() {
     super()
 
     this.onEntityAdded.add((entity) => {
-      for (const [predicate, bucket] of this.archetypes) {
+      for (const [predicate, bucket] of this.derivedBuckets) {
         if (predicate(entity)) {
           bucket.add(entity)
         }
@@ -15,29 +14,10 @@ export class World<E extends IEntity> extends Bucket<E> {
     })
 
     this.onEntityRemoved.add((entity) => {
-      for (const query of this.archetypes.values()) {
+      for (const query of this.derivedBuckets.values()) {
         query.remove(entity)
       }
     })
-  }
-
-  archetypes = new Map<PredicateFunction<E, any>, Archetype<any>>()
-
-  derive<D extends E>(predicate: PredicateFunction<E, D>): Archetype<D> {
-    if (this.archetypes.has(predicate)) {
-      return this.archetypes.get(predicate)!
-    }
-
-    const archetype = new Archetype<D>()
-    this.archetypes.set(predicate, archetype)
-
-    for (const entity of this) {
-      if (predicate(entity)) {
-        archetype.add(entity)
-      }
-    }
-
-    return archetype
   }
 
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
@@ -48,9 +28,9 @@ export class World<E extends IEntity> extends Bucket<E> {
     entity[component] = value
 
     /* Update archetypes */
-    for (const [predicate, archetype] of this.archetypes) {
+    for (const [predicate, bucket] of this.derivedBuckets) {
       if (predicate(entity)) {
-        archetype.add(entity)
+        bucket.add(entity)
       }
     }
 
@@ -67,11 +47,11 @@ export class World<E extends IEntity> extends Bucket<E> {
       const future = { ...entity }
       delete future[component]
 
-      for (const [predicate, archetype] of this.archetypes) {
+      for (const [predicate, bucket] of this.derivedBuckets) {
         if (predicate(future)) {
-          archetype.add(entity)
+          bucket.add(entity)
         } else {
-          archetype.remove(entity)
+          bucket.remove(entity)
         }
       }
     }
