@@ -1,3 +1,3 @@
 export * from "./Bucket"
-export * from "./predicates"
+export * from "./Query"
 export * from "./World"

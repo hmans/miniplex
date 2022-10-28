@@ -1,16 +1,16 @@
 import { Bucket } from "./Bucket"
-import { ArchetypeQuery, IEntity } from "./types"
+import { Query } from "./Query"
+import { IEntity } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
-  [Symbol.iterator]() {
-    let index = this.entities.length
+  queries = new Bucket<Query<any, E>>()
 
-    return {
-      next: () => {
-        const value = this.entities[--index]
-        return { value, done: index < 0 }
-      }
-    }
+  registerQuery(query: Query<any, E>) {
+    this.queries.add(query)
+  }
+
+  unregisterQuery(query: Query<any, E>) {
+    this.queries.remove(query)
   }
 
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
@@ -20,61 +20,36 @@ export class World<E extends IEntity> extends Bucket<E> {
     /* Set the component */
     entity[component] = value
 
-    /* If this world doesn't know about the entity, we're done. */
-    if (!this.has(entity)) return
-
-    /* Update archetypes */
-    for (const [predicate, archetype] of this.archetypes) {
-      if (predicate(entity)) {
-        archetype.add(entity)
-      } else {
-        archetype.remove(entity)
+    /* Update queries */
+    for (const query of this.queries) {
+      if (query.predicate(entity)) {
+        query.add(entity)
       }
     }
+
+    /* If this world doesn't know about the entity, we're done. */
+    if (!this.has(entity)) return
   }
 
   removeComponent(entity: E, component: keyof E) {
     /* Return early if the entity doesn't have the component. */
     if (entity[component] === undefined) return
 
-    /* Update archetypes */
+    /* Update queries */
     if (this.has(entity)) {
       const copy = { ...entity }
       delete copy[component]
 
-      for (const [predicate, archetype] of this.archetypes) {
-        if (predicate(copy)) {
-          archetype.add(entity)
+      for (const query of this.queries) {
+        if (query.predicate(copy)) {
+          query.add(entity)
         } else {
-          archetype.remove(entity)
+          query.remove(entity)
         }
       }
     }
 
     /* Remove the component */
     delete entity[component]
-  }
-
-  private archetypes = new Map<ArchetypeQuery<E, any>, Bucket<any>>()
-
-  archetype<D extends E>(predicate: ArchetypeQuery<E, D>): Bucket<D> {
-    /* First, try to find the archetype by its predicate. */
-    let archetype = this.archetypes.get(predicate)
-
-    /* If we didn't find it, create it! */
-    if (!archetype) {
-      /* Create a new bucket representing the archetype. */
-      archetype = new Bucket<D>()
-      this.archetypes.set(predicate, archetype)
-
-      /* Add existing entities */
-      for (const entity of this.entities) {
-        if (predicate(entity)) {
-          archetype.add(entity)
-        }
-      }
-    }
-
-    return archetype
   }
 }

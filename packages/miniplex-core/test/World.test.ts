@@ -1,4 +1,5 @@
-import { has, World } from "../src"
+import { World } from "../src"
+import { Query } from "../src/Query"
 import { WithComponents } from "../src/types"
 
 type Entity = {
@@ -11,37 +12,6 @@ const hasAge = (v: any): v is WithComponents<Entity, "age"> =>
   typeof v.age !== "undefined"
 
 describe(World, () => {
-  describe("derive", () => {
-    it("given a predicate, returns a new bucket containing all entities matching the predicate", () => {
-      const world = new World<Entity>()
-      const john = world.add({ name: "John", age: 123 })
-      const alice = world.add({ name: "Alice" })
-
-      const archetype = world.archetype(hasAge)
-
-      expect(archetype.has(john)).toBe(true)
-      expect(archetype.has(alice)).toBe(false)
-    })
-
-    it("returns the same bucket instance for the same predicate", () => {
-      const world = new World<Entity>()
-      const archetype = world.archetype(hasAge)
-
-      expect(world.archetype(hasAge)).toBe(archetype)
-    })
-
-    it("can use the `has` predicate builder to query for entities that have all of the specified components", () => {
-      const world = new World<Entity>()
-      const john = world.add({ name: "John", age: 123 })
-      const alice = world.add({ name: "Alice" })
-
-      const archetype = world.archetype(has("age", "name"))
-
-      expect(archetype.has(john)).toBe(true)
-      expect(archetype.has(alice)).toBe(false)
-    })
-  })
-
   describe("addComponent", () => {
     it("adds the component to the entity", () => {
       const world = new World<Entity>()
@@ -64,7 +34,7 @@ describe(World, () => {
     it("adds the entity to relevant archetypes", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John" })
-      const archetype = world.archetype(hasAge)
+      const archetype = new Query(world, hasAge)
 
       world.addComponent(john, "age", 123)
 
@@ -94,7 +64,7 @@ describe(World, () => {
     it("removes the entity from relevant archetypes", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
-      const archetype = world.archetype(hasAge)
+      const archetype = new Query(world, hasAge)
       expect(archetype.has(john)).toBe(true)
 
       world.removeComponent(john, "age")
@@ -104,7 +74,7 @@ describe(World, () => {
     it("only removes the component from the entity after the archetypes' onEntityRemoved events have fired", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
-      const archetype = world.archetype(hasAge)
+      const archetype = new Query(world, hasAge)
 
       let age: number | undefined
       archetype.onEntityRemoved.add((entity) => {

@@ -1,12 +1,23 @@
 import { Event } from "@hmans/event"
 
 export class Bucket<E> {
+  [Symbol.iterator]() {
+    let index = this.entities.length
+
+    return {
+      next: () => {
+        const value = this.entities[--index]
+        return { value, done: index < 0 }
+      }
+    }
+  }
+
   entities: E[] = []
 
   onEntityAdded = new Event<E>()
   onEntityRemoved = new Event<E>()
 
-  has(entity: any) {
+  has(entity: any): entity is E {
     return this.entities.includes(entity)
   }
 
