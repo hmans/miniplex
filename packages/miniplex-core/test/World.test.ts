@@ -1,5 +1,5 @@
-import { DerivableBucket } from "@miniplex/bucket/src"
-import { World } from "../src"
+import { DerivableBucket } from "@miniplex/bucket"
+import { has, World } from "../src"
 import { WithComponents } from "../src/types"
 
 type Entity = {
@@ -88,7 +88,7 @@ describe(World, () => {
     })
   })
 
-  describe("query", () => {
+  describe("derive", () => {
     it("returns a query bucket that holds all entities matching a specific predicate", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
@@ -105,6 +105,15 @@ describe(World, () => {
       const archetype2 = world.derive(hasAge)
 
       expect(archetype1).toBe(archetype2)
+    })
+
+    it("can derive a bucket holding all entities with specific components", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John", age: 123 })
+
+      const archetype = world.derive(has({ all: ["age"], any: [], none: [] }))
+
+      expect(archetype.has(john)).toBe(true)
     })
   })
 })
