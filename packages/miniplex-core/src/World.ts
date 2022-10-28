@@ -1,8 +1,8 @@
-import { DerivableBucket } from "@miniplex/bucket/src"
+import { Bucket } from "@miniplex/bucket"
 import { has } from "./queries"
 import { IEntity } from "./types"
 
-export class World<E extends IEntity> extends DerivableBucket<E> {
+export class World<E extends IEntity> extends Bucket<E> {
   constructor() {
     super()
 

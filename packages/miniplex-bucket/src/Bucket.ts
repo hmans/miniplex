@@ -1,5 +1,9 @@
 import { Event } from "@hmans/event"
 
+export type Predicate<E, D extends E> =
+  | ((v: E) => v is D)
+  | ((entity: E) => boolean)
+
 export class Bucket<E> {
   [Symbol.iterator]() {
     let index = this.entities.length
@@ -60,5 +64,24 @@ export class Bucket<E> {
     for (const entity of this) {
       this.remove(entity)
     }
+  }
+
+  derivedBuckets = new Map<Predicate<E, any>, Bucket<any>>()
+
+  where<D extends E>(predicate: Predicate<E, D>): Bucket<D> {
+    if (this.derivedBuckets.has(predicate)) {
+      return this.derivedBuckets.get(predicate)!
+    }
+
+    const bucket = new Bucket<D>()
+    this.derivedBuckets.set(predicate, bucket)
+
+    for (const entity of this.entities) {
+      if (predicate(entity)) {
+        bucket.add(entity)
+      }
+    }
+
+    return bucket
   }
 }
