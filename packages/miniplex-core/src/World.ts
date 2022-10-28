@@ -56,29 +56,21 @@ export class World<E extends IEntity> extends Bucket<E> {
   }
 
   private archetypes = new Map<ArchetypeQuery<E, any>, Bucket<any>>()
-  private serializedArchetypes = new Map<string, Bucket<any>>()
 
   archetype<D extends E>(predicate: ArchetypeQuery<E, D>): Bucket<D> {
     /* First, try to find the archetype by its predicate. */
     let archetype = this.archetypes.get(predicate)
 
-    /* If we didn't find it, try to find it by its serialized predicate. */
+    /* If we still didn't find it, create it! */
     if (!archetype) {
-      const key = predicate.toString()
-      archetype = this.serializedArchetypes.get(key)
+      /* Create a new bucket representing the archetype. */
+      archetype = new Bucket<D>()
+      this.archetypes.set(predicate, archetype)
 
-      /* If we still didn't find it, create it! */
-      if (!archetype) {
-        /* Create a new bucket representing the archetype. */
-        archetype = new Bucket<D>()
-        this.archetypes.set(predicate, archetype)
-        this.serializedArchetypes.set(key, archetype)
-
-        /* Add existing entities */
-        for (const entity of this.entities) {
-          if (predicate(entity)) {
-            archetype.add(entity)
-          }
+      /* Add existing entities */
+      for (const entity of this.entities) {
+        if (predicate(entity)) {
+          archetype.add(entity)
         }
       }
     }

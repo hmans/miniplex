@@ -1,4 +1,4 @@
-import { World } from "../src"
+import { has, World } from "../src"
 import { WithComponents } from "../src/types"
 
 type Entity = {
@@ -30,12 +30,15 @@ describe(World, () => {
       expect(world.archetype(hasAge)).toBe(archetype)
     })
 
-    it("returns the same bucket for two predicates that are different objects, but the same implementation", () => {
+    it("can use the `has` predicate builder to query for entities that have all of the specified components", () => {
       const world = new World<Entity>()
-      const archetype1 = world.archetype((v) => !!v.age && v.age > 18)
-      const archetype2 = world.archetype((v) => !!v.age && v.age > 18)
+      const john = world.add({ name: "John", age: 123 })
+      const alice = world.add({ name: "Alice" })
 
-      expect(archetype1).toBe(archetype2)
+      const archetype = world.archetype(has("age", "name"))
+
+      expect(archetype.has(john)).toBe(true)
+      expect(archetype.has(alice)).toBe(false)
     })
   })
 
