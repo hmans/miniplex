@@ -1,5 +1,4 @@
-import { World } from "../src"
-import { Query } from "../src/Query"
+import { Archetype, World } from "../src"
 import { WithComponents } from "../src/types"
 
 type Entity = {
@@ -93,18 +92,18 @@ describe(World, () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
 
-      const predicate = world.query(hasAge)
+      const archetype = world.query(hasAge)
 
-      expect(predicate).toBeInstanceOf(Query)
-      expect(predicate.has(john)).toBe(true)
+      expect(archetype).toBeInstanceOf(Archetype)
+      expect(archetype.has(john)).toBe(true)
     })
 
     it("returns the same query bucket given the same predicate function", () => {
       const world = new World<Entity>()
-      const predicate1 = world.query(hasAge)
-      const predicate2 = world.query(hasAge)
+      const archetype1 = world.query(hasAge)
+      const archetype2 = world.query(hasAge)
 
-      expect(predicate1).toBe(predicate2)
+      expect(archetype1).toBe(archetype2)
     })
   })
 })

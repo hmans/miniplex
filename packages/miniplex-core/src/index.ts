@@ -1,2 +1,2 @@
-export * from "./Query"
+export * from "./Archetype"
 export * from "./World"

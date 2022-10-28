@@ -1,5 +1,5 @@
 import { Bucket } from "@miniplex/bucket"
-import { Query } from "./Query"
+import { Archetype } from "./Archetype"
 import { IEntity, PredicateFunction } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
@@ -7,37 +7,37 @@ export class World<E extends IEntity> extends Bucket<E> {
     super()
 
     this.onEntityAdded.add((entity) => {
-      for (const query of this.queries.values()) {
-        if (query.predicate(entity)) {
-          query.add(entity)
+      for (const [predicate, bucket] of this.archetypes) {
+        if (predicate(entity)) {
+          bucket.add(entity)
         }
       }
     })
 
     this.onEntityRemoved.add((entity) => {
-      for (const query of this.queries.values()) {
+      for (const query of this.archetypes.values()) {
         query.remove(entity)
       }
     })
   }
 
-  queries = new Map<PredicateFunction<E, any>, Query<E, any>>()
+  archetypes = new Map<PredicateFunction<E, any>, Archetype<any>>()
 
-  query<D extends E>(fun: PredicateFunction<E, D>): Query<E, D> {
-    if (this.queries.has(fun)) {
-      return this.queries.get(fun)!
+  query<D extends E>(predicate: PredicateFunction<E, D>): Archetype<D> {
+    if (this.archetypes.has(predicate)) {
+      return this.archetypes.get(predicate)!
     }
 
-    const predicate = new Query(fun)
-    this.queries.set(fun, predicate)
+    const archetype = new Archetype<D>()
+    this.archetypes.set(predicate, archetype)
 
     for (const entity of this) {
-      if (fun(entity)) {
-        predicate.add(entity)
+      if (predicate(entity)) {
+        archetype.add(entity)
       }
     }
 
-    return predicate
+    return archetype
   }
 
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
@@ -47,10 +47,10 @@ export class World<E extends IEntity> extends Bucket<E> {
     /* Set the component */
     entity[component] = value
 
-    /* Update queries */
-    for (const query of this.queries.values()) {
-      if (query.predicate(entity)) {
-        query.add(entity)
+    /* Update archetypes */
+    for (const [predicate, archetype] of this.archetypes) {
+      if (predicate(entity)) {
+        archetype.add(entity)
       }
     }
 
@@ -62,16 +62,16 @@ export class World<E extends IEntity> extends Bucket<E> {
     /* Return early if the entity doesn't have the component. */
     if (entity[component] === undefined) return
 
-    /* Update queries */
+    /* Update archetypes */
     if (this.has(entity)) {
       const future = { ...entity }
       delete future[component]
 
-      for (const query of this.queries.values()) {
-        if (query.predicate(future)) {
-          query.add(entity)
+      for (const [predicate, archetype] of this.archetypes) {
+        if (predicate(future)) {
+          archetype.add(entity)
         } else {
-          query.remove(entity)
+          archetype.remove(entity)
         }
       }
     }
