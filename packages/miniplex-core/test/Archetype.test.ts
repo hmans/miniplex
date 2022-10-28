@@ -1,4 +1,4 @@
-import { Archetype, Query, World } from "../src"
+import { Archetype, World } from "../src"
 
 type Entity = {
   name: string
