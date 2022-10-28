@@ -1,5 +1,5 @@
 import { DerivableBucket } from "@miniplex/bucket/src"
-import { Archetype, World } from "../src"
+import { World } from "../src"
 import { WithComponents } from "../src/types"
 
 type Entity = {
