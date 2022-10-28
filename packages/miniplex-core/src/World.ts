@@ -1,9 +1,9 @@
 import { Bucket } from "@miniplex/bucket"
-import { Query } from "./Query"
+import { Predicate } from "./Predicate"
 import { IEntity } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
-  queries = new Bucket<Query<any, E>>()
+  queries = new Bucket<Predicate<any, E>>()
 
   constructor() {
     super()
@@ -23,11 +23,11 @@ export class World<E extends IEntity> extends Bucket<E> {
     })
   }
 
-  registerQuery(query: Query<any, E>) {
+  registerQuery(query: Predicate<any, E>) {
     this.queries.add(query)
   }
 
-  unregisterQuery(query: Query<any, E>) {
+  unregisterQuery(query: Predicate<any, E>) {
     this.queries.remove(query)
   }
 

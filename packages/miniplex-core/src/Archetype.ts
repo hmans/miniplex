@@ -1,15 +1,15 @@
-import { Query } from "./Query"
+import { Predicate } from "./Predicate"
 import { IEntity } from "./types"
 import { World } from "./World"
 
-type ArchetypeQuery<E> = {
+type ComponentQuery<E> = {
   all?: (keyof E)[]
   none?: (keyof E)[]
   any?: (keyof E)[]
 }
 
-export class Archetype<D extends E, E extends IEntity> extends Query<D, E> {
-  constructor(public world: World<E>, public query: ArchetypeQuery<E>) {
+export class Archetype<D extends E, E extends IEntity> extends Predicate<D, E> {
+  constructor(public world: World<E>, public query: ComponentQuery<E>) {
     super(world, (entity): entity is D => {
       if (query.all) {
         for (const key of query.all) {

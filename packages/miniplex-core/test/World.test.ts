@@ -1,5 +1,5 @@
 import { World } from "../src"
-import { Query } from "../src/Query"
+import { Predicate } from "../src/Predicate"
 import { WithComponents } from "../src/types"
 
 type Entity = {
@@ -33,7 +33,7 @@ describe(World, () => {
 
     it("adds the entity to relevant queries", () => {
       const world = new World<Entity>()
-      const archetype = new Query(world, hasAge)
+      const archetype = new Predicate(world, hasAge)
       const john = world.add({ name: "John" })
 
       world.addComponent(john, "age", 123)
@@ -64,7 +64,7 @@ describe(World, () => {
     it("removes the entity from relevant archetypes", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
-      const archetype = new Query(world, hasAge)
+      const archetype = new Predicate(world, hasAge)
       expect(archetype.has(john)).toBe(true)
 
       world.removeComponent(john, "age")
@@ -74,7 +74,7 @@ describe(World, () => {
     it("only removes the component from the entity after the archetypes' onEntityRemoved events have fired", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
-      const archetype = new Query(world, hasAge)
+      const archetype = new Predicate(world, hasAge)
 
       let age: number | undefined
       archetype.onEntityRemoved.add((entity) => {

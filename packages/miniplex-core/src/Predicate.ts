@@ -1,9 +1,12 @@
 import { Bucket } from "@miniplex/bucket"
-import { QueryPredicate, IEntity } from "./types"
+import { IEntity, PredicateFunction } from "./types"
 import { World } from "./World"
 
-export class Query<D extends E, E extends IEntity> extends Bucket<D> {
-  constructor(public world: World<E>, public predicate: QueryPredicate<E, D>) {
+export class Predicate<D extends E, E extends IEntity> extends Bucket<D> {
+  constructor(
+    public world: World<E>,
+    public predicate: PredicateFunction<E, D>
+  ) {
     super()
 
     /* Import all entities that match our predicate */
