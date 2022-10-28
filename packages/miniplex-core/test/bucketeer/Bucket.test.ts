@@ -1,4 +1,4 @@
-import { Bucket } from "../src"
+import { Bucket } from "../../src"
 
 describe(Bucket, () => {
   describe("add", () => {

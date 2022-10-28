@@ -1,4 +1,4 @@
-import { Bucket } from "./Bucket"
+import { Bucket } from "./bucketeer/Bucket"
 import { ArchetypeQuery, IEntity } from "./types"
 import { World } from "./World"
 

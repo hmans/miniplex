@@ -1,4 +1,4 @@
-import { Bucket } from "./Bucket"
+import { Bucket } from "./bucketeer/Bucket"
 import { Query } from "./Query"
 import { IEntity } from "./types"
 
