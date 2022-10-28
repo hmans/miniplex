@@ -31,10 +31,10 @@ describe(World, () => {
       expect(john.age).toBe(123)
     })
 
-    it("adds the entity to relevant archetypes", () => {
+    it("adds the entity to relevant queries", () => {
       const world = new World<Entity>()
-      const john = world.add({ name: "John" })
       const archetype = new Query(world, hasAge)
+      const john = world.add({ name: "John" })
 
       world.addComponent(john, "age", 123)
 
