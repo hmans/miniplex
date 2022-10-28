@@ -37,11 +37,11 @@ export class World<E extends IEntity> extends Bucket<E> {
 
     /* Update queries */
     if (this.has(entity)) {
-      const copy = { ...entity }
-      delete copy[component]
+      const future = { ...entity }
+      delete future[component]
 
       for (const query of this.queries) {
-        if (query.predicate(copy)) {
+        if (query.predicate(future)) {
           query.add(entity)
         } else {
           query.remove(entity)
