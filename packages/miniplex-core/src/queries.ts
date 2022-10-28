@@ -1,5 +1,6 @@
 import { Predicate } from "@miniplex/bucket"
 import { IEntity, WithComponents } from "./types"
+import { PredicateCache } from "./util/PredicateCache"
 
 export const normalizeComponents = <E extends IEntity>(
   components: (keyof E)[]
@@ -35,10 +36,20 @@ export type ComponentQuery<
 
 /* NEW */
 
-export const has =
-  <E extends IEntity, C extends keyof E>(...components: C[]) =>
-  (entity: E): entity is WithComponents<E, C> =>
-    components.every((c) => entity[c] !== undefined)
+type HasPredicate<E extends IEntity, All extends keyof E> = (
+  entity: E
+) => entity is WithComponents<E, All>
+
+const hasCache = new PredicateCache<HasPredicate<any, any>>()
+
+export const has = <E extends IEntity, C extends keyof E>(
+  ...components: C[]
+): HasPredicate<E, C> =>
+  hasCache.get(
+    JSON.stringify(components),
+    (entity: E): entity is WithComponents<E, C> =>
+      components.every((c) => entity[c] !== undefined)
+  )
 
 export const hasAll = has
 

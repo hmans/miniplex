@@ -8,6 +8,10 @@ describe(has, () => {
   it("returns false if the entity does not have all of the specified components", () => {
     expect(has("name", "age")({ name: "John" })).toBe(false)
   })
+
+  it("returns the same predicate for the same input values", () => {
+    expect(has("name", "age")).toBe(has("name", "age"))
+  })
 })
 
 describe(hasSome, () => {
