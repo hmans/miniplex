@@ -1,5 +1,5 @@
 import { Bucket } from "./Bucket"
-import { IEntity, Predicate } from "./types"
+import { ArchetypeQuery, IEntity } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
   [Symbol.iterator]() {
@@ -55,10 +55,10 @@ export class World<E extends IEntity> extends Bucket<E> {
     delete entity[component]
   }
 
-  private archetypes = new Map<Predicate<E>, Bucket<any>>()
+  private archetypes = new Map<ArchetypeQuery<E, any>, Bucket<any>>()
   private serializedArchetypes = new Map<string, Bucket<any>>()
 
-  archetype<D extends E>(predicate: Predicate<D>): Bucket<D> {
+  archetype<D extends E>(predicate: ArchetypeQuery<E, D>): Bucket<D> {
     /* First, try to find the archetype by its predicate. */
     let archetype = this.archetypes.get(predicate)
 
