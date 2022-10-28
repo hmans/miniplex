@@ -64,4 +64,25 @@ export class World<E extends IEntity> extends DerivableBucket<E> {
   archetype<C extends keyof E>(...components: C[]) {
     return this.where(has(...components))
   }
+
+  /* IDs */
+  private entityToId = new Map<E, number>()
+  private idToEntity = new Map<number, E>()
+  private nextId = 0
+
+  id(entity: E) {
+    if (!this.has(entity)) return undefined
+
+    if (!this.entityToId.has(entity)) {
+      const id = this.nextId++
+      this.entityToId.set(entity, id)
+      this.idToEntity.set(id, entity)
+    }
+
+    return this.entityToId.get(entity)!
+  }
+
+  entity(id: number) {
+    return this.idToEntity.get(id)
+  }
 }

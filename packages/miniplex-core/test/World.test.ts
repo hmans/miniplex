@@ -139,4 +139,36 @@ describe(World, () => {
       expect(archetype.entities).toEqual([john])
     })
   })
+
+  describe("id", () => {
+    it("returns the id of the entity", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John" })
+
+      expect(world.id(john)).toBe(0)
+    })
+
+    it("returns undefined if the entity is not in the world", () => {
+      const world = new World<Entity>()
+      const john = { name: "John" }
+
+      expect(world.id(john)).toBe(undefined)
+    })
+  })
+
+  describe("entity", () => {
+    it("returns the entity with the given id", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John" })
+      const id = world.id(john)!
+
+      expect(world.entity(id)).toBe(john)
+    })
+
+    it("returns undefined if the id is not in the world", () => {
+      const world = new World<Entity>()
+
+      expect(world.entity(0)).toBe(undefined)
+    })
+  })
 })
