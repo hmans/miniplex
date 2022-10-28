@@ -1,10 +1,8 @@
 import { Bucket } from "@miniplex/bucket"
-import { Predicate } from "./Predicate"
+import { Query } from "./Query"
 import { IEntity, PredicateFunction } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
-  queries = new Map<PredicateFunction<E, any>, Predicate<any, E>>()
-
   constructor() {
     super()
 
@@ -23,20 +21,20 @@ export class World<E extends IEntity> extends Bucket<E> {
     })
   }
 
-  registerQuery(query: Predicate<any, E>) {
-    this.queries.set(query.predicate, query)
-  }
+  queries = new Map<PredicateFunction<E, any>, Query<E, any>>()
 
-  unregisterQuery(query: Predicate<any, E>) {
-    this.queries.delete(query.predicate)
-  }
+  query<D extends E>(fun: PredicateFunction<E, D>): Query<E, D> {
+    if (this.queries.has(fun)) {
+      return this.queries.get(fun)!
+    }
 
-  predicate<D extends E>(fun: PredicateFunction<E, D>): Predicate<D, E> {
-    let predicate = this.queries.get(fun)
+    const predicate = new Query(fun)
+    this.queries.set(fun, predicate)
 
-    if (!predicate) {
-      predicate = new Predicate(this, fun)
-      this.registerQuery(predicate)
+    for (const entity of this) {
+      if (fun(entity)) {
+        predicate.add(entity)
+      }
     }
 
     return predicate

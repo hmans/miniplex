@@ -1,5 +1,5 @@
 import { World } from "../src"
-import { Predicate } from "../src/Predicate"
+import { Query } from "../src/Query"
 import { WithComponents } from "../src/types"
 
 type Entity = {
@@ -33,7 +33,7 @@ describe(World, () => {
 
     it("adds the entity to relevant queries", () => {
       const world = new World<Entity>()
-      const archetype = new Predicate(world, hasAge)
+      const archetype = world.query(hasAge)
       const john = world.add({ name: "John" })
 
       world.addComponent(john, "age", 123)
@@ -64,7 +64,7 @@ describe(World, () => {
     it("removes the entity from relevant archetypes", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
-      const archetype = new Predicate(world, hasAge)
+      const archetype = world.query(hasAge)
       expect(archetype.has(john)).toBe(true)
 
       world.removeComponent(john, "age")
@@ -74,7 +74,7 @@ describe(World, () => {
     it("only removes the component from the entity after the archetypes' onEntityRemoved events have fired", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
-      const archetype = new Predicate(world, hasAge)
+      const archetype = world.query(hasAge)
 
       let age: number | undefined
       archetype.onEntityRemoved.add((entity) => {
@@ -88,21 +88,21 @@ describe(World, () => {
     })
   })
 
-  describe("predicate", () => {
-    it("returns a predicate that can be used to query the world", () => {
+  describe("query", () => {
+    it("returns a query bucket that holds all entities matching a specific predicate", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
 
-      const predicate = world.predicate(hasAge)
+      const predicate = world.query(hasAge)
 
-      expect(predicate).toBeInstanceOf(Predicate)
+      expect(predicate).toBeInstanceOf(Query)
       expect(predicate.has(john)).toBe(true)
     })
 
-    it("returns the same predicate instance given the same predicate function", () => {
+    it("returns the same query bucket given the same predicate function", () => {
       const world = new World<Entity>()
-      const predicate1 = world.predicate(hasAge)
-      const predicate2 = world.predicate(hasAge)
+      const predicate1 = world.query(hasAge)
+      const predicate2 = world.query(hasAge)
 
       expect(predicate1).toBe(predicate2)
     })

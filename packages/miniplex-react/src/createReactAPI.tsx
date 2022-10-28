@@ -1,11 +1,5 @@
 import { useConst } from "@hmans/use-const"
-import {
-  Bucket,
-  IEntity,
-  Predicate,
-  WithComponents,
-  World
-} from "@miniplex/core"
+import { Bucket, IEntity, Query, WithComponents, World } from "@miniplex/core"
 import React, {
   createContext,
   FunctionComponent,
@@ -100,7 +94,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     query,
     ...props
   }: {
-    query: Predicate<E, C> | C | C[]
+    query: Query<E, C> | C | C[]
     children?: EntityChildren<WithComponents<E, C>>
     as?: FunctionComponent<{
       entity: WithComponents<E, C>

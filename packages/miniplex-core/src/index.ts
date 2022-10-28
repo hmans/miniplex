@@ -1,3 +1,2 @@
-export * from "./Archetype"
-export * from "./Predicate"
+export * from "./Query"
 export * from "./World"
