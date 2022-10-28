@@ -36,7 +36,7 @@ export type ComponentQuery<
 
 /* has */
 
-const cache = new PredicateCache()
+const cache = new PredicateCache<string, Function>()
 
 export const has = <E extends IEntity, C extends keyof E>(...components: C[]) =>
   cache.get(
@@ -59,7 +59,11 @@ export const hasNone = <E extends IEntity>(...components: (keyof E)[]) =>
     (entity: E) => components.every((c) => entity[c] === undefined)
   ) as Predicate<E, E>
 
-export const not =
-  <E extends IEntity, D extends E>(predicate: Predicate<E, D>) =>
-  (entity: E) =>
-    !predicate(entity)
+/* not */
+
+const notCache = new PredicateCache<Function, Function>()
+
+export const not = <E extends IEntity, D extends E>(
+  predicate: Predicate<E, D>
+) =>
+  notCache.get(predicate, (entity: E) => !predicate(entity)) as Predicate<E, E>

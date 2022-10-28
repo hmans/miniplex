@@ -1,7 +1,7 @@
-export class PredicateCache<T extends Function = Function> {
-  private readonly cache = new Map<string, T>()
+export class PredicateCache<Key, T extends Function = Function> {
+  private readonly cache = new Map<Key, T>()
 
-  get(key: string, predicate: T) {
+  get(key: Key, predicate: T) {
     let value = this.cache.get(key)
 
     if (value === undefined) {

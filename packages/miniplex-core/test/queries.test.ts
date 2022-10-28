@@ -46,4 +46,8 @@ describe(not, () => {
   it("negates the predicte", () => {
     expect(not(has("name", "age"))({ name: "John" } as any)).toBe(true)
   })
+
+  it("always returns the same predicate for the given input predicate", () => {
+    expect(not(has("name", "age"))).toBe(not(has("name", "age")))
+  })
 })
