@@ -1,6 +1,17 @@
 import { Bucket } from "../src"
 
 describe(Bucket, () => {
+  it("can be instantiated", () => {
+    const bucket = new Bucket()
+    expect(bucket).toBeInstanceOf(Bucket)
+  })
+
+  it("can be instantiated with a list of entities", () => {
+    const bucket = new Bucket([1, 2, 3])
+    expect(bucket).toBeInstanceOf(Bucket)
+    expect(bucket.size).toBe(3)
+  })
+
   describe("add", () => {
     it("adds the entity to the bucket", () => {
       const bucket = new Bucket()

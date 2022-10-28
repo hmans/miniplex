@@ -12,7 +12,7 @@ export class Bucket<E> {
     }
   }
 
-  entities: E[] = []
+  constructor(public entities: E[] = []) {}
 
   onEntityAdded = new Event<E>()
   onEntityRemoved = new Event<E>()
