@@ -29,6 +29,22 @@ describe(World, () => {
 
       expect(world.archetype(hasAge)).toBe(archetype)
     })
+
+    it("returns the same bucket for two predicates that are different objects, but the same implementation", () => {
+      const world = new World<Entity>()
+
+      const archetype = world.archetype(
+        (v: any): v is WithComponents<Entity, "age"> =>
+          typeof v.age !== "undefined"
+      )
+
+      expect(
+        world.archetype(
+          (v: any): v is WithComponents<Entity, "age"> =>
+            typeof v.age !== "undefined"
+        )
+      ).toBe(archetype)
+    })
   })
 
   describe("addComponent", () => {
