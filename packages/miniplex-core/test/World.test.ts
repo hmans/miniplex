@@ -88,7 +88,7 @@ describe(World, () => {
     })
   })
 
-  describe("derive", () => {
+  describe("where", () => {
     it("returns a query bucket that holds all entities matching a specific predicate", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
@@ -114,6 +114,18 @@ describe(World, () => {
       const archetype = world.where(has("age"))
 
       expect(archetype.has(john)).toBe(true)
+    })
+
+    it("can be nested, creating a graph of buckets", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John", age: 123, height: 180 })
+      const jane = world.add({ name: "Jane", age: 123 })
+
+      const withAge = world.where(has("age"))
+      const withAgeAndHeight = withAge.where(has("height"))
+
+      expect(withAge.entities).toEqual([john, jane])
+      expect(withAgeAndHeight.entities).toEqual([john])
     })
   })
 })
