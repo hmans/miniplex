@@ -1,4 +1,5 @@
 import { DerivableBucket } from "@miniplex/bucket/src"
+import { has } from "./queries"
 import { IEntity } from "./types"
 
 export class World<E extends IEntity> extends DerivableBucket<E> {
@@ -58,5 +59,9 @@ export class World<E extends IEntity> extends DerivableBucket<E> {
 
     /* Remove the component */
     delete entity[component]
+  }
+
+  archetype<C extends keyof E>(...components: C[]) {
+    return this.where(has(...components))
   }
 }

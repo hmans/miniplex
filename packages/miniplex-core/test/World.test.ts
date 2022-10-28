@@ -128,4 +128,15 @@ describe(World, () => {
       expect(withAgeAndHeight.entities).toEqual([john])
     })
   })
+
+  describe("archetype", () => {
+    it("is a shortcut to a where(has()) query", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John", age: 123 })
+
+      const archetype = world.archetype("age")
+
+      expect(archetype.entities).toEqual([john])
+    })
+  })
 })
