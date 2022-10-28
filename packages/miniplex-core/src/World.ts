@@ -61,7 +61,7 @@ export class World<E extends IEntity> extends Bucket<E> {
     /* First, try to find the archetype by its predicate. */
     let archetype = this.archetypes.get(predicate)
 
-    /* If we still didn't find it, create it! */
+    /* If we didn't find it, create it! */
     if (!archetype) {
       /* Create a new bucket representing the archetype. */
       archetype = new Bucket<D>()
