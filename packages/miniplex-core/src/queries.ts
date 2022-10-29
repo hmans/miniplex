@@ -72,9 +72,12 @@ export function archetype<
     All
   > {
     const all = query.all.every((c) => entity[c] !== undefined)
+
     const some =
       query.some.length === 0 || query.some.some((c) => entity[c] !== undefined)
+
     const none = query.none.every((c) => entity[c] === undefined)
+
     return all && some && none
   }) as Predicate<E, WithComponents<E, All>>
 }
