@@ -30,7 +30,7 @@ export type ArchetypeQuery<
 
 const archetypeCache = new PredicateCache<string, Function>()
 
-export const normalizeQuery = <
+const normalizeQuery = <
   E extends IEntity,
   All extends keyof E,
   Any extends keyof E,
@@ -72,20 +72,20 @@ export function archetype<
 
   /* Normalize and deduplicate given query */
   const query = normalizeQuery(partialQuery)
-  const key = JSON.stringify(query)
 
   /* Return a predicate that checks if an entity matches the archetype query */
-  return archetypeCache.get(key, function (entity: E): entity is WithComponents<
-    E,
-    All
-  > {
-    const all = query.all.every((c) => entity[c] !== undefined)
+  return archetypeCache.get(
+    JSON.stringify(query),
 
-    const some =
-      query.any.length === 0 || query.any.some((c) => entity[c] !== undefined)
+    function (entity: E): entity is WithComponents<E, All> {
+      const all = query.all.every((c) => entity[c] !== undefined)
 
-    const none = query.none.every((c) => entity[c] === undefined)
+      const some =
+        query.any.length === 0 || query.any.some((c) => entity[c] !== undefined)
 
-    return all && some && none
-  }) as Predicate<E, WithComponents<E, All>>
+      const none = query.none.every((c) => entity[c] === undefined)
+
+      return all && some && none
+    }
+  ) as Predicate<E, WithComponents<E, All>>
 }
