@@ -51,19 +51,34 @@ export type ArchetypeQuery<
   None extends keyof E
 > = {
   all: All[]
-  some: Any[]
+  any: Any[]
   none: None[]
 }
 
 const archetypeCache = new PredicateCache<string, Function>()
+
+export const normalizeQuery = <
+  E extends IEntity,
+  All extends keyof E,
+  Any extends keyof E,
+  None extends keyof E
+>(
+  query: Partial<ArchetypeQuery<E, All, Any, None>>
+) =>
+  ({
+    all: query.all !== undefined ? normalizeComponents<E>(query.all) : [],
+    any: query.any !== undefined ? normalizeComponents<E>(query.any) : [],
+    none: query.none !== undefined ? normalizeComponents<E>(query.none) : []
+  } as ArchetypeQuery<E, All, Any, None>)
 
 export function archetype<
   E extends IEntity,
   All extends keyof E,
   Any extends keyof E,
   None extends keyof E
->(query: ArchetypeQuery<E, All, Any, None>) {
-  /* TODO: Normalize and deduplicate given query */
+>(partialQuery: Partial<ArchetypeQuery<E, All, Any, None>>) {
+  /* Normalize and deduplicate given query */
+  const query = normalizeQuery(partialQuery)
   const key = JSON.stringify(query)
 
   /* Return a predicate that checks if an entity matches the archetype query */
@@ -74,7 +89,7 @@ export function archetype<
     const all = query.all.every((c) => entity[c] !== undefined)
 
     const some =
-      query.some.length === 0 || query.some.some((c) => entity[c] !== undefined)
+      query.any.length === 0 || query.any.some((c) => entity[c] !== undefined)
 
     const none = query.none.every((c) => entity[c] === undefined)
 
