@@ -71,12 +71,32 @@ export const normalizeQuery = <
     none: query.none !== undefined ? normalizeComponents<E>(query.none) : []
   } as ArchetypeQuery<E, All, Any, None>)
 
+export function archetype<E extends IEntity, All extends keyof E>(
+  ...all: All[]
+): Predicate<E, WithComponents<E, All>>
+
 export function archetype<
   E extends IEntity,
   All extends keyof E,
   Any extends keyof E,
   None extends keyof E
->(partialQuery: Partial<ArchetypeQuery<E, All, Any, None>>) {
+>(
+  partialQuery: Partial<ArchetypeQuery<E, All, Any, None>>
+): Predicate<E, WithComponents<E, All>>
+
+export function archetype<
+  E extends IEntity,
+  All extends keyof E,
+  Any extends keyof E,
+  None extends keyof E
+>(
+  partialQuery: Partial<ArchetypeQuery<E, All, Any, None>> | All,
+  ...extra: All[]
+) {
+  if (typeof partialQuery !== "object") {
+    return archetype<E, All, never, never>({ all: [partialQuery, ...extra] })
+  }
+
   /* Normalize and deduplicate given query */
   const query = normalizeQuery(partialQuery)
   const key = JSON.stringify(query)

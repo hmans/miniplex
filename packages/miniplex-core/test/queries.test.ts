@@ -85,6 +85,16 @@ describe(archetype, () => {
     ).toBe(true)
   })
 
+  it("provides a short form that allows you to just pass a number of component names", () => {
+    const entity = {
+      name: "John",
+      age: 123
+    }
+
+    expect(archetype("name", "age")(entity)).toBe(true)
+    expect(archetype("health")(entity)).toBe(false)
+  })
+
   it("returns different predicates for different queries", () => {
     expect(
       archetype({

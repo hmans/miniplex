@@ -1,6 +1,6 @@
 import { Bucket } from "@miniplex/bucket"
-import { has } from "./queries"
-import { IEntity } from "./types"
+import { archetype, ArchetypeQuery, has } from "./queries"
+import { IEntity, WithComponents } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
   constructor(entities: E[] = []) {
@@ -54,8 +54,23 @@ export class World<E extends IEntity> extends Bucket<E> {
     delete entity[component]
   }
 
-  archetype<C extends keyof E>(...components: C[]) {
-    return this.where(has(...components))
+  archetype<All extends keyof E>(
+    ...components: All[]
+  ): Bucket<WithComponents<E, All>>
+
+  archetype<All extends keyof E, Any extends keyof E, None extends keyof E>(
+    query: Partial<ArchetypeQuery<E, All, Any, None>>
+  ): Bucket<WithComponents<E, All>>
+
+  archetype<All extends keyof E, Any extends keyof E, None extends keyof E>(
+    first: ArchetypeQuery<E, All, Any, None> | All,
+    ...extra: All[]
+  ) {
+    if (typeof first !== "object") {
+      return this.where(archetype(first, ...extra))
+    } else {
+      return this.where(archetype(first))
+    }
   }
 
   /* IDs */
