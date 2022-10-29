@@ -16,10 +16,6 @@ export class World<E extends IEntity> extends Bucket<E> {
     })
 
     this.onEntityRemoved.add((entity) => {
-      /* Notify all derived buckets that this entity has been removed */
-      /* TODO: this should be built into the Bucket class */
-      for (const query of this.derivedBuckets.values()) query.remove(entity)
-
       /* Remove the entity from the ID map */
       if (this.entityToId.has(entity)) {
         const id = this.entityToId.get(entity)!

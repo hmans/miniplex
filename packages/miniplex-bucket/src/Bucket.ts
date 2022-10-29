@@ -54,6 +54,12 @@ export class Bucket<E> {
       this.entities.pop()
       this.entityPositions.delete(entity)
 
+      /* Remove the entity from any derived buckets. */
+      for (const query of this.derivedBuckets.values()) {
+        query.remove(entity)
+      }
+
+      /* Emit our own onEntityRemoved event. */
       this.onEntityRemoved.emit(entity)
     }
 

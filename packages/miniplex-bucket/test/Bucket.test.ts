@@ -82,6 +82,16 @@ describe(Bucket, () => {
 
       expect(listener).toHaveBeenCalledWith(entity)
     })
+
+    it("removes the entity from any derived buckets", () => {
+      const bucket = new Bucket()
+      const entity = bucket.add({ id: "1" })
+      const derivedBucket = bucket.where(() => true)
+
+      bucket.remove(entity)
+
+      expect(derivedBucket.entities).not.toContain(entity)
+    })
   })
 
   describe("size", () => {
