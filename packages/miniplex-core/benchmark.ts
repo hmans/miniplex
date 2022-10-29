@@ -69,7 +69,7 @@ profile("add (with archetypes)", () => {
   }
 })
 
-profile("remove", () => {
+profile("remove (random)", () => {
   const world = new World<Entity>()
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -90,7 +90,7 @@ profile("remove", () => {
   }
 })
 
-profile("remove (with archetypes)", () => {
+profile("remove (random, with archetypes)", () => {
   const world = new World<Entity>()
   const withPosition = world.archetype("position")
   const withVelocity = world.archetype("velocity")
