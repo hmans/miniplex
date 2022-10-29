@@ -19,20 +19,20 @@ describe(archetype, () => {
 
     expect(
       archetype({
-        all: ["name", "age"]
+        with: ["name", "age"]
       })(entity)
     ).toBe(true)
 
     expect(
       archetype({
-        all: ["health"]
+        with: ["health"]
       })(entity)
     ).toBe(false)
 
     expect(
       archetype({
-        all: ["name"],
-        none: ["age"]
+        with: ["name"],
+        without: ["age"]
       })(entity)
     ).toBe(false)
 
@@ -56,11 +56,11 @@ describe(archetype, () => {
   it("returns different predicates for different queries", () => {
     expect(
       archetype({
-        all: ["name", "age"]
+        with: ["name", "age"]
       })
     ).not.toBe(
       archetype({
-        all: ["name"]
+        with: ["name"]
       })
     )
   })
@@ -68,12 +68,12 @@ describe(archetype, () => {
   it("returns the same predicate for the same query (with normalization)", () => {
     expect(
       archetype({
-        all: ["name", undefined!, "age"],
+        with: ["name", undefined!, "age"],
         any: ["health", undefined!]
       })
     ).toBe(
       archetype({
-        all: ["age", "name"],
+        with: ["age", "name"],
         any: ["health"]
       })
     )

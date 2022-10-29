@@ -23,51 +23,52 @@ export type ArchetypeQuery<
   Any extends keyof E,
   None extends keyof E
 > = {
-  all: All[]
+  with: All[]
   any: Any[]
-  none: None[]
+  without: None[]
 }
 
 const archetypeCache = new PredicateCache<string, Function>()
 
 const normalizeQuery = <
   E extends IEntity,
-  All extends keyof E,
+  With extends keyof E,
   Any extends keyof E,
-  None extends keyof E
+  Without extends keyof E
 >(
-  query: Partial<ArchetypeQuery<E, All, Any, None>>
+  query: Partial<ArchetypeQuery<E, With, Any, Without>>
 ) =>
   ({
-    all: query.all !== undefined ? normalizeComponents<E>(query.all) : [],
+    with: query.with !== undefined ? normalizeComponents<E>(query.with) : [],
     any: query.any !== undefined ? normalizeComponents<E>(query.any) : [],
-    none: query.none !== undefined ? normalizeComponents<E>(query.none) : []
-  } as ArchetypeQuery<E, All, Any, None>)
+    without:
+      query.without !== undefined ? normalizeComponents<E>(query.without) : []
+  } as ArchetypeQuery<E, With, Any, Without>)
 
-export function archetype<E extends IEntity, All extends keyof E>(
-  ...all: All[]
-): Predicate<E, WithComponents<E, All>>
-
-export function archetype<
-  E extends IEntity,
-  All extends keyof E,
-  Any extends keyof E,
-  None extends keyof E
->(
-  partialQuery: Partial<ArchetypeQuery<E, All, Any, None>>
-): Predicate<E, WithComponents<E, All>>
+export function archetype<E extends IEntity, With extends keyof E>(
+  ...components: With[]
+): Predicate<E, WithComponents<E, With>>
 
 export function archetype<
   E extends IEntity,
-  All extends keyof E,
+  With extends keyof E,
   Any extends keyof E,
-  None extends keyof E
+  Without extends keyof E
 >(
-  partialQuery: Partial<ArchetypeQuery<E, All, Any, None>> | All,
-  ...extra: All[]
+  partialQuery: Partial<ArchetypeQuery<E, With, Any, Without>>
+): Predicate<E, WithComponents<E, With>>
+
+export function archetype<
+  E extends IEntity,
+  With extends keyof E,
+  Any extends keyof E,
+  Without extends keyof E
+>(
+  partialQuery: Partial<ArchetypeQuery<E, With, Any, Without>> | With,
+  ...extra: With[]
 ) {
   if (typeof partialQuery !== "object") {
-    return archetype<E, All, never, never>({ all: [partialQuery, ...extra] })
+    return archetype<E, With, never, never>({ with: [partialQuery, ...extra] })
   }
 
   /* Normalize and deduplicate given query */
@@ -77,15 +78,15 @@ export function archetype<
   return archetypeCache.get(
     JSON.stringify(query),
 
-    function (entity: E): entity is WithComponents<E, All> {
-      const all = query.all.every((c) => entity[c] !== undefined)
+    function (entity: E): entity is WithComponents<E, With> {
+      const all = query.with.every((c) => entity[c] !== undefined)
 
       const some =
         query.any.length === 0 || query.any.some((c) => entity[c] !== undefined)
 
-      const none = query.none.every((c) => entity[c] === undefined)
+      const none = query.without.every((c) => entity[c] === undefined)
 
       return all && some && none
     }
-  ) as Predicate<E, WithComponents<E, All>>
+  ) as Predicate<E, WithComponents<E, With>>
 }

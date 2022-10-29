@@ -54,17 +54,17 @@ export class World<E extends IEntity> extends Bucket<E> {
     delete entity[component]
   }
 
-  archetype<All extends keyof E>(
-    ...components: All[]
-  ): Bucket<WithComponents<E, All>>
+  archetype<With extends keyof E>(
+    ...components: With[]
+  ): Bucket<WithComponents<E, With>>
 
-  archetype<All extends keyof E, Any extends keyof E, None extends keyof E>(
-    query: Partial<ArchetypeQuery<E, All, Any, None>>
-  ): Bucket<WithComponents<E, All>>
+  archetype<With extends keyof E, Any extends keyof E, Without extends keyof E>(
+    query: Partial<ArchetypeQuery<E, With, Any, Without>>
+  ): Bucket<WithComponents<E, With>>
 
-  archetype<All extends keyof E, Any extends keyof E, None extends keyof E>(
-    first: ArchetypeQuery<E, All, Any, None> | All,
-    ...extra: All[]
+  archetype<With extends keyof E, Any extends keyof E, Without extends keyof E>(
+    first: ArchetypeQuery<E, With, Any, Without> | With,
+    ...extra: With[]
   ) {
     return typeof first !== "object"
       ? this.where(archetype(first, ...extra))

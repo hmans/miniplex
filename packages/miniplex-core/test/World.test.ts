@@ -142,7 +142,7 @@ describe(World, () => {
       const john = world.add({ name: "John", age: 123, height: 180 })
       const jane = world.add({ name: "Jane" })
 
-      const withAge = world.where(archetype({ all: ["age"] }))
+      const withAge = world.where(archetype({ with: ["age"] }))
 
       expect(withAge.entities).toEqual([john])
     })
@@ -164,7 +164,7 @@ describe(World, () => {
       const john = world.add({ name: "John", age: 123 })
       const jane = world.add({ name: "Jane" })
 
-      const archetype = world.archetype({ all: ["age"] })
+      const archetype = world.archetype({ with: ["age"] })
 
       expect(archetype.entities).toEqual([john])
     })
