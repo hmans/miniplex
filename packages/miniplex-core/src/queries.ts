@@ -10,14 +10,16 @@ export const normalizeComponents = <E extends IEntity>(
 
 const cache = new PredicateCache<string, Function>()
 
-export const has = <E extends IEntity, C extends keyof E>(...components: C[]) =>
+export const hasAll = <E extends IEntity, C extends keyof E>(
+  ...components: C[]
+) =>
   cache.get(
     JSON.stringify(["has", ...normalizeComponents<E>(components)]),
     (entity: E): entity is WithComponents<E, C> =>
       components.every((c) => entity[c] !== undefined)
   ) as Predicate<E, WithComponents<E, C>>
 
-export const hasAll = has
+export const has = hasAll
 
 export const hasSome = <E extends IEntity>(...components: (keyof E)[]) =>
   cache.get(
