@@ -140,6 +140,7 @@ describe(World, () => {
     it("can use the archetype predicate helper", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123, height: 180 })
+      const jane = world.add({ name: "Jane" })
 
       const withAge = world.where(archetype({ all: ["age"] }))
 
@@ -161,8 +162,19 @@ describe(World, () => {
     it("is a shortcut to a where(archetype()) query", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
+      const jane = world.add({ name: "Jane" })
 
       const archetype = world.archetype({ all: ["age"] })
+
+      expect(archetype.entities).toEqual([john])
+    })
+
+    it("supports the short form, too", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John", age: 123 })
+      const jane = world.add({ name: "Jane" })
+
+      const archetype = world.archetype("age")
 
       expect(archetype.entities).toEqual([john])
     })

@@ -2,9 +2,9 @@ import { Predicate } from "@miniplex/bucket"
 import { IEntity, WithComponents } from "./types"
 import { PredicateCache } from "./util/PredicateCache"
 
-export const normalizeComponents = <E extends IEntity>(
-  components: (keyof E)[]
-) => [...new Set(components.sort().filter((c) => !!c && c !== ""))]
+const normalizeComponents = <E extends IEntity>(components: (keyof E)[]) => [
+  ...new Set(components.sort().filter((c) => !!c && c !== ""))
+]
 
 /* not */
 
