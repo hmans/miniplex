@@ -6,33 +6,6 @@ export const normalizeComponents = <E extends IEntity>(
   components: (keyof E)[]
 ) => [...new Set(components.sort().filter((c) => !!c && c !== ""))]
 
-/* has */
-
-const cache = new PredicateCache<string, Function>()
-
-export const hasAll = <E extends IEntity, C extends keyof E>(
-  ...components: C[]
-) =>
-  cache.get(
-    JSON.stringify(["has", ...normalizeComponents<E>(components)]),
-    (entity: E): entity is WithComponents<E, C> =>
-      components.every((c) => entity[c] !== undefined)
-  ) as Predicate<E, WithComponents<E, C>>
-
-export const has = hasAll
-
-export const hasSome = <E extends IEntity>(...components: (keyof E)[]) =>
-  cache.get(
-    JSON.stringify(["hasSome", ...normalizeComponents<E>(components)]),
-    (entity: E) => components.some((c) => entity[c] !== undefined)
-  ) as Predicate<E, E>
-
-export const hasNone = <E extends IEntity>(...components: (keyof E)[]) =>
-  cache.get(
-    JSON.stringify(["hasNone", ...normalizeComponents<E>(components)]),
-    (entity: E) => components.every((c) => entity[c] === undefined)
-  ) as Predicate<E, E>
-
 /* not */
 
 const notCache = new PredicateCache<Function, Function>()

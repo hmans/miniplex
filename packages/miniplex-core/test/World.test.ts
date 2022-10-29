@@ -1,5 +1,5 @@
 import { Bucket } from "@miniplex/bucket"
-import { archetype, has, World } from "../src"
+import { archetype, World } from "../src"
 import { WithComponents } from "../src/types"
 
 type Entity = {
@@ -120,9 +120,9 @@ describe(World, () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
 
-      const archetype = world.where(has("age"))
+      const bucket = world.where(archetype("age"))
 
-      expect(archetype.has(john)).toBe(true)
+      expect(bucket.has(john)).toBe(true)
     })
 
     it("can be nested, creating a graph of buckets", () => {
@@ -130,8 +130,8 @@ describe(World, () => {
       const john = world.add({ name: "John", age: 123, height: 180 })
       const jane = world.add({ name: "Jane", age: 123 })
 
-      const withAge = world.where(has("age"))
-      const withAgeAndHeight = withAge.where(has("height"))
+      const withAge = world.where(archetype("age"))
+      const withAgeAndHeight = withAge.where(archetype("height"))
 
       expect(withAge.entities).toEqual([john, jane])
       expect(withAgeAndHeight.entities).toEqual([john])
