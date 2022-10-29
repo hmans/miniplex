@@ -66,11 +66,9 @@ export class World<E extends IEntity> extends Bucket<E> {
     first: ArchetypeQuery<E, All, Any, None> | All,
     ...extra: All[]
   ) {
-    if (typeof first !== "object") {
-      return this.where(archetype(first, ...extra))
-    } else {
-      return this.where(archetype(first))
-    }
+    return typeof first !== "object"
+      ? this.where(archetype(first, ...extra))
+      : this.where(archetype(first))
   }
 
   /* IDs */
