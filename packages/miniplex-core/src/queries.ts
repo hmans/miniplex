@@ -20,11 +20,9 @@ export const not = <E extends IEntity, D extends E>(
 export type ArchetypeQuery<
   E extends IEntity,
   All extends keyof E,
-  Any extends keyof E,
   None extends keyof E
 > = {
   with: All[]
-  any: Any[]
   without: None[]
 }
 
@@ -33,17 +31,15 @@ const archetypeCache = new PredicateCache<string, Function>()
 const normalizeQuery = <
   E extends IEntity,
   With extends keyof E,
-  Any extends keyof E,
   Without extends keyof E
 >(
-  query: Partial<ArchetypeQuery<E, With, Any, Without>>
+  query: Partial<ArchetypeQuery<E, With, Without>>
 ) =>
   ({
     with: query.with !== undefined ? normalizeComponents<E>(query.with) : [],
-    any: query.any !== undefined ? normalizeComponents<E>(query.any) : [],
     without:
       query.without !== undefined ? normalizeComponents<E>(query.without) : []
-  } as ArchetypeQuery<E, With, Any, Without>)
+  } as ArchetypeQuery<E, With, Without>)
 
 export function archetype<E extends IEntity, With extends keyof E>(
   ...components: With[]
@@ -52,23 +48,21 @@ export function archetype<E extends IEntity, With extends keyof E>(
 export function archetype<
   E extends IEntity,
   With extends keyof E,
-  Any extends keyof E,
   Without extends keyof E
 >(
-  partialQuery: Partial<ArchetypeQuery<E, With, Any, Without>>
+  partialQuery: Partial<ArchetypeQuery<E, With, Without>>
 ): Predicate<E, WithComponents<E, With>>
 
 export function archetype<
   E extends IEntity,
   With extends keyof E,
-  Any extends keyof E,
   Without extends keyof E
 >(
-  partialQuery: Partial<ArchetypeQuery<E, With, Any, Without>> | With,
+  partialQuery: Partial<ArchetypeQuery<E, With, Without>> | With,
   ...extra: With[]
 ) {
   if (typeof partialQuery !== "object") {
-    return archetype<E, With, never, never>({ with: [partialQuery, ...extra] })
+    return archetype<E, With, never>({ with: [partialQuery, ...extra] })
   }
 
   /* Normalize and deduplicate given query */
@@ -79,14 +73,10 @@ export function archetype<
     JSON.stringify(query),
 
     function (entity: E): entity is WithComponents<E, With> {
-      const all = query.with.every((c) => entity[c] !== undefined)
-
-      const some =
-        query.any.length === 0 || query.any.some((c) => entity[c] !== undefined)
-
-      const none = query.without.every((c) => entity[c] === undefined)
-
-      return all && some && none
+      return (
+        query.with.every((c) => entity[c] !== undefined) &&
+        query.without.every((c) => entity[c] === undefined)
+      )
     }
   ) as Predicate<E, WithComponents<E, With>>
 }

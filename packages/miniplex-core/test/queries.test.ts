@@ -35,12 +35,6 @@ describe(archetype, () => {
         without: ["age"]
       })(entity)
     ).toBe(false)
-
-    expect(
-      archetype({
-        any: ["name", "height"]
-      })(entity)
-    ).toBe(true)
   })
 
   it("provides a short form that allows you to just pass a number of component names", () => {
@@ -69,12 +63,12 @@ describe(archetype, () => {
     expect(
       archetype({
         with: ["name", undefined!, "age"],
-        any: ["health", undefined!]
+        without: ["health", undefined!]
       })
     ).toBe(
       archetype({
         with: ["age", "name"],
-        any: ["health"]
+        without: ["health"]
       })
     )
   })
