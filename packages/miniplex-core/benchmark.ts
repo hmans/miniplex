@@ -149,7 +149,7 @@ profile("clear (with archetypes)", () => {
   }
 })
 
-profile("simulate", () => {
+profile("simulate (iterator)", () => {
   const world = new World<Entity>()
 
   for (let i = 0; i < entityCount; i++)
@@ -172,7 +172,7 @@ profile("simulate", () => {
   }
 })
 
-profile("simulate (with archetypes)", () => {
+profile("simulate (iterator, archetypes)", () => {
   const world = new World<Entity>()
   const withVelocity = world.archetype("velocity")
 
@@ -187,6 +187,29 @@ profile("simulate (with archetypes)", () => {
 
     for (const { position, velocity } of withVelocity) {
       i++
+      position.x += velocity.x
+      position.y += velocity.y
+      position.z += velocity.z
+    }
+
+    return () => i === entityCount
+  }
+})
+
+profile("simulate (entities)", () => {
+  const world = new World<Entity>()
+
+  for (let i = 0; i < entityCount; i++)
+    world.add({
+      position: { x: 0, y: i, z: 0 },
+      velocity: { x: 1, y: 2, z: 3 }
+    })
+
+  return () => {
+    let i = 0
+    for (const { position, velocity } of world.entities) {
+      i++
+      if (!velocity) continue
       position.x += velocity.x
       position.y += velocity.y
       position.z += velocity.z
