@@ -1,6 +1,6 @@
+import { archetype, World } from "@miniplex/core"
 import "@testing-library/jest-dom"
 import { act, render, renderHook, screen } from "@testing-library/react"
-import { archetype, World } from "@miniplex/core"
 import React from "react"
 import createReactAPI from "../src"
 
