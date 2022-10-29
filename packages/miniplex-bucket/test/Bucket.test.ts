@@ -50,6 +50,14 @@ describe(Bucket, () => {
 
       expect(listener).toHaveBeenCalledWith(entity)
     })
+
+    it("adds the entity to any matching derived buckets", () => {
+      const bucket = new Bucket()
+      const derivedBucket = bucket.where(() => true)
+      const entity = bucket.add({ id: 1 })
+
+      expect(derivedBucket.entities).toContain(entity)
+    })
   })
 
   describe("remove", () => {

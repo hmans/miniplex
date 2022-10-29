@@ -6,15 +6,6 @@ export class World<E extends IEntity> extends Bucket<E> {
   constructor() {
     super()
 
-    this.onEntityAdded.add((entity) => {
-      /* TODO: this should be built into the Bucket class */
-      for (const [predicate, bucket] of this.derivedBuckets) {
-        if (predicate(entity)) {
-          bucket.add(entity)
-        }
-      }
-    })
-
     this.onEntityRemoved.add((entity) => {
       /* Remove the entity from the ID map */
       if (this.entityToId.has(entity)) {

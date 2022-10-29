@@ -35,7 +35,16 @@ export class Bucket<E> {
     if (entity && !this.has(entity)) {
       this.entities.push(entity)
       this.entityPositions.set(entity, this.entities.length - 1)
+
+      /* Emit our own onEntityAdded event */
       this.onEntityAdded.emit(entity)
+
+      /* Add the entity to any derived buckets. */
+      for (const [predicate, bucket] of this.derivedBuckets) {
+        if (predicate(entity)) {
+          bucket.add(entity)
+        }
+      }
     }
 
     return entity
