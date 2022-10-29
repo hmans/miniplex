@@ -1,3 +1,4 @@
+import { has } from "miniplex"
 import { between } from "randomish"
 import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle } from "vfx-composer-r3f"
@@ -12,7 +13,7 @@ export const Bullets = () => (
     <planeGeometry args={[0.15, 0.5]} />
     <meshStandardMaterial color={new Color("orange").multiplyScalar(5)} />
 
-    <ECS.Archetype query="isBullet" as={RenderableEntity} />
+    <ECS.Archetype query={has("isBullet")} as={RenderableEntity} />
   </InstancedParticles>
 )
 
