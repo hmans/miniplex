@@ -1,5 +1,5 @@
 import { Bucket } from "@miniplex/bucket"
-import { has, World } from "../src"
+import { archetype, has, World } from "../src"
 import { WithComponents } from "../src/types"
 
 type Entity = {
@@ -135,6 +135,15 @@ describe(World, () => {
 
       expect(withAge.entities).toEqual([john, jane])
       expect(withAgeAndHeight.entities).toEqual([john])
+    })
+
+    it("can use the archetype predicate helper", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John", age: 123, height: 180 })
+
+      const withAge = world.where(archetype({ all: ["age"] }))
+
+      expect(withAge.entities).toEqual([john])
     })
   })
 
