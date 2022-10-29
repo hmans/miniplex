@@ -1,4 +1,4 @@
-import { has, hasNone, hasSome, not } from "../src/queries"
+import { archetype, has, hasNone, hasSome, not } from "../src/queries"
 
 describe(has, () => {
   it("returns true if the entity has all of the specified components", () => {
@@ -49,5 +49,46 @@ describe(not, () => {
 
   it("always returns the same predicate for the given input predicate", () => {
     expect(not(has("name", "age"))).toBe(not(has("name", "age")))
+  })
+})
+
+describe(archetype, () => {
+  it("returns a predicate that checks if an entity belongs to the specified archetype", () => {
+    const entity = {
+      name: "John",
+      age: 123
+    }
+
+    expect(
+      archetype({
+        all: ["name", "age"],
+        some: [],
+        none: []
+      })(entity)
+    ).toBe(true)
+
+    expect(
+      archetype({
+        all: ["health"],
+        some: [],
+        none: []
+      })(entity)
+    ).toBe(false)
+
+    expect(
+      archetype({
+        all: ["name"],
+        some: [],
+        none: ["age"]
+      })(entity)
+    ).toBe(false)
+
+    expect(
+      archetype({
+        all: [],
+        some: ["name", "height"],
+        none: []
+      })(entity)
+    ).toBe(true)
   })
 })
