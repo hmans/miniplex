@@ -12,6 +12,15 @@ const hasAge = (v: any): v is WithComponents<Entity, "age"> =>
   typeof v.age !== "undefined"
 
 describe(World, () => {
+  it("can be instantiated with a list of entities", () => {
+    const world = new World<Entity>([
+      { name: "Alice", age: 25 },
+      { name: "Bob", age: 30 }
+    ])
+
+    expect(world.size).toBe(2)
+  })
+
   describe("addComponent", () => {
     it("adds the component to the entity", () => {
       const world = new World<Entity>()

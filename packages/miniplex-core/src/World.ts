@@ -3,8 +3,8 @@ import { has } from "./queries"
 import { IEntity } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
-  constructor() {
-    super()
+  constructor(entities: E[] = []) {
+    super(entities)
 
     this.onEntityRemoved.add((entity) => {
       /* Remove the entity from the ID map */
