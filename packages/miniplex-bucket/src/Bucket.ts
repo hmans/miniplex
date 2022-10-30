@@ -95,6 +95,21 @@ export class Bucket<E> {
     return entity
   }
 
+  test(entity: E, future = entity) {
+    const has = this.has(entity)
+    const wants = this.predicate(future)
+
+    if (has && !wants) {
+      this.remove(entity)
+    } else if (!has && wants) {
+      this.add(entity)
+    } else if (has && wants) {
+      for (const bucket of this.derivedBuckets.values()) {
+        bucket.test(entity, future)
+      }
+    }
+  }
+
   clear() {
     for (const entity of this) {
       this.remove(entity)
