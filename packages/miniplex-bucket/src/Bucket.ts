@@ -129,4 +129,17 @@ export class Bucket<E> {
 
     return bucket
   }
+
+  /* DIRTY TRACKING */
+
+  private dirty = new Array<E>()
+
+  mark(entity: E) {
+    this.dirty.push(entity)
+  }
+
+  flushMarked() {
+    for (const entity of this.dirty) this.test(entity)
+    this.dirty.length = 0
+  }
 }

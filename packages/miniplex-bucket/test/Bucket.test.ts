@@ -1,3 +1,4 @@
+import { World } from "../../miniplex/src"
 import { Bucket } from "../src"
 
 describe(Bucket, () => {
@@ -151,6 +152,29 @@ describe(Bucket, () => {
       const derived1 = bucket.where(predicate)
       const derived2 = bucket.where(predicate)
       expect(derived1).toBe(derived2)
+    })
+
+    it("creates a bucket that is updated automatically for entities that are explicitly marked as dirty", () => {
+      type Entity = { health: number }
+
+      const bucket = new Bucket<Entity>()
+      const player = bucket.add({ health: 30 })
+      const lowHealth = bucket.where((p) => p.health < 25)
+
+      function applyDamage(entity: Entity, amount = 10) {
+        entity.health -= amount
+        bucket.mark(entity)
+      }
+
+      expect(lowHealth.entities).toEqual([])
+
+      /* Ouch, something hit the player */
+      applyDamage(player)
+
+      /* This would typically be done once per tick, or similar */
+      bucket.flushMarked()
+
+      expect(lowHealth.entities).toEqual([player])
     })
   })
 })
