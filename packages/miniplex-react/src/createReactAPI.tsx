@@ -98,6 +98,10 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     return <Bucket bucket={bucket} {...props} />
   }
 
+  function Entities<D extends E>(props: Parameters<typeof Archetype<D>>[0]) {
+    return <Archetype {...props} />
+  }
+
   const Component = <P extends keyof E>(props: {
     name: P
     value?: E[P]
@@ -151,6 +155,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
 
   return {
     Entity,
+    Entities,
     Bucket,
     Archetype,
     Component,
