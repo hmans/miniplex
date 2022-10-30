@@ -61,7 +61,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
 
   const Entity = memo(RawEntity) as typeof RawEntity
 
-  const EntitiesList = <D extends E>({
+  const EntitiesInList = <D extends E>({
     entities,
     ...props
   }: {
@@ -76,18 +76,20 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     </>
   )
 
-  const RawBucket = <D extends E>({
+  const RawEntitiesInBucket = <D extends E>({
     bucket,
     ...props
   }: {
     bucket: Bucket<D>
     children?: EntityChildren<D>
     as?: FunctionComponent<{ entity: D; children?: ReactNode }>
-  }) => <EntitiesList entities={useEntities(bucket)} {...props} />
+  }) => <EntitiesInList entities={useEntities(bucket)} {...props} />
 
-  const Bucket = memo(RawBucket) as typeof RawBucket
+  const EntitiesInBucket = memo(
+    RawEntitiesInBucket
+  ) as typeof RawEntitiesInBucket
 
-  const Archetype = <D extends E>({
+  const EntitiesInQuery = <D extends E>({
     where,
     ...props
   }: {
@@ -100,33 +102,33 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   }) => {
     const bucket = world.where(where)
 
-    return <Bucket bucket={bucket} {...props} />
+    return <EntitiesInBucket bucket={bucket} {...props} />
   }
 
   function Entities<D extends E>(
-    props: Parameters<typeof EntitiesList<D>>[0]
+    props: Parameters<typeof EntitiesInList<D>>[0]
   ): JSX.Element
 
   function Entities<D extends E>(
-    props: Parameters<typeof Bucket<D>>[0]
+    props: Parameters<typeof EntitiesInBucket<D>>[0]
   ): JSX.Element
 
   function Entities<D extends E>(
-    props: Parameters<typeof Archetype<D>>[0]
+    props: Parameters<typeof EntitiesInQuery<D>>[0]
   ): JSX.Element
 
   function Entities<D extends E>(
     props:
-      | Parameters<typeof Archetype<D>>[0]
-      | Parameters<typeof Bucket<D>>[0]
-      | Parameters<typeof EntitiesList<D>>[0]
+      | Parameters<typeof EntitiesInQuery<D>>[0]
+      | Parameters<typeof EntitiesInBucket<D>>[0]
+      | Parameters<typeof EntitiesInList<D>>[0]
   ): JSX.Element {
     if ("bucket" in props) {
-      return <Bucket {...props} />
+      return <EntitiesInBucket {...props} />
     } else if ("where" in props) {
-      return <Archetype {...props} />
+      return <EntitiesInQuery {...props} />
     } else {
-      return <EntitiesList {...props} />
+      return <EntitiesInList {...props} />
     }
   }
 
