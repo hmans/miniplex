@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber"
 import { archetype } from "miniplex"
 import { ECS } from "../state"
-import { getEntitiesInRadius } from "./spatialHashingSystem"
+import { getEntitiesInRadius } from "./SpatialHashingSystemMoo"
 
 const entities = ECS.world.where(
   archetype("transform", "physics", "neighbors", "spatialHashing")
