@@ -61,7 +61,7 @@ importers:
       add: ^2.0.6
       material-composer: ^0.2.6
       material-composer-r3f: ^0.2.5
-      miniplex: workspace:2.0.0-next.11
+      miniplex: workspace:2.0.0-next.12
       postprocessing: ^6.29.0
       r3f-perf: ^6.5.0
       randomish: ^0.1.6
@@ -109,7 +109,7 @@ importers:
     specifiers:
       '@types/three': ^0.144.0
       fp-ts: ^2.13.0
-      miniplex: workspace:2.0.0-next.11
+      miniplex: workspace:2.0.0-next.12
       randomish: ^0.1.6
       three: ^0.145.0
       typescript: ^4.6.4
@@ -126,7 +126,7 @@ importers:
 
   packages/miniplex:
     specifiers:
-      '@miniplex/core': 2.0.0-next.11
+      '@miniplex/core': 2.0.0-next.12
       '@miniplex/react': 2.0.0-next.11
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -153,7 +153,7 @@ importers:
   packages/miniplex-core:
     specifiers:
       '@hmans/event': ^0.2.0
-      '@miniplex/bucket': workspace:2.0.0-next.11
+      '@miniplex/bucket': workspace:2.0.0-next.12
       '@types/node': ^18.11.0
       ts-node: ^10.9.1
       typescript: ^4.8.4
@@ -169,7 +169,7 @@ importers:
     specifiers:
       '@hmans/use-const': ^0.0.1
       '@hmans/use-rerender': ^0.0.2
-      '@miniplex/core': 2.0.0-next.11
+      '@miniplex/core': 2.0.0-next.12
       react: ^18.2.0
       react-dom: ^18.2.0
       react-merge-refs: ^1.1.0

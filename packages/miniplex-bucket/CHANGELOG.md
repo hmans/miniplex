@@ -1,5 +1,11 @@
 # miniplex
 
+## 2.0.0-next.12
+
+### Patch Changes
+
+- 252cc0f: Extracted Bucket into its own micropackage, yay!
+
 ## 2.0.0-next.11
 
 ### Patch Changes

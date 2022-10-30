@@ -9,7 +9,8 @@
     "@miniplex/react": "2.0.0-next.3",
     "@hmans/queue": "0.0.1",
     "@hmans/id": "0.0.1",
-    "vanilla-demo": "0.0.0"
+    "vanilla-demo": "0.0.0",
+    "@miniplex/bucket": "2.0.0-next.11"
   },
   "changesets": [
     "afraid-bats-matter",
@@ -17,6 +18,7 @@
     "bright-ghosts-nail",
     "eleven-pianos-cry",
     "eleven-socks-design",
+    "empty-cars-brake",
     "forty-kings-shop",
     "four-singers-sip",
     "funny-hounds-love",
@@ -28,6 +30,7 @@
     "healthy-dragons-think",
     "heavy-swans-argue",
     "itchy-lobsters-protect",
+    "lazy-ravens-doubt",
     "lazy-ties-raise",
     "lovely-terms-occur",
     "modern-gifts-taste",
