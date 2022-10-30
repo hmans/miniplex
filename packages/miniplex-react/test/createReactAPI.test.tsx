@@ -243,8 +243,8 @@ describe("<Entities bucket>", () => {
   })
 })
 
-describe("<Archetype>", () => {
-  it("renders the entities within the given archetype bucket", () => {
+describe("<Entities where>", () => {
+  it("renders the entities returned by the specified query", () => {
     const world = new World<{ name: string }>()
     const { Entities } = createReactAPI(world)
 
