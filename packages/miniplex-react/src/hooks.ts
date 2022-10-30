@@ -19,3 +19,23 @@ export function useEntities<E>(bucket: Bucket<E>): Bucket<E> {
 
   return bucket
 }
+
+export function useOnEntityAdded<E>(
+  bucket: Bucket<E>,
+  callback: (entity: E) => void
+) {
+  useIsomorphicLayoutEffect(
+    () => bucket.onEntityAdded.add(callback),
+    [bucket, callback]
+  )
+}
+
+export function useOnEntityRemoved<E>(
+  bucket: Bucket<E>,
+  callback: (entity: E) => void
+) {
+  useIsomorphicLayoutEffect(
+    () => bucket.onEntityRemoved.add(callback),
+    [bucket, callback]
+  )
+}
