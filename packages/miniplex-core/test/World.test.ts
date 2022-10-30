@@ -158,28 +158,6 @@ describe(World, () => {
     })
   })
 
-  describe("archetype", () => {
-    it("is a shortcut to a where(archetype()) query", () => {
-      const world = new World<Entity>()
-      const john = world.add({ name: "John", age: 123 })
-      const jane = world.add({ name: "Jane" })
-
-      const archetype = world.archetype({ with: ["age"] })
-
-      expect(archetype.entities).toEqual([john])
-    })
-
-    it("supports the short form, too", () => {
-      const world = new World<Entity>()
-      const john = world.add({ name: "John", age: 123 })
-      const jane = world.add({ name: "Jane" })
-
-      const archetype = world.archetype("age")
-
-      expect(archetype.entities).toEqual([john])
-    })
-  })
-
   describe("id", () => {
     it("returns the id of the entity", () => {
       const world = new World<Entity>()
