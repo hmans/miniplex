@@ -46,7 +46,7 @@ export class World<E extends IEntity> extends Bucket<E> {
   }
 
   archetype<With extends keyof E, Without extends keyof E>(
-    query: ArchetypeQuery<E, With, Without>
+    query: Partial<ArchetypeQuery<E, With, Without>>
   ): Bucket<WithComponents<E, With>>
 
   archetype<With extends keyof E>(
@@ -54,7 +54,7 @@ export class World<E extends IEntity> extends Bucket<E> {
   ): Bucket<WithComponents<E, With>>
 
   archetype<With extends keyof E>(
-    first: ArchetypeQuery<E, With, never> | With,
+    first: Partial<ArchetypeQuery<E, With, never>> | With,
     ...rest: With[]
   ): Bucket<WithComponents<E, With>> {
     return typeof first !== "object"
