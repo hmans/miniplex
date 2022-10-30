@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { archetype, Bucket, Predicate, WithComponents } from "miniplex"
+import { archetype, Predicate, WithComponents } from "miniplex"
 import { Vector3 } from "three"
 import { spawnBullet } from "../entities/Bullets"
 import { ECS, Entity } from "../state"
@@ -31,6 +31,7 @@ export const PlayerSystem = () => {
       fire: keyboard.getKey("Space")
     }
 
+    /* Forward thrust */
     if (input.thrust) {
       tmpVec3
         .set(0, input.thrust * 20, 0)
@@ -40,11 +41,13 @@ export const PlayerSystem = () => {
       player.physics.sleeping = false
     }
 
+    /* Rotation */
     if (input.rotate) {
       player.physics.angularVelocity.z -= input.rotate * 10 * dt
       player.physics.sleeping = false
     }
 
+    /* Firing */
     const now = performance.now()
     if (input.fire && now > lastFireTime + 65) {
       lastFireTime = now
