@@ -24,7 +24,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   const useCurrentEntity = () => useContext(EntityContext)
 
   const useEntities = <D extends E>(predicate: Predicate<E, D>) =>
-    useEntitiesGlobal(world, predicate)
+    useEntitiesGlobal(world.where(predicate))
 
   const RawEntity = <D extends E>({
     children: givenChildren,
