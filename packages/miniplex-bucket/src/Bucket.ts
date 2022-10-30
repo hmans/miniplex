@@ -5,6 +5,7 @@ export type Predicate<E, D extends E> =
   | ((entity: E) => boolean)
 
 export class Bucket<E> {
+  /* Custom iterator that iterates over all entities in reverse order. */
   [Symbol.iterator]() {
     let index = this.entities.length
 
@@ -18,10 +19,19 @@ export class Bucket<E> {
 
   constructor(public entities: E[] = []) {}
 
+  /**
+   * Fired when an entity has been added to the bucket.
+   */
   onEntityAdded = new Event<E>()
+
+  /**
+   * Fired when an entity is about to be removed from the bucket.
+   */
   onEntityRemoved = new Event<E>()
 
   private entityPositions = new Map<E, number>()
+
+  protected derivedBuckets = new Map<Predicate<E, any>, Bucket<any>>()
 
   get size() {
     return this.entities.length
@@ -52,24 +62,27 @@ export class Bucket<E> {
 
   remove(entity: E) {
     if (this.has(entity)) {
-      const index = this.entityPositions.get(entity)!
+      /* Emit our own onEntityRemoved event. */
+      this.onEntityRemoved.emit(entity)
 
+      /* Get the entity's current position. */
+      const index = this.entityPositions.get(entity)!
+      this.entityPositions.delete(entity)
+
+      /* Perform shuffle-pop if there is more than one entity. */
       const other = this.entities[this.entities.length - 1]
       if (other !== entity) {
         this.entities[index] = other
         this.entityPositions.set(other, index)
       }
 
+      /* Remove the entity from the entities array. */
       this.entities.pop()
-      this.entityPositions.delete(entity)
 
       /* Remove the entity from any derived buckets. */
       for (const query of this.derivedBuckets.values()) {
         query.remove(entity)
       }
-
-      /* Emit our own onEntityRemoved event. */
-      this.onEntityRemoved.emit(entity)
     }
 
     return entity
@@ -81,16 +94,17 @@ export class Bucket<E> {
     }
   }
 
-  derivedBuckets = new Map<Predicate<E, any>, Bucket<any>>()
-
   where<D extends E>(predicate: Predicate<E, D>): Bucket<D> {
+    /* If we already have a bucket for the given predicate, return it. */
     if (this.derivedBuckets.has(predicate)) {
       return this.derivedBuckets.get(predicate)!
     }
 
+    /* Otherwise, create a new bucket. */
     const bucket = new Bucket<D>()
     this.derivedBuckets.set(predicate, bucket)
 
+    /* Add all entities that match the predicate to the new bucket. */
     for (const entity of this.entities) {
       if (predicate(entity)) {
         bucket.add(entity)
