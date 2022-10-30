@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0-next.13
+
+### Patch Changes
+
+- 15d7c38: `<ECS.Entities bucket/entities/where>`
+
 ## 2.0.0-next.11
 
 ### Patch Changes
