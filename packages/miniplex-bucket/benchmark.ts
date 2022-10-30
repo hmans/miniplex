@@ -1,4 +1,4 @@
-import { archetype, World } from "./src"
+import { World } from "./src"
 
 const entityCount = 1_000_000
 
@@ -18,7 +18,7 @@ const profile = (name: string, setup: () => () => () => boolean) => {
   const ops = entityCount / (after - before)
 
   console.log(
-    `${name.padStart(40)}  ${duration.toFixed(2).padStart(8)}ms ${ops
+    `${name.padStart(30)}  ${duration.toFixed(2).padStart(8)}ms ${ops
       .toFixed(1)
       .padStart(10)} ops/ms`
   )
@@ -54,8 +54,8 @@ profile("add", () => {
 
 profile("add (with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.where(archetype("position"))
-  const withVelocity = world.where(archetype("velocity"))
+  const withPosition = world.archetype("position")
+  const withVelocity = world.archetype("velocity")
 
   return () => {
     for (let i = 0; i < entityCount; i++) {
@@ -69,7 +69,7 @@ profile("add (with archetypes)", () => {
   }
 })
 
-profile("remove (random)", () => {
+profile("remove", () => {
   const world = new World<Entity>()
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -78,11 +78,7 @@ profile("remove (random)", () => {
     })
 
   return () => {
-    while (world.size > 0) {
-      /* Get a random entity... */
-      const entity = world.entities[Math.floor(Math.random() * world.size)]
-
-      /* ...and delete it */
+    for (const entity of world) {
       world.remove(entity)
     }
 
@@ -90,10 +86,10 @@ profile("remove (random)", () => {
   }
 })
 
-profile("remove (random, with archetypes)", () => {
+profile("remove (with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.where(archetype("position"))
-  const withVelocity = world.where(archetype("velocity"))
+  const withPosition = world.archetype("position")
+  const withVelocity = world.archetype("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -102,11 +98,7 @@ profile("remove (random, with archetypes)", () => {
     })
 
   return () => {
-    while (world.size > 0) {
-      /* Get a random entity... */
-      const entity = world.entities[Math.floor(Math.random() * world.size)]
-
-      /* ...and delete it */
+    for (const entity of world) {
       world.remove(entity)
     }
 
@@ -132,8 +124,8 @@ profile("clear", () => {
 
 profile("clear (with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.where(archetype("position"))
-  const withVelocity = world.where(archetype("velocity"))
+  const withPosition = world.archetype("position")
+  const withVelocity = world.archetype("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -149,7 +141,7 @@ profile("clear (with archetypes)", () => {
   }
 })
 
-profile("simulate (iterator)", () => {
+profile("simulate", () => {
   const world = new World<Entity>()
 
   for (let i = 0; i < entityCount; i++)
@@ -172,9 +164,9 @@ profile("simulate (iterator)", () => {
   }
 })
 
-profile("simulate (iterator, archetypes)", () => {
+profile("simulate (with archetypes)", () => {
   const world = new World<Entity>()
-  const withVelocity = world.where(archetype("velocity"))
+  const withVelocity = world.archetype("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -187,29 +179,6 @@ profile("simulate (iterator, archetypes)", () => {
 
     for (const { position, velocity } of withVelocity) {
       i++
-      position.x += velocity.x
-      position.y += velocity.y
-      position.z += velocity.z
-    }
-
-    return () => i === entityCount
-  }
-})
-
-profile("simulate (array)", () => {
-  const world = new World<Entity>()
-
-  for (let i = 0; i < entityCount; i++)
-    world.add({
-      position: { x: 0, y: i, z: 0 },
-      velocity: { x: 1, y: 2, z: 3 }
-    })
-
-  return () => {
-    let i = 0
-    for (const { position, velocity } of world.entities) {
-      i++
-      if (!velocity) continue
       position.x += velocity.x
       position.y += velocity.y
       position.z += velocity.z

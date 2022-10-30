@@ -1,5 +1,5 @@
 import { Composable, Modules } from "material-composer-r3f"
-import { Archetype, WithComponents } from "miniplex"
+import { archetype, Bucket, WithComponents } from "miniplex"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { $, Input, InstanceID, Lerp } from "shader-composer"
@@ -47,10 +47,10 @@ export const Asteroids = () => {
       </Composable.MeshStandardMaterial>
 
       {segmentedAsteroids.entities.map((segment, i) => (
-        <ECS.Bucket key={i} bucket={segment} as={RenderableEntity} />
+        <ECS.Entities key={i} bucket={segment} as={RenderableEntity} />
       ))}
 
-      {/* <ECS.Bucket bucket={asteroids} as={RenderableEntity} /> */}
+      {/* <ECS.Entities bucket={asteroids} as={RenderableEntity} /> */}
     </InstancedParticles>
   )
 }
@@ -65,7 +65,7 @@ export type Asteroid = WithComponents<
   | "render"
 >
 
-const asteroids = ECS.world.archetype("isAsteroid") as Archetype<Asteroid>
+const asteroids = ECS.world.where(archetype("isAsteroid")) as Bucket<Asteroid>
 
 const tmpVec3 = new Vector3()
 

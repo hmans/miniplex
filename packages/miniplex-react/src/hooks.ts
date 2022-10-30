@@ -1,8 +1,8 @@
 import { useRerender } from "@hmans/use-rerender"
-import { Bucket, IEntity, World } from "@miniplex/core"
+import { Bucket, Predicate } from "@miniplex/core"
 import useIsomorphicLayoutEffect from "./isomorphicLayoutEffect"
 
-export const useEntities = <E extends IEntity>(bucket: Bucket<E>) => {
+export function useEntities<E>(bucket: Bucket<E>): Bucket<E> {
   const rerender = useRerender()
 
   useIsomorphicLayoutEffect(() => {
@@ -17,10 +17,5 @@ export const useEntities = <E extends IEntity>(bucket: Bucket<E>) => {
 
   useIsomorphicLayoutEffect(rerender, [])
 
-  return bucket.entities
+  return bucket
 }
-
-export const useArchetype = <E extends IEntity, P extends keyof E>(
-  world: World<E>,
-  ...properties: P[]
-) => useEntities(world.archetype(...properties))

@@ -1,63 +1,75 @@
-import {
-  normalizeComponents,
-  normalizeQuery,
-  serializeQuery
-} from "../src/queries"
+import { archetype, not } from "../src/queries"
 
-describe("normalizeComponents", () => {
-  it("sorts the given list of components alphabetically", () => {
-    expect(normalizeComponents(["b", "a"])).toEqual(["a", "b"])
+describe(not, () => {
+  it("negates the predicte", () => {
+    expect(not(archetype("name", "age"))({ name: "John" } as any)).toBe(true)
   })
 
-  it("removes duplicates", () => {
-    expect(normalizeComponents(["a", "a"])).toEqual(["a"])
-  })
-
-  it("removes empty strings", () => {
-    expect(normalizeComponents(["a", ""])).toEqual(["a"])
-  })
-
-  it("removes falsy values", () => {
-    expect(normalizeComponents(["a", undefined!])).toEqual(["a"])
+  it("always returns the same predicate for the given input predicate", () => {
+    expect(not(archetype("name", "age"))).toBe(not(archetype("name", "age")))
   })
 })
 
-describe("normalizeQuery", () => {
-  it("normalizes the 'all' components", () => {
-    expect(normalizeQuery({ all: ["b", "a"] })).toEqual({ all: ["a", "b"] })
-  })
-
-  it("normalizes the 'any' components", () => {
-    expect(normalizeQuery({ any: ["b", "a"] })).toEqual({ any: ["a", "b"] })
-  })
-
-  it("normalizes the 'none' components", () => {
-    expect(normalizeQuery({ none: ["b", "a"] })).toEqual({ none: ["a", "b"] })
-  })
-
-  it("does everything at once, too!", () => {
-    expect(
-      normalizeQuery({
-        all: ["b", undefined!, "a"],
-        any: ["d", "c", "c"],
-        none: ["f", "e", null!]
-      })
-    ).toEqual({
-      all: ["a", "b"],
-      any: ["c", "d"],
-      none: ["e", "f"]
-    })
-  })
-})
-
-describe("serializeQuery", () => {
-  it("serializes the query as JSON", () => {
-    const query = {
-      all: ["a", "b"],
-      any: ["c", "d"],
-      none: ["e", "f"]
+describe(archetype, () => {
+  it("returns a predicate that checks if an entity belongs to the specified archetype", () => {
+    const entity = {
+      name: "John",
+      age: 123
     }
 
-    expect(serializeQuery(query)).toEqual(JSON.stringify(query))
+    expect(
+      archetype({
+        with: ["name", "age"]
+      })(entity)
+    ).toBe(true)
+
+    expect(
+      archetype({
+        with: ["health"]
+      })(entity)
+    ).toBe(false)
+
+    expect(
+      archetype({
+        with: ["name"],
+        without: ["age"]
+      })(entity)
+    ).toBe(false)
+  })
+
+  it("provides a short form that allows you to just pass a number of component names", () => {
+    const entity = {
+      name: "John",
+      age: 123
+    }
+
+    expect(archetype("name", "age")(entity)).toBe(true)
+    expect(archetype("health")(entity)).toBe(false)
+  })
+
+  it("returns different predicates for different queries", () => {
+    expect(
+      archetype({
+        with: ["name", "age"]
+      })
+    ).not.toBe(
+      archetype({
+        with: ["name"]
+      })
+    )
+  })
+
+  it("returns the same predicate for the same query (with normalization)", () => {
+    expect(
+      archetype({
+        with: ["name", undefined!, "age"],
+        without: ["health", undefined!]
+      })
+    ).toBe(
+      archetype({
+        with: ["age", "name"],
+        without: ["health"]
+      })
+    )
   })
 })
