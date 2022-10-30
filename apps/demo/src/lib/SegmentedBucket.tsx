@@ -6,7 +6,11 @@ export class SegmentedBucket<E> extends Bucket<Bucket<E>> {
   private counter = 0
   private current = 0
 
-  constructor(public source: Bucket<E>, public segments = 30) {
+  constructor(
+    public source: Bucket<E>,
+    public segments = 30,
+    public limit = 100
+  ) {
     super()
 
     /* Create segments */
@@ -21,7 +25,7 @@ export class SegmentedBucket<E> extends Bucket<Bucket<E>> {
       this.entityToSegment.set(entity, segment)
       this.counter++
 
-      if (this.counter >= 100) {
+      if (this.counter >= this.limit) {
         this.counter = 0
         this.current = (this.current + 1) % this.segments
       }
