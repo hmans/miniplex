@@ -176,6 +176,23 @@ describe(World, () => {
     })
   })
 
+  describe("archetype", () => {
+    it("is shorthand for .where(archetype(...components))", () => {
+      const world = new World<Entity>()
+      const bucket1 = world.where(archetype("name", "age"))
+      const bucket2 = world.archetype("name", "age")
+      expect(bucket1).toBe(bucket2)
+    })
+
+    it("is shorthand for .where(archetype(query))", () => {
+      const world = new World<Entity>()
+      const query = { with: ["name", "age"] }
+      const bucket1 = world.where(archetype(query))
+      const bucket2 = world.archetype(query)
+      expect(bucket1).toBe(bucket2)
+    })
+  })
+
   describe("id", () => {
     it("returns the id of the entity", () => {
       const world = new World<Entity>()

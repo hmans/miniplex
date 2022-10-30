@@ -1,5 +1,6 @@
 import { Bucket } from "@miniplex/bucket"
-import { IEntity } from "./types"
+import { archetype, ArchetypeQuery } from "./queries"
+import { IEntity, WithComponents } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
   constructor(entities: E[] = []) {
@@ -42,6 +43,23 @@ export class World<E extends IEntity> extends Bucket<E> {
 
     /* Remove the component. */
     delete entity[component]
+  }
+
+  archetype<With extends keyof E, Without extends keyof E>(
+    query: ArchetypeQuery<E, With, Without>
+  ): Bucket<WithComponents<E, With>>
+
+  archetype<With extends keyof E>(
+    ...components: With[]
+  ): Bucket<WithComponents<E, With>>
+
+  archetype<With extends keyof E>(
+    first: ArchetypeQuery<E, With, never> | With,
+    ...rest: With[]
+  ): Bucket<WithComponents<E, With>> {
+    return typeof first !== "object"
+      ? this.where(archetype(first, ...rest))
+      : this.where(archetype(first))
   }
 
   /* IDs */
