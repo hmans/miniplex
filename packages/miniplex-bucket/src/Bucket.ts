@@ -6,7 +6,7 @@ export type Predicate<E, D extends E> =
 
 export class Bucket<E> extends SimpleBucket<E> {
   constructor(
-    public source: Bucket<any> | E[] = [],
+    source: Bucket<any> | E[] = [],
     public predicate: Predicate<any, E> = () => true
   ) {
     super()
@@ -15,6 +15,7 @@ export class Bucket<E> extends SimpleBucket<E> {
     if (source instanceof Bucket) {
       source.onEntityAdded.add(this.add)
       source.onEntityRemoved.add(this.remove)
+      this.source = source
     }
 
     /* Add all entities contained in the source */
@@ -22,6 +23,8 @@ export class Bucket<E> extends SimpleBucket<E> {
       this.add(entity)
     }
   }
+
+  source?: Bucket<any>
 
   private predicateBuckets = new Map<Predicate<E, any>, Bucket<any>>()
 
