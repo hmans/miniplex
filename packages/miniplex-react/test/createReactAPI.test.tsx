@@ -185,9 +185,7 @@ describe("<Entities bucket>", () => {
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })
 
-    render(
-      <Entities bucket={world}>{(entity) => <p>{entity.name}</p>}</Entities>
-    )
+    render(<Entities in={world}>{(entity) => <p>{entity.name}</p>}</Entities>)
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
@@ -200,9 +198,7 @@ describe("<Entities bucket>", () => {
     const alice = world.add({ name: "Alice" })
     world.add({ name: "Bob" })
 
-    render(
-      <Entities bucket={world}>{(entity) => <p>{entity.name}</p>}</Entities>
-    )
+    render(<Entities in={world}>{(entity) => <p>{entity.name}</p>}</Entities>)
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
@@ -235,7 +231,7 @@ describe("<Entities bucket>", () => {
 
       const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
 
-      render(<Entities as={User} bucket={world} />)
+      render(<Entities as={User} in={world} />)
 
       expect(screen.getByText("Alice")).toBeInTheDocument()
       expect(screen.getByText("Bob")).toBeInTheDocument()
@@ -252,7 +248,7 @@ describe("<Entities where>", () => {
     world.add({ name: "Bob" })
 
     render(
-      <Entities where={archetype("name")}>
+      <Entities in={archetype("name")}>
         {(entity) => <p>{entity.name}</p>}
       </Entities>
     )
@@ -269,7 +265,7 @@ describe("<Entities where>", () => {
     world.add({ name: "Bob" })
 
     render(
-      <Entities where={archetype("name")}>
+      <Entities in={archetype("name")}>
         {(entity) => <p>{entity.name}</p>}
       </Entities>
     )
@@ -297,7 +293,7 @@ describe("<Entities where>", () => {
 
       const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
 
-      render(<Entities as={User} where={archetype("name")} />)
+      render(<Entities as={User} in={archetype("name")} />)
 
       expect(screen.getByText("Alice")).toBeInTheDocument()
       expect(screen.getByText("Bob")).toBeInTheDocument()
@@ -313,7 +309,7 @@ describe("<Entities where>", () => {
     world.add({ name: "Bob", age: 100 })
 
     render(
-      <Entities where={archetype("name")}>
+      <Entities in={archetype("name")}>
         {(entity) => <p>{entity.name}</p>}
       </Entities>
     )

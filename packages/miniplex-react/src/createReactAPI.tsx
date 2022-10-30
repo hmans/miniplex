@@ -106,30 +106,23 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     }>
   }) => <EntitiesInBucket bucket={useEntities(where)} {...props} />
 
-  function Entities<D extends E>(
-    props: Parameters<typeof EntitiesInList<D>>[0]
-  ): JSX.Element
-
-  function Entities<D extends E>(
-    props: Parameters<typeof EntitiesInBucket<D>>[0]
-  ): JSX.Element
-
-  function Entities<D extends E>(
-    props: Parameters<typeof EntitiesInQuery<D>>[0]
-  ): JSX.Element
-
-  function Entities<D extends E>(
-    props:
-      | Parameters<typeof EntitiesInQuery<D>>[0]
-      | Parameters<typeof EntitiesInBucket<D>>[0]
-      | Parameters<typeof EntitiesInList<D>>[0]
-  ): JSX.Element {
-    if ("bucket" in props) {
-      return <EntitiesInBucket {...props} />
-    } else if ("where" in props) {
-      return <EntitiesInQuery {...props} />
+  function Entities<D extends E, C extends keyof E>({
+    in: source,
+    ...props
+  }: {
+    in: Predicate<E, D> | Bucket<D> | D[]
+    children?: EntityChildren<D>
+    as?: FunctionComponent<{
+      entity: D
+      children?: ReactNode
+    }>
+  }): JSX.Element {
+    if (source instanceof Bucket) {
+      return <EntitiesInBucket bucket={source} {...props} />
+    } else if (typeof source === "function") {
+      return <EntitiesInQuery where={source} {...props} />
     } else {
-      return <EntitiesInList {...props} />
+      return <EntitiesInList entities={source} {...props} />
     }
   }
 

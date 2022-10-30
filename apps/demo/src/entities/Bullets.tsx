@@ -13,7 +13,7 @@ export const Bullets = () => (
     <planeGeometry args={[0.15, 0.5]} />
     <meshStandardMaterial color={new Color("orange").multiplyScalar(5)} />
 
-    <ECS.Entities where={archetype("isBullet")} as={RenderableEntity} />
+    <ECS.Entities in={archetype("isBullet")} as={RenderableEntity} />
   </InstancedParticles>
 )
 
