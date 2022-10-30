@@ -177,43 +177,6 @@ describe("<Property>", () => {
   })
 })
 
-describe("<Entities>", () => {
-  it("renders a list of entities", () => {
-    const world = new World<{ name: string }>()
-    const { Entities } = createReactAPI(world)
-
-    world.add({ name: "Alice" })
-    world.add({ name: "Bob" })
-
-    render(
-      <Entities entities={world.entities}>
-        {(entity) => <p>{entity.name}</p>}
-      </Entities>
-    )
-
-    expect(screen.getByText("Alice")).toBeInTheDocument()
-    expect(screen.getByText("Bob")).toBeInTheDocument()
-  })
-
-  describe("given an `as` prop", () => {
-    it("renders the entities using the given component, passing the entity to it", () => {
-      type Entity = { name: string }
-      const world = new World<Entity>()
-      const { Entities } = createReactAPI(world)
-
-      world.add({ name: "Alice" })
-      world.add({ name: "Bob" })
-
-      const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
-
-      render(<Entities as={User} entities={world.entities} />)
-
-      expect(screen.getByText("Alice")).toBeInTheDocument()
-      expect(screen.getByText("Bob")).toBeInTheDocument()
-    })
-  })
-})
-
 describe("<Bucket>", () => {
   it("renders the entities within the given bucket", () => {
     const world = new World<{ name: string }>()

@@ -61,21 +61,6 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
 
   const Entity = memo(RawEntity) as typeof RawEntity
 
-  const Entities = <D extends E>({
-    entities,
-    ...props
-  }: {
-    entities: D[]
-    children?: EntityChildren<D>
-    as?: FunctionComponent<{ entity: D; children?: ReactNode }>
-  }) => (
-    <>
-      {entities.map((entity) => (
-        <Entity key={world.id(entity)} entity={entity} {...props} />
-      ))}
-    </>
-  )
-
   const RawBucket = <D extends E>({
     bucket,
     ...props
@@ -85,7 +70,14 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     as?: FunctionComponent<{ entity: D; children?: ReactNode }>
   }) => {
     const entities = useEntities(bucket)
-    return <Entities entities={entities} {...props} />
+
+    return (
+      <>
+        {entities.map((entity) => (
+          <Entity key={world.id(entity)} entity={entity} {...props} />
+        ))}
+      </>
+    )
   }
 
   const Bucket = memo(RawBucket) as typeof RawBucket
@@ -159,7 +151,6 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
 
   return {
     Entity,
-    Entities,
     Bucket,
     Archetype,
     Component,
