@@ -18,7 +18,7 @@ const profile = (name: string, setup: () => () => () => boolean) => {
   const ops = entityCount / (after - before)
 
   console.log(
-    `${name.padStart(30)}  ${duration.toFixed(2).padStart(8)}ms ${ops
+    `${name.padStart(40)}  ${duration.toFixed(2).padStart(8)}ms ${ops
       .toFixed(1)
       .padStart(10)} ops/ms`
   )
@@ -196,7 +196,7 @@ profile("simulate (iterator, archetypes)", () => {
   }
 })
 
-profile("simulate (entities)", () => {
+profile("simulate (array)", () => {
   const world = new World<Entity>()
 
   for (let i = 0; i < entityCount; i++)
