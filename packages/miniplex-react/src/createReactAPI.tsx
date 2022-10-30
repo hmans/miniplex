@@ -1,4 +1,3 @@
-import { useConst } from "@hmans/use-const"
 import { Bucket, IEntity, Predicate, World } from "@miniplex/core"
 import React, {
   createContext,
@@ -38,13 +37,11 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
 
   const RawEntity = <D extends E>({
     children: givenChildren,
-    entity: givenEntity = {} as D,
+    entity = {} as D,
     as: As
   }: CommonProps<D> & {
     entity?: D
   }) => {
-    const entity = useConst(() => givenEntity)
-
     /* Add the entity to the bucket represented by this component if it isn't already part of it. */
     useIsomorphicLayoutEffect(() => {
       if (world.has(entity)) return
