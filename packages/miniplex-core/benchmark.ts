@@ -196,6 +196,63 @@ profile("simulate (iterator, archetypes)", () => {
   }
 })
 
+profile("simulate (mutate & mark)", () => {
+  const world = new World<Entity>()
+  const withVelocity = world.where(archetype("velocity"))
+
+  for (let i = 0; i < entityCount; i++)
+    world.add({
+      position: { x: 0, y: i, z: 0 },
+      velocity: { x: 1, y: 2, z: 3 }
+    })
+
+  return () => {
+    let i = 0
+
+    for (const entity of withVelocity) {
+      i++
+
+      const { position, velocity } = entity
+      position.x += velocity.x
+      position.y += velocity.y
+      position.z += velocity.z
+      world.mark(entity)
+    }
+
+    world.flushMarked()
+
+    return () => i === entityCount
+  }
+})
+
+profile("simulate (update & function)", () => {
+  const world = new World<Entity>()
+  const withVelocity = world.where(archetype("velocity"))
+
+  for (let i = 0; i < entityCount; i++)
+    world.add({
+      position: { x: 0, y: i, z: 0 },
+      velocity: { x: 1, y: 2, z: 3 }
+    })
+
+  return () => {
+    let i = 0
+
+    for (const entity of withVelocity) {
+      i++
+      world.update(entity, ({ position, velocity }) => {
+        position.x += velocity.x
+        position.y += velocity.y
+        position.z += velocity.z
+      })
+    }
+
+    world.flushMarked()
+
+    return () => i === entityCount
+  }
+})
+
 profile("simulate (array)", () => {
   const world = new World<Entity>()
 

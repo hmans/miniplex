@@ -142,4 +142,9 @@ export class Bucket<E> {
     for (const entity of this.dirty) this.test(entity)
     this.dirty.length = 0
   }
+
+  update<D extends E>(entity: D, fun: (entity: D) => void) {
+    fun(entity)
+    this.mark(entity)
+  }
 }
