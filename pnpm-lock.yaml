@@ -61,7 +61,7 @@ importers:
       add: ^2.0.6
       material-composer: ^0.2.6
       material-composer-r3f: ^0.2.5
-      miniplex: workspace:2.0.0-next.13
+      miniplex: workspace:2.0.0-next.14
       postprocessing: ^6.29.0
       r3f-perf: ^6.5.0
       randomish: ^0.1.6
@@ -109,7 +109,7 @@ importers:
     specifiers:
       '@types/three': ^0.144.0
       fp-ts: ^2.13.0
-      miniplex: workspace:2.0.0-next.13
+      miniplex: workspace:2.0.0-next.14
       randomish: ^0.1.6
       three: ^0.145.0
       typescript: ^4.6.4
@@ -127,7 +127,7 @@ importers:
   packages/miniplex:
     specifiers:
       '@miniplex/core': 2.0.0-next.12
-      '@miniplex/react': 2.0.0-next.13
+      '@miniplex/react': 2.0.0-next.14
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:

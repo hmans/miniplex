@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "fp-ts": "^2.13.0",
-    "miniplex": "workspace:2.0.0-next.13",
+    "miniplex": "workspace:2.0.0-next.14",
     "randomish": "^0.1.6",
     "three": "^0.145.0"
   }
