@@ -95,6 +95,7 @@ export class Bucket<E> {
     return entity
   }
 
+  /* TODO: is `test` really the best name? */
   test(entity: E, future = entity) {
     const has = this.has(entity)
     const wants = this.predicate(future)
