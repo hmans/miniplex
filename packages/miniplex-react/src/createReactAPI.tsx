@@ -16,12 +16,17 @@ import { mergeRefs } from "./lib/mergeRefs"
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect
 
-export type EntityChildren<E> = ReactNode | ((entity: E) => ReactNode)
+type EntityChildren<E> = ReactNode | ((entity: E) => ReactNode)
 
-export type AsComponent<E> = FunctionComponent<{
+type AsComponent<E> = FunctionComponent<{
   entity: E
   children?: ReactNode
 }>
+
+type CommonProps<E> = {
+  children?: EntityChildren<E>
+  as?: AsComponent<E>
+}
 
 export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   const EntityContext = createContext<E | null>(null)
@@ -35,10 +40,8 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     children: givenChildren,
     entity: givenEntity = {} as D,
     as: As
-  }: {
+  }: CommonProps<D> & {
     entity?: D
-    children?: EntityChildren<D>
-    as?: AsComponent<D>
   }) => {
     const entity = useConst(() => givenEntity)
 
@@ -69,10 +72,8 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   const EntitiesInList = <D extends E>({
     entities,
     ...props
-  }: {
+  }: CommonProps<D> & {
     entities: D[]
-    children?: EntityChildren<D>
-    as?: AsComponent<D>
   }) => (
     <>
       {entities.map((entity) => (
@@ -84,10 +85,8 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   const RawEntitiesInBucket = <D extends E>({
     bucket,
     ...props
-  }: {
+  }: CommonProps<D> & {
     bucket: Bucket<D>
-    children?: EntityChildren<D>
-    as?: FunctionComponent<{ entity: D; children?: ReactNode }>
   }) => (
     <EntitiesInList
       entities={useEntitiesGlobal(bucket).entities as D[]}
@@ -102,19 +101,15 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   const EntitiesInQuery = <D extends E>({
     where,
     ...props
-  }: {
+  }: CommonProps<D> & {
     where: Predicate<E, D>
-    children?: EntityChildren<D>
-    as?: AsComponent<D>
   }) => <EntitiesInBucket bucket={useEntities(where)} {...props} />
 
   function Entities<D extends E>({
     in: source,
     ...props
-  }: {
+  }: CommonProps<D> & {
     in: Predicate<E, D> | Bucket<D> | D[]
-    children?: EntityChildren<D>
-    as?: AsComponent<D>
   }): JSX.Element {
     if (source instanceof Bucket) {
       return <EntitiesInBucket bucket={source} {...props} />
