@@ -61,15 +61,15 @@ export class Bucket<E> extends SimpleBucket<E> {
 
   /* DIRTY TRACKING */
 
-  private dirty = new Array<E>()
+  private dirty = new SimpleBucket<E>()
 
   mark(entity: E) {
-    this.dirty.push(entity)
+    this.dirty.add(entity)
   }
 
   flushMarked() {
     for (const entity of this.dirty) this.test(entity)
-    this.dirty.length = 0
+    this.dirty.clear()
   }
 
   update<D extends E>(entity: D, fun: (entity: D) => void) {
