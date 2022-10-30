@@ -248,7 +248,7 @@ describe("<Archetype>", () => {
     world.add({ name: "Bob" })
 
     render(
-      <Archetype query={archetype("name")}>
+      <Archetype where={archetype("name")}>
         {(entity) => <p>{entity.name}</p>}
       </Archetype>
     )
@@ -265,7 +265,7 @@ describe("<Archetype>", () => {
     world.add({ name: "Bob" })
 
     render(
-      <Archetype query={archetype("name")}>
+      <Archetype where={archetype("name")}>
         {(entity) => <p>{entity.name}</p>}
       </Archetype>
     )
@@ -293,7 +293,7 @@ describe("<Archetype>", () => {
 
       const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
 
-      render(<Archetype as={User} query={archetype("name")} />)
+      render(<Archetype as={User} where={archetype("name")} />)
 
       expect(screen.getByText("Alice")).toBeInTheDocument()
       expect(screen.getByText("Bob")).toBeInTheDocument()
@@ -309,7 +309,7 @@ describe("<Archetype>", () => {
     world.add({ name: "Bob", age: 100 })
 
     render(
-      <Archetype query={archetype("name")}>
+      <Archetype where={archetype("name")}>
         {(entity) => <p>{entity.name}</p>}
       </Archetype>
     )

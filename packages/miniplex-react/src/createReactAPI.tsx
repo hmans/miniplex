@@ -61,6 +61,21 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
 
   const Entity = memo(RawEntity) as typeof RawEntity
 
+  const EntitiesList = <D extends E>({
+    entities,
+    ...props
+  }: {
+    entities: D[]
+    children?: EntityChildren<D>
+    as?: FunctionComponent<{ entity: D; children?: ReactNode }>
+  }) => (
+    <>
+      {entities.map((entity) => (
+        <Entity key={world.id(entity)} entity={entity} {...props} />
+      ))}
+    </>
+  )
+
   const RawBucket = <D extends E>({
     bucket,
     ...props
@@ -68,38 +83,51 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     bucket: Bucket<D>
     children?: EntityChildren<D>
     as?: FunctionComponent<{ entity: D; children?: ReactNode }>
-  }) => {
-    const entities = useEntities(bucket)
-
-    return (
-      <>
-        {entities.map((entity) => (
-          <Entity key={world.id(entity)} entity={entity} {...props} />
-        ))}
-      </>
-    )
-  }
+  }) => <EntitiesList entities={useEntities(bucket)} {...props} />
 
   const Bucket = memo(RawBucket) as typeof RawBucket
 
   const Archetype = <D extends E>({
-    query,
+    where,
     ...props
   }: {
-    query: Predicate<E, D>
+    where: Predicate<E, D>
     children?: EntityChildren<D>
     as?: FunctionComponent<{
       entity: D
       children?: ReactNode
     }>
   }) => {
-    const bucket = world.where(query)
+    const bucket = world.where(where)
 
     return <Bucket bucket={bucket} {...props} />
   }
 
-  function Entities<D extends E>(props: Parameters<typeof Archetype<D>>[0]) {
-    return <Archetype {...props} />
+  function Entities<D extends E>(
+    props: Parameters<typeof EntitiesList<D>>[0]
+  ): JSX.Element
+
+  function Entities<D extends E>(
+    props: Parameters<typeof Bucket<D>>[0]
+  ): JSX.Element
+
+  function Entities<D extends E>(
+    props: Parameters<typeof Archetype<D>>[0]
+  ): JSX.Element
+
+  function Entities<D extends E>(
+    props:
+      | Parameters<typeof Archetype<D>>[0]
+      | Parameters<typeof Bucket<D>>[0]
+      | Parameters<typeof EntitiesList<D>>[0]
+  ): JSX.Element {
+    if ("bucket" in props) {
+      return <Bucket {...props} />
+    } else if ("where" in props) {
+      return <Archetype {...props} />
+    } else {
+      return <EntitiesList {...props} />
+    }
   }
 
   const Component = <P extends keyof E>(props: {
@@ -154,11 +182,9 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   }
 
   return {
+    Component,
     Entity,
     Entities,
-    Bucket,
-    Archetype,
-    Component,
     useCurrentEntity,
     useArchetype
   }
