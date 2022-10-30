@@ -18,6 +18,11 @@ const useIsomorphicLayoutEffect =
 
 export type EntityChildren<E> = ReactNode | ((entity: E) => ReactNode)
 
+export type AsComponent<E> = FunctionComponent<{
+  entity: E
+  children?: ReactNode
+}>
+
 export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   const EntityContext = createContext<E | null>(null)
 
@@ -33,7 +38,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   }: {
     entity?: D
     children?: EntityChildren<D>
-    as?: FunctionComponent<{ entity: D; children?: ReactNode }>
+    as?: AsComponent<D>
   }) => {
     const entity = useConst(() => givenEntity)
 
@@ -67,7 +72,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   }: {
     entities: D[]
     children?: EntityChildren<D>
-    as?: FunctionComponent<{ entity: D; children?: ReactNode }>
+    as?: AsComponent<D>
   }) => (
     <>
       {entities.map((entity) => (
@@ -100,10 +105,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   }: {
     where: Predicate<E, D>
     children?: EntityChildren<D>
-    as?: FunctionComponent<{
-      entity: D
-      children?: ReactNode
-    }>
+    as?: AsComponent<D>
   }) => <EntitiesInBucket bucket={useEntities(where)} {...props} />
 
   function Entities<D extends E>({
@@ -112,10 +114,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
   }: {
     in: Predicate<E, D> | Bucket<D> | D[]
     children?: EntityChildren<D>
-    as?: FunctionComponent<{
-      entity: D
-      children?: ReactNode
-    }>
+    as?: AsComponent<D>
   }): JSX.Element {
     if (source instanceof Bucket) {
       return <EntitiesInBucket bucket={source} {...props} />
