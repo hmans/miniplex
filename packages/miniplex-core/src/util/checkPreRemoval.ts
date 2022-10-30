@@ -3,15 +3,15 @@ import { Bucket } from "@miniplex/bucket"
 export function checkPreRemoval<E>(bucket: Bucket<E>, entity: E, future: E) {
   if (!bucket.has(entity)) return
 
-  for (const [predicate, b] of bucket.derivedBuckets) {
-    const inBucket = b.has(entity)
-    const willBeInBucket = predicate(future)
+  for (const b of bucket.derivedBuckets.values()) {
+    const has = b.has(entity)
+    const wants = b.predicate(future)
 
-    if (inBucket && !willBeInBucket) {
+    if (has && !wants) {
       b.remove(entity)
-    } else if (!inBucket && willBeInBucket) {
+    } else if (!has && wants) {
       b.add(entity)
-    } else if (inBucket && willBeInBucket) {
+    } else if (has && wants) {
       checkPreRemoval(b, entity, future)
     }
   }

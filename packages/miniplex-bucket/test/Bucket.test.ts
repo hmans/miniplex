@@ -142,7 +142,7 @@ describe(Bucket, () => {
     it("will return a new bucket that only holds the entities that match the given predicate", () => {
       const bucket = new Bucket([1, 2, 3])
       const derived = bucket.where((v) => v > 1)
-      expect(derived.entities).toEqual([2, 3])
+      expect(derived.entities).toEqual([3, 2])
     })
 
     it("returns the same bucket for the same predicate (by referential equality)", () => {

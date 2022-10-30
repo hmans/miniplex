@@ -17,7 +17,26 @@ export class Bucket<E> {
     }
   }
 
-  constructor(public entities: E[] = []) {}
+  entities: E[] = []
+
+  constructor(
+    public source: Bucket<any> | E[] = [],
+    public predicate: Predicate<any, E> = () => true
+  ) {
+    this.add = this.add.bind(this)
+    this.remove = this.remove.bind(this)
+
+    /* If we have a source bucket, add ourselves as a listener. */
+    if (source instanceof Bucket) {
+      source.onEntityAdded.add(this.add)
+      source.onEntityRemoved.add(this.remove)
+    }
+
+    /* Add all entities contained in the source */
+    for (const entity of source) {
+      this.add(entity)
+    }
+  }
 
   /**
    * Fired when an entity has been added to the bucket.
@@ -42,19 +61,12 @@ export class Bucket<E> {
   }
 
   add<D extends E>(entity: D): D & E {
-    if (entity && !this.has(entity)) {
+    if (entity && !this.has(entity) && this.predicate(entity)) {
       this.entities.push(entity)
       this.entityPositions.set(entity, this.entities.length - 1)
 
       /* Emit our own onEntityAdded event */
       this.onEntityAdded.emit(entity)
-
-      /* Add the entity to any derived buckets. */
-      for (const [predicate, bucket] of this.derivedBuckets) {
-        if (predicate(entity)) {
-          bucket.add(entity)
-        }
-      }
     }
 
     return entity
@@ -78,11 +90,6 @@ export class Bucket<E> {
 
       /* Remove the entity from the entities array. */
       this.entities.pop()
-
-      /* Remove the entity from any derived buckets. */
-      for (const query of this.derivedBuckets.values()) {
-        query.remove(entity)
-      }
     }
 
     return entity
@@ -101,15 +108,8 @@ export class Bucket<E> {
     }
 
     /* Otherwise, create a new bucket. */
-    const bucket = new Bucket<D>()
+    const bucket = new Bucket(this, predicate)
     this.derivedBuckets.set(predicate, bucket)
-
-    /* Add all entities that match the predicate to the new bucket. */
-    for (const entity of this.entities) {
-      if (predicate(entity)) {
-        bucket.add(entity)
-      }
-    }
 
     return bucket
   }

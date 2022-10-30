@@ -151,7 +151,7 @@ describe(World, () => {
       const withAge = world.where(archetype("age"))
       const withAgeAndHeight = withAge.where(archetype("height"))
 
-      expect(withAge.entities).toEqual([john, jane])
+      expect(withAge.entities).toEqual([jane, john])
       expect(withAgeAndHeight.entities).toEqual([john])
     })
 

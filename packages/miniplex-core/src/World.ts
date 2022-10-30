@@ -24,9 +24,11 @@ export class World<E extends IEntity> extends Bucket<E> {
     entity[component] = value
 
     /* Update derived buckets */
-    if (this.has(entity))
-      for (const [predicate, bucket] of this.derivedBuckets)
-        predicate(entity) && bucket.add(entity)
+    if (this.has(entity)) {
+      for (const bucket of this.derivedBuckets.values()) {
+        bucket.add(entity)
+      }
+    }
   }
 
   removeComponent(entity: E, component: keyof E) {
