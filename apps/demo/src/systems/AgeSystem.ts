@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber"
 import { archetype } from "miniplex"
+import { queueDestroy } from "../actions"
 import { ECS } from "../state"
-import { queueDestroy } from "./DestroySystem"
 
 export const AgeSystem = () => {
   useFrame((_, dt) => {

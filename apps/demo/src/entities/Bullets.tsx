@@ -1,9 +1,9 @@
-import { archetype, hasComponents } from "miniplex"
+import { archetype } from "miniplex"
 import { between } from "randomish"
 import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle } from "vfx-composer-r3f"
-import { ECS, Entity, lifetime, physics, PhysicsLayers } from "../state"
-import { queueDestroy } from "../systems/DestroySystem"
+import { applyDamage, queueDestroy } from "../actions"
+import { ECS, lifetime, physics, PhysicsLayers } from "../state"
 import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
 
@@ -62,10 +62,4 @@ export const spawnBullet = () => {
   })
 
   return bullet
-}
-
-export function applyDamage(entity: Entity, damage: number) {
-  if (!hasComponents(entity, "health")) return
-  entity.health -= damage
-  if (entity.health <= 0) queueDestroy(entity)
 }
