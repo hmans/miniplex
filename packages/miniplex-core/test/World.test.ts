@@ -186,9 +186,8 @@ describe(World, () => {
 
     it("is shorthand for .where(archetype(query))", () => {
       const world = new World<Entity>()
-      const query = { with: ["name", "age"] }
-      const bucket1 = world.where(archetype(query))
-      const bucket2 = world.archetype(query)
+      const bucket1 = world.where(archetype({ with: ["name", "age"] }))
+      const bucket2 = world.archetype({ with: ["name", "age"] })
       expect(bucket1).toBe(bucket2)
     })
   })
