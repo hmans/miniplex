@@ -53,34 +53,6 @@ export const spawnBullet = () => {
 
           if (other.health <= 0) {
             queueDestroy(other)
-
-            /* If the other entity was an asteroid, spawn new asteroids */
-            if (other.isAsteroid) {
-              const scale = other.transform!.scale.x
-              if (scale > 0.8) {
-                const count = between(3, 10)
-                for (let i = 0; i < count; i++) {
-                  const direction = new Vector3(
-                    Math.cos(((2 * Math.PI) / count) * i),
-                    Math.sin(((2 * Math.PI) / count) * i),
-                    0
-                  )
-
-                  const asteroid = spawnAsteroid(
-                    {
-                      position: new Vector3()
-                        .copy(direction)
-                        .add(other.transform!.position)
-                    },
-                    scale * between(0.5, 0.9)
-                  )
-
-                  asteroid.physics!.velocity = direction
-                    .clone()
-                    .multiplyScalar(15)
-                }
-              }
-            }
           }
         }
       }
