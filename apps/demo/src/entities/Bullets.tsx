@@ -2,10 +2,9 @@ import { archetype, hasComponents } from "miniplex"
 import { between } from "randomish"
 import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle } from "vfx-composer-r3f"
-import { ECS, lifetime, physics, PhysicsLayers } from "../state"
+import { ECS, Entity, lifetime, physics, PhysicsLayers } from "../state"
 import { queueDestroy } from "../systems/DestroySystem"
 import { bitmask } from "../util/bitmask"
-import { spawnAsteroid } from "./Asteroids"
 import { RenderableEntity } from "./RenderableEntity"
 
 export const Bullets = () => (
@@ -44,17 +43,8 @@ export const spawnBullet = () => {
       collisionMask: bitmask([PhysicsLayers.Asteroid]),
 
       onContactStart: (other) => {
-        /* Destroy bullet */
         queueDestroy(bullet)
-
-        /* If the other entity has health, damage it */
-        if (hasComponents(other, "health")) {
-          other.health -= 270
-
-          if (other.health <= 0) {
-            queueDestroy(other)
-          }
-        }
+        applyDamage(other, 270)
       }
     }),
 
@@ -72,4 +62,10 @@ export const spawnBullet = () => {
   })
 
   return bullet
+}
+
+export function applyDamage(entity: Entity, damage: number) {
+  if (!hasComponents(entity, "health")) return
+  entity.health -= damage
+  if (entity.health <= 0) queueDestroy(entity)
 }
