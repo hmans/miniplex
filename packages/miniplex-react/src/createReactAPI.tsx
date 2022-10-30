@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useLayoutEffect
 } from "react"
-import { useArchetype as useArchetypeGlobal, useEntities } from "./hooks"
+import { useEntities as useEntitiesGlobal } from "./hooks"
 import { mergeRefs } from "./lib/mergeRefs"
 
 const useIsomorphicLayoutEffect =
@@ -23,8 +23,8 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
 
   const useCurrentEntity = () => useContext(EntityContext)
 
-  const useArchetype = <P extends keyof E>(...components: P[]) =>
-    useArchetypeGlobal(world, ...components)
+  const useEntities = <D extends E>(predicate: Predicate<E, D>) =>
+    useEntitiesGlobal(world, predicate)
 
   const RawEntity = <D extends E>({
     children: givenChildren,
@@ -83,7 +83,12 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     bucket: Bucket<D>
     children?: EntityChildren<D>
     as?: FunctionComponent<{ entity: D; children?: ReactNode }>
-  }) => <EntitiesInList entities={useEntities(bucket)} {...props} />
+  }) => (
+    <EntitiesInList
+      entities={useEntitiesGlobal(bucket).entities as D[]}
+      {...props}
+    />
+  )
 
   const EntitiesInBucket = memo(
     RawEntitiesInBucket
@@ -99,11 +104,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
       entity: D
       children?: ReactNode
     }>
-  }) => {
-    const bucket = world.where(where)
-
-    return <EntitiesInBucket bucket={bucket} {...props} />
-  }
+  }) => <EntitiesInBucket bucket={useEntities(where)} {...props} />
 
   function Entities<D extends E>(
     props: Parameters<typeof EntitiesInList<D>>[0]
@@ -188,6 +189,6 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     Entity,
     Entities,
     useCurrentEntity,
-    useArchetype
+    useEntities
   }
 }

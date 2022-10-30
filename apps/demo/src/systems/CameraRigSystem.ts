@@ -1,4 +1,5 @@
 import { useFrame } from "@react-three/fiber"
+import { archetype } from "miniplex"
 import { Vector3 } from "three"
 import { ECS } from "../state"
 
@@ -10,8 +11,8 @@ export const CameraRigSystem = ({
 }: {
   offset?: Vector3
 }) => {
-  const [player] = ECS.useArchetype("isPlayer", "transform")
-  const [camera] = ECS.useArchetype("isCamera", "transform")
+  const [player] = ECS.useEntities(archetype("isPlayer", "transform"))
+  const [camera] = ECS.useEntities(archetype("isCamera", "transform"))
 
   useFrame((_, dt) => {
     if (!player || !camera) return
