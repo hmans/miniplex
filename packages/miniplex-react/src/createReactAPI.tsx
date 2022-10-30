@@ -106,7 +106,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     }>
   }) => <EntitiesInBucket bucket={useEntities(where)} {...props} />
 
-  function Entities<D extends E, C extends keyof E>({
+  function Entities<D extends E>({
     in: source,
     ...props
   }: {
