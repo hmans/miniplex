@@ -4,8 +4,8 @@ import { AsteroidsSystem } from "./systems/AsteroidsSystem"
 import { CameraRigSystem } from "./systems/CameraRigSystem"
 import { DestroySystem } from "./systems/DestroySystem"
 import { FindNeighborsSystem } from "./systems/findNeighborsSystem"
-import { PhysicsSystem } from "./systems/PhysicsSystemMoo"
-import { PlayerSystem } from "./systems/playerSystem"
+import { PhysicsSystem } from "./systems/PhysicsSystem"
+import { PlayerSystem } from "./systems/PlayerSystemMoo"
 import { SpatialHashingSystem } from "./systems/spatialHashingSystem"
 
 export const Systems = () => (
