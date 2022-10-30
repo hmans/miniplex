@@ -61,7 +61,7 @@ export class Bucket<E> extends SimpleBucket<E> {
 
   /* DIRTY TRACKING */
 
-  private dirty = new SimpleBucket<E>()
+  private dirty = new Set<E>()
 
   mark(entity: E) {
     this.dirty.add(entity)
