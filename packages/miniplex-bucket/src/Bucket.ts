@@ -1,30 +1,15 @@
-import { Event } from "@hmans/event"
+import { SimpleBucket } from "./SimpleBucket"
 
 export type Predicate<E, D extends E> =
   | ((v: E) => v is D)
   | ((entity: E) => boolean)
 
-export class Bucket<E> {
-  /* Custom iterator that iterates over all entities in reverse order. */
-  [Symbol.iterator]() {
-    let index = this.entities.length
-
-    return {
-      next: () => {
-        const value = this.entities[--index]
-        return { value, done: index < 0 }
-      }
-    }
-  }
-
-  entities: E[] = []
-
+export class Bucket<E> extends SimpleBucket<E> {
   constructor(
     public source: Bucket<any> | E[] = [],
     public predicate: Predicate<any, E> = () => true
   ) {
-    this.add = this.add.bind(this)
-    this.remove = this.remove.bind(this)
+    super()
 
     /* If we have a source bucket, add ourselves as a listener. */
     if (source instanceof Bucket) {
@@ -38,61 +23,11 @@ export class Bucket<E> {
     }
   }
 
-  /**
-   * Fired when an entity has been added to the bucket.
-   */
-  onEntityAdded = new Event<E>()
-
-  /**
-   * Fired when an entity is about to be removed from the bucket.
-   */
-  onEntityRemoved = new Event<E>()
-
-  private entityPositions = new Map<E, number>()
-
   private predicateBuckets = new Map<Predicate<E, any>, Bucket<any>>()
 
-  get size() {
-    return this.entities.length
-  }
-
-  has(entity: any): entity is E {
-    return this.entityPositions.has(entity)
-  }
-
   add<D extends E>(entity: D): D & E {
-    if (entity && !this.has(entity) && this.predicate(entity)) {
-      this.entities.push(entity)
-      this.entityPositions.set(entity, this.entities.length - 1)
-
-      /* Emit our own onEntityAdded event */
-      this.onEntityAdded.emit(entity)
-    }
-
-    return entity
-  }
-
-  remove(entity: E) {
-    if (this.has(entity)) {
-      /* Emit our own onEntityRemoved event. */
-      this.onEntityRemoved.emit(entity)
-
-      /* Get the entity's current position. */
-      const index = this.entityPositions.get(entity)!
-      this.entityPositions.delete(entity)
-
-      /* Perform shuffle-pop if there is more than one entity. */
-      const other = this.entities[this.entities.length - 1]
-      if (other !== entity) {
-        this.entities[index] = other
-        this.entityPositions.set(other, index)
-      }
-
-      /* Remove the entity from the entities array. */
-      this.entities.pop()
-    }
-
-    return entity
+    if (!this.predicate(entity)) return entity
+    return super.add(entity)
   }
 
   /* TODO: is `test` really the best name? */
@@ -108,12 +43,6 @@ export class Bucket<E> {
       for (const bucket of this.predicateBuckets.values()) {
         bucket.test(entity, future)
       }
-    }
-  }
-
-  clear() {
-    for (const entity of this) {
-      this.remove(entity)
     }
   }
 
