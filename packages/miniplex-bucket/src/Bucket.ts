@@ -20,18 +20,13 @@ export class Bucket<E> extends SimpleBucket<E> {
 
     /* Add all entities contained in the source */
     for (const entity of source instanceof Bucket ? source.entities : source) {
-      this.add(entity)
+      if (this.predicate(entity)) this.add(entity)
     }
   }
 
   source?: Bucket<any>
 
   private predicateBuckets = new Map<Predicate<E, any>, Bucket<any>>()
-
-  add<D extends E>(entity: D): D & E {
-    if (!this.predicate(entity)) return entity
-    return super.add(entity)
-  }
 
   /* TODO: is `test` really the best name? */
   test(entity: E, future = entity) {
