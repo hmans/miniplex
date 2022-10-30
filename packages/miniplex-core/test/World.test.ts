@@ -83,10 +83,28 @@ describe(World, () => {
     it("only removes the component from the entity after the archetypes' onEntityRemoved events have fired", () => {
       const world = new World<Entity>()
       const john = world.add({ name: "John", age: 123 })
-      const archetype = world.where(hasAge)
+      const withAge = world.where(hasAge)
 
       let age: number | undefined
-      archetype.onEntityRemoved.add((entity) => {
+      withAge.onEntityRemoved.add((entity) => {
+        age = entity.age
+      })
+
+      world.removeComponent(john, "age")
+
+      expect(john.age).toBe(undefined)
+      expect(age).toBe(123)
+    })
+
+    it("only removes the component from the entity after the archetypes' onEntityRemoved events have fired, even with nested buckets", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John", age: 123 })
+      const withName = world.where(archetype("name"))
+      const withAge = withName.where(archetype("age"))
+      const reallyOld = withAge.where((entity) => entity.age > 100)
+
+      let age: number | undefined
+      reallyOld.onEntityRemoved.add((entity) => {
         age = entity.age
       })
 

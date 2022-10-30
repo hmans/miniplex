@@ -31,7 +31,7 @@ export class Bucket<E> {
 
   private entityPositions = new Map<E, number>()
 
-  protected derivedBuckets = new Map<Predicate<E, any>, Bucket<any>>()
+  derivedBuckets = new Map<Predicate<E, any>, Bucket<any>>()
 
   get size() {
     return this.entities.length
