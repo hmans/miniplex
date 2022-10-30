@@ -1,5 +1,4 @@
 import { Bucket } from "@miniplex/bucket"
-import { checkPreRemoval } from "./util/checkPreRemoval"
 import { IEntity } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
@@ -44,7 +43,7 @@ export class World<E extends IEntity> extends Bucket<E> {
 
       /* Go through all known buckets, check the future version of the entity against
       its predicate, and add/remove accordingly. */
-      checkPreRemoval(this, entity, future)
+      this.test(entity, future)
     }
 
     /* Remove the component. */
