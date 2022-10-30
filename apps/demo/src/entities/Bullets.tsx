@@ -17,16 +17,6 @@ export const Bullets = () => (
       where={archetype("isBullet", "render")}
       as={RenderableEntity}
     />
-
-    <ECS.Entities
-      bucket={ECS.world.where(archetype("isBullet", "render"))}
-      as={RenderableEntity}
-    />
-
-    <ECS.Entities
-      entities={ECS.world.where(archetype("isBullet", "render")).entities}
-      as={RenderableEntity}
-    />
   </InstancedParticles>
 )
 
