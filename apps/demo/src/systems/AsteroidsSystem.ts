@@ -1,7 +1,6 @@
 import { archetype, Bucket } from "miniplex"
 import { useOnEntityAdded } from "miniplex/react"
 import { between } from "randomish"
-import { useEffect } from "react"
 import { Vector3 } from "three"
 import { Asteroid, spawnAsteroid } from "../entities/Asteroids"
 import { ECS } from "../state"
