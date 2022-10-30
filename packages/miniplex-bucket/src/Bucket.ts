@@ -50,7 +50,7 @@ export class Bucket<E> {
 
   private entityPositions = new Map<E, number>()
 
-  derivedBuckets = new Map<Predicate<E, any>, Bucket<any>>()
+  private predicateBuckets = new Map<Predicate<E, any>, Bucket<any>>()
 
   get size() {
     return this.entities.length
@@ -105,7 +105,7 @@ export class Bucket<E> {
     } else if (!has && wants) {
       this.add(entity)
     } else if (has && wants) {
-      for (const bucket of this.derivedBuckets.values()) {
+      for (const bucket of this.predicateBuckets.values()) {
         bucket.test(entity, future)
       }
     }
@@ -119,13 +119,13 @@ export class Bucket<E> {
 
   where<D extends E>(predicate: Predicate<E, D>): Bucket<D> {
     /* If we already have a bucket for the given predicate, return it. */
-    if (this.derivedBuckets.has(predicate)) {
-      return this.derivedBuckets.get(predicate)!
+    if (this.predicateBuckets.has(predicate)) {
+      return this.predicateBuckets.get(predicate)!
     }
 
     /* Otherwise, create a new bucket. */
     const bucket = new Bucket(this, predicate)
-    this.derivedBuckets.set(predicate, bucket)
+    this.predicateBuckets.set(predicate, bucket)
 
     return bucket
   }
