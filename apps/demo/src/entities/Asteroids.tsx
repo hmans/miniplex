@@ -1,15 +1,29 @@
 import { Composable, Modules } from "material-composer-r3f"
-import { archetype, Bucket, WithComponents } from "miniplex"
+import { archetype, Predicate, WithComponents } from "miniplex"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { $, Input, InstanceID, Lerp } from "shader-composer"
 import { Random } from "shader-composer-toybox"
 import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
+import { useSegmentedBucket } from "../lib/SegmentedBucket"
 import { ECS, Entity, physics, PhysicsLayers } from "../state"
 import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
-import { useSegmentedBucket } from "../lib/SegmentedBucket"
+
+export type Asteroid = WithComponents<
+  Entity,
+  | "isAsteroid"
+  | "transform"
+  | "physics"
+  | "spatialHashing"
+  | "neighbors"
+  | "render"
+>
+
+export const isAsteroid = archetype("isAsteroid") as Predicate<Entity, Asteroid>
+
+const asteroids = ECS.world.where(isAsteroid)
 
 export const InstanceRNG =
   ({ seed }: { seed?: Input<"float"> } = {}) =>
@@ -54,18 +68,6 @@ export const Asteroids = () => {
     </InstancedParticles>
   )
 }
-
-export type Asteroid = WithComponents<
-  Entity,
-  | "isAsteroid"
-  | "transform"
-  | "physics"
-  | "spatialHashing"
-  | "neighbors"
-  | "render"
->
-
-const asteroids = ECS.world.where(archetype("isAsteroid")) as Bucket<Asteroid>
 
 const tmpVec3 = new Vector3()
 
