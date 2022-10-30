@@ -16,7 +16,7 @@ import { mergeRefs } from "./lib/mergeRefs"
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect
 
-type EntityChildren<E> = ReactNode | ((entity: E) => ReactNode)
+export type EntityChildren<E> = ReactNode | ((entity: E) => ReactNode)
 
 type AsComponent<E> = FunctionComponent<{
   entity: E
