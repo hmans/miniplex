@@ -33,7 +33,7 @@ export class Bucket<E> {
     }
 
     /* Add all entities contained in the source */
-    for (const entity of source) {
+    for (const entity of source instanceof Bucket ? source.entities : source) {
       this.add(entity)
     }
   }
