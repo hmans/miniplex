@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { archetype, Bucket, WithComponents } from "miniplex"
+import { archetype, Bucket, Predicate, WithComponents } from "miniplex"
 import { Vector3 } from "three"
 import { spawnBullet } from "../entities/Bullets"
 import { ECS, Entity } from "../state"
@@ -7,9 +7,14 @@ import { useKeyboard } from "../util/useKeyboard"
 
 const tmpVec3 = new Vector3()
 
+/* Create a type specifically for our player entity. */
 type Player = WithComponents<Entity, "isPlayer" | "transform" | "physics">
 
-const players = ECS.world.where(archetype("isPlayer")) as Bucket<Player>
+/* Create a predicate that narrows the type to the above. */
+const isPlayer = archetype("isPlayer") as Predicate<Entity, Player>
+
+/* Create a bucket. Its entities will be typed as `Player`. */
+const players = ECS.world.where(isPlayer)
 
 let lastFireTime = 0
 
@@ -40,8 +45,9 @@ export const PlayerSystem = () => {
       player.physics.sleeping = false
     }
 
-    if (input.fire && performance.now() > lastFireTime + 65) {
-      lastFireTime = performance.now()
+    const now = performance.now()
+    if (input.fire && now > lastFireTime + 65) {
+      lastFireTime = now
       spawnBullet()
     }
   })
