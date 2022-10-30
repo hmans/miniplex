@@ -1,6 +1,5 @@
 import { Bucket } from "@miniplex/bucket"
-import { archetype, ArchetypeQuery } from "./queries"
-import { IEntity, WithComponents } from "./types"
+import { IEntity } from "./types"
 
 export class World<E extends IEntity> extends Bucket<E> {
   constructor(entities: E[] = []) {
