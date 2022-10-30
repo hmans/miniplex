@@ -1,4 +1,4 @@
-import { archetype } from "miniplex"
+import { archetype, hasComponents } from "miniplex"
 import { between } from "randomish"
 import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle } from "vfx-composer-r3f"
@@ -48,8 +48,9 @@ export const spawnBullet = () => {
         queueDestroy(bullet)
 
         /* If the other entity has health, damage it */
-        if (other.health !== undefined) {
+        if (hasComponents(other, "health")) {
           other.health -= 270
+
           if (other.health <= 0) {
             queueDestroy(other)
 
