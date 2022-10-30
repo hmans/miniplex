@@ -58,11 +58,11 @@ export class World<E extends IEntity> extends Bucket<E> {
     ...components: With[]
   ): Bucket<WithComponents<E, With>>
 
-  archetype<With extends keyof E, Any extends keyof E, Without extends keyof E>(
+  archetype<With extends keyof E, Without extends keyof E>(
     query: Partial<ArchetypeQuery<E, With, Without>>
   ): Bucket<WithComponents<E, With>>
 
-  archetype<With extends keyof E, Any extends keyof E, Without extends keyof E>(
+  archetype<With extends keyof E, Without extends keyof E>(
     first: ArchetypeQuery<E, With, Without> | With,
     ...extra: With[]
   ) {
