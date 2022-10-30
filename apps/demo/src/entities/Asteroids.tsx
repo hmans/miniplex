@@ -111,5 +111,5 @@ export const spawnAsteroid = (
     )
   })
 
-  return entity
+  return entity as Asteroid
 }

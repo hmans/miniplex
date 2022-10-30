@@ -13,15 +13,13 @@ export class SimpleBucket<E> {
     }
   }
 
-  entities: E[] = []
-
-  constructor(entities: E[] = []) {
+  constructor(public entities: E[] = []) {
     this.add = this.add.bind(this)
     this.remove = this.remove.bind(this)
 
-    /* Add all entities contained in the source */
-    for (const entity of entities) {
-      this.add(entity)
+    /* Register all entity positions */
+    for (let i = 0; i < entities.length; i++) {
+      this.entityPositions.set(entities[i], i)
     }
   }
 
