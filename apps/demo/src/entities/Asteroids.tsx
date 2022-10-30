@@ -17,7 +17,7 @@ export const InstanceRNG =
     Random($`${offset} + float(${InstanceID}) * 1.1005`)
 
 export const Asteroids = () => {
-  // const segmentedAsteroids = useSegmentedBucket(asteroids)
+  const segmentedAsteroids = useSegmentedBucket(asteroids)
 
   console.log("Rerendering Asteroids component. You should only see this once.")
 
@@ -46,11 +46,11 @@ export const Asteroids = () => {
         />
       </Composable.MeshStandardMaterial>
 
-      {/* {segmentedAsteroids.entities.map((segment, i) => (
-        <ECS.Bucket key={i} bucket={segment} as={RenderableEntity} />
-      ))} */}
+      {segmentedAsteroids.entities.map((segment, i) => (
+        <ECS.Entities key={i} bucket={segment} as={RenderableEntity} />
+      ))}
 
-      <ECS.Entities bucket={asteroids} as={RenderableEntity} />
+      {/* <ECS.Entities bucket={asteroids} as={RenderableEntity} /> */}
     </InstancedParticles>
   )
 }
