@@ -7,23 +7,19 @@ const entities = ECS.world.where(
   archetype("transform", "physics", "neighbors", "spatialHashing")
 )
 
-export function findNeighborsSystem() {
-  for (const entity of entities) {
-    /* If the body is sleeping, skip it */
-    if (entity.physics.sleeping) continue
-
-    getEntitiesInRadius(
-      entity.transform.position,
-      Math.max(2, entity.physics.radius * 2),
-      Infinity,
-      entity.neighbors
-    )
-  }
-}
-
 export const FindNeighborsSystem = () => {
   useFrame(() => {
-    findNeighborsSystem()
+    for (const entity of entities) {
+      /* If the body is sleeping, skip it */
+      if (entity.physics.sleeping) continue
+
+      getEntitiesInRadius(
+        entity.transform.position,
+        Math.max(2, entity.physics.radius * 2),
+        Infinity,
+        entity.neighbors
+      )
+    }
   })
 
   return null

@@ -4,7 +4,7 @@ import { AsteroidsSystem } from "./systems/AsteroidsSystem"
 import { CameraRigSystem } from "./systems/CameraRigSystem"
 import { DestroySystem } from "./systems/DestroySystem"
 import { FindNeighborsSystem } from "./systems/findNeighborsSystem"
-import { PhysicsSystem } from "./systems/physicsSystem"
+import { PhysicsSystem } from "./systems/PhysicsSystemMoo"
 import { PlayerSystem } from "./systems/playerSystem"
 import { SpatialHashingSystem } from "./systems/spatialHashingSystem"
 
