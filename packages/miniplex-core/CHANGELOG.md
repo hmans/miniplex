@@ -1,5 +1,13 @@
 # miniplex
 
+## 2.0.0-next.12
+
+### Patch Changes
+
+- 252cc0f: `world.archetype` is gone. Instead, there is `world.where(predicate)`. For archetype queries, please use `world.where(archetype("foo", "bar"))`.
+- Updated dependencies [252cc0f]
+  - @miniplex/bucket@2.0.0-next.12
+
 ## 2.0.0-next.11
 
 ### Patch Changes
