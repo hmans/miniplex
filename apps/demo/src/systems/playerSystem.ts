@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { Bucket, WithComponents } from "miniplex"
+import { archetype, Bucket, WithComponents } from "miniplex"
 import { Vector3 } from "three"
 import { spawnBullet } from "../entities/Bullets"
 import { ECS, Entity } from "../state"
@@ -9,8 +9,7 @@ const tmpVec3 = new Vector3()
 
 type Player = WithComponents<Entity, "isPlayer" | "transform" | "physics">
 
-// const players = ECS.world.archetype(isPlayer)
-const players = ECS.world.archetype("isPlayer") as Bucket<Player>
+const players = ECS.world.where(archetype("isPlayer")) as Bucket<Player>
 
 let lastFireTime = 0
 

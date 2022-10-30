@@ -1,5 +1,5 @@
 import { Composable, Modules } from "material-composer-r3f"
-import { Bucket, WithComponents } from "miniplex"
+import { archetype, Bucket, WithComponents } from "miniplex"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { $, Input, InstanceID, Lerp } from "shader-composer"
@@ -65,7 +65,7 @@ export type Asteroid = WithComponents<
   | "render"
 >
 
-const asteroids = ECS.world.archetype("isAsteroid") as Bucket<Asteroid>
+const asteroids = ECS.world.where(archetype("isAsteroid")) as Bucket<Asteroid>
 
 const tmpVec3 = new Vector3()
 

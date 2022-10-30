@@ -1,10 +1,11 @@
 import { useFrame } from "@react-three/fiber"
+import { archetype } from "miniplex"
 import { ECS } from "../state"
 import { queueDestroy } from "./DestroySystem"
 
 export const AgeSystem = () => {
   useFrame((_, dt) => {
-    for (const entity of ECS.world.archetype("lifetime")) {
+    for (const entity of ECS.world.where(archetype("lifetime"))) {
       entity.lifetime.age += dt
 
       if (

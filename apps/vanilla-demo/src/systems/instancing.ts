@@ -1,8 +1,8 @@
-import { World } from "miniplex"
+import { archetype, World } from "miniplex"
 import { Entity } from "./engine"
 
 export function createInstancingSystem(world: World<Entity>) {
-  const entities = world.archetype("instance", "transform")
+  const entities = world.where(archetype("instance", "transform"))
 
   const imeshState = new Map<THREE.InstancedMesh, number>()
 
