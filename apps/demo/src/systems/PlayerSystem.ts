@@ -8,10 +8,13 @@ import { useKeyboard } from "../util/useKeyboard"
 const tmpVec3 = new Vector3()
 
 /* Create a type specifically for our player entity. */
-type Player = WithComponents<Entity, "isPlayer" | "transform" | "physics">
+export type Player = WithComponents<
+  Entity,
+  "isPlayer" | "transform" | "physics"
+>
 
 /* Create a predicate that narrows the type to the above. */
-const isPlayer = archetype("isPlayer") as Predicate<Entity, Player>
+export const isPlayer = archetype("isPlayer") as Predicate<Entity, Player>
 
 /* Create a bucket. Its entities will be typed as `Player`. */
 const players = ECS.world.where(isPlayer)
