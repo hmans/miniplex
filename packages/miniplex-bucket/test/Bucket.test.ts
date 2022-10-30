@@ -13,6 +13,11 @@ describe(Bucket, () => {
   })
 
   describe("add", () => {
+    it("only adds the entity when it satisfies the bucket's predicate", () => {
+      const bucket = new Bucket([1, 2, 3], (entity) => entity % 2 === 0)
+      expect(bucket.entities).toEqual([2])
+    })
+
     it("adds the entity to any matching derived buckets", () => {
       const bucket = new Bucket()
       const derivedBucket = bucket.where(() => true)
