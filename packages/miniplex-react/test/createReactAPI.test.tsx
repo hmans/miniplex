@@ -344,3 +344,11 @@ describe("useEntities", () => {
     expect(entities[2].name).toBe("Charlie")
   })
 })
+
+describe("world", () => {
+  it("is a reference to the world originally passed into createReactAPI", () => {
+    const world = new World<{ name: string }>()
+    const api = createReactAPI(world)
+    expect(api.world).toBe(world)
+  })
+})

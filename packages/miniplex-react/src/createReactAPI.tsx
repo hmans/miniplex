@@ -169,6 +169,7 @@ export const createReactAPI = <E,>(world: World<E>) => {
   }
 
   return {
+    world,
     Component,
     Entity,
     Entities,
