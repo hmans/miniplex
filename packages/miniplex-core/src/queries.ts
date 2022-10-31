@@ -1,5 +1,5 @@
 import { Predicate } from "@miniplex/bucket"
-import { WithComponents } from "./types"
+import { With } from "./types"
 import { PredicateCache } from "./util/PredicateCache"
 
 const normalizeComponents = <E>(components: (keyof E)[]) => [
@@ -20,36 +20,36 @@ export const tag = <E>(tag: keyof E) => archetype(tag) as Predicate<any, E>
 
 /* Archetype Queries */
 
-export type ArchetypeQuery<E, All extends keyof E, None extends keyof E> = {
-  with: All[]
-  without: None[]
+export type ArchetypeQuery<E, P extends keyof E> = {
+  with: P[]
+  without: (keyof E)[]
 }
 
 const archetypeCache = new PredicateCache<string, Function>()
 
-const normalizeQuery = <E, With extends keyof E, Without extends keyof E>(
-  query: Partial<ArchetypeQuery<E, With, Without>>
+const normalizeQuery = <E, P extends keyof E>(
+  query: Partial<ArchetypeQuery<E, P>>
 ) =>
   ({
     with: query.with !== undefined ? normalizeComponents<E>(query.with) : [],
     without:
       query.without !== undefined ? normalizeComponents<E>(query.without) : []
-  } as ArchetypeQuery<E, With, Without>)
+  } as ArchetypeQuery<E, P>)
 
-export function archetype<E, With extends keyof E>(
-  ...components: With[]
-): Predicate<E, WithComponents<E, With>>
+export function archetype<E, P extends keyof E>(
+  ...components: P[]
+): Predicate<E, With<E, P>>
 
-export function archetype<E, With extends keyof E, Without extends keyof E>(
-  partialQuery: Partial<ArchetypeQuery<E, With, Without>>
-): Predicate<E, WithComponents<E, With>>
+export function archetype<E, P extends keyof E>(
+  partialQuery: Partial<ArchetypeQuery<E, P>>
+): Predicate<E, With<E, P>>
 
-export function archetype<E, With extends keyof E, Without extends keyof E>(
-  partialQuery: Partial<ArchetypeQuery<E, With, Without>> | With,
-  ...extra: With[]
+export function archetype<E, P extends keyof E>(
+  partialQuery: Partial<ArchetypeQuery<E, P>> | P,
+  ...extra: P[]
 ) {
   if (typeof partialQuery !== "object") {
-    return archetype<E, With, never>({ with: [partialQuery, ...extra] })
+    return archetype<E, P>({ with: [partialQuery, ...extra] })
   }
 
   /* Normalize and deduplicate given query */
@@ -59,36 +59,36 @@ export function archetype<E, With extends keyof E, Without extends keyof E>(
   return archetypeCache.get(
     JSON.stringify(query),
 
-    (entity: E): entity is WithComponents<E, With> =>
+    (entity: E): entity is With<E, P> =>
       hasComponents(entity, ...query.with) &&
       hasNoComponents(entity, ...query.without)
   )
 }
 
-export function isArchetype<E, With extends keyof E>(
+export function isArchetype<E, P extends keyof E>(
   entity: E,
-  ...components: With[]
-): entity is WithComponents<E, With> {
+  ...components: P[]
+): entity is With<E, P> {
   return hasComponents(entity, ...components)
 }
 
 export function hasComponents<E, C extends keyof E>(
   entity: E,
   ...components: C[]
-): entity is WithComponents<E, C> {
+): entity is With<E, C> {
   return components.every((c) => entity[c] !== undefined)
 }
 
 export function hasAnyComponents<E, C extends keyof E>(
   entity: E,
   ...components: C[]
-): entity is WithComponents<E, C> {
+): entity is With<E, C> {
   return components.some((c) => entity[c] !== undefined)
 }
 
 export function hasNoComponents<E, C extends keyof E>(
   entity: E,
   ...components: C[]
-): entity is WithComponents<E, C> {
+): entity is With<E, C> {
   return components.every((c) => entity[c] === undefined)
 }

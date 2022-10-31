@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { archetype, Predicate, WithComponents } from "miniplex"
+import { tag, With } from "miniplex"
 import { Vector3 } from "three"
 import { spawnBullet } from "../entities/Bullets"
 import { ECS, Entity } from "../state"
@@ -8,15 +8,11 @@ import { useKeyboard } from "../util/useKeyboard"
 const tmpVec3 = new Vector3()
 
 /* Create a type specifically for our player entity. */
-export type Player = WithComponents<
-  Entity,
-  "isPlayer" | "transform" | "physics"
->
+export type Player = With<Entity, "isPlayer" | "transform" | "physics">
 
 /* Create a predicate that narrows the type to the above. */
-export const isPlayer = (entity: Entity): entity is Player => !!entity.isPlayer
+export const isPlayer = tag<Player>("isPlayer")
 
-/* Create a bucket. Its entities will be typed as `Player`. */
 const players = ECS.world.where(isPlayer)
 
 let lastFireTime = 0

@@ -1,6 +1,6 @@
 import { Bucket } from "@miniplex/bucket"
 import { archetype, World } from "../src"
-import { WithComponents } from "../src/types"
+import { Strictly, With } from "../src/types"
 
 type Entity = {
   name: string
@@ -8,7 +8,7 @@ type Entity = {
   height?: number
 }
 
-const hasAge = (v: any): v is WithComponents<Entity, "age"> =>
+const hasAge = (v: any): v is With<Entity, "age"> =>
   typeof v.age !== "undefined"
 
 describe(World, () => {
@@ -163,6 +163,17 @@ describe(World, () => {
       const withAge = world.where(archetype({ with: ["age"] }))
 
       expect(withAge.entities).toEqual([john])
+    })
+
+    it("can use the archetype predicate helper with a Generic", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John", age: 123, height: 180 })
+      const jane = world.add({ name: "Jane" })
+
+      type Human = With<Entity, "age" | "height">
+      const humans = world.where<Human>(archetype({ with: ["age"] }))
+
+      expect(humans.entities).toEqual([john])
     })
 
     it("can use the archetype predicate helper with its short form", () => {

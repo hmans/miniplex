@@ -1,9 +1,9 @@
 import { useFrame } from "@react-three/fiber"
-import { archetype, WithComponents } from "miniplex"
+import { archetype, With } from "miniplex"
 import { MathUtils, Vector3 } from "three"
 import { ECS, Entity } from "../state"
 
-type PhysicsEntity = WithComponents<Entity, "transform" | "physics">
+type PhysicsEntity = With<Entity, "transform" | "physics">
 
 const entities = ECS.world.where(archetype("transform", "physics"))
 

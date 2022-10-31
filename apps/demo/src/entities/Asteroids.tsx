@@ -1,5 +1,5 @@
 import { Composable, Modules } from "material-composer-r3f"
-import { archetype, Predicate, WithComponents } from "miniplex"
+import { archetype, With } from "miniplex"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { $, Input, InstanceID, Lerp } from "shader-composer"
@@ -11,7 +11,7 @@ import { ECS, Entity, physics, PhysicsLayers } from "../state"
 import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
 
-export type Asteroid = WithComponents<
+export type Asteroid = With<
   Entity,
   | "isAsteroid"
   | "transform"
@@ -21,9 +21,7 @@ export type Asteroid = WithComponents<
   | "render"
 >
 
-export const isAsteroid = archetype("isAsteroid") as Predicate<Entity, Asteroid>
-
-const asteroids = ECS.world.where(isAsteroid)
+const asteroids = ECS.world.where<Asteroid>(archetype("isAsteroid"))
 
 export const InstanceRNG =
   ({ seed }: { seed?: Input<"float"> } = {}) =>
