@@ -1,5 +1,19 @@
 # miniplex
 
+## 2.0.0-next.16
+
+### Patch Changes
+
+- 682caf4: Renamed the `WithComponent<E, P>` helper type to `With<E, P>`. Also added the `Strictly<T>` type that removes all non-required properties from a given type. These can be combined to create a type that is a strict version of a specificy type of entity:
+
+  ```ts
+  type Player = With<Entity, "isPlayer" | "transform" | "health">
+
+  const players = world.where<Strictly<Player>>(archetype("isPlayer"))
+  ```
+
+- 8ff926c: Experimental new `tagged` predicate factory.
+
 ## 2.0.0-next.15
 
 ### Patch Changes

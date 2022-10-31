@@ -1,5 +1,13 @@
 # miniplex
 
+## 2.0.0-next.16
+
+### Patch Changes
+
+- Updated dependencies [682caf4]
+- Updated dependencies [8ff926c]
+  - @miniplex/core@2.0.0-next.16
+
 ## 2.0.0-next.15
 
 ### Patch Changes
