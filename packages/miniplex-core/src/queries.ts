@@ -13,6 +13,11 @@ const notCache = new PredicateCache<Function, Function>()
 export const not = <E, D extends E>(predicate: Predicate<E, D>) =>
   notCache.get(predicate, (entity: E) => !predicate(entity)) as Predicate<E, E>
 
+/**
+ * Returns a predicate that checks if an entity has the requested tag.
+ */
+export const tag = <E>(tag: keyof E) => archetype(tag) as Predicate<any, E>
+
 /* Archetype Queries */
 
 export type ArchetypeQuery<E, All extends keyof E, None extends keyof E> = {
