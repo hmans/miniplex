@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { archetype, Predicate, WithComponents } from "miniplex"
+import { WithComponents, WithOnly } from "miniplex"
 import { Vector3 } from "three"
 import { spawnBullet } from "../entities/Bullets"
 import { ECS, Entity } from "../state"
@@ -8,7 +8,8 @@ import { useKeyboard } from "../util/useKeyboard"
 const tmpVec3 = new Vector3()
 
 /* Create a type specifically for our player entity. */
-export type Player = WithComponents<
+export type Player = WithOnly<Entity, "isPlayer" | "transform" | "physics">
+export type Player2 = WithComponents<
   Entity,
   "isPlayer" | "transform" | "physics"
 >
