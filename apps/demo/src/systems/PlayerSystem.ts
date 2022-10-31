@@ -14,7 +14,7 @@ export type Player = With<Entity, "isPlayer" | "transform" | "physics">
 export const isPlayer = (entity: Entity): entity is Player => !!entity.isPlayer
 
 /* Create a bucket. Its entities will be typed as `Strict<Player>`. The `Strict`
-utility type will remove all non-optional properties. */
+    utility type will remove all non-optional properties. */
 const players = ECS.world.where<Strict<Player>>(isPlayer)
 
 let lastFireTime = 0

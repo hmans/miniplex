@@ -14,6 +14,8 @@ export type WithOnly<E, P extends keyof E> = Strict<With<E, P>>
  */
 export type Strict<T> = WithoutOptional<T>
 
+/* Utility types */
+
 type OptionalKeys<T> = {
   [K in keyof T]-?: undefined extends T[K] ? K : never
 }
