@@ -1,4 +1,4 @@
-import { archetype, Bucket } from "miniplex"
+import { archetype } from "miniplex"
 import { useOnEntityAdded } from "miniplex/react"
 import { between } from "randomish"
 import { Vector3 } from "three"

@@ -1,5 +1,5 @@
 import { Composable, Modules } from "material-composer-r3f"
-import { archetype, WithOnly } from "miniplex"
+import { archetype, With } from "miniplex"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { $, Input, InstanceID, Lerp } from "shader-composer"
@@ -11,7 +11,7 @@ import { ECS, Entity, physics, PhysicsLayers } from "../state"
 import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
 
-export type Asteroid = WithOnly<
+export type Asteroid = With<
   Entity,
   | "isAsteroid"
   | "transform"
