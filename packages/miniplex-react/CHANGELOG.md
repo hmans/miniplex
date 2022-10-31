@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.0-next.15
+
+### Patch Changes
+
+- 12d2c94: `onEntityAdded(bucket, callback)` and `onEntityRemoved(bucket, callback)`
+- 5bf4733: Removed `IEntity` - amazingly, we no longer need it at all!
+
 ## 2.0.0-next.14
 
 ### Patch Changes

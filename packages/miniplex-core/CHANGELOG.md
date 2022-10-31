@@ -1,5 +1,14 @@
 # miniplex
 
+## 2.0.0-next.15
+
+### Patch Changes
+
+- 5bf4733: Removed `IEntity` - amazingly, we no longer need it at all!
+- 2efcd9e: `isArchetype(entity, query)`, `hasComponents(entity, ...c)`, `hasAnyComponents(entity, ...c)` and `hasNoComponents(entity, ...c)` helpers.
+- Updated dependencies [6eee056]
+  - @miniplex/bucket@2.0.0-next.13
+
 ## 2.0.0-next.12
 
 ### Patch Changes

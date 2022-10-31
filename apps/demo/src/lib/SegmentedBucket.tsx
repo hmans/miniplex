@@ -1,6 +1,14 @@
 import { useConst } from "@hmans/use-const"
 import { Bucket } from "miniplex"
 
+/**
+ * Creates a segmented bucket that can be used to render a large number of entities
+ * through React more efficiently. It creates a number of sub-buckets (`segments`, default is 30)
+ * that can be rendered separately. Newly added entities are distributed across these
+ * buckets, with the cursor moving to the next bucket after `limit` (default 100) additions.
+ *
+ * This is an experimental class that will eventually migrate into Miniplex itself.
+ */
 export class SegmentedBucket<E> extends Bucket<Bucket<E>> {
   private entityToSegment = new Map<E, Bucket<E>>()
   private counter = 0

@@ -1,4 +1,4 @@
-import { Bucket, IEntity, Predicate, World } from "@miniplex/core"
+import { Bucket, Predicate, World } from "@miniplex/core"
 import React, {
   createContext,
   FunctionComponent,
@@ -27,7 +27,7 @@ type CommonProps<E> = {
   as?: AsComponent<E>
 }
 
-export const createReactAPI = <E extends IEntity>(world: World<E>) => {
+export const createReactAPI = <E,>(world: World<E>) => {
   const EntityContext = createContext<E | null>(null)
 
   const useCurrentEntity = () => useContext(EntityContext)
@@ -142,7 +142,7 @@ export const createReactAPI = <E extends IEntity>(world: World<E>) => {
     /* Handle updates to existing component */
     useIsomorphicLayoutEffect(() => {
       if (props.value === undefined) return
-      entity[props.name] = props.value
+      entity[props.name] = props.value as typeof entity[P]
     }, [entity, props.name, props.value])
 
     /* Handle setting of child value */

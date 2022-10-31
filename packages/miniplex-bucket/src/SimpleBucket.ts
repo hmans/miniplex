@@ -1,5 +1,10 @@
 import { Event } from "@hmans/event"
 
+/**
+ * A class wrapping an array of entities of a specific type, providing
+ * performance-optimized methods for adding and removing entities, and events
+ * for when entities are added or removed.
+ */
 export class SimpleBucket<E> {
   /* Custom iterator that iterates over all entities in reverse order. */
   [Symbol.iterator]() {

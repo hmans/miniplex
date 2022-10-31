@@ -4,6 +4,7 @@ import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle } from "vfx-composer-r3f"
 import { applyDamage, queueDestroy } from "../actions"
 import { ECS, lifetime, physics, PhysicsLayers } from "../state"
+import { isPlayer } from "../systems/PlayerSystem"
 import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
 
@@ -16,7 +17,7 @@ export const Bullets = () => (
   </InstancedParticles>
 )
 
-const players = ECS.world.where(archetype("isPlayer"))
+const players = ECS.world.where(isPlayer)
 
 const jitter = new Quaternion()
 const axisZ = new Vector3(0, 0, 1)

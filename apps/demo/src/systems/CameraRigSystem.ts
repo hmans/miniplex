@@ -6,22 +6,22 @@ import { ECS } from "../state"
 const bodyTarget = new Vector3()
 const lookTarget = new Vector3()
 
+const players = ECS.world.where(archetype("isPlayer", "transform"))
+const cameras = ECS.world.where(archetype("isCamera", "transform"))
+
 export const CameraRigSystem = ({
   offset = new Vector3()
 }: {
   offset?: Vector3
 }) => {
-  const [player] = ECS.useEntities(archetype("isPlayer", "transform"))
-  const [camera] = ECS.useEntities(archetype("isCamera", "transform"))
-
   useFrame((_, dt) => {
+    const [player] = players
+    const [camera] = cameras
+
     if (!player || !camera) return
 
     bodyTarget.copy(player.transform.position).add(offset)
     lookTarget.copy(camera.transform.position).sub(offset)
-
-    /* Zoom out based on player velocity */
-    // bodyTarget.z += player.physics!.velocity.length()
 
     camera.transform.position.lerp(bodyTarget, dt * 2)
     camera.transform.lookAt(lookTarget)

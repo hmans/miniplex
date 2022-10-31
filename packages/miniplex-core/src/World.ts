@@ -1,7 +1,6 @@
 import { Bucket } from "@miniplex/bucket"
-import { IEntity } from "./types"
 
-export class World<E extends IEntity> extends Bucket<E> {
+export class World<E> extends Bucket<E> {
   constructor(entities: E[] = []) {
     super(entities)
 
