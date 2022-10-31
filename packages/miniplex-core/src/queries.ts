@@ -16,7 +16,7 @@ export const not = <E, D extends E>(predicate: Predicate<E, D>) =>
 /**
  * Returns a predicate that checks if an entity has the requested tag.
  */
-export const tag = <E>(tag: keyof E) => archetype(tag) as Predicate<any, E>
+export const tagged = <E>(tag: keyof E) => archetype(tag) as Predicate<any, E>
 
 /* Archetype Queries */
 

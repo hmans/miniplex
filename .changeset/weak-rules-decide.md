@@ -2,4 +2,4 @@
 "@miniplex/core": patch
 ---
 
-Experimental new `tag` predicate factory.
+Experimental new `tagged` predicate factory.

@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { tag, With } from "miniplex"
+import { tagged, With } from "miniplex"
 import { Vector3 } from "three"
 import { spawnBullet } from "../entities/Bullets"
 import { ECS, Entity } from "../state"
@@ -11,7 +11,7 @@ const tmpVec3 = new Vector3()
 export type Player = With<Entity, "isPlayer" | "transform" | "physics">
 
 /* Create a predicate that narrows the type to the above. */
-export const isPlayer = tag<Player>("isPlayer")
+export const isPlayer = tagged<Player>("isPlayer")
 
 const players = ECS.world.where(isPlayer)
 
