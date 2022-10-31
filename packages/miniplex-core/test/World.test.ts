@@ -1,6 +1,6 @@
 import { Bucket } from "@miniplex/bucket"
 import { archetype, World } from "../src"
-import { WithComponents } from "../src/types"
+import { With } from "../src/types"
 
 type Entity = {
   name: string
@@ -8,7 +8,7 @@ type Entity = {
   height?: number
 }
 
-const hasAge = (v: any): v is WithComponents<Entity, "age"> =>
+const hasAge = (v: any): v is With<Entity, "age"> =>
   typeof v.age !== "undefined"
 
 describe(World, () => {

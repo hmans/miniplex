@@ -1,5 +1,5 @@
 import { Predicate } from "@miniplex/bucket"
-import { WithComponents } from "./types"
+import { With } from "./types"
 import { PredicateCache } from "./util/PredicateCache"
 
 const normalizeComponents = <E>(components: (keyof E)[]) => [
@@ -31,20 +31,20 @@ const normalizeQuery = <E, With extends keyof E, Without extends keyof E>(
       query.without !== undefined ? normalizeComponents<E>(query.without) : []
   } as ArchetypeQuery<E, With, Without>)
 
-export function archetype<E, With extends keyof E>(
-  ...components: With[]
-): Predicate<E, WithComponents<E, With>>
+export function archetype<E, P extends keyof E>(
+  ...components: P[]
+): Predicate<E, With<E, P>>
 
-export function archetype<E, With extends keyof E, Without extends keyof E>(
-  partialQuery: Partial<ArchetypeQuery<E, With, Without>>
-): Predicate<E, WithComponents<E, With>>
+export function archetype<E, P extends keyof E, N extends keyof E>(
+  partialQuery: Partial<ArchetypeQuery<E, P, N>>
+): Predicate<E, With<E, P>>
 
-export function archetype<E, With extends keyof E, Without extends keyof E>(
-  partialQuery: Partial<ArchetypeQuery<E, With, Without>> | With,
-  ...extra: With[]
+export function archetype<E, P extends keyof E, N extends keyof E>(
+  partialQuery: Partial<ArchetypeQuery<E, P, N>> | P,
+  ...extra: P[]
 ) {
   if (typeof partialQuery !== "object") {
-    return archetype<E, With, never>({ with: [partialQuery, ...extra] })
+    return archetype<E, P, never>({ with: [partialQuery, ...extra] })
   }
 
   /* Normalize and deduplicate given query */
@@ -54,36 +54,36 @@ export function archetype<E, With extends keyof E, Without extends keyof E>(
   return archetypeCache.get(
     JSON.stringify(query),
 
-    (entity: E): entity is WithComponents<E, With> =>
+    (entity: E): entity is With<E, P> =>
       hasComponents(entity, ...query.with) &&
       hasNoComponents(entity, ...query.without)
   )
 }
 
-export function isArchetype<E, With extends keyof E>(
+export function isArchetype<E, P extends keyof E>(
   entity: E,
-  ...components: With[]
-): entity is WithComponents<E, With> {
+  ...components: P[]
+): entity is With<E, P> {
   return hasComponents(entity, ...components)
 }
 
 export function hasComponents<E, C extends keyof E>(
   entity: E,
   ...components: C[]
-): entity is WithComponents<E, C> {
+): entity is With<E, C> {
   return components.every((c) => entity[c] !== undefined)
 }
 
 export function hasAnyComponents<E, C extends keyof E>(
   entity: E,
   ...components: C[]
-): entity is WithComponents<E, C> {
+): entity is With<E, C> {
   return components.some((c) => entity[c] !== undefined)
 }
 
 export function hasNoComponents<E, C extends keyof E>(
   entity: E,
   ...components: C[]
-): entity is WithComponents<E, C> {
+): entity is With<E, C> {
   return components.every((c) => entity[c] === undefined)
 }
