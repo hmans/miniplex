@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0-next.17
+
+### Patch Changes
+
+- a293a9c: The object returned by `createReactAPI` now contains the `world` originally passed into it, as `world`.
+
 ## 2.0.0-next.15
 
 ### Patch Changes
