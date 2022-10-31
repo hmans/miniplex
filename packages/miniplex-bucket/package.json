@@ -15,7 +15,7 @@
     "state-management"
   ],
   "sideEffects": false,
-  "version": "2.0.0-next.12",
+  "version": "2.0.0-next.13",
   "main": "dist/miniplex-bucket.cjs.js",
   "module": "dist/miniplex-bucket.esm.js",
   "types": "dist/miniplex-bucket.cjs.d.ts",
