@@ -1,5 +1,11 @@
 # miniplex
 
+## 2.0.0-next.13
+
+### Patch Changes
+
+- 6eee056: Extracted the simple, non-queryable core of the `Bucket` class into a new `SimpleBucket` class.
+
 ## 2.0.0-next.12
 
 ### Patch Changes
