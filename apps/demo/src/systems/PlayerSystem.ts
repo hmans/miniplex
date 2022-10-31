@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { Strict, With } from "miniplex"
+import { Strictly, With } from "miniplex"
 import { Vector3 } from "three"
 import { spawnBullet } from "../entities/Bullets"
 import { ECS, Entity } from "../state"
@@ -15,7 +15,7 @@ export const isPlayer = (entity: Entity): entity is Player => !!entity.isPlayer
 
 /* Create a bucket. Its entities will be typed as `Strict<Player>`. The `Strict`
     utility type will remove all non-optional properties. */
-const players = ECS.world.where<Strict<Player>>(isPlayer)
+const players = ECS.world.where<Strictly<Player>>(isPlayer)
 
 let lastFireTime = 0
 
