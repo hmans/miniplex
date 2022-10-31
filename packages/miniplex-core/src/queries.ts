@@ -15,36 +15,36 @@ export const not = <E, D extends E>(predicate: Predicate<E, D>) =>
 
 /* Archetype Queries */
 
-export type ArchetypeQuery<E, All extends keyof E, None extends keyof E> = {
-  with: All[]
-  without: None[]
+export type ArchetypeQuery<E, P extends keyof E> = {
+  with: P[]
+  without: (keyof E)[]
 }
 
 const archetypeCache = new PredicateCache<string, Function>()
 
-const normalizeQuery = <E, With extends keyof E, Without extends keyof E>(
-  query: Partial<ArchetypeQuery<E, With, Without>>
+const normalizeQuery = <E, P extends keyof E>(
+  query: Partial<ArchetypeQuery<E, P>>
 ) =>
   ({
     with: query.with !== undefined ? normalizeComponents<E>(query.with) : [],
     without:
       query.without !== undefined ? normalizeComponents<E>(query.without) : []
-  } as ArchetypeQuery<E, With, Without>)
+  } as ArchetypeQuery<E, P>)
 
 export function archetype<E, P extends keyof E>(
   ...components: P[]
 ): Predicate<E, With<E, P>>
 
-export function archetype<E, P extends keyof E, N extends keyof E>(
-  partialQuery: Partial<ArchetypeQuery<E, P, N>>
+export function archetype<E, P extends keyof E>(
+  partialQuery: Partial<ArchetypeQuery<E, P>>
 ): Predicate<E, With<E, P>>
 
-export function archetype<E, P extends keyof E, N extends keyof E>(
-  partialQuery: Partial<ArchetypeQuery<E, P, N>> | P,
+export function archetype<E, P extends keyof E>(
+  partialQuery: Partial<ArchetypeQuery<E, P>> | P,
   ...extra: P[]
 ) {
   if (typeof partialQuery !== "object") {
-    return archetype<E, P, never>({ with: [partialQuery, ...extra] })
+    return archetype<E, P>({ with: [partialQuery, ...extra] })
   }
 
   /* Normalize and deduplicate given query */
