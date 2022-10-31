@@ -5,7 +5,10 @@ import { Vector3 } from "three"
 import { Asteroid, spawnAsteroid } from "../entities/Asteroids"
 import { ECS } from "../state"
 
-const asteroids = ECS.world.where(archetype("isAsteroid")) as Bucket<Asteroid>
+/* Query by archetype, supply custom type of resulting entities */
+const asteroids = ECS.world.where<Asteroid>(archetype("isAsteroid"))
+
+/* Nest queries to get more specific results */
 const destroyedAsteroids = asteroids.where(archetype("destroy"))
 
 export const AsteroidsSystem = () => {

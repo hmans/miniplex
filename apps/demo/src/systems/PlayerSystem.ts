@@ -14,7 +14,7 @@ export type Player = WithComponents<
 >
 
 /* Create a predicate that narrows the type to the above. */
-export const isPlayer = archetype("isPlayer") as Predicate<Entity, Player>
+export const isPlayer = (entity: Entity): entity is Player => !!entity.isPlayer
 
 /* Create a bucket. Its entities will be typed as `Player`. */
 const players = ECS.world.where(isPlayer)
