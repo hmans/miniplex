@@ -1,4 +1,4 @@
-import { Predicate } from "@miniplex/bucket"
+import { Bucket, Predicate } from "@miniplex/bucket"
 import { With } from "./types"
 import { PredicateCache } from "./util/PredicateCache"
 
@@ -91,4 +91,13 @@ export function hasNoComponents<E, C extends keyof E>(
   ...components: C[]
 ): entity is With<E, C> {
   return components.every((c) => entity[c] === undefined)
+}
+
+/* Experimental: getArchetype */
+
+export function getArchetype<E, P extends keyof E>(
+  source: Bucket<E>,
+  ...components: P[]
+) {
+  return source.where(archetype(...components))
 }

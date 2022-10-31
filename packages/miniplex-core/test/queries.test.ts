@@ -1,4 +1,5 @@
-import { archetype, not } from "../src/queries"
+import { World } from "../src"
+import { archetype, getArchetype, not } from "../src/queries"
 
 describe(not, () => {
   it("negates the predicte", () => {
@@ -71,5 +72,18 @@ describe(archetype, () => {
         without: ["health"]
       })
     )
+  })
+})
+
+describe(getArchetype, () => {
+  type Entity = { name: string; age?: number; height?: number }
+
+  it("returns entities of the given type", () => {
+    const world = new World<Entity>()
+    const withAge = getArchetype(world, "age")
+    const john = world.add({ name: "John", age: 123 })
+    const jane = world.add({ name: "Jane" })
+
+    expect(withAge.entities).toEqual([john])
   })
 })
