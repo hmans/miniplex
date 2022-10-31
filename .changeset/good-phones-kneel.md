@@ -7,5 +7,5 @@ Renamed the `WithComponent<E, P>` helper type to `With<E, P>`. Also added the `S
 ```ts
 type Player = With<Entity, "isPlayer" | "transform" | "health">
 
-const players = world.where<Strict<Player>>(archetype("isPlayer"))
+const players = world.where<Strictly<Player>>(archetype("isPlayer"))
 ```
