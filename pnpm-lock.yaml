@@ -126,11 +126,13 @@ importers:
 
   packages/miniplex:
     specifiers:
+      '@hmans/queue': ^0.0.1
       '@miniplex/core': 2.0.0-next.16
       '@miniplex/react': 2.0.0-next.15
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
+      '@hmans/queue': 0.0.1
       '@miniplex/core': link:../miniplex-core
       '@miniplex/react': link:../miniplex-react
     devDependencies:
@@ -1925,6 +1927,10 @@ packages:
 
   /@hmans/event/0.2.0:
     resolution: {integrity: sha512-VrDaUafGrcT2yuC59yTxpxT7KsWoST6zNd/JdATgU4y/jEHghL5yqY9sNftNajo5VpzJkF9XxwxBixz6UlGNfg==}
+    dev: false
+
+  /@hmans/queue/0.0.1:
+    resolution: {integrity: sha512-Mm8oQRFRoiEYQ3QD9CD14DTaShd21nzNrUFyBhFxy+TduKf2PdMRfHHx7lDvEpbODGNlj+e8mcWGj/YjWmC3Bw==}
     dev: false
 
   /@hmans/r3f-animate/0.0.5_cpod6d3cr76qxhqbh6bdljlrqm:
