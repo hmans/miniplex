@@ -8,11 +8,7 @@ export class EntityBucket<E> extends Bucket<E> {
     return true
   }
 
-  archetype<P extends keyof E>(...components: P[]) {
-    /* TODO: find and return existing archetype bucket */
-
-    /* Create a new bucket */
-    const bucket = new Archetype<With<E, P>>()
+  addBucket<D extends E>(bucket: EntityBucket<D>) {
     this.buckets.add(bucket)
 
     this.onEntityAdded.add((e) => {
@@ -28,6 +24,13 @@ export class EntityBucket<E> extends Bucket<E> {
     })
 
     return bucket
+  }
+
+  archetype<P extends keyof E>(...components: P[]): Archetype<With<E, P>> {
+    /* TODO: find and return existing archetype bucket */
+
+    /* Create a new bucket */
+    return this.addBucket(new Archetype())
   }
 }
 
