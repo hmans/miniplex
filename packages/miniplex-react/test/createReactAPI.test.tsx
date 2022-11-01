@@ -1,4 +1,4 @@
-import { World } from "@miniplex/core"
+import { With, World } from "@miniplex/core"
 import "@testing-library/jest-dom"
 import { act, render, screen } from "@testing-library/react"
 import React from "react"
@@ -182,47 +182,49 @@ describe("<Property>", () => {
   })
 })
 
-describe("<Entities bucket>", () => {
-  it("renders the entities within the given bucket", () => {
-    const world = new World<Entity>()
-    const { Entities } = createReactAPI(world)
+describe("<Entities>", () => {
+  describe("with a bucket", () => {
+    it("renders the entities within the given bucket", () => {
+      const world = new World<Entity>()
+      const { Entities } = createReactAPI(world)
 
-    world.add({ name: "Alice" })
-    world.add({ name: "Bob" })
+      world.add({ name: "Alice" })
+      world.add({ name: "Bob" })
 
-    render(<Entities in={world}>{(entity) => <p>{entity.name}</p>}</Entities>)
+      render(<Entities in={world}>{(entity) => <p>{entity.name}</p>}</Entities>)
 
-    expect(screen.getByText("Alice")).toBeInTheDocument()
-    expect(screen.getByText("Bob")).toBeInTheDocument()
-  })
-
-  it("re-renders the entities when the bucket contents change", () => {
-    const world = new World<Entity>()
-    const { Entities } = createReactAPI(world)
-
-    const alice = world.add({ name: "Alice" })
-    world.add({ name: "Bob" })
-
-    render(<Entities in={world}>{(entity) => <p>{entity.name}</p>}</Entities>)
-
-    expect(screen.getByText("Alice")).toBeInTheDocument()
-    expect(screen.getByText("Bob")).toBeInTheDocument()
-
-    act(() => {
-      world.add({ name: "Charlie" })
+      expect(screen.getByText("Alice")).toBeInTheDocument()
+      expect(screen.getByText("Bob")).toBeInTheDocument()
     })
 
-    expect(screen.getByText("Alice")).toBeInTheDocument()
-    expect(screen.getByText("Bob")).toBeInTheDocument()
-    expect(screen.getByText("Charlie")).toBeInTheDocument()
+    it("re-renders the entities when the bucket contents change", () => {
+      const world = new World<Entity>()
+      const { Entities } = createReactAPI(world)
 
-    act(() => {
-      world.remove(alice)
+      const alice = world.add({ name: "Alice" })
+      world.add({ name: "Bob" })
+
+      render(<Entities in={world}>{(entity) => <p>{entity.name}</p>}</Entities>)
+
+      expect(screen.getByText("Alice")).toBeInTheDocument()
+      expect(screen.getByText("Bob")).toBeInTheDocument()
+
+      act(() => {
+        world.add({ name: "Charlie" })
+      })
+
+      expect(screen.getByText("Alice")).toBeInTheDocument()
+      expect(screen.getByText("Bob")).toBeInTheDocument()
+      expect(screen.getByText("Charlie")).toBeInTheDocument()
+
+      act(() => {
+        world.remove(alice)
+      })
+
+      expect(screen.queryByText("Alice")).toBeNull()
+      expect(screen.getByText("Bob")).toBeInTheDocument()
+      expect(screen.getByText("Charlie")).toBeInTheDocument()
     })
-
-    expect(screen.queryByText("Alice")).toBeNull()
-    expect(screen.getByText("Bob")).toBeInTheDocument()
-    expect(screen.getByText("Charlie")).toBeInTheDocument()
   })
 
   describe("given an `as` prop", () => {
@@ -240,84 +242,6 @@ describe("<Entities bucket>", () => {
       expect(screen.getByText("Alice")).toBeInTheDocument()
       expect(screen.getByText("Bob")).toBeInTheDocument()
     })
-  })
-})
-
-describe("<Entities where>", () => {
-  it("renders the entities returned by the specified query", () => {
-    const world = new World<Entity>()
-    const { Entities } = createReactAPI(world)
-
-    world.add({ name: "Alice" })
-    world.add({ name: "Bob" })
-
-    render(
-      <Entities in={world.archetype("name")}>
-        {(entity) => <p>{entity.name}</p>}
-      </Entities>
-    )
-
-    expect(screen.getByText("Alice")).toBeInTheDocument()
-    expect(screen.getByText("Bob")).toBeInTheDocument()
-  })
-
-  it("re-renders the entities when the bucket contents change", () => {
-    const world = new World<Entity>()
-    const { Entities } = createReactAPI(world)
-
-    world.add({ name: "Alice" })
-    world.add({ name: "Bob" })
-
-    render(
-      <Entities in={world.archetype("name")}>
-        {(entity) => <p>{entity.name}</p>}
-      </Entities>
-    )
-
-    expect(screen.getByText("Alice")).toBeInTheDocument()
-    expect(screen.getByText("Bob")).toBeInTheDocument()
-
-    act(() => {
-      world.add({ name: "Charlie" })
-    })
-
-    expect(screen.getByText("Alice")).toBeInTheDocument()
-    expect(screen.getByText("Bob")).toBeInTheDocument()
-    expect(screen.getByText("Charlie")).toBeInTheDocument()
-  })
-
-  describe("given an `as` prop", () => {
-    it("renders the entities using the given component, passing the entity to it", () => {
-      const world = new World<Entity>()
-      const { Entities } = createReactAPI(world)
-
-      world.add({ name: "Alice" })
-      world.add({ name: "Bob" })
-
-      const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
-
-      render(<Entities as={User} in={world.archetype("name")} />)
-
-      expect(screen.getByText("Alice")).toBeInTheDocument()
-      expect(screen.getByText("Bob")).toBeInTheDocument()
-    })
-  })
-
-  it("accepts a query object as its `query` prop", () => {
-    const world = new World<Entity>()
-    const { Entities } = createReactAPI(world)
-
-    world.add({ name: "Alice" })
-    world.add({ name: "Bob", age: 100 })
-
-    render(
-      <Entities in={world.archetype("name")}>
-        {(entity) => <p>{entity.name}</p>}
-      </Entities>
-    )
-
-    expect(screen.getByText("Alice")).toBeInTheDocument()
-    expect(screen.getByText("Bob")).toBeInTheDocument()
   })
 })
 

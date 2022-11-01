@@ -92,25 +92,14 @@ export const createReactAPI = <E,>(world: World<E>) => {
     RawEntitiesInBucket
   ) as typeof RawEntitiesInBucket
 
-  const EntitiesInQuery = <D extends E>({
-    where,
-    ...props
-  }: CommonProps<D> & {
-    where: Predicate<E, D>
-  }) => (
-    <EntitiesInBucket bucket={useEntities(world.archetype(where))} {...props} />
-  )
-
   function Entities<D extends E>({
     in: source,
     ...props
   }: CommonProps<D> & {
-    in: Predicate<E, D> | Bucket<D> | D[]
+    in: Bucket<D> | D[]
   }): JSX.Element {
     if (source instanceof Bucket) {
       return <EntitiesInBucket bucket={source} {...props} />
-    } else if (typeof source === "function") {
-      return <EntitiesInQuery where={source} {...props} />
     } else {
       return <EntitiesInList entities={source} {...props} />
     }
