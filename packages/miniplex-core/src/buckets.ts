@@ -1,5 +1,5 @@
 import { Bucket } from "@miniplex/bucket"
-import { memoizeQuery } from "./queries"
+import { hasComponents, hasNoComponents, memoizeQuery } from "./queries"
 import { ArchetypeQuery, Predicate, With } from "./types"
 
 /**
@@ -119,19 +119,14 @@ export class PredicateBucket<E> extends EntityBucket<E> {
  * specific set of components.
  */
 export class ArchetypeBucket<E> extends EntityBucket<E> {
-  constructor(public query: ArchetypeQuery<any, any>) {
+  constructor(public query: ArchetypeQuery<E, keyof E>) {
     super()
   }
 
   wants(entity: any): entity is E {
-    const hasWith =
-      this.query.with === undefined ||
-      this.query.with.every((p) => entity[p] !== undefined)
-
-    const hasWithout =
-      this.query.without === undefined ||
-      this.query.without.every((p) => entity[p] === undefined)
-
-    return hasWith && hasWithout
+    return (
+      hasComponents(entity, ...(this.query.with || [])) &&
+      hasNoComponents(entity, ...(this.query.without || []))
+    )
   }
 }

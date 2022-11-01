@@ -43,16 +43,10 @@ export function hasComponents<E, C extends keyof E>(
   return components.every((c) => entity[c] !== undefined)
 }
 
-export function hasAnyComponents<E, C extends keyof E>(
-  entity: E,
-  ...components: C[]
-): entity is With<E, C> {
+export function hasAnyComponents<E>(entity: E, ...components: (keyof E)[]) {
   return components.some((c) => entity[c] !== undefined)
 }
 
-export function hasNoComponents<E, C extends keyof E>(
-  entity: E,
-  ...components: C[]
-): entity is With<E, C> {
+export function hasNoComponents<E>(entity: E, ...components: (keyof E)[]) {
   return components.every((c) => entity[c] === undefined)
 }
