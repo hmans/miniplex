@@ -1,3 +1,7 @@
+export type Predicate<E, D extends E> =
+  | ((v: E) => v is D)
+  | ((entity: E) => boolean)
+
 /**
  * A utility type that marks the specified properties as required.
  */
