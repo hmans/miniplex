@@ -50,6 +50,13 @@ describe(EntityBucket, () => {
         expect(withAge).toBeInstanceOf(ArchetypeBucket)
         expect(withAge.entities).toEqual([john])
       })
+
+      it("always returns the same archetype bucket for equal queries", () => {
+        const bucket = new EntityBucket<Entity>()
+        const withAge1 = bucket.archetype("name", undefined!, "age")
+        const withAge2 = bucket.archetype("age", "name")
+        expect(withAge1).toBe(withAge2)
+      })
     })
 
     describe("with a predicate", () => {
