@@ -46,7 +46,16 @@ export class World<E> extends EntityBucket<E> {
       const future = { ...entity }
       delete future[component]
 
-      // this.test(entity, future)
+      for (const bucket of this.buckets) {
+        const has = bucket.has(entity)
+        const wants = bucket.wants(future) // !
+
+        if (has && !wants) {
+          bucket.remove(entity)
+        } else if (!has && wants) {
+          bucket.add(entity)
+        }
+      }
     }
 
     /* Remove the component. */

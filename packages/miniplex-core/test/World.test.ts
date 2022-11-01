@@ -75,4 +75,23 @@ describe(World, () => {
       expect(withAge.entities).toEqual([john])
     })
   })
+
+  describe("removeComponent", () => {
+    it("removes a component from an entity", () => {
+      const world = new World<Entity>()
+      const entity = world.add({ name: "John", age: 30 })
+      world.removeComponent(entity, "age")
+      expect(entity).toEqual({ name: "John" })
+    })
+
+    it("removes the entity from any relevant archetypes", () => {
+      const world = new World<Entity>()
+      const withAge = world.archetype({ with: ["age"] })
+      const john = world.add({ name: "John", age: 30 })
+      const jane = world.add({ name: "Jane" })
+
+      world.removeComponent(john, "age")
+      expect(withAge.entities).toEqual([])
+    })
+  })
 })
