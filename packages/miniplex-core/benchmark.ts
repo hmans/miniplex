@@ -1,6 +1,13 @@
 import { World } from "./src"
+import chalk from "chalk"
 
 const entityCount = 1_000_000
+
+const heading = (text: string) => {
+  console.log()
+  console.log(chalk.bgCyanBright(` ${text} `))
+  console.log()
+}
 
 const profile = (name: string, setup: () => () => () => boolean) => {
   const test = setup()
@@ -37,6 +44,8 @@ type Entity = {
 
 console.log(`Entity count: ${entityCount}\n`)
 
+heading("Entity Addition")
+
 profile("add", () => {
   const world = new World<Entity>()
 
@@ -68,6 +77,8 @@ profile("add (with archetypes)", () => {
     return () => world.size === entityCount
   }
 })
+
+heading("Entity Removal")
 
 profile("remove (random)", () => {
   const world = new World<Entity>()
@@ -149,6 +160,8 @@ profile("clear (with archetypes)", () => {
   }
 })
 
+heading("Iteration")
+
 profile("simulate (iterator)", () => {
   const world = new World<Entity>()
 
@@ -218,6 +231,8 @@ profile("simulate (array 👎)", () => {
     return () => i === entityCount
   }
 })
+
+heading("Iteration with predicates")
 
 profile("value predicate check (where)", () => {
   const world = new World<Entity>()
