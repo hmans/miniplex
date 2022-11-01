@@ -256,10 +256,68 @@ describe("<Entities>", () => {
 
       const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
 
-      render(<Entities as={User} in={world} />)
+      render(<Entities in={world} as={User} />)
 
       expect(screen.getByText("Alice")).toBeInTheDocument()
       expect(screen.getByText("Bob")).toBeInTheDocument()
+    })
+  })
+})
+
+describe("<Archetype>", () => {
+  it("renders the entities that match the archetype", () => {
+    const world = new World<Entity>()
+    const { Archetype } = createReactAPI(world)
+
+    world.add({ name: "John", age: 45 })
+    world.add({ name: "Alice" })
+    world.add({ name: "Charlie", age: 32, height: 180 })
+
+    render(
+      <Archetype with="age" without="height">
+        {(entity) => <p>{entity.name}</p>}
+      </Archetype>
+    )
+
+    expect(screen.getByText("John")).toBeInTheDocument()
+    expect(screen.queryByText("Alice")).toBeNull()
+    expect(screen.queryByText("Charlie")).toBeNull()
+  })
+
+  it("re-renders the entities when the archetype matches change", () => {
+    const world = new World<Entity>()
+    const { Archetype } = createReactAPI(world)
+
+    world.add({ name: "John", age: 45 })
+    const alice = world.add({ name: "Alice" })
+
+    render(<Archetype with="age">{(entity) => <p>{entity.name}</p>}</Archetype>)
+
+    expect(screen.getByText("John")).toBeInTheDocument()
+    expect(screen.queryByText("Alice")).toBeNull()
+
+    act(() => {
+      world.addComponent(alice, "age", 30)
+    })
+
+    expect(screen.getByText("Alice")).toBeInTheDocument()
+  })
+
+  describe("given an `as` prop", () => {
+    it("renders the entities using the given component, passing the entity to it", () => {
+      const world = new World<Entity>()
+      const { Archetype } = createReactAPI(world)
+
+      world.add({ name: "John", age: 45 })
+      world.add({ name: "Alice" })
+      world.add({ name: "Charlie", age: 32, height: 180 })
+
+      const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
+
+      render(<Archetype with="age" as={User} />)
+
+      expect(screen.getByText("John")).toBeInTheDocument()
+      expect(screen.queryByText("Alice")).toBeNull()
     })
   })
 })
