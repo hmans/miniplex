@@ -13,7 +13,7 @@ export class EntityBucket<E> extends Bucket<E> {
     return true
   }
 
-  addBucket(bucket: EntityBucket<any>) {
+  addBucket<B extends EntityBucket<any>>(bucket: B) {
     this.buckets.add(bucket)
 
     /* Process existing entities */
@@ -36,6 +36,16 @@ export class EntityBucket<E> extends Bucket<E> {
     })
 
     return bucket
+  }
+
+  where<D extends E>(predicate: Predicate<E, D>): PredicateBucket<D> {
+    for (const bucket of this.buckets) {
+      if (bucket instanceof PredicateBucket && bucket.predicate === predicate) {
+        return bucket
+      }
+    }
+
+    return this.addBucket(new PredicateBucket(predicate))
   }
 
   /* Predicate form */
@@ -68,13 +78,7 @@ export class EntityBucket<E> extends Bucket<E> {
   ) {
     /* Handle the function form */
     if (typeof query === "function") {
-      for (const bucket of this.buckets) {
-        if (bucket instanceof PredicateBucket && bucket.predicate === query) {
-          return bucket
-        }
-      }
-
-      return this.addBucket(new PredicateBucket(query))
+      return this.where(query)
     }
 
     /* Handle the string form */
