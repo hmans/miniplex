@@ -56,4 +56,23 @@ describe(World, () => {
       expect(world.entity(id)).toBe(entity)
     })
   })
+
+  describe("addComponent", () => {
+    it("adds a component to an entity", () => {
+      const world = new World<Entity>()
+      const entity = world.add({ name: "John" })
+      world.addComponent(entity, "age", 30)
+      expect(entity).toEqual({ name: "John", age: 30 })
+    })
+
+    it("adds the entity to any relevant archetypes", () => {
+      const world = new World<Entity>()
+      const withAge = world.archetype({ with: ["age"] })
+      const john = world.add({ name: "John" })
+      const jane = world.add({ name: "Jane" })
+
+      world.addComponent(john, "age", 30)
+      expect(withAge.entities).toEqual([john])
+    })
+  })
 })

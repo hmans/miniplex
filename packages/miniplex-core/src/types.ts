@@ -2,6 +2,11 @@ export type Predicate<E, D extends E> =
   | ((v: E) => v is D)
   | ((entity: E) => boolean)
 
+export type ArchetypeQuery<E, P extends keyof E> = {
+  with?: P[]
+  without?: (keyof E)[]
+}
+
 /**
  * A utility type that marks the specified properties as required.
  */

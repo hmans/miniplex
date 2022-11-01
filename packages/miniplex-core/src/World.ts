@@ -24,7 +24,16 @@ export class World<E> extends EntityBucket<E> {
 
     /* Touch the entity, triggering re-checks of indices */
     if (this.has(entity)) {
-      // this.test(entity)
+      for (const bucket of this.buckets) {
+        const has = bucket.has(entity)
+        const wants = bucket.wants(entity)
+
+        if (has && !wants) {
+          bucket.remove(entity)
+        } else if (!has && wants) {
+          bucket.add(entity)
+        }
+      }
     }
   }
 

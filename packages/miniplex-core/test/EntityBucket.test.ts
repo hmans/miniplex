@@ -12,7 +12,7 @@ describe(EntityBucket, () => {
   describe("archetype", () => {
     it("returns an archetype bucket", () => {
       const bucket = new EntityBucket<Entity>()
-      const archetype = bucket.archetype("age")
+      const archetype = bucket.archetype({ with: ["age"] })
       expect(archetype).toBeInstanceOf(Archetype)
     })
   })
@@ -26,7 +26,7 @@ describe(EntityBucket, () => {
 
     it("adds the entity to any relevant archetypes", () => {
       const bucket = new EntityBucket<Entity>()
-      const archetype = bucket.archetype("age")
+      const archetype = bucket.archetype({ with: ["age"] })
       const entity = bucket.add({ name: "John", age: 30 })
       expect(archetype.entities).toEqual([entity])
     })
@@ -44,7 +44,7 @@ describe(EntityBucket, () => {
 
     it("removes the entity from any relevant archetypes", () => {
       const bucket = new EntityBucket<Entity>()
-      const archetype = bucket.archetype("age")
+      const archetype = bucket.archetype({ with: ["age"] })
       const entity = bucket.add({ name: "John", age: 30 })
       expect(archetype.entities).toEqual([entity])
 
