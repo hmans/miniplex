@@ -69,6 +69,14 @@ export class EntityBucket<E> extends Bucket<E> {
     return this.addBucket(new PredicateBucket(predicate))
   }
 
+  with<P extends keyof E>(...props: P[]) {
+    return this.archetype(...props)
+  }
+
+  without<P extends keyof E>(...props: P[]) {
+    return this.archetype({ without: props })
+  }
+
   /* Predicate form */
 
   archetype<D extends E>(predicate: Predicate<E, D>): PredicateBucket<D>
