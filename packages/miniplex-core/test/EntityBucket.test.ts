@@ -1,12 +1,10 @@
-import { ArchetypeBucket, EntityBucket, PredicateBucket, With } from "../src"
+import { ArchetypeBucket, EntityBucket, PredicateBucket } from "../src"
 
 type Entity = {
   name: string
   age?: number
   height?: number
 }
-
-type EntityWithAge = With<Entity, "age">
 
 describe(EntityBucket, () => {
   describe("where", () => {
