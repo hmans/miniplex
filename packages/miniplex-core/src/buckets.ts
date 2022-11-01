@@ -39,7 +39,7 @@ export class EntityBucket<E> extends Bucket<E> {
     return bucket
   }
 
-  where<D extends E>(predicate: Predicate<E, D>): PredicateBucket<D> {
+  derive<D extends E>(predicate: Predicate<E, D>): PredicateBucket<D> {
     for (const bucket of this.buckets) {
       if (bucket instanceof PredicateBucket && bucket.predicate === predicate) {
         return bucket
@@ -79,7 +79,7 @@ export class EntityBucket<E> extends Bucket<E> {
   ) {
     /* Handle the function form */
     if (typeof query === "function") {
-      return this.where(query)
+      return this.derive(query)
     }
 
     /* Handle the string form */
