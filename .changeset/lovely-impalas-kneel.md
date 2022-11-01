@@ -19,16 +19,15 @@ These can now be nested:
 world.archetype("name").archetype("age")
 ```
 
-**The previous `where` API that would create a bucket based on a custom predicate is now called `derive`** (hello, hold friend). It, too, can be chained:
+`archetype` also takes a function predicate:
 
 ```js
-world
-  .archetype("age")
-  .derive((e) => e.age > 18)
-  .archetype("admin")
+world.archetype("age").archetype((e) => e.age > 18)
 ```
 
-**`where` now produces a short-lived iterator** that allows a system to only operate on a subset of entities, without creating a new archetype, which in some situations will be much more efficient than creating value-based archetypes and keeping them updated:
+> **Warning** This will only be evaluated whenever the entity is added to the archetype from its source, and every time components are added to or removed from it, but not when any of the actual component values change.
+
+**`where` produces a short-lived iterator** that allows a system to only operate on a subset of entities, without creating a new archetype, which in some situations will be much more efficient than creating value-based archetypes and keeping them updated:
 
 ```js
 const withAge = world.archetype("age")

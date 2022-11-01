@@ -66,16 +66,6 @@ export class EntityBucket<E> extends Bucket<E> {
     }
   }
 
-  derive<D extends E>(predicate: Predicate<E, D>): PredicateBucket<D> {
-    for (const bucket of this.buckets) {
-      if (bucket instanceof PredicateBucket && bucket.predicate === predicate) {
-        return bucket
-      }
-    }
-
-    return this.addBucket(new PredicateBucket(predicate))
-  }
-
   /* with */
 
   with<P extends keyof E>(...props: P[]): ArchetypeBucket<With<E, P>>
@@ -130,7 +120,13 @@ export class EntityBucket<E> extends Bucket<E> {
   ) {
     /* Handle the function form */
     if (typeof query === "function") {
-      return this.derive(query)
+      for (const bucket of this.buckets) {
+        if (bucket instanceof PredicateBucket && bucket.predicate === query) {
+          return bucket
+        }
+      }
+
+      return this.addBucket(new PredicateBucket(query))
     }
 
     /* Handle the string form */

@@ -26,34 +26,6 @@ describe(EntityBucket, () => {
     })
   })
 
-  describe("derive", () => {
-    it("returns a PredicateBucket", () => {
-      const bucket = new EntityBucket<Entity>()
-      const predicate = (entity: Entity) => entity.age !== undefined
-      const predicateBucket = bucket.derive(predicate)
-      expect(predicateBucket.derive(predicate)).toBeInstanceOf(PredicateBucket)
-      expect(predicateBucket.predicate).toBe(predicate)
-    })
-
-    it("returns an archetype containing all entities that satisfy the specified predicate", () => {
-      const bucket = new EntityBucket<Entity>()
-      const john = bucket.add({ name: "John", age: 30 })
-      const jane = bucket.add({ name: "Jane" })
-
-      const withAge = bucket.derive((entity) => Number(entity.age) > 25)
-      expect(withAge).toBeInstanceOf(PredicateBucket)
-      expect(withAge.entities).toEqual([john])
-    })
-
-    it("always returns the same archetype bucket for identical predicates", () => {
-      const bucket = new EntityBucket<Entity>()
-      const predicate = (entity: Entity) => Number(entity.age) > 25
-      const withAge1 = bucket.derive(predicate)
-      const withAge2 = bucket.derive(predicate)
-      expect(withAge1).toBe(withAge2)
-    })
-  })
-
   describe("archetype", () => {
     describe("with a query object", () => {
       it("returns an archetype bucket wrapping that query", () => {
@@ -105,15 +77,34 @@ describe(EntityBucket, () => {
     })
 
     describe("with a predicate", () => {
-      it("passes the predicate to its .where() function", () => {
-        const bucket = new EntityBucket<Entity>()
-        const predicate = (entity: Entity) => entity.age !== undefined
-        const withAge = bucket.archetype(predicate)
-        expect(withAge).toBeInstanceOf(PredicateBucket)
-        expect(withAge.predicate).toBe(predicate)
+      describe("derive", () => {
+        it("returns a PredicateBucket", () => {
+          const bucket = new EntityBucket<Entity>()
+          const predicate = (entity: Entity) => entity.age !== undefined
+          const predicateBucket = bucket.archetype(predicate)
+          expect(predicateBucket.archetype(predicate)).toBeInstanceOf(
+            PredicateBucket
+          )
+          expect(predicateBucket.predicate).toBe(predicate)
+        })
 
-        const withAge2 = bucket.derive(predicate)
-        expect(withAge).toBe(withAge2)
+        it("returns an archetype containing all entities that satisfy the specified predicate", () => {
+          const bucket = new EntityBucket<Entity>()
+          const john = bucket.add({ name: "John", age: 30 })
+          const jane = bucket.add({ name: "Jane" })
+
+          const withAge = bucket.archetype((entity) => Number(entity.age) > 25)
+          expect(withAge).toBeInstanceOf(PredicateBucket)
+          expect(withAge.entities).toEqual([john])
+        })
+
+        it("always returns the same archetype bucket for identical predicates", () => {
+          const bucket = new EntityBucket<Entity>()
+          const predicate = (entity: Entity) => Number(entity.age) > 25
+          const withAge1 = bucket.archetype(predicate)
+          const withAge2 = bucket.archetype(predicate)
+          expect(withAge1).toBe(withAge2)
+        })
       })
     })
 
