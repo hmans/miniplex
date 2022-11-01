@@ -37,7 +37,21 @@ export class EntityBucket<E> extends Bucket<E> {
     return bucket
   }
 
+  /* Predicate form */
+
   archetype<D extends E>(predicate: Predicate<E, D>): PredicateBucket<D>
+
+  /* Query form */
+
+  archetype<P extends keyof E>(
+    query: ArchetypeQuery<E, P>
+  ): ArchetypeBucket<With<E, P>>
+
+  archetype<D extends With<E, any>>(
+    query: ArchetypeQuery<E, any>
+  ): ArchetypeBucket<D>
+
+  /* Component name form */
 
   archetype<P extends keyof E>(...components: P[]): ArchetypeBucket<With<E, P>>
 
@@ -45,9 +59,7 @@ export class EntityBucket<E> extends Bucket<E> {
     ...components: (keyof D)[]
   ): ArchetypeBucket<D>
 
-  archetype<P extends keyof E>(
-    query: ArchetypeQuery<E, P>
-  ): ArchetypeBucket<With<E, P>>
+  /* Implementation */
 
   archetype<P extends keyof E>(
     query: ArchetypeQuery<E, P> | P | Predicate<E, With<E, P>>,
