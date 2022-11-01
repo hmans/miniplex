@@ -4,6 +4,7 @@ export class World<E> extends EntityBucket<E> {
   constructor(entities: E[] = []) {
     super(entities)
 
+    /* When entities are removed, also make sure to forget about their IDs. */
     this.onEntityRemoved.add((entity) => {
       /* Remove the entity from the ID map */
       if (this.entityToId.has(entity)) {
