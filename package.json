@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "scripts": {
-    "benchmark": "pnpm -r benchmark",
+    "benchmark": "pnpm -F @miniplex/core benchmark",
     "postinstall": "preconstruct dev",
     "dev": "preconstruct dev",
     "demo:react": "pnpm dev && pnpm -F demo dev",
