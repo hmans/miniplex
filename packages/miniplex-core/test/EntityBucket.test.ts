@@ -126,6 +126,44 @@ describe(EntityBucket, () => {
     })
   })
 
+  describe("with", () => {
+    it("returns an archetype containing all entities that have the specified components", () => {
+      const bucket = new EntityBucket<Entity>()
+      const john = bucket.add({ name: "John", age: 30 })
+      const jane = bucket.add({ name: "Jane" })
+
+      const withAge = bucket.with("age")
+      expect(withAge).toBeInstanceOf(ArchetypeBucket)
+      expect(withAge.entities).toEqual([john])
+    })
+
+    it("always returns the same archetype bucket for equal queries", () => {
+      const bucket = new EntityBucket<Entity>()
+      const withAge1 = bucket.with("name", undefined!, "age")
+      const withAge2 = bucket.with("age", "name")
+      expect(withAge1).toBe(withAge2)
+    })
+  })
+
+  describe("without", () => {
+    it("returns an archetype containing all entities that do not have the specified components", () => {
+      const bucket = new EntityBucket<Entity>()
+      const john = bucket.add({ name: "John", age: 30 })
+      const jane = bucket.add({ name: "Jane" })
+
+      const withoutAge = bucket.without("age")
+      expect(withoutAge).toBeInstanceOf(ArchetypeBucket)
+      expect(withoutAge.entities).toEqual([jane])
+    })
+
+    it("always returns the same archetype bucket for equal queries", () => {
+      const bucket = new EntityBucket<Entity>()
+      const withoutAge1 = bucket.without("name", undefined!, "age")
+      const withoutAge2 = bucket.without("age", "name")
+      expect(withoutAge1).toBe(withoutAge2)
+    })
+  })
+
   describe("add", () => {
     it("adds an entity", () => {
       const bucket = new EntityBucket<Entity>()

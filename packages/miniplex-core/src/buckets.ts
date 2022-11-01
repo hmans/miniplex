@@ -1,7 +1,14 @@
 import { Bucket } from "@miniplex/bucket"
 import { hasComponents, hasNoComponents } from "./predicates"
 import { memoizeQuery } from "./queries"
-import { ArchetypeQuery, IEntityIterator, Predicate, With } from "./types"
+import {
+  ArchetypeQuery,
+  ArchetypeWithoutQuery,
+  ArchetypeWithQuery,
+  IEntityIterator,
+  Predicate,
+  With
+} from "./types"
 
 /**
  * An entity-aware bucket providing methods for creating
@@ -69,11 +76,35 @@ export class EntityBucket<E> extends Bucket<E> {
     return this.addBucket(new PredicateBucket(predicate))
   }
 
+  /* with */
+
+  with<P extends keyof E>(...props: P[]): ArchetypeBucket<With<E, P>>
+  with<D extends With<E, any>>(...props: (keyof D)[]): ArchetypeBucket<D>
+  with<P extends keyof E>(...props: P[]) {
+    return this.archetype(...props)
+  }
+
+  /* without */
+
+  without<P extends keyof E>(...props: P[]): ArchetypeBucket<E>
+  without<D extends E>(...props: (keyof D)[]): ArchetypeBucket<D>
+  without<P extends keyof E>(...props: P[]) {
+    return this.archetype({ without: props })
+  }
+
   /* Predicate form */
 
   archetype<D extends E>(predicate: Predicate<E, D>): PredicateBucket<D>
 
   /* Query form */
+
+  archetype<P extends keyof E>(
+    query: ArchetypeWithQuery<E, P>
+  ): ArchetypeBucket<With<E, P>>
+
+  archetype<P extends keyof E>(
+    query: ArchetypeWithoutQuery<E>
+  ): ArchetypeBucket<E>
 
   archetype<P extends keyof E>(
     query: ArchetypeQuery<E, P>
