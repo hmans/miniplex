@@ -39,14 +39,14 @@ export class EntityBucket<E> extends Bucket<E> {
     return bucket
   }
 
-  where<D extends E>(predicate: Predicate<E, D>): IEntityIterator<E> {
+  where<D extends E>(predicate: Predicate<E, D>): IEntityIterator<D> {
     let index = this.entities.length
 
     const next = () => {
-      let value: E | undefined
+      let value: D | undefined
 
       do {
-        value = this.entities[--index]
+        value = this.entities[--index] as D
       } while (value && !predicate(value))
 
       return { value, done: index < 0 }
