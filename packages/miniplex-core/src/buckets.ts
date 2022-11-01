@@ -4,7 +4,7 @@ import { With } from "./types"
 export class EntityBucket<E> extends Bucket<E> {
   buckets = new Set<EntityBucket<any>>()
 
-  wants(entity: E): boolean {
+  wants(entity: any): entity is E {
     return true
   }
 
@@ -14,6 +14,19 @@ export class EntityBucket<E> extends Bucket<E> {
     /* Create a new bucket */
     const bucket = new Archetype<With<E, P>>()
     this.buckets.add(bucket)
+
+    this.onEntityAdded.add((e) => {
+      if (bucket.wants(e)) {
+        bucket.add(e)
+      }
+    })
+
+    this.onEntityRemoved.add((e) => {
+      if (bucket.has(e)) {
+        bucket.remove(e)
+      }
+    })
+
     return bucket
   }
 }
