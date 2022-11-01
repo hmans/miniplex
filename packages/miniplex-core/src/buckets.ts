@@ -1,6 +1,10 @@
 import { Bucket } from "@miniplex/bucket"
-import { ArchetypeQuery, With } from "./types"
+import { ArchetypeQuery, Predicate, With } from "./types"
 
+/**
+ * An entity-aware bucket providing methods for creating
+ * derived buckets, and tracking the buckets derived from it.
+ */
 export class EntityBucket<E> extends Bucket<E> {
   buckets = new Set<EntityBucket<any>>()
 
@@ -38,6 +42,10 @@ export class EntityBucket<E> extends Bucket<E> {
   }
 }
 
+/**
+ * A bucket representing a subset of entities that have a
+ * specific set of components.
+ */
 export class Archetype<E> extends EntityBucket<E> {
   constructor(public query: ArchetypeQuery<any, any>) {
     super()

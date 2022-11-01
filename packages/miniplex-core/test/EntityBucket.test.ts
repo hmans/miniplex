@@ -15,6 +15,14 @@ describe(EntityBucket, () => {
       const archetype = bucket.archetype({ with: ["age"] })
       expect(archetype).toBeInstanceOf(Archetype)
     })
+
+    it("indexes entities already present in the world", () => {
+      const bucket = new EntityBucket<Entity>()
+      const entity = bucket.add({ name: "John", age: 30 })
+
+      const withAge = bucket.archetype({ with: ["age"] })
+      expect(withAge.entities).toEqual([entity])
+    })
   })
 
   describe("add", () => {
