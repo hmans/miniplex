@@ -3,6 +3,8 @@ import { ArchetypeBucket } from "./ArchetypeBucket"
 import { With } from "./types"
 
 export class EntityBucket<E> extends Bucket<E> {
+  buckets = new Set<EntityBucket<E>>()
+
   wants(entity: E): boolean {
     return true
   }
