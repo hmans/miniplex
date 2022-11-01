@@ -7,6 +7,15 @@ export type ArchetypeQuery<E, P extends keyof E> = {
   without?: (keyof E)[]
 }
 
+export interface IEntityIterator<E> {
+  [Symbol.iterator](): {
+    next: () => {
+      value: E
+      done: boolean
+    }
+  }
+}
+
 /**
  * A utility type that marks the specified properties as required.
  */

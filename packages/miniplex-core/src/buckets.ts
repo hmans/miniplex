@@ -1,7 +1,7 @@
 import { Bucket } from "@miniplex/bucket"
 import { hasComponents, hasNoComponents } from "./predicates"
 import { memoizeQuery } from "./queries"
-import { ArchetypeQuery, Predicate, With } from "./types"
+import { ArchetypeQuery, IEntityIterator, Predicate, With } from "./types"
 
 /**
  * An entity-aware bucket providing methods for creating
@@ -37,6 +37,26 @@ export class EntityBucket<E> extends Bucket<E> {
     })
 
     return bucket
+  }
+
+  where<D extends E>(predicate: Predicate<E, D>): IEntityIterator<E> {
+    let index = this.entities.length
+
+    const next = () => {
+      let value: E | undefined
+
+      do {
+        value = this.entities[--index]
+      } while (value && !predicate(value))
+
+      return { value, done: index < 0 }
+    }
+
+    return {
+      [Symbol.iterator]() {
+        return { next }
+      }
+    }
   }
 
   derive<D extends E>(predicate: Predicate<E, D>): PredicateBucket<D> {
