@@ -154,7 +154,7 @@ profile("simulate (iterator)", () => {
 
   for (let i = 0; i < entityCount; i++)
     world.add({
-      position: { x: 0, y: i, z: 0 },
+      position: { x: Math.random() * 200 - 100, y: i, z: 0 },
       velocity: { x: 1, y: 2, z: 3 }
     })
 
@@ -178,7 +178,7 @@ profile("simulate (iterator, archetypes)", () => {
 
   for (let i = 0; i < entityCount; i++)
     world.add({
-      position: { x: 0, y: i, z: 0 },
+      position: { x: Math.random() * 200 - 100, y: i, z: 0 },
       velocity: { x: 1, y: 2, z: 3 }
     })
 
@@ -196,12 +196,12 @@ profile("simulate (iterator, archetypes)", () => {
   }
 })
 
-profile("simulate (array)", () => {
+profile("simulate (array 👎)", () => {
   const world = new World<Entity>()
 
   for (let i = 0; i < entityCount; i++)
     world.add({
-      position: { x: 0, y: i, z: 0 },
+      position: { x: Math.random() * 200 - 100, y: i, z: 0 },
       velocity: { x: 1, y: 2, z: 3 }
     })
 
@@ -216,5 +216,55 @@ profile("simulate (array)", () => {
     }
 
     return () => i === entityCount
+  }
+})
+
+profile("value predicate check (where)", () => {
+  const world = new World<Entity>()
+
+  for (let i = 0; i < entityCount; i++)
+    world.add({
+      position: { x: Math.random() * 200 - 100, y: i, z: 0 },
+      velocity: { x: 1, y: 2, z: 3 }
+    })
+
+  return () => {
+    let i = 0
+
+    for (const { position, velocity } of world.where((e) => e.position.x > 0)) {
+      i++
+      if (!velocity) continue
+      position.x += velocity.x
+      position.y += velocity.y
+      position.z += velocity.z
+    }
+
+    return () => i > 0
+  }
+})
+
+profile("value predicate check (filter 👎)", () => {
+  const world = new World<Entity>()
+
+  for (let i = 0; i < entityCount; i++)
+    world.add({
+      position: { x: Math.random() * 200 - 100, y: i, z: 0 },
+      velocity: { x: 1, y: 2, z: 3 }
+    })
+
+  return () => {
+    let i = 0
+
+    for (const { position, velocity } of world.entities.filter(
+      (e) => e.position.x > 0
+    )) {
+      i++
+      if (!velocity) continue
+      position.x += velocity.x
+      position.y += velocity.y
+      position.z += velocity.z
+    }
+
+    return () => i > 0
   }
 })
