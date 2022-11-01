@@ -9,7 +9,7 @@ import React, {
   useEffect,
   useLayoutEffect
 } from "react"
-import { useEntities as useEntitiesGlobal } from "./hooks"
+import { useEntities, useEntities as useEntitiesGlobal } from "./hooks"
 import { mergeRefs } from "./lib/mergeRefs"
 
 const useIsomorphicLayoutEffect =
@@ -97,7 +97,9 @@ export const createReactAPI = <E,>(world: World<E>) => {
     ...props
   }: CommonProps<D> & {
     where: Predicate<E, D>
-  }) => <EntitiesInBucket bucket={useEntities(where)} {...props} />
+  }) => (
+    <EntitiesInBucket bucket={useEntities(world.archetype(where))} {...props} />
+  )
 
   function Entities<D extends E>({
     in: source,
