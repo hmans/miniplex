@@ -32,11 +32,11 @@ export class EntityBucket<E> extends Bucket<E> {
 
   archetype<P extends keyof E>(
     query: ArchetypeQuery<E, P>
-  ): Archetype<With<E, P>> {
+  ): ArchetypeBucket<With<E, P>> {
     /* TODO: find and return existing archetype bucket */
 
     /* Create a new bucket */
-    const bucket = new Archetype(query) as Archetype<With<E, P>>
+    const bucket = new ArchetypeBucket(query) as ArchetypeBucket<With<E, P>>
     this.addBucket(bucket)
     return bucket
   }
@@ -46,7 +46,7 @@ export class EntityBucket<E> extends Bucket<E> {
  * A bucket representing a subset of entities that have a
  * specific set of components.
  */
-export class Archetype<E> extends EntityBucket<E> {
+export class ArchetypeBucket<E> extends EntityBucket<E> {
   constructor(public query: ArchetypeQuery<any, any>) {
     super()
   }

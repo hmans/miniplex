@@ -1,4 +1,4 @@
-import { Archetype, EntityBucket, With } from "../src"
+import { ArchetypeBucket, EntityBucket, With } from "../src"
 
 type Entity = {
   name: string
@@ -13,7 +13,7 @@ describe(EntityBucket, () => {
     it("returns an archetype bucket", () => {
       const bucket = new EntityBucket<Entity>()
       const archetype = bucket.archetype({ with: ["age"] })
-      expect(archetype).toBeInstanceOf(Archetype)
+      expect(archetype).toBeInstanceOf(ArchetypeBucket)
     })
 
     it("indexes entities already present in the world", () => {
