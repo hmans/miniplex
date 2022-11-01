@@ -68,6 +68,14 @@ export class EntityBucket<E> extends Bucket<E> {
   ) {
     /* Handle the function form */
     if (typeof query === "function") {
+      for (const bucket of this.buckets) {
+        if (bucket instanceof PredicateBucket) {
+          if (bucket.predicate === query) {
+            return bucket
+          }
+        }
+      }
+
       return this.addBucket(new PredicateBucket(query))
     }
 

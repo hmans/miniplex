@@ -69,6 +69,14 @@ describe(EntityBucket, () => {
         expect(withAge).toBeInstanceOf(PredicateBucket)
         expect(withAge.entities).toEqual([john])
       })
+
+      it("always returns the same archetype bucket for identical predicates", () => {
+        const bucket = new EntityBucket<Entity>()
+        const predicate = (entity: Entity) => Number(entity.age) > 25
+        const withAge1 = bucket.archetype(predicate)
+        const withAge2 = bucket.archetype(predicate)
+        expect(withAge1).toBe(withAge2)
+      })
     })
 
     it("indexes entities already present in the world", () => {
