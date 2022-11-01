@@ -22,11 +22,15 @@ export class EntityBucket<E> extends Bucket<E> {
   }
 
   update(entity: any, future = entity) {
+    /* Accept or reject the entity */
     if (this.has(entity) && !this.wants(future)) {
       this.remove(entity)
     } else if (!this.has(entity) && this.wants(future)) {
       this.add(entity)
-    } else {
+    }
+
+    /* If the entity is still in this bucket, update derived buckets. */
+    if (this.has(entity)) {
       for (const bucket of this.buckets) {
         bucket.update(entity, future)
       }
