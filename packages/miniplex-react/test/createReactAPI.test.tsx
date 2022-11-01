@@ -245,14 +245,14 @@ describe("<Entities bucket>", () => {
 
 describe("<Entities where>", () => {
   it("renders the entities returned by the specified query", () => {
-    const world = new World<{ name: string }>()
+    const world = new World<Entity>()
     const { Entities } = createReactAPI(world)
 
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })
 
     render(
-      <Entities in={archetype("name")}>
+      <Entities in={world.archetype("name")}>
         {(entity) => <p>{entity.name}</p>}
       </Entities>
     )
@@ -262,14 +262,14 @@ describe("<Entities where>", () => {
   })
 
   it("re-renders the entities when the bucket contents change", () => {
-    const world = new World<{ name: string; age?: number }>()
+    const world = new World<Entity>()
     const { Entities } = createReactAPI(world)
 
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })
 
     render(
-      <Entities in={archetype("name")}>
+      <Entities in={world.archetype("name")}>
         {(entity) => <p>{entity.name}</p>}
       </Entities>
     )
@@ -288,7 +288,6 @@ describe("<Entities where>", () => {
 
   describe("given an `as` prop", () => {
     it("renders the entities using the given component, passing the entity to it", () => {
-      type Entity = { name: string }
       const world = new World<Entity>()
       const { Entities } = createReactAPI(world)
 
@@ -297,7 +296,7 @@ describe("<Entities where>", () => {
 
       const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
 
-      render(<Entities as={User} in={archetype("name")} />)
+      render(<Entities as={User} in={world.archetype("name")} />)
 
       expect(screen.getByText("Alice")).toBeInTheDocument()
       expect(screen.getByText("Bob")).toBeInTheDocument()
@@ -305,7 +304,6 @@ describe("<Entities where>", () => {
   })
 
   it("accepts a query object as its `query` prop", () => {
-    type Entity = { name: string; age?: number }
     const world = new World<Entity>()
     const { Entities } = createReactAPI(world)
 
@@ -313,39 +311,13 @@ describe("<Entities where>", () => {
     world.add({ name: "Bob", age: 100 })
 
     render(
-      <Entities in={archetype("name")}>
+      <Entities in={world.archetype("name")}>
         {(entity) => <p>{entity.name}</p>}
       </Entities>
     )
 
     expect(screen.getByText("Alice")).toBeInTheDocument()
     expect(screen.getByText("Bob")).toBeInTheDocument()
-  })
-})
-
-describe("useEntities", () => {
-  it("returns the entities of the specified archetype and re-renders the component when the archetype updates", () => {
-    const world = new World<{ name: string }>()
-    const { useEntities } = createReactAPI(world)
-
-    world.add({ name: "Alice" })
-    world.add({ name: "Bob" })
-
-    const { result } = renderHook(() => useEntities(archetype("name")))
-
-    const { entities } = result.current
-    expect(entities).toHaveLength(2)
-    expect(entities[0].name).toBe("Alice")
-    expect(entities[1].name).toBe("Bob")
-
-    act(() => {
-      world.add({ name: "Charlie" })
-    })
-
-    expect(entities).toHaveLength(3)
-    expect(entities[0].name).toBe("Alice")
-    expect(entities[1].name).toBe("Bob")
-    expect(entities[2].name).toBe("Charlie")
   })
 })
 
