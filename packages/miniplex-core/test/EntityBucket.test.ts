@@ -27,12 +27,12 @@ describe(EntityBucket, () => {
         const bucket = new EntityBucket<Entity>()
 
         const archetype1 = bucket.archetype({
-          with: ["age"],
-          without: ["height"]
+          with: ["age", null, "name"],
+          without: [undefined, "height"]
         })
 
         const archetype2 = bucket.archetype({
-          with: ["age"],
+          with: ["name", "age"],
           without: ["height"]
         })
 
