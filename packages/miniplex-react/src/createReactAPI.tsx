@@ -32,9 +32,6 @@ export const createReactAPI = <E,>(world: World<E>) => {
 
   const useCurrentEntity = () => useContext(EntityContext)
 
-  const useEntities = <D extends E>(predicate: Predicate<E, D>) =>
-    useEntitiesGlobal(world.where(predicate))
-
   const RawEntity = <D extends E>({
     children: givenChildren,
     entity = {} as D,
@@ -173,7 +170,6 @@ export const createReactAPI = <E,>(world: World<E>) => {
     Component,
     Entity,
     Entities,
-    useCurrentEntity,
-    useEntities
+    useCurrentEntity
   }
 }

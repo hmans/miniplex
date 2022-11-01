@@ -1,6 +1,6 @@
 import { EntityBucket } from "./buckets"
 
-export class World<E> extends EntityBucket<E> {
+export class World<E = any> extends EntityBucket<E> {
   constructor(entities: E[] = []) {
     super(entities)
 

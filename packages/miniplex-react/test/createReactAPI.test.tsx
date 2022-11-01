@@ -1,12 +1,18 @@
-import { archetype, World } from "@miniplex/core"
+import { World } from "@miniplex/core"
 import "@testing-library/jest-dom"
 import { act, render, renderHook, screen } from "@testing-library/react"
 import React from "react"
 import createReactAPI from "../src"
 
+type Entity = {
+  name: string
+  age?: number
+  height?: number
+}
+
 describe("<Entity>", () => {
   it("creates an entity", () => {
-    const world = new World()
+    const world = new World<Entity>()
     const { Entity } = createReactAPI(world)
 
     expect(world.entities.length).toBe(0)
@@ -15,7 +21,7 @@ describe("<Entity>", () => {
   })
 
   it("removes the entity on unmount", () => {
-    const world = new World()
+    const world = new World<Entity>()
     const { Entity } = createReactAPI(world)
 
     const { unmount } = render(<Entity />)
@@ -25,21 +31,20 @@ describe("<Entity>", () => {
   })
 
   it("accepts a function as its child", () => {
-    const world = new World<{ foo: string }>()
+    const world = new World<Entity>()
     const { Entity } = createReactAPI(world)
 
-    const entity = world.add({ foo: "bar" })
+    const entity = world.add({ name: "John" })
 
     render(
-      <Entity entity={entity}>{(entity) => <div>{entity.foo}</div>}</Entity>
+      <Entity entity={entity}>{(entity) => <div>{entity.name}</div>}</Entity>
     )
 
-    expect(world.entities[0].foo).toBe("bar")
-    expect(screen.getByText("bar")).toBeInTheDocument()
+    expect(world.entities[0].name).toBe("John")
+    expect(screen.getByText("John")).toBeInTheDocument()
   })
 
   it("accepts a React function component as a child", () => {
-    type Entity = { name: string; age: number }
     const world = new World<Entity>()
     const { Entity } = createReactAPI(world)
 
@@ -54,9 +59,9 @@ describe("<Entity>", () => {
 
   describe("with a given entity that is not yet part of the bucket", () => {
     it("adds the entity to the bucket", () => {
-      const world = new World()
+      const world = new World<Entity>()
       const { Entity } = createReactAPI(world)
-      const entity = {}
+      const entity = { name: "John" }
 
       expect(world.entities.length).toBe(0)
       render(<Entity entity={entity} />)
@@ -65,9 +70,9 @@ describe("<Entity>", () => {
     })
 
     it("removes the entity on unmount", () => {
-      const world = new World()
+      const world = new World<Entity>()
       const { Entity } = createReactAPI(world)
-      const entity = {}
+      const entity = { name: "John" }
 
       const { unmount } = render(<Entity entity={entity} />)
       expect(world.entities.length).toBe(1)
@@ -78,108 +83,108 @@ describe("<Entity>", () => {
 
   describe("given an `as` prop", () => {
     it("renders the entity using that component, passing the entity to it", () => {
-      const world = new World<{ foo: string }>()
+      const world = new World<Entity>()
       const { Entity } = createReactAPI(world)
 
-      const entity = world.add({ foo: "bar" })
+      const entity = world.add({ name: "John" })
 
-      const Foo = (props: { entity: { foo: string } }) => (
-        <div>{props.entity.foo}</div>
+      const Person = (props: { entity: Entity }) => (
+        <div>{props.entity.name}</div>
       )
 
-      render(<Entity as={Foo} entity={entity} />)
+      render(<Entity as={Person} entity={entity} />)
 
-      expect(screen.getByText("bar")).toBeInTheDocument()
+      expect(screen.getByText("John")).toBeInTheDocument()
     })
   })
 })
 
 describe("<Property>", () => {
   it("assigns the specified component", () => {
-    const world = new World()
+    const world = new World<Entity>()
     const { Entity, Component } = createReactAPI(world)
 
     render(
       <Entity>
-        <Component name="foo" value="bar" />
+        <Component name="name" value="John" />
       </Entity>
     )
     expect(world.entities[0]).toMatchObject({})
-    expect(world.entities[0].foo).toBe("bar")
+    expect(world.entities[0].name).toBe("John")
   })
 
   it("updates the specified component on re-rendering", () => {
-    const world = new World()
+    const world = new World<Entity>()
     const { Entity, Component } = createReactAPI(world)
 
     const { rerender } = render(
       <Entity>
-        <Component name="foo" value="bar" />
+        <Component name="name" value="John" />
       </Entity>
     )
-    expect(world.entities[0].foo).toBe("bar")
+    expect(world.entities[0].name).toBe("John")
 
     rerender(
       <Entity>
-        <Component name="foo" value="baz" />
+        <Component name="name" value="Jane" />
       </Entity>
     )
-    expect(world.entities[0].foo).toBe("baz")
+    expect(world.entities[0].name).toBe("Jane")
   })
 
   it("removes the component when the component is unmounted", () => {
-    const world = new World()
-    const entity = world.add({})
+    const world = new World<Entity>()
+    const entity = world.add({ name: "John" })
     const { Entity, Component } = createReactAPI(world)
 
     const { unmount } = render(
       <Entity entity={entity}>
-        <Component name="foo" value="bar" />
+        <Component name="age" value={50} />
       </Entity>
     )
-    expect(world.entities[0].foo).toBe("bar")
+    expect(world.entities[0].age).toBe(50)
 
     unmount()
-    expect(world.entities[0]).toMatchObject({})
+    expect(world.entities[0]).toEqual({ name: "John" })
   })
 
   it("captures the ref of the child when it has one", () => {
-    const world = new World()
+    const world = new World<{ div: HTMLDivElement }>()
     const { Entity, Component } = createReactAPI(world)
 
     const ref = React.createRef<HTMLDivElement>()
 
     render(
       <Entity>
-        <Component name="foo">
+        <Component name="div">
           <div ref={ref} />
         </Component>
       </Entity>
     )
 
-    expect(world.entities[0].foo).toBe(ref.current)
+    expect(world.entities[0].div).toBe(ref.current)
   })
 
   describe("when the entity already has the component", () => {
     it("updates the component", () => {
-      const world = new World()
+      const world = new World<Entity>()
       const { Entity, Component } = createReactAPI(world)
-      const entity = world.add({ foo: "bar" })
+      const entity = world.add({ name: "John" })
 
       render(
         <Entity entity={entity}>
-          <Component name="foo" value="baz" />
+          <Component name="name" value="Jane" />
         </Entity>
       )
 
-      expect(world.entities[0].foo).toBe("baz")
+      expect(world.entities[0].name).toBe("Jane")
     })
   })
 })
 
 describe("<Entities bucket>", () => {
   it("renders the entities within the given bucket", () => {
-    const world = new World<{ name: string }>()
+    const world = new World<Entity>()
     const { Entities } = createReactAPI(world)
 
     world.add({ name: "Alice" })
@@ -192,7 +197,7 @@ describe("<Entities bucket>", () => {
   })
 
   it("re-renders the entities when the bucket contents change", () => {
-    const world = new World<{ name: string }>()
+    const world = new World<Entity>()
     const { Entities } = createReactAPI(world)
 
     const alice = world.add({ name: "Alice" })
@@ -222,7 +227,6 @@ describe("<Entities bucket>", () => {
 
   describe("given an `as` prop", () => {
     it("renders the entities using the given component, passing the entity to it", () => {
-      type Entity = { name: string }
       const world = new World<Entity>()
       const { Entities } = createReactAPI(world)
 
