@@ -1,4 +1,4 @@
-import { Bucket, Predicate, With, World } from "@miniplex/core"
+import { Bucket, With, World } from "@miniplex/core"
 import React, {
   createContext,
   FunctionComponent,
@@ -10,7 +10,7 @@ import React, {
   useLayoutEffect,
   useMemo
 } from "react"
-import { useEntities, useEntities as useEntitiesGlobal } from "./hooks"
+import { useEntities as useEntitiesGlobal } from "./hooks"
 import { mergeRefs } from "./lib/mergeRefs"
 
 const useIsomorphicLayoutEffect =
