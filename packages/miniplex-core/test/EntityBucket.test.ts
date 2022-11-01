@@ -10,7 +10,7 @@ type EntityWithAge = With<Entity, "age">
 
 describe(EntityBucket, () => {
   describe("archetype", () => {
-    it("can take an archetype query object to return an archetype bucket representing that query", () => {
+    it("can take an archetype query object", () => {
       const bucket = new EntityBucket<Entity>()
       const archetype = bucket.archetype({ with: ["age"], without: ["height"] })
       const john = bucket.add({ name: "John", age: 30 })

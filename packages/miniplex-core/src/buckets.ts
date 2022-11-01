@@ -15,6 +15,13 @@ export class EntityBucket<E> extends Bucket<E> {
   addBucket(bucket: EntityBucket<any>) {
     this.buckets.add(bucket)
 
+    /* Process existing entities */
+    for (const entity of this.entities) {
+      if (bucket.wants(entity)) {
+        bucket.add(entity)
+      }
+    }
+
     this.onEntityAdded.add((e) => {
       if (bucket.wants(e)) {
         bucket.add(e)
@@ -44,18 +51,7 @@ export class EntityBucket<E> extends Bucket<E> {
   ) {
     /* Handle the function form */
     if (typeof query === "function") {
-      /* Create a new bucket */
-      const bucket = new PredicateBucket(query)
-
-      /* Process existing entities */
-      for (const entity of this.entities) {
-        if (bucket.wants(entity)) {
-          bucket.add(entity)
-        }
-      }
-
-      this.addBucket(bucket)
-      return bucket
+      return this.addBucket(new PredicateBucket(query))
     }
 
     /* Handle the string form */
@@ -66,17 +62,7 @@ export class EntityBucket<E> extends Bucket<E> {
     /* TODO: find and return existing archetype bucket */
 
     /* Create a new bucket */
-    const bucket = new ArchetypeBucket(query) as ArchetypeBucket<With<E, P>>
-
-    /* Process existing entities */
-    for (const entity of this.entities) {
-      if (bucket.wants(entity)) {
-        bucket.add(entity)
-      }
-    }
-
-    this.addBucket(bucket)
-    return bucket
+    return this.addBucket(new ArchetypeBucket(query))
   }
 }
 
