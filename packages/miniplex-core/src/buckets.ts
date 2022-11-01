@@ -48,6 +48,37 @@ export class EntityBucket<E> extends Bucket<E> {
     this.addBucket(bucket)
     return bucket
   }
+
+  where<D extends E>(predicate: Predicate<E, D>): PredicateBucket<D> {
+    /* TODO: find existing predicate bucket */
+
+    /* Create a new bucket */
+    const bucket = new PredicateBucket(predicate) as PredicateBucket<D>
+
+    /* Process existing entities */
+    for (const entity of this.entities) {
+      if (bucket.wants(entity)) {
+        bucket.add(entity)
+      }
+    }
+
+    this.addBucket(bucket)
+    return bucket
+  }
+}
+
+/**
+ * A bucket representing a subset of entities that satisfy
+ * a given predicate.
+ */
+export class PredicateBucket<E> extends EntityBucket<E> {
+  constructor(public predicate: Predicate<E, E>) {
+    super()
+  }
+
+  wants(entity: any): entity is E {
+    return this.predicate(entity)
+  }
 }
 
 /**
