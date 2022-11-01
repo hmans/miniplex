@@ -37,6 +37,14 @@ export class EntityBucket<E> extends Bucket<E> {
 
     /* Create a new bucket */
     const bucket = new ArchetypeBucket(query) as ArchetypeBucket<With<E, P>>
+
+    /* Process existing entities */
+    for (const entity of this.entities) {
+      if (bucket.wants(entity)) {
+        bucket.add(entity)
+      }
+    }
+
     this.addBucket(bucket)
     return bucket
   }
