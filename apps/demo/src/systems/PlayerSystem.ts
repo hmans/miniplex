@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { tagged, With } from "miniplex"
+import { With } from "miniplex"
 import { Vector3 } from "three"
 import { spawnBullet } from "../entities/Bullets"
 import { ECS, Entity } from "../state"
@@ -10,10 +10,7 @@ const tmpVec3 = new Vector3()
 /* Create a type specifically for our player entity. */
 export type Player = With<Entity, "isPlayer" | "transform" | "physics">
 
-/* Create a predicate that narrows the type to the above. */
-export const isPlayer = tagged<Player>("isPlayer")
-
-const players = ECS.world.where(isPlayer)
+const players = ECS.world.archetype<Player>("isPlayer")
 
 let lastFireTime = 0
 

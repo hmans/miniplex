@@ -1,13 +1,12 @@
 import { useFrame } from "@react-three/fiber"
-import { archetype } from "miniplex"
 import { Vector3 } from "three"
 import { ECS } from "../state"
 
 const bodyTarget = new Vector3()
 const lookTarget = new Vector3()
 
-const players = ECS.world.where(archetype("isPlayer", "transform"))
-const cameras = ECS.world.where(archetype("isCamera", "transform"))
+const players = ECS.world.archetype("isPlayer", "transform")
+const cameras = ECS.world.archetype("isCamera", "transform")
 
 export const CameraRigSystem = ({
   offset = new Vector3()

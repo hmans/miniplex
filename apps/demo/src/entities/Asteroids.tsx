@@ -1,5 +1,5 @@
 import { Composable, Modules } from "material-composer-r3f"
-import { archetype, With } from "miniplex"
+import { With } from "miniplex"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { $, Input, InstanceID, Lerp } from "shader-composer"
@@ -21,7 +21,7 @@ export type Asteroid = With<
   | "render"
 >
 
-const asteroids = ECS.world.where<Asteroid>(archetype("isAsteroid"))
+const asteroids = ECS.world.archetype<Asteroid>("isAsteroid")
 
 export const InstanceRNG =
   ({ seed }: { seed?: Input<"float"> } = {}) =>

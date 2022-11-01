@@ -1,10 +1,9 @@
 import { useFrame } from "@react-three/fiber"
-import { archetype } from "miniplex"
 import { useLayoutEffect } from "react"
 import { Vector3 } from "three"
 import { ECS, Entity } from "../state"
 
-const entities = ECS.world.where(archetype("transform", "spatialHashing"))
+const entities = ECS.world.archetype("transform", "spatialHashing")
 
 const cells = new Map<string, Entity[]>()
 const entityCells = new WeakMap<Entity, Entity[]>()
