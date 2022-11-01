@@ -88,10 +88,11 @@ describe(World, () => {
       const world = new World<Entity>()
       const withAge = world.archetype({ with: ["age"] })
       const john = world.add({ name: "John", age: 30 })
-      const jane = world.add({ name: "Jane" })
+      const jane = world.add({ name: "Jane", age: 35 })
+      expect(withAge.entities).toEqual([john, jane])
 
       world.removeComponent(john, "age")
-      expect(withAge.entities).toEqual([])
+      expect(withAge.entities).toEqual([jane])
     })
   })
 })
