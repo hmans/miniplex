@@ -1,16 +1,9 @@
-import { ArchetypeQuery, Predicate } from "./types"
+import { ArchetypeQuery } from "./types"
 import { Memoizer } from "./util/Memoizer"
 
 export const normalizeComponents = (components: any[]) => [
   ...new Set(components.sort().filter((c) => !!c && c !== ""))
 ]
-
-/* not */
-
-const notCache = new Memoizer<Function, Function>()
-
-export const not = <E, D extends E>(predicate: Predicate<E, D>) =>
-  notCache.get(predicate, (entity: E) => !predicate(entity)) as Predicate<E, E>
 
 /* Archetype Queries */
 
