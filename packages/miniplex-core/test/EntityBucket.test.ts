@@ -10,10 +10,20 @@ type EntityWithAge = With<Entity, "age">
 
 describe(EntityBucket, () => {
   describe("archetype", () => {
-    it("returns an archetype bucket", () => {
+    it("can take an archetype query object to return an archetype bucket representing that query", () => {
       const bucket = new EntityBucket<Entity>()
       const archetype = bucket.archetype({ with: ["age"] })
       expect(archetype).toBeInstanceOf(ArchetypeBucket)
+    })
+
+    it("can take a list of properties", () => {
+      const bucket = new EntityBucket<Entity>()
+      const john = bucket.add({ name: "John", age: 30 })
+      const jane = bucket.add({ name: "Jane" })
+
+      const withAge = bucket.archetype("age")
+      expect(withAge).toBeInstanceOf(ArchetypeBucket)
+      expect(withAge.entities).toEqual([john])
     })
 
     it("indexes entities already present in the world", () => {

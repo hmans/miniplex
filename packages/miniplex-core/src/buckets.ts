@@ -30,9 +30,21 @@ export class EntityBucket<E> extends Bucket<E> {
     return bucket
   }
 
+  archetype<P extends keyof E>(...components: P[]): ArchetypeBucket<With<E, P>>
+
   archetype<P extends keyof E>(
     query: ArchetypeQuery<E, P>
+  ): ArchetypeBucket<With<E, P>>
+
+  archetype<P extends keyof E>(
+    query: ArchetypeQuery<E, P> | P,
+    ...rest: P[]
   ): ArchetypeBucket<With<E, P>> {
+    /* Handle the shorthand form */
+    if (typeof query !== "object") {
+      return this.archetype({ with: [query, ...rest] })
+    }
+
     /* TODO: find and return existing archetype bucket */
 
     /* Create a new bucket */
