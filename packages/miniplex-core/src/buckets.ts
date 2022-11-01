@@ -1,5 +1,6 @@
 import { Bucket } from "@miniplex/bucket"
-import { hasComponents, hasNoComponents, memoizeQuery } from "./queries"
+import { hasComponents, hasNoComponents } from "./predicates"
+import { memoizeQuery } from "./queries"
 import { ArchetypeQuery, Predicate, With } from "./types"
 
 /**
