@@ -183,6 +183,25 @@ describe("<Property>", () => {
 })
 
 describe("<Entities>", () => {
+  describe("with an array of entities", () => {
+    it("renders the entities", () => {
+      const world = new World<Entity>()
+      const { Entities } = createReactAPI(world)
+
+      const entities = [
+        world.add({ name: "John" }),
+        world.add({ name: "Jane" })
+      ]
+
+      render(
+        <Entities in={entities}>{(entity) => <p>{entity.name}</p>}</Entities>
+      )
+
+      expect(screen.getByText("John")).toBeInTheDocument()
+      expect(screen.getByText("Jane")).toBeInTheDocument()
+    })
+  })
+
   describe("with a bucket", () => {
     it("renders the entities within the given bucket", () => {
       const world = new World<Entity>()
