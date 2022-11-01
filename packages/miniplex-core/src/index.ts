@@ -1,5 +1,4 @@
 export * from "@miniplex/bucket"
-export * from "./EntityBucket"
-export * from "./ArchetypeBucket"
+export * from "./buckets"
 export * from "./types"
 export * from "./World"

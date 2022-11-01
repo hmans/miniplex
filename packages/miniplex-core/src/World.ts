@@ -1,4 +1,4 @@
-import { EntityBucket } from "./EntityBucket"
+import { EntityBucket } from "./buckets"
 
 export class World<E> extends EntityBucket<E> {
   constructor(entities: E[] = []) {
