@@ -1,9 +1,10 @@
-import { Bucket } from "@miniplex/bucket"
+import { EntityBucket } from "./buckets"
 
-export class World<E> extends Bucket<E> {
+export class World<E = any> extends EntityBucket<E> {
   constructor(entities: E[] = []) {
     super(entities)
 
+    /* When entities are removed, also make sure to forget about their IDs. */
     this.onEntityRemoved.add((entity) => {
       /* Remove the entity from the ID map */
       if (this.entityToId.has(entity)) {
@@ -23,7 +24,16 @@ export class World<E> extends Bucket<E> {
 
     /* Touch the entity, triggering re-checks of indices */
     if (this.has(entity)) {
-      this.test(entity)
+      for (const bucket of this.buckets) {
+        const has = bucket.has(entity)
+        const wants = bucket.wants(entity)
+
+        if (has && !wants) {
+          bucket.remove(entity)
+        } else if (!has && wants) {
+          bucket.add(entity)
+        }
+      }
     }
   }
 
@@ -36,7 +46,16 @@ export class World<E> extends Bucket<E> {
       const future = { ...entity }
       delete future[component]
 
-      this.test(entity, future)
+      for (const bucket of this.buckets) {
+        const has = bucket.has(entity)
+        const wants = bucket.wants(future) // !
+
+        if (has && !wants) {
+          bucket.remove(entity)
+        } else if (!has && wants) {
+          bucket.add(entity)
+        }
+      }
     }
 
     /* Remove the component. */

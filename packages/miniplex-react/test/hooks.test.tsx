@@ -1,4 +1,4 @@
-import { archetype, World } from "@miniplex/core"
+import { World } from "@miniplex/core"
 import { act, renderHook } from "@testing-library/react"
 import { useEntities, useOnEntityAdded, useOnEntityRemoved } from "../src"
 
@@ -9,9 +9,7 @@ describe("useEntities", () => {
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })
 
-    const { result } = renderHook(() =>
-      useEntities(world.where(archetype("name")))
-    )
+    const { result } = renderHook(() => useEntities(world.archetype("name")))
 
     const { entities } = result.current
 

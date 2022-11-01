@@ -1,4 +1,4 @@
-import { archetype, World } from "./src"
+import { World } from "./src"
 
 const entityCount = 1_000_000
 
@@ -54,8 +54,8 @@ profile("add", () => {
 
 profile("add (with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.where(archetype("position"))
-  const withVelocity = world.where(archetype("velocity"))
+  const withPosition = world.archetype("position")
+  const withVelocity = world.archetype("velocity")
 
   return () => {
     for (let i = 0; i < entityCount; i++) {
@@ -92,8 +92,8 @@ profile("remove (random)", () => {
 
 profile("remove (random, with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.where(archetype("position"))
-  const withVelocity = world.where(archetype("velocity"))
+  const withPosition = world.archetype("position")
+  const withVelocity = world.archetype("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -132,8 +132,8 @@ profile("clear", () => {
 
 profile("clear (with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.where(archetype("position"))
-  const withVelocity = world.where(archetype("velocity"))
+  const withPosition = world.archetype("position")
+  const withVelocity = world.archetype("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -174,7 +174,7 @@ profile("simulate (iterator)", () => {
 
 profile("simulate (iterator, archetypes)", () => {
   const world = new World<Entity>()
-  const withVelocity = world.where(archetype("velocity"))
+  const withVelocity = world.archetype("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({

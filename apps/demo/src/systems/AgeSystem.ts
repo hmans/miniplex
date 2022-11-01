@@ -1,9 +1,8 @@
 import { useFrame } from "@react-three/fiber"
-import { archetype } from "miniplex"
 import { queueDestroy } from "../actions"
 import { ECS } from "../state"
 
-const withLifetime = ECS.world.where(archetype("lifetime"))
+const withLifetime = ECS.world.archetype("lifetime")
 
 export const AgeSystem = () => {
   useFrame((_, dt) => {

@@ -1,8 +1,7 @@
 import { useFrame } from "@react-three/fiber"
-import { archetype } from "miniplex"
 import { ECS } from "../state"
 
-const withDestroy = ECS.world.where(archetype("destroy"))
+const withDestroy = ECS.world.archetype("destroy")
 
 export const DestroySystem = () => {
   useFrame(() => {

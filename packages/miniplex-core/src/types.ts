@@ -1,3 +1,21 @@
+export type Predicate<E, D extends E> =
+  | ((v: E) => v is D)
+  | ((entity: E) => boolean)
+
+export type ArchetypeQuery<E, P extends keyof E> = {
+  with?: P[]
+  without?: (keyof E)[]
+}
+
+export interface IEntityIterator<E> {
+  [Symbol.iterator](): {
+    next: () => {
+      value: E
+      done: boolean
+    }
+  }
+}
+
 /**
  * A utility type that marks the specified properties as required.
  */

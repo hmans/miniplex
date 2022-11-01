@@ -2,7 +2,7 @@ import { useRerender } from "@hmans/use-rerender"
 import { Bucket } from "@miniplex/core"
 import useIsomorphicLayoutEffect from "./isomorphicLayoutEffect"
 
-export function useEntities<E>(bucket: Bucket<E>): Bucket<E> {
+export function useEntities<T extends Bucket<any>>(bucket: T): T {
   const rerender = useRerender()
 
   useIsomorphicLayoutEffect(() => {

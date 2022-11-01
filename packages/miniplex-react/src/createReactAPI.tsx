@@ -1,4 +1,4 @@
-import { Bucket, Predicate, World } from "@miniplex/core"
+import { Bucket, With, World } from "@miniplex/core"
 import React, {
   createContext,
   FunctionComponent,
@@ -7,7 +7,8 @@ import React, {
   ReactNode,
   useContext,
   useEffect,
-  useLayoutEffect
+  useLayoutEffect,
+  useMemo
 } from "react"
 import { useEntities as useEntitiesGlobal } from "./hooks"
 import { mergeRefs } from "./lib/mergeRefs"
@@ -31,9 +32,6 @@ export const createReactAPI = <E,>(world: World<E>) => {
   const EntityContext = createContext<E | null>(null)
 
   const useCurrentEntity = () => useContext(EntityContext)
-
-  const useEntities = <D extends E>(predicate: Predicate<E, D>) =>
-    useEntitiesGlobal(world.where(predicate))
 
   const RawEntity = <D extends E>({
     children: givenChildren,
@@ -95,26 +93,42 @@ export const createReactAPI = <E,>(world: World<E>) => {
     RawEntitiesInBucket
   ) as typeof RawEntitiesInBucket
 
-  const EntitiesInQuery = <D extends E>({
-    where,
-    ...props
-  }: CommonProps<D> & {
-    where: Predicate<E, D>
-  }) => <EntitiesInBucket bucket={useEntities(where)} {...props} />
-
   function Entities<D extends E>({
     in: source,
     ...props
   }: CommonProps<D> & {
-    in: Predicate<E, D> | Bucket<D> | D[]
+    in: Bucket<D> | D[]
   }): JSX.Element {
     if (source instanceof Bucket) {
       return <EntitiesInBucket bucket={source} {...props} />
-    } else if (typeof source === "function") {
-      return <EntitiesInQuery where={source} {...props} />
     } else {
       return <EntitiesInList entities={source} {...props} />
     }
+  }
+
+  function Archetype<P extends keyof E>({
+    with: _with,
+    without,
+    ...props
+  }: CommonProps<With<E, P>> & {
+    with?: P | P[]
+    without?: keyof E | (keyof E)[]
+  }) {
+    const query = useMemo(
+      () => ({
+        with: _with ? (Array.isArray(_with) ? _with : [_with]) : undefined,
+        without: without
+          ? Array.isArray(without)
+            ? without
+            : [without]
+          : undefined
+      }),
+      [_with, without]
+    )
+
+    const bucket = useMemo(() => world.archetype(query), [world, query])
+
+    return <EntitiesInBucket {...props} bucket={bucket} />
   }
 
   const Component = <P extends keyof E>(props: {
@@ -172,8 +186,8 @@ export const createReactAPI = <E,>(world: World<E>) => {
     world,
     Component,
     Entity,
+    Archetype,
     Entities,
-    useCurrentEntity,
-    useEntities
+    useCurrentEntity
   }
 }
