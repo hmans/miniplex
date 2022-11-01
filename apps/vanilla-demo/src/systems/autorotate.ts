@@ -1,8 +1,8 @@
-import { archetype, World } from "miniplex"
+import { World } from "miniplex"
 import { Entity } from "./engine"
 
 export function createAutorotateSystem(world: World<Entity>) {
-  const entities = world.where(archetype("autorotate", "transform"))
+  const entities = world.archetype("autorotate", "transform")
 
   return function (dt: number) {
     for (const { transform: transform, autorotate } of entities) {
