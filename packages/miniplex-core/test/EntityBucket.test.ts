@@ -22,6 +22,22 @@ describe(EntityBucket, () => {
         expect(archetype).toBeInstanceOf(ArchetypeBucket)
         expect(archetype.entities).toEqual([john])
       })
+
+      it("always returns the same archetype bucket for equal queries", () => {
+        const bucket = new EntityBucket<Entity>()
+
+        const archetype1 = bucket.archetype({
+          with: ["age"],
+          without: ["height"]
+        })
+
+        const archetype2 = bucket.archetype({
+          with: ["age"],
+          without: ["height"]
+        })
+
+        expect(archetype1).toBe(archetype2)
+      })
     })
 
     describe("with a list of components", () => {

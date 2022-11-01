@@ -1,4 +1,5 @@
 import { Bucket } from "@miniplex/bucket"
+import { memoizeQuery } from "./queries"
 import { ArchetypeQuery, Predicate, With } from "./types"
 
 /**
@@ -75,10 +76,17 @@ export class EntityBucket<E> extends Bucket<E> {
       return this.archetype({ with: [query, ...rest] })
     }
 
-    /* TODO: find and return existing archetype bucket */
+    /* Find and return existing archetype bucket */
+    const memoizedQuery = memoizeQuery(query)
+
+    for (const bucket of this.buckets) {
+      if (bucket instanceof ArchetypeBucket && bucket.query === memoizedQuery) {
+        return bucket
+      }
+    }
 
     /* Create a new bucket */
-    return this.addBucket(new ArchetypeBucket(query))
+    return this.addBucket(new ArchetypeBucket(memoizedQuery))
   }
 }
 
