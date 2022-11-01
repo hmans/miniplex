@@ -4,10 +4,6 @@ import { ArchetypeQuery, With } from "./types"
 export class EntityBucket<E> extends Bucket<E> {
   buckets = new Set<EntityBucket<any>>()
 
-  constructor() {
-    super()
-  }
-
   wants(entity: any): entity is E {
     return true
   }

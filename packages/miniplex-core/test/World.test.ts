@@ -7,6 +7,14 @@ type Entity = {
 }
 
 describe(World, () => {
+  it("can be instantiated with a list of entities", () => {
+    const world = new World<Entity>([
+      { name: "John", age: 30 },
+      { name: "Jane", age: 28 }
+    ])
+    expect(world.entities).toHaveLength(2)
+  })
+
   describe("add", () => {
     it("adds an entity", () => {
       const world = new World<Entity>()
