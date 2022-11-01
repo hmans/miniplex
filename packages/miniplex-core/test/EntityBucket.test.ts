@@ -48,22 +48,6 @@ describe(EntityBucket, () => {
     })
   })
 
-  describe("where", () => {
-    it("returns a predicate bucket", () => {
-      const bucket = new EntityBucket<Entity>()
-      const old = bucket.where((e) => Number(e.age) >= 45)
-      expect(old).toBeInstanceOf(PredicateBucket)
-    })
-
-    it("indexes entities already present in the world", () => {
-      const bucket = new EntityBucket<Entity>()
-      const entity = bucket.add({ name: "John", age: 46 })
-      const old = bucket.where((e) => Number(e.age) >= 45)
-
-      expect(old.entities).toEqual([entity])
-    })
-  })
-
   describe("add", () => {
     it("adds an entity", () => {
       const bucket = new EntityBucket<Entity>()

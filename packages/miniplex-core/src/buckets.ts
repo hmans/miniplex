@@ -44,7 +44,18 @@ export class EntityBucket<E> extends Bucket<E> {
   ) {
     /* Handle the function form */
     if (typeof query === "function") {
-      return this.where(query)
+      /* Create a new bucket */
+      const bucket = new PredicateBucket(query)
+
+      /* Process existing entities */
+      for (const entity of this.entities) {
+        if (bucket.wants(entity)) {
+          bucket.add(entity)
+        }
+      }
+
+      this.addBucket(bucket)
+      return bucket
     }
 
     /* Handle the string form */
@@ -56,23 +67,6 @@ export class EntityBucket<E> extends Bucket<E> {
 
     /* Create a new bucket */
     const bucket = new ArchetypeBucket(query) as ArchetypeBucket<With<E, P>>
-
-    /* Process existing entities */
-    for (const entity of this.entities) {
-      if (bucket.wants(entity)) {
-        bucket.add(entity)
-      }
-    }
-
-    this.addBucket(bucket)
-    return bucket
-  }
-
-  where<D extends E>(predicate: Predicate<E, D>): PredicateBucket<D> {
-    /* TODO: find existing predicate bucket */
-
-    /* Create a new bucket */
-    const bucket = new PredicateBucket(predicate) as PredicateBucket<D>
 
     /* Process existing entities */
     for (const entity of this.entities) {
