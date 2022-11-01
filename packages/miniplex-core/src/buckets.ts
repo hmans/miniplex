@@ -30,6 +30,8 @@ export class EntityBucket<E> extends Bucket<E> {
     return bucket
   }
 
+  archetype<D extends E>(predicate: Predicate<E, D>): PredicateBucket<D>
+
   archetype<P extends keyof E>(...components: P[]): ArchetypeBucket<With<E, P>>
 
   archetype<P extends keyof E>(
@@ -37,10 +39,15 @@ export class EntityBucket<E> extends Bucket<E> {
   ): ArchetypeBucket<With<E, P>>
 
   archetype<P extends keyof E>(
-    query: ArchetypeQuery<E, P> | P,
+    query: ArchetypeQuery<E, P> | P | Predicate<E, With<E, P>>,
     ...rest: P[]
-  ): ArchetypeBucket<With<E, P>> {
-    /* Handle the shorthand form */
+  ) {
+    /* Handle the function form */
+    if (typeof query === "function") {
+      return this.where(query)
+    }
+
+    /* Handle the string form */
     if (typeof query !== "object") {
       return this.archetype({ with: [query, ...rest] })
     }

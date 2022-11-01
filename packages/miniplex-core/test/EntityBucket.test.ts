@@ -12,8 +12,11 @@ describe(EntityBucket, () => {
   describe("archetype", () => {
     it("can take an archetype query object to return an archetype bucket representing that query", () => {
       const bucket = new EntityBucket<Entity>()
-      const archetype = bucket.archetype({ with: ["age"] })
+      const archetype = bucket.archetype({ with: ["age"], without: ["height"] })
+      const john = bucket.add({ name: "John", age: 30 })
+      const jane = bucket.add({ name: "Jane", age: 28, height: 170 })
       expect(archetype).toBeInstanceOf(ArchetypeBucket)
+      expect(archetype.entities).toEqual([john])
     })
 
     it("can take a list of properties", () => {
@@ -23,6 +26,16 @@ describe(EntityBucket, () => {
 
       const withAge = bucket.archetype("age")
       expect(withAge).toBeInstanceOf(ArchetypeBucket)
+      expect(withAge.entities).toEqual([john])
+    })
+
+    it("can take a predicate", () => {
+      const bucket = new EntityBucket<Entity>()
+      const john = bucket.add({ name: "John", age: 30 })
+      const jane = bucket.add({ name: "Jane" })
+
+      const withAge = bucket.archetype((entity) => Number(entity.age) > 25)
+      expect(withAge).toBeInstanceOf(PredicateBucket)
       expect(withAge.entities).toEqual([john])
     })
 
