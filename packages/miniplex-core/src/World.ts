@@ -24,16 +24,7 @@ export class World<E = any> extends EntityBucket<E> {
 
     /* Touch the entity, triggering re-checks of indices */
     if (this.has(entity)) {
-      for (const bucket of this.buckets) {
-        const has = bucket.has(entity)
-        const wants = bucket.wants(entity)
-
-        if (has && !wants) {
-          bucket.remove(entity)
-        } else if (!has && wants) {
-          bucket.add(entity)
-        }
-      }
+      this.update(entity)
     }
   }
 
@@ -45,17 +36,7 @@ export class World<E = any> extends EntityBucket<E> {
     if (this.has(entity)) {
       const future = { ...entity }
       delete future[component]
-
-      for (const bucket of this.buckets) {
-        const has = bucket.has(entity)
-        const wants = bucket.wants(future) // !
-
-        if (has && !wants) {
-          bucket.remove(entity)
-        } else if (!has && wants) {
-          bucket.add(entity)
-        }
-      }
+      this.update(entity, future)
     }
 
     /* Remove the component. */

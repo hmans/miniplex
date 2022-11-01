@@ -115,6 +115,22 @@ describe(EntityBucket, () => {
       const withAge = bucket.archetype({ with: ["age"] })
       expect(withAge.entities).toEqual([entity])
     })
+
+    it("can be nested", () => {
+      const bucket = new EntityBucket<Entity>()
+      const entity: Entity = bucket.add({ name: "John", age: 30 })
+
+      const withAge = bucket.with("name").with("age")
+      expect(withAge.entities).toEqual([entity])
+
+      delete entity.age
+      bucket.update(entity)
+      expect(withAge.entities).toEqual([])
+
+      entity.age = 30
+      bucket.update(entity)
+      expect(withAge.entities).toEqual([entity])
+    })
   })
 
   describe("with", () => {

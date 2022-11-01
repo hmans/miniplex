@@ -21,6 +21,18 @@ export class EntityBucket<E> extends Bucket<E> {
     return true
   }
 
+  update(entity: any, future = entity) {
+    if (this.has(entity) && !this.wants(future)) {
+      this.remove(entity)
+    } else if (!this.has(entity) && this.wants(future)) {
+      this.add(entity)
+    } else {
+      for (const bucket of this.buckets) {
+        bucket.update(entity, future)
+      }
+    }
+  }
+
   addBucket<B extends EntityBucket<any>>(bucket: B) {
     this.buckets.add(bucket)
 

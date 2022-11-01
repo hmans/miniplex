@@ -8,7 +8,7 @@ import { ECS } from "../state"
 const asteroids = ECS.world.archetype<Asteroid>("isAsteroid")
 
 /* Nest queries to get more specific results */
-const destroyedAsteroids = asteroids.archetype("destroy")
+const destroyedAsteroids = asteroids.with("destroy")
 
 export const AsteroidsSystem = () => {
   /* Every time a new destroyed asteroid "appears", spawn some new ones! */

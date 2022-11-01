@@ -75,9 +75,22 @@ describe(World, () => {
 
     it("adds the entity to any relevant archetypes", () => {
       const world = new World<Entity>()
-      const withAge = world.archetype({ with: ["age"] })
+      const withAge = world.with("age")
+      const withoutAge = world.without("age")
       const john = world.add({ name: "John" })
       const jane = world.add({ name: "Jane" })
+
+      world.addComponent(john, "age", 30)
+      expect(withAge.entities).toEqual([john])
+      expect(withoutAge.entities).toEqual([jane])
+    })
+
+    it("adds the entity to nested archetypes", () => {
+      const world = new World<Entity>()
+      const withAge = world.with("name").with("age")
+
+      const john = world.add({ name: "John" })
+      expect(withAge.entities).toEqual([])
 
       world.addComponent(john, "age", 30)
       expect(withAge.entities).toEqual([john])
@@ -101,6 +114,32 @@ describe(World, () => {
 
       world.removeComponent(john, "age")
       expect(withAge.entities).toEqual([jane])
+    })
+
+    it("removes the entity from nested archetypes", () => {
+      const world = new World<Entity>()
+      const withAge = world.with("name").with("age")
+
+      const john = world.add({ name: "John", age: 30 })
+      expect(withAge.entities).toEqual([john])
+
+      world.removeComponent(john, "age")
+      expect(withAge.entities).toEqual([])
+    })
+
+    it("uses a future check, so in onEntityRemoved, the entity is still intact", () => {
+      const world = new World<Entity>()
+      const withAge = world.with("age")
+      const john = world.add({ name: "John", age: 30 })
+
+      let age: number | undefined
+      withAge.onEntityRemoved.add((entity) => {
+        age = entity.age
+      })
+
+      world.removeComponent(john, "age")
+
+      expect(age).toBe(30)
     })
   })
 })
