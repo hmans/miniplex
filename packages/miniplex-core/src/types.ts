@@ -2,10 +2,17 @@ export type Predicate<E, D extends E> =
   | ((v: E) => v is D)
   | ((entity: E) => boolean)
 
-export type ArchetypeQuery<E, P extends keyof E> = {
-  with?: P[]
-  without?: (keyof E)[]
+export type ArchetypeWithQuery<E, P extends keyof E> = {
+  with: P[]
 }
+
+export type ArchetypeWithoutQuery<E, P extends keyof E = keyof E> = {
+  without: P[]
+}
+
+export type ArchetypeQuery<E, P extends keyof E> = Partial<
+  ArchetypeWithQuery<E, P> & ArchetypeWithoutQuery<E>
+>
 
 export interface IEntityIterator<E> {
   [Symbol.iterator](): {
