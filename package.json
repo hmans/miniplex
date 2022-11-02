@@ -38,7 +38,7 @@
     "@babel/preset-env": "^7.19.4",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
-    "@changesets/cli": "^2.25.1",
+    "@changesets/cli": "^2.25.2",
     "@preconstruct/cli": "^2.2.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
@@ -52,7 +52,7 @@
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
     "ts-jest": "^28.0.7",
-    "tslib": "^2.4.0",
+    "tslib": "^2.4.1",
     "typedoc": "^0.23.19",
     "typescript": "^4.8.4"
   }
