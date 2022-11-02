@@ -147,6 +147,38 @@ This will immediately remove the entity from the Miniplex world and all associat
 
 > **Note** While this will remove the entity object from the world, it will not destroy or otherwise change the object itself. In fact, you can just add it right back into the world if you want to!
 
+## Advanced Usage
+
+### Archetypes
+
+Archetypes are the main way to query entities in Miniplex. They are created by calling the `with` method on a world, and can be thought of as something akin to database indices.
+
+Next to `with`, there is also `without`, which creates an archetype that matches entities that do _not_ have any of the specified components.
+
+`with` and `without` can be nested:
+
+```ts
+const movable = world.with("position", "velocity").without("paused")
+```
+
+It is very important to understand that this will create _two_ archetypes; one that matches entities that have both `position` and `velocity`, and another that matches entities that have `position` and `velocity`, _and_ do not have a `paused` component.
+
+Every time an entity is added to the world or has a component added or removed, it is now checked against the first archetype, and added to it if it matches; it is then checked against the second archetype. You can think of the structure as a waterfall, where entities start in the `world`, and then trickle down into buckets based on the archetypes they match:
+
+```mermaid
+graph TD;
+    A[world] --> B(with("position", "velocity"))];
+    B --> C(without("paused"))];
+```
+
+```
+world
+  |
+  +-- with "position" and "velocity"
+        |
+        +-- without "paused"
+```
+
 ## Usage & Performance Hints
 
 ### Use `addComponent` and `removeComponent` for adding and removing components
