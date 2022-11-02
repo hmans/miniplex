@@ -1,5 +1,11 @@
 # miniplex
 
+## 2.0.0-next.19
+
+### Patch Changes
+
+- e0684cd: Removed `IEntityIterator<T>`, just use `Iterable<T>` instead.
+
 ## 2.0.0-next.18
 
 ### Patch Changes

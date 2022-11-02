@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0-next.19
+
+### Patch Changes
+
+- c40587e: **Fixed** a bug where `<Component>`, with the capturing ref form, would remove the ECS component a little too eagerly.
+
 ## 2.0.0-next.18
 
 ### Patch Changes
