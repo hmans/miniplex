@@ -79,6 +79,7 @@ type Entity = {
   position: { x: number; y: number; z: number }
   velocity?: { x: number; y: number; z: number }
   health?: number
+  paused?: true
 }
 
 const world = new World<Entity>()
@@ -118,6 +119,20 @@ Since we're going to move entities, we're interested in entities that have both 
 /* Get all entities with position and velocity */
 const movingEntities = world.with("position", "velocity")
 ```
+
+> **Note** There is also `without`, which will return all entities that do _not_ have the specified components:
+>
+> ```ts
+> const active = world.without("paused")
+> ```
+>
+> Queries can also be nested:
+>
+> ```ts
+> const movingEntities = world.with("position", "velocity").without("paused")
+> ```
+>
+> Please read the "Advanced Usage" chapter below for some important notes on these!
 
 ### Implementing Systems
 
