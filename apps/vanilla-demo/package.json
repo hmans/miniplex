@@ -14,7 +14,7 @@
     "vite": "^3.2.2"
   },
   "dependencies": {
-    "fp-ts": "^2.13.0",
+    "fp-ts": "^2.13.1",
     "miniplex": "workspace:2.0.0-next.18",
     "randomish": "^0.1.6",
     "three": "^0.145.0"
