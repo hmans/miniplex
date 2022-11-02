@@ -37,14 +37,14 @@ type Entity = {
 const world = new World<Entity>()
 
 /* Create an entity */
-const player = world.createEntity({
+const player = world.add({
   position: { x: 0, y: 0 },
   velocity: { x: 0, y: 0 },
   health: { current: 100, max: 100 }
 })
 
 /* Create another entity */
-const enemy = world.createEntity({
+const enemy = world.add({
   position: { x: 10, y: 10 },
   velocity: { x: 0, y: 0 },
   health: { current: 100, max: 100 }
