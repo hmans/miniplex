@@ -52,7 +52,7 @@ export const Asteroids = () => {
     <InstancedParticles capacity={20000}>
       <icosahedronGeometry />
 
-      <Composable.MeshStandardMaterial>
+      <Composable.MeshStandardMaterial metalness={0.2} roughness={0.7}>
         <Modules.Color
           color={Lerp(new Color("#666"), new Color("#888"), rand(12))}
         />
