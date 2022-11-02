@@ -3,8 +3,6 @@ import { With } from "miniplex"
 import { MathUtils, Vector3 } from "three"
 import { ECS, Entity } from "../state"
 
-const tmpVec3 = new Vector3()
-
 type PhysicsEntity = With<Entity, "transform" | "physics">
 
 const entities = ECS.world.with("transform", "physics")
@@ -15,6 +13,8 @@ export const PhysicsSystem = () => {
 }
 
 export function physicsSystem(entities: Iterable<PhysicsEntity>, dt: number) {
+  /* Clamp the time step to 200ms for those pesky situations where the user
+  reactivates a long-suspended browser tab. */
   const step = MathUtils.clamp(dt, 0, 0.2)
 
   for (const entity of entities) {
@@ -35,8 +35,8 @@ export function physicsSystem(entities: Iterable<PhysicsEntity>, dt: number) {
     transform.rotation.z += physics.angularVelocity.z * step
 
     /* Apply damping */
-    physics.velocity.multiplyScalar(physics.linearDamping)
-    physics.angularVelocity.multiplyScalar(physics.angularDamping)
+    physics.velocity.multiplyScalar(1 - physics.linearDamping)
+    physics.angularVelocity.multiplyScalar(1 - physics.angularDamping)
 
     /* Ball collisions */
     if (entity.neighbors) {
@@ -60,6 +60,8 @@ export function physicsSystem(entities: Iterable<PhysicsEntity>, dt: number) {
     }
   }
 }
+
+const tmpVec3 = new Vector3()
 
 function handleBallCollision(a: PhysicsEntity, b: PhysicsEntity) {
   /* Check groups and masks */

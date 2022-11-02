@@ -35,8 +35,6 @@ export const spawnBullet = () => {
         .add(player.physics!.velocity),
       radius: 0.1,
       restitution: 1,
-      linearDamping: 1,
-      angularDamping: 1,
 
       groupMask: bitmask(PhysicsLayers.Bullet),
       collisionMask: bitmask([PhysicsLayers.Asteroid]),

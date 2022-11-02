@@ -10,8 +10,8 @@ export const Player = () => {
         data={physics({
           radius: 0.3,
           mass: 10,
-          linearDamping: 0.98,
-          angularDamping: 0.98,
+          linearDamping: 0.02,
+          angularDamping: 0.02,
           groupMask: bitmask(PhysicsLayers.Player),
           collisionMask: bitmask([PhysicsLayers.Asteroid])
         })}

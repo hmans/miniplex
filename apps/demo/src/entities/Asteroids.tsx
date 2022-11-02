@@ -82,6 +82,8 @@ export const spawnAsteroid = (
       radius: scale * 0.8,
       restitution: 0.1,
       mass: 40 * scale,
+      linearDamping: 0.01,
+      angularDamping: 0.01,
 
       groupMask: bitmask(PhysicsLayers.Asteroid),
       collisionMask: bitmask([
