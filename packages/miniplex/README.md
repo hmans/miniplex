@@ -10,7 +10,18 @@
 
 > Tested @hmans' Miniplex library over the weekend and after having previously implemented an ECS for my wip browser game, I have to say **Miniplex feels like the "right" way to do ECS in #r3f**. - [Brian Breiholz](https://twitter.com/BrianBreiholz/status/1577182839509962752)
 
-## Introduction
+## Table of Contents
+
+- [Example](#example)
+- [Overview](#overview)
+- [Installation](#installation)
+- [Basic Usage](#basic-usage)
+- [Advanced Usage](#advanced-usage)
+- [Best Practices](#best-practices)
+
+## Example
+
+## Overview
 
 **Miniplex is an entity management system for games and similarly demanding applications.** Instead of creating separate buckets for different types of entities (eg. asteroids, enemies, pickups, the player, etc.), you throw all of them into a single store, describe their properties through components, and then write code that performs updates on entities of specific types.
 
@@ -22,7 +33,7 @@ If you're hearing about this approach for the first time, maybe it will sound a 
 
 For a more in-depth explanation, please also see Sander Mertens' wonderful [Entity Component System FAQ](https://github.com/SanderMertens/ecs-faq).
 
-## Headline Features
+### Headline Features
 
 - A very strong focus on **developer experience**. Miniplex aims to be the most convenient to use ECS implementation while still providing great performance.
 - **[Tiny package size](https://bundlephobia.com/package/miniplex)** and **minimal dependencies**.
@@ -30,29 +41,39 @@ For a more in-depth explanation, please also see Sander Mertens' wonderful [Enti
 - Can power your entire project or just parts of it.
 - Written in **TypeScript**, with full type checking for your entities.
 
-## Main differences from other ECS libraries
+### Differences from other ECS libraries
 
 If you've used other Entity Component System libraries before, here's how Miniplex is different from some of them:
 
-### Entities are just normal JavaScript objects
+#### Entities are just normal JavaScript objects
 
 Entities are just **plain JavaScript objects**, and components are just **properties on those objects**. Component data can be **anything** you need, from primitive values to entire class instances, or even [entire reactive stores](https://github.com/hmans/statery). Miniplex puts developer experience first, and the most important way it does this is by making its usage feel as natural as possible in a JavaScript environment.
 
 Miniplex does not expect you to programmatically declare component types before using them; if you're using TypeScript, you can provide a type describing your entities and Miniplex will provide full edit- and compile-time type hints and safety.
 
-### Miniplex does not have a built-in notion of systems
+#### Miniplex does not have a built-in notion of systems
 
 Unlike the majority of ECS libraries, Miniplex does not have any built-in notion of systems, and does not perform any of its own scheduling. This is by design; your project will likely already have an opinion on how to schedule code execution, and instead of providing its own and potentially conflicting setup, Miniplex will neatly snuggle into the one you already have.
 
 Systems are extremely straight-forward: just write simple functions that operate on the Miniplex world, and run them in whatever fashion fits best to your project (`setInterval`, `requestAnimationFrame`, `useFrame`, your custom ticker implementation, and so on.)
 
-### Archetypal Queries
+#### Archetypal Queries
 
 Entity queries are performed through **archetypes**, with individual archetypes representing a subset of your world's entities that have (or don't have) a specific set of components, and/or match a specific predicate.
 
-### Focus on Object Identities over numerical IDs
+#### Focus on Object Identities over numerical IDs
 
 Most interactions with Miniplex are using **object identity** to identify entities or archetypes (instead of numerical IDs). Miniplex provides a lightweight mechanism to generate unique IDs for your entities, but it is entirely optional. In more complex projects that need stable entity IDs, the user is encouraged to implement their own ID generation and management.
+
+## Installation
+
+Add the `miniplex` package to your project using your favorite package manager:
+
+```bash
+npm add miniplex
+yarn add miniplex
+pnpm add miniplex
+```
 
 ## Basic Usage
 
@@ -204,7 +225,7 @@ const movableAndActive = world.archetype({
 
 This will create a single archetype wrapping the two queries, matching entities that have both `position` and `velocity` components, but do not have the `paused` component.
 
-## Usage & Performance Hints
+## Best Practices
 
 ### Use `addComponent` and `removeComponent` for adding and removing components
 
