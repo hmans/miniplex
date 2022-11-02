@@ -10,6 +10,13 @@ export const PhysicsLayers = {
   Bullet: 3
 }
 
+export const UpdatePriority = {
+  Early: -100,
+  Normal: 0,
+  Late: 100,
+  Render: 200
+} as const
+
 export type Entity = {
   isPlayer?: true
   isAsteroid?: true
