@@ -3,8 +3,6 @@ import createReactAPI from "miniplex/react"
 import { ReactNode } from "react"
 import { Object3D, Vector3 } from "three"
 
-export const BOUNDS = 10
-
 export const PhysicsLayers = {
   Player: 1,
   Asteroid: 2,
