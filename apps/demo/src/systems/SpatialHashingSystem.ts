@@ -1,9 +1,9 @@
 import { useFrame } from "@react-three/fiber"
-import { useLayoutEffect } from "react"
+import { useOnEntityRemoved } from "miniplex/react"
 import { Vector3 } from "three"
 import { ECS, Entity } from "../state"
 
-const entities = ECS.world.archetype("transform", "spatialHashing")
+const entities = ECS.world.with("transform", "spatialHashing")
 
 const cells = new Map<string, Entity[]>()
 const entityCells = new WeakMap<Entity, Entity[]>()
@@ -37,22 +37,18 @@ export function getEntitiesInRadius(
 }
 
 export const SpatialHashingSystem = () => {
-  useLayoutEffect(
-    () =>
-      entities.onEntityRemoved.add((entity) => {
-        const cell = entityCells.get(entity)
+  useOnEntityRemoved(entities, (entity) => {
+    const cell = entityCells.get(entity)
 
-        if (cell) {
-          const index = cell.indexOf(entity)
-          if (index !== -1) {
-            cell[index] = cell[cell.length - 1]
-            cell.pop()
-            entityCells.delete(entity)
-          }
-        }
-      }),
-    []
-  )
+    if (cell) {
+      const index = cell.indexOf(entity)
+      if (index !== -1) {
+        cell[index] = cell[cell.length - 1]
+        cell.pop()
+        entityCells.delete(entity)
+      }
+    }
+  })
 
   useFrame(() => {
     for (const entity of entities) {
