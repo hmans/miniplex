@@ -31,10 +31,10 @@
     "vfx-composer-r3f": "^0.4.0"
   },
   "devDependencies": {
-    "@types/react": "^18.0.17",
-    "@types/react-dom": "^18.0.6",
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8",
     "@types/three": "^0.144.0",
-    "@vitejs/plugin-react": "^2.1.0",
+    "@vitejs/plugin-react": "^2.2.0",
     "typescript": "^4.8.4",
     "vite": "^3.2.2"
   }
