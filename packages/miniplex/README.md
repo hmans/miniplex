@@ -320,6 +320,8 @@ graph TD;
     D-->E["with('position', 'velocity')"];
 ```
 
+Everything will still work fine, but now the system is unnecessarily doing work twice.
+
 > **Note** A future version of Miniplex will likely include a way to optimize cases like this automatically, but for now, you should be careful when creating nested archetypes.
 
 ## Questions?
