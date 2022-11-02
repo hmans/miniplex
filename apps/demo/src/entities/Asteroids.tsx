@@ -1,5 +1,4 @@
 import { Composable, Modules } from "material-composer-r3f"
-import { With } from "miniplex"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
 import { $, Input, InstanceID, Lerp, Round } from "shader-composer"
@@ -7,22 +6,10 @@ import { Random } from "shader-composer-toybox"
 import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
 import { useSegmentedBucket } from "../lib/SegmentedBucket"
-import { ECS, Entity, PhysicsLayers } from "../state"
+import { archetypes, Asteroid, ECS, PhysicsLayers } from "../state"
 import { physics } from "../systems/PhysicsSystem"
 import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
-
-export type Asteroid = With<
-  Entity,
-  | "isAsteroid"
-  | "transform"
-  | "physics"
-  | "spatialHashing"
-  | "neighbors"
-  | "render"
->
-
-const asteroids = ECS.world.with<Asteroid>("isAsteroid")
 
 export const InstanceRNG =
   ({ seed }: { seed?: Input<"float"> } = {}) =>
@@ -30,7 +17,7 @@ export const InstanceRNG =
     Random($`${offset} + float(${InstanceID}) * 1.1005`)
 
 export const Asteroids = () => {
-  const segmentedAsteroids = useSegmentedBucket(asteroids)
+  const segmentedAsteroids = useSegmentedBucket(archetypes.asteroids)
 
   console.log("Rerendering Asteroids component. You should only see this once.")
 
@@ -41,7 +28,7 @@ export const Asteroids = () => {
     }
 
     return () => {
-      for (const asteroid of asteroids) {
+      for (const asteroid of archetypes.asteroids) {
         ECS.world.remove(asteroid)
       }
     }

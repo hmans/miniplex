@@ -1,14 +1,10 @@
 import { useFrame } from "@react-three/fiber"
-import { With } from "miniplex"
 import { Vector3 } from "three"
 import { spawnBullet } from "../entities/Bullets"
-import { ECS, Entity } from "../state"
+import { ECS, Player } from "../state"
 import { useKeyboard } from "../util/useKeyboard"
 
 const tmpVec3 = new Vector3()
-
-/* Create a type specifically for our player entity. */
-export type Player = With<Entity, "isPlayer" | "transform" | "physics">
 
 const players = ECS.world.archetype<Player>("isPlayer")
 

@@ -1,4 +1,4 @@
-import { World } from "miniplex"
+import { With, World } from "miniplex"
 import createReactAPI from "miniplex/react"
 import { ReactNode } from "react"
 import { Object3D } from "three"
@@ -60,6 +60,18 @@ export type Entity = {
   render?: ReactNode
 }
 
+export type Asteroid = With<
+  Entity,
+  | "isAsteroid"
+  | "transform"
+  | "physics"
+  | "spatialHashing"
+  | "neighbors"
+  | "render"
+>
+
+export type Player = With<Entity, "isPlayer" | "transform" | "physics">
+
 export const lifetime = (maxAge?: number) => ({
   lifetime: { age: 0, maxAge }
 })
@@ -67,3 +79,7 @@ export const lifetime = (maxAge?: number) => ({
 const world = new World<Entity>()
 
 export const ECS = createReactAPI(world)
+
+export const archetypes = {
+  asteroids: world.with<Asteroid>("isAsteroid")
+}
