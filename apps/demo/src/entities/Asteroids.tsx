@@ -2,7 +2,7 @@ import { Composable, Modules } from "material-composer-r3f"
 import { With } from "miniplex"
 import { insideCircle, power } from "randomish"
 import { useLayoutEffect } from "react"
-import { $, Input, InstanceID, Lerp } from "shader-composer"
+import { $, Input, InstanceID, Lerp, Round } from "shader-composer"
 import { Random } from "shader-composer-toybox"
 import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle, ParticleProps } from "vfx-composer-r3f"
@@ -53,9 +53,9 @@ export const Asteroids = () => {
     <InstancedParticles capacity={20000}>
       <icosahedronGeometry />
 
-      <Composable.MeshStandardMaterial metalness={0.2} roughness={0.7}>
+      <Composable.MeshStandardMaterial metalness={0.1} roughness={0.8}>
         <Modules.Color
-          color={Lerp(new Color("#666"), new Color("#888"), rand(12))}
+          color={Lerp(new Color("#444"), new Color("#888"), Round(rand(12)))}
         />
       </Composable.MeshStandardMaterial>
 
