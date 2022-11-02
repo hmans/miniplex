@@ -1,5 +1,17 @@
 # miniplex
 
+## 2.0.0-next.18
+
+### Patch Changes
+
+- Updated dependencies [531f4ae]
+- Updated dependencies [531f4ae]
+- Updated dependencies [c6abd0b]
+- Updated dependencies [531f4ae]
+- Updated dependencies [78745ab]
+  - @miniplex/react@2.0.0-next.18
+  - @miniplex/core@2.0.0-next.18
+
 ## 2.0.0-next.17
 
 ### Patch Changes

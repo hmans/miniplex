@@ -1,5 +1,11 @@
 # miniplex
 
+## 2.0.0-next.18
+
+### Patch Changes
+
+- 531f4ae: `@miniplex/bucket` has been simplified to only contain the `Bucket` class (and the most simple version of it, too.)
+
 ## 2.0.0-next.13
 
 ### Patch Changes
