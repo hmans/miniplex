@@ -167,8 +167,8 @@ Every time an entity is added to the world or has a component added or removed, 
 
 ```mermaid
 graph TD;
-    A[world] --> B(with("position", "velocity"))];
-    B --> C(without("paused"))];
+    A[world] --> B[with("position", "velocity")];
+    B --> C[without("paused")];
 ```
 
 ```
