@@ -4,16 +4,11 @@
 [![Downloads](https://img.shields.io/npm/dt/miniplex.svg?style=for-the-badge)](https://www.npmjs.com/package/miniplex)
 [![Bundle Size](https://img.shields.io/bundlephobia/min/miniplex?style=for-the-badge&label=bundle%20size)](https://bundlephobia.com/result?p=miniplex)
 
+> **Warning** You are looking at the work-in-progress documentation for the upcoming **version 2.0** of Miniplex and its companion libraries. If you're looking for 1.0 documentation, [please go here](https://github.com/hmans/miniplex/tree/miniplex%401.0.0).
+
 ## Testimonials
 
 > Tested @hmans' Miniplex library over the weekend and after having previously implemented an ECS for my wip browser game, I have to say **Miniplex feels like the "right" way to do ECS in #r3f**. - [Brian Breiholz](https://twitter.com/BrianBreiholz/status/1577182839509962752)
-
-## Ecosystem
-
-- **[miniplex](https://github.com/hmans/miniplex/tree/main/packages/miniplex)**  
-  The core package. Use it in any JavaScript or TypeScript project.
-- **[miniplex-react](https://github.com/hmans/miniplex/tree/main/packages/miniplex-react)**  
-  React bindings. Create, extend and render entities declaratively.
 
 ## Introduction
 
@@ -31,7 +26,7 @@ For a more in-depth explanation, please also see Sander Mertens' wonderful [Enti
 
 - A very strong focus on **developer experience**. Miniplex aims to be the most convenient to use ECS implementation while still providing great performance.
 - **[Tiny package size](https://bundlephobia.com/package/miniplex)** and **minimal dependencies**.
-- React glue available through [miniplex-react](https://www.npmjs.com/package/miniplex-react).
+- React glue available through [@miniplex/react](https://www.npmjs.com/package/miniplex-react), maybe more in the future?
 - Can power your entire project or just parts of it.
 - Written in **TypeScript**, with full type checking for your entities.
 
@@ -41,9 +36,9 @@ If you've used other Entity Component System libraries before, here's how Minipl
 
 ### Entities are just normal JavaScript objects
 
-Entities are just **plain JavaScript objects**, and components are just **properties on those objects**. Component data can be **anything** you need, from primitive values to entire class instances, or even [entire reactive stores](https://github.com/hmans/statery). Miniplex puts developer experience first, and the most important way it does this is by making its usage feel as natural as possible in a JavaScript setting.
+Entities are just **plain JavaScript objects**, and components are just **properties on those objects**. Component data can be **anything** you need, from primitive values to entire class instances, or even [entire reactive stores](https://github.com/hmans/statery). Miniplex puts developer experience first, and the most important way it does this is by making its usage feel as natural as possible in a JavaScript environment.
 
-Miniplex does not expect you to programmatically declare component types before using them, but if you're using TypeScript, you can provide a type describing your entities and Miniplex will provide full edit- and compile-time type hints and safety.
+Miniplex does not expect you to programmatically declare component types before using them; if you're using TypeScript, you can provide a type describing your entities and Miniplex will provide full edit- and compile-time type hints and safety.
 
 ### Miniplex does not have a built-in notion of systems
 
@@ -53,21 +48,19 @@ Systems are extremely straight-forward: just write simple functions that operate
 
 ### Archetypal Queries
 
-Entity queries are performed through **archetypes**, with individual archetypes representing a subset of your world's entities that have a specific set of components. More complex querying capabilities may be added at a later date.
+Entity queries are performed through **archetypes**, with individual archetypes representing a subset of your world's entities that have (or don't have) a specific set of components, and/or match a specific predicate.
 
 ### Focus on Object Identities over numerical IDs
 
-Most interactions with Miniplex are using **object identity** to identify entities or archetypes (instead of numerical IDs). However, entities do automatically get a **built-in `id` component** with an auto-incrementing numerical ID once they're added to the world; this is mostly meant as a convenience for situations where you _need_ to provide a unique scalar reference (eg. as the `key` prop when rendering a list of entities as React components.)
+Most interactions with Miniplex are using **object identity** to identify entities or archetypes (instead of numerical IDs). Miniplex provides a lightweight mechanism to generate unique IDs for your entities, but it is entirely optional. In more complex projects that need stable entity IDs, the user is encouraged to implement their own ID generation and management.
 
 ## Basic Usage
 
-Miniplex can be used in any JavaScript or TypeScript project, regardless of which extra frameworks you might be using. Integrations with frameworks like React are provided as separate packages, so here we will only talk about framework-less usage.
-
-Specifically, if you intend to use Miniplex in a React project, please don't miss the [miniplex-react](https://github.com/hmans/miniplex/tree/main/packages/miniplex-react) documentation!
+Miniplex can be used in any JavaScript or TypeScript project, regardless of which extra frameworks you might be using. Before we talk about using Miniplex in React, let's start with the basics!
 
 ### Creating a World
 
-Miniplex manages entities in worlds, which act as containers for entities as well as an API for interacting with them. You can have one big world in your project, or several smaller worlds handling separate concerns.
+Miniplex manages entities in **worlds**, which act as containers for entities as well as an API for interacting with them. You can have one big world in your project, or several smaller worlds handling separate concerns.
 
 ```ts
 import { World } from "miniplex"
@@ -93,25 +86,25 @@ const world = new World<Entity>()
 
 ### Creating Entities
 
-The main interactions with a Miniplex world are creating and destroying entities, and adding or removing components from these entities.
-
-Let's create an entity. Note how we're immediately giving it a `position` component:
+The main interactions with a Miniplex world are creating and destroying entities, and adding or removing components from these entities. Entities are just plain JavaScript objects that you pass into the world's `add` and `remove` functions, like here:
 
 ```ts
-const entity = world.createEntity({ position: { x: 0, y: 0, z: 0 } })
+const entity = world.add({ position: { x: 0, y: 0, z: 0 } })
 ```
+
+We've directly added a `position` component to the entity. If you're using TypeScript, the component values here will be type-checked against the type you provided to the `World` constructor.
+
+> **Note** Adding the entity will make it known to the world and all relevant archetypes, but it will not change the entity object itself in any way. In Miniplex, entities can _live in multiple worlds at the same time_!
 
 ### Adding Components
 
-Now let's add a `velocity` component to the entity. Note that we're passing the entity itself, not just its identifier:
+The `World` instance provides `addComponent` and `removeComponent` functions for adding and removing components from entities. Let's add a `velocity` component to the entity. Note that we're passing the entity itself as the first argument:
 
 ```ts
 world.addComponent(entity, "velocity", { x: 10, y: 0, z: 0 })
 ```
 
 Now the entity has two components: `position` and `velocity`.
-
-> **Note** Once added to the world, entities also automatically receive an internal `__miniplex` component. This component contains data that helps Miniplex track the entity's lifecycle, and optimize a lot of interactions with the world, and you can safely ignore it.
 
 ### Querying Entities
 
@@ -122,12 +115,13 @@ Fetching only the entities that a system is interested in is the most important 
 Since we're going to move entities, we're interested in entities that have both the `position` and `velocity` components, so let's create an archetype for that:
 
 ```ts
-const movingEntities = world.archetype("position", "velocity")
+/* Get all entities with position and velocity */
+const movingEntities = world.with("position", "velocity")
 ```
 
 ### Implementing Systems
 
-Now we can implement our system, which is really just a function -- or any other piece of code -- that uses the archetype to fetch the associated entities and then iterates over them:
+Now we can implement a system that operates on these entities! Miniplex doesn't have an opinion on how you implement systems – they can be as simple as a function. Here's a system that uses the `movingEntities` archetype we created in the previous step, iterates over all entities in it, and moves them according to their velocity:
 
 ```ts
 function movementSystem() {
@@ -143,193 +137,83 @@ function movementSystem() {
 
 ### Destroying Entities
 
-At some point we may want to remove an entity from the world (for example, an enemy spaceship that got destroyed by the player):
+At some point we may want to remove an entity from the world (for example, an enemy spaceship that got destroyed by the player). We can do this through the world's `remove` function:
 
 ```ts
-world.destroyEntity(entity)
+world.remove(entity)
 ```
 
 This will immediately remove the entity from the Miniplex world and all associated archetypes.
 
-### Queued Commands
+> **Note** While this will remove the entity object from the world, it will not destroy or otherwise change the object itself. In fact, you can just add it right back into the world if you want to!
 
-All functions that modify the world (`createEntity`, `destroyEntity`, `addComponent` and `removeComponent`) also provide an alternative function that will not perform the action immediately, but instead put it into a queue:
+## Usage & Performance Hints
 
-```ts
-world.queue.destroyEntity(bullet)
-```
-
-Once you're ready to execute the queued operations, you can flush the queue likes this:
-
-```ts
-world.queue.flush()
-```
-
-**Note:** Please remember that the queue is not flushed automatically, and doing this is left to you. You might, for example, do this in your game's main loop, after all systems have finished executing.
-
-## Usage Hints
-
-### Do not add or remove entity properties directly
+### Use `addComponent` and `removeComponent` for adding and removing components
 
 Since entities are just normal objects, you might be tempted to just add new properties to (or delete properties from) them directly. **This is a bad idea** because it will skip the indexing step needed to make sure the entity is listed in the correct archetypes. Please always go through `addComponent` and `removeComponent`!
 
-### Be careful when deleting entities from within a system
+It is perfectly fine to mutate component _values_ directly, though.
 
-If your system code will under some circumstances remove entities (without queueing the deletion), it is recommended to iterate over the entities in reverse order, like this:
+```ts
+/* ✅ This is fine: */
+const entity = world.add({ position: { x: 0, y: 0, z: 0 } })
+entity.position.x = 10
+
+/* ⛔️ This is not: */
+const entity = world.add({ position: { x: 0, y: 0, z: 0 } })
+entity.velocity = { x: 10, y: 0, z: 0 }
+```
+
+### Iterate over archetypes using `for...of`
+
+The world as well as all archetypes derived from it are _iterable_, meaning you can use them in `for...of` loops. This is the recommended way to iterate over entities in an archetype, as it is highly performant, and iterates over the entities _in reverse order_, which allows you to safely remove entities from within the loop.
 
 ```ts
 const withHealth = world.archetype("health")
 
-function healthSystem(world) {
-  /* Note how we're going through the list in reverse order: */
-  for (let i = withHealth.entities.length; i > 0; i--) {
-    const entity = withHealth.entities[i - 1]
-
-    /* If health is depleted, destroy the entity */
-    if (entity.health <= 0) {
-      world.destroyEntity(entity)
-    }
+/* ✅ Recommended: */
+for (const entity of withHealth) {
+  if (entity.health <= 0) {
+    world.remove(entity)
   }
 }
-```
 
-This is because the `destroyEntity` function will remove the entity from the archetype's entity list, and if you're iterating over the list in normal order, you will end up skipping the next entity in the list.
-
-### Consider using Component Factories
-
-`createEntity` and `addComponent` accept plain Javascript objects, opening the door to some nice patterns for making entities and components nicely composable. For example, you could create a set of functions acting as component factories, like this:
-
-```js
-/* Provide a bunch of component factories */
-const position = (x = 0, y = 0) => ({ position: { x, y } })
-const velocity = (x = 0, y = 0) => ({ velocity: { x, y } })
-const health = (initial) => ({ health: { max: initial, current: initial } })
-
-const world = new World()
-
-/* Use these in createEntity */
-const entity = world.createEntity({
-  ...position(0, 0),
-  ...velocity(5, 7),
-  ...health(1000)
-})
-```
-
-Miniplex offers the `extendEntity` function to add multiple components to an entity in one go, and you can make use of your factory components here:
-
-```js
-const other = world.createEntity(position(0, 0))
-
-world.extendEntity(other, {
-  ...velocity(-10, 0),
-  ...health(500)
-})
-```
-
-If you're using Typescript, you may even add some per-component types on top like in the following example:
-
-```ts
-/* Define component types */
-type Vector2 = { x: number; y: number }
-type PositionComponent = { position: Vector2 }
-type VelocityComponent = { velocity: Vector2 }
-type HealthComponent = { health: { max: number; current: number } }
-
-/* Define an entity type composed of required and optional components */
-type Entity = PositionComponent & Partial<VelocityComponent, HealthComponent>
-
-/* Provide a bunch of component factories */
-const position = (x = 0, y = 0): PositionComponent => ({ position: { x, y } })
-const velocity = (x = 0, y = 0): VelocityComponent => ({ velocity: { x, y } })
-const health = (initial: number): HealthComponent => ({
-  health: { max: initial, current: initial }
-})
-
-const world = new World<Entity>()
-
-/* Use these in createEntity */
-const entity = world.createEntity({
-  ...position(0, 0),
-  ...velocity(5, 7),
-  ...health(1000)
-})
-
-/* Use these in extendEntity */
-const other = world.createEntity(position(0, 0))
-
-world.extendEntity(other, {
-  ...velocity(-10, 0),
-  ...health(500)
-})
-```
-
-## Performance Hints
-
-### Prefer `for` over `forEach`
-
-You might be tempted to use `forEach` in your system implementations, like this:
-
-```ts
-function movementSystem(world) {
-  movingEntities.entities.forEach(({ position, velocity }) => {
-    position.x += velocity.x
-    position.y += velocity.y
-    position.z += velocity.z
-  })
-}
-```
-
-This will incur a modest, but noticeable performance penalty, since you would be calling and returning from a function for every entity in the archetype. If performance is a concern, it is recommended to use either a `for/of` loop:
-
-```ts
-function movementSystem(world) {
-  for (const { position, velocity } of movingEntities) {
-    position.x += velocity.x
-    position.y += velocity.y
-    position.z += velocity.z
+/* ⛔️ Avoid: */
+for (const entity of withHealth.entities) {
+  if (entity.health <= 0) {
+    world.remove(entity)
   }
 }
-```
 
-Or a classic `for` loop with numerical index access:
-
-```ts
-function movementSystem(world) {
-  const len = movingEntities.entities.length
-
-  for (let i = 0; i < len; i++) {
-    const { position, velocity } = movingEntities.entities[i]
-    position.x += velocity.x
-    position.y += velocity.y
-    position.z += velocity.z
+/* ⛔️ Especially avoid: */
+withHealth.entities.forEach((entity) => {
+  if (entity.health <= 0) {
+    world.remove(entity)
   }
-}
+})
 ```
 
 ### Reuse archetypes where possible
 
-The `archetype` function aims to be idempotent and will reuse existing archetypes for the same queries passed to it, so you will never risk accidentally creating multiple indices of the same archetypes. It is, however, a comparatively heavyweight function, and you are advised to, wherever possible, reuse previously created archetypes.
-
-For example, creating your archetypes within a system function like this will work, but unnecessarily create additional overhead, and is thus not recommended:
+The `archetype` function and its shorthand friends (`with`, `without`) aim to be idempotent and will reuse existing archetypes for the same queries passed to them. Checking if an archetype already exists for the given query is a comparatively heavyweight function, thought, and you are advised to, wherever possible, reuse previously created archetypes.
 
 ```ts
-function movementSystem(world) {
-  const movingEntities = world.archetype("position", "velocity")
+/* ✅ Recommended: */
+const movingEntities = world.archetype("position", "velocity")
 
+function movementSystem() {
   for (const { position, velocity } of movingEntities) {
     position.x += velocity.x
     position.y += velocity.y
     position.z += velocity.z
   }
 }
-```
 
-Instead, create the archetype outside of your system:
+/* ⛔️ Avoid: */
+function movementSystem(world) {
+  const movingEntities = world.archetype("position", "velocity")
 
-```ts
-const movingEntities = world.archetype("position", "velocity")
-
-function movementSystem() {
   for (const { position, velocity } of movingEntities) {
     position.x += velocity.x
     position.y += velocity.y
