@@ -25,8 +25,8 @@
 /* Define an entity type */
 type Entity = {
   position: { x: number; y: number }
-  velocity: { x: number; y: number }
-  health: {
+  velocity?: { x: number; y: number }
+  health?: {
     current: number
     max: number
   }
