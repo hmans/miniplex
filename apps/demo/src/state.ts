@@ -76,7 +76,4 @@ export const lifetime = (maxAge?: number) => ({
 
 const world = new World<Entity>()
 
-export const ECS = {
-  ...createReactAPI(world),
-  world
-}
+export const ECS = createReactAPI(world)
