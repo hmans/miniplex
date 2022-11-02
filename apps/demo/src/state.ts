@@ -4,12 +4,21 @@ import { ReactNode } from "react"
 import { Object3D } from "three"
 import { PhysicsData } from "./systems/PhysicsSystem"
 
+/*
+Some constants we will be using for defining collisions masks for
+the physics system.
+*/
 export const PhysicsLayers = {
   Player: 1,
   Asteroid: 2,
   Bullet: 3
 }
 
+/*
+A couple of update priority constants we will pass to react-three-fiber's
+useFrame function. This gives us more control over the order in which
+things run, without having to perform any bookkeeping ourselves.
+*/
 export const UpdatePriority = {
   Early: -100,
   Normal: 0,
@@ -17,6 +26,11 @@ export const UpdatePriority = {
   Render: 200
 } as const
 
+/*
+The main entity type. In Miniplex, you typically declare a world whose entities
+all are of a specific type. This type can have some properties marked as required,
+but will usually have most, if not all, of them optional.
+*/
 export type Entity = {
   isPlayer?: true
   isAsteroid?: true
