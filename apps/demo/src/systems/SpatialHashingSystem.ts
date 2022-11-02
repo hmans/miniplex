@@ -11,10 +11,9 @@ export const SpatialHashingSystem = () => {
   When an entity is removed, make sure it is also removed from
   the spatial hashing grid.
   */
-  useOnEntityRemoved(entities, (entity) => {
-    const cell = entityCells.get(entity)
-    if (cell) cell.remove(entity)
-  })
+  useOnEntityRemoved(entities, (entity: Entity) =>
+    entityCells.get(entity)?.remove(entity)
+  )
 
   useFrame(() => {
     for (const entity of entities) {
@@ -34,9 +33,7 @@ export const SpatialHashingSystem = () => {
       const current = entityCells.get(entity)
       if (current !== cell) {
         /* Remove the entity from its previous cell */
-        if (current) {
-          current.remove(entity)
-        }
+        current?.remove(entity)
 
         /* Add the entity to its new cell */
         cell.add(entity)
