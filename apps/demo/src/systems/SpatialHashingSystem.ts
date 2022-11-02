@@ -1,4 +1,5 @@
 import { useFrame } from "@react-three/fiber"
+import { Bucket } from "miniplex"
 import { useOnEntityRemoved } from "miniplex/react"
 import { Vector3 } from "three"
 import { ECS, Entity } from "../state"
@@ -12,15 +13,7 @@ export const SpatialHashingSystem = () => {
   */
   useOnEntityRemoved(entities, (entity) => {
     const cell = entityCells.get(entity)
-
-    if (cell) {
-      const index = cell.indexOf(entity)
-      if (index !== -1) {
-        cell[index] = cell[cell.length - 1]
-        cell.pop()
-        entityCells.delete(entity)
-      }
-    }
+    if (cell) cell.remove(entity)
   })
 
   useFrame(() => {
@@ -33,7 +26,7 @@ export const SpatialHashingSystem = () => {
 
       /* Make sure the cell is initialized */
       if (!cell) {
-        cell = new Array<Entity>()
+        cell = new Bucket<Entity>()
         cells.set(key, cell)
       }
 
@@ -42,13 +35,11 @@ export const SpatialHashingSystem = () => {
       if (current !== cell) {
         /* Remove the entity from its previous cell */
         if (current) {
-          const index = current.indexOf(entity)
-          current[index] = current[current.length - 1]
-          current.pop()
+          current.remove(entity)
         }
 
         /* Add the entity to its new cell */
-        cell.push(entity)
+        cell.add(entity)
         entityCells.set(entity, cell)
       }
     }
@@ -57,8 +48,8 @@ export const SpatialHashingSystem = () => {
   return null
 }
 
-const cells = new Map<string, Entity[]>()
-const entityCells = new WeakMap<Entity, Entity[]>()
+const cells = new Map<string, Bucket<Entity>>()
+const entityCells = new WeakMap<Entity, Bucket<Entity>>()
 
 export function cellKey(x: number, y: number) {
   return `${Math.floor(x)}|${Math.floor(y)}`
