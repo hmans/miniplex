@@ -22,7 +22,7 @@ export type Asteroid = With<
   | "render"
 >
 
-const asteroids = ECS.world.archetype<Asteroid>("isAsteroid")
+const asteroids = ECS.world.with<Asteroid>("isAsteroid")
 
 export const InstanceRNG =
   ({ seed }: { seed?: Input<"float"> } = {}) =>
