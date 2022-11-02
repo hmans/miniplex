@@ -99,7 +99,7 @@ describe("<Entity>", () => {
   })
 })
 
-describe("<Property>", () => {
+describe("<Component>", () => {
   it("assigns the specified component", () => {
     const world = new World<Entity>()
     const { Entity, Component } = createReactAPI(world)
@@ -149,20 +149,26 @@ describe("<Property>", () => {
   })
 
   it("captures the ref of the child when it has one", () => {
-    const world = new World<{ div: HTMLDivElement }>()
+    const world = new World<{ div?: HTMLDivElement }>()
+    const entity = world.add({})
+
     const { Entity, Component } = createReactAPI(world)
 
     const ref = React.createRef<HTMLDivElement>()
 
-    render(
-      <Entity>
+    const { unmount } = render(
+      <Entity entity={entity}>
         <Component name="div">
           <div ref={ref} />
         </Component>
       </Entity>
     )
 
-    expect(world.entities[0].div).toBe(ref.current)
+    expect(entity.div).toBe(ref.current)
+
+    unmount()
+
+    expect(entity.div).toBe(undefined)
   })
 
   describe("when the entity already has the component", () => {

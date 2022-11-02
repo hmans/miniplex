@@ -8,7 +8,8 @@ import React, {
   useContext,
   useEffect,
   useLayoutEffect,
-  useMemo
+  useMemo,
+  useRef
 } from "react"
 import { useEntities as useEntitiesGlobal } from "./hooks"
 import { mergeRefs } from "./lib/mergeRefs"
@@ -137,6 +138,7 @@ export const createReactAPI = <E,>(world: World<E>) => {
     children?: ReactNode
   }) => {
     const entity = useContext(EntityContext)
+    const ref = useRef<E[P]>(null!)
 
     if (!entity) {
       throw new Error("<Component> must be a child of <Entity>")
@@ -144,39 +146,23 @@ export const createReactAPI = <E,>(world: World<E>) => {
 
     /* Handle creation and removal of component with a value prop */
     useIsomorphicLayoutEffect(() => {
-      if (props.data === undefined) return
-
-      world.addComponent(entity, props.name, props.data)
-
-      return () => {
-        world.removeComponent(entity, props.name)
-      }
+      world.addComponent(entity, props.name, props.data || ref.current)
+      return () => world.removeComponent(entity, props.name)
     }, [entity, props.name])
 
     /* Handle updates to existing component */
     useIsomorphicLayoutEffect(() => {
       if (props.data === undefined) return
-      entity[props.name] = props.data as typeof entity[P]
-    }, [entity, props.name, props.data])
+      entity[props.name] = (props.data || ref.current) as typeof entity[P]
+    }, [entity, props.name, props.data, ref.current])
 
     /* Handle setting of child value */
     if (props.children) {
       const child = React.Children.only(props.children) as ReactElement
 
-      const children = React.cloneElement(child, {
-        ref: mergeRefs([
-          (child as any).ref,
-          (object: E[P]) => {
-            if (object) {
-              world.addComponent(entity, props.name, object)
-            } else {
-              world.removeComponent(entity, props.name)
-            }
-          }
-        ])
+      return React.cloneElement(child, {
+        ref: mergeRefs([(child as any).ref, ref])
       })
-
-      return <>{children}</>
     }
 
     return null
