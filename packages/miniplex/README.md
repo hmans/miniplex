@@ -149,7 +149,7 @@ This will immediately remove the entity from the Miniplex world and all associat
 
 ## Advanced Usage
 
-### Archetypes
+### Nested Archetypes
 
 Archetypes are the main way to query entities in Miniplex. They are created by calling the `with` method on a world, and can be thought of as something akin to database indices.
 
@@ -158,26 +158,36 @@ Next to `with`, there is also `without`, which creates an archetype that matches
 `with` and `without` can be nested:
 
 ```ts
-const movable = world.with("position", "velocity").without("paused")
+const movable = world.with("position", "velocity")
+const movableAndActive = movable.without("paused")
+const movableAndDead = movable.with("dead")
 ```
 
-It is very important to understand that this will create _two_ archetypes; one that matches entities that have both `position` and `velocity`, and another that matches entities that have `position` and `velocity`, _and_ do not have a `paused` component.
-
-Every time an entity is added to the world or has a component added or removed, it is now checked against the first archetype, and added to it if it matches; it is then checked against the second archetype. You can think of the structure as a waterfall, where entities start in the `world`, and then trickle down into buckets based on the archetypes they match:
+It is very important to understand that this will create _three_ archetypes; one that matches entities that have both `position` and `velocity`, another that matches entities from the first archetype that also do not have the `paused` component, and a third that matches entities from the first archetype that also have the `dead` component.
 
 ```mermaid
 graph TD;
-    A[world] --> B[with("position", "velocity")];
-    B --> C[without("paused")];
+    A[world]-->B["with('position', 'velocity')"];
+    B-->C["without('paused')"];
+    B-->D["with('dead')"];
 ```
 
+Every time an entity is added to the world or has a component added or removed, all relevant archetypes are updated and asked to re-evaluate the changed entity. This update trickles down to all archetypes, and stops with archetypes that reject the entity.
+
+In larger projects, the structure of your archetype waterfall can have a significant impact on performance; in some cases, it can be beneficial to create a large number of small, nested archetypes, while in other cases it can be beneficial to create fewer, larger archetypes.
+
+### Combining `with` and `without` queries
+
+You can create a combined query that looks for both the presence as well as the absence of specific components through the `archetype` function:
+
+```ts
+const movableAndActive = world.archetype({
+  with: ["position", "velocity"],
+  without: ["paused"]
+})
 ```
-world
-  |
-  +-- with "position" and "velocity"
-        |
-        +-- without "paused"
-```
+
+This will create a single archetype wrapping the two queries, matching entities that have both `position` and `velocity` components, but do not have the `paused` component.
 
 ## Usage & Performance Hints
 
@@ -253,6 +263,27 @@ function movementSystem(world) {
   }
 }
 ```
+
+### Create nested archetypes with caution
+
+Miniplex does not optimize queries automatically, so the following code will create more archetypes than you probably need:
+
+```ts
+const a = world.with("position", "velocity").without("paused")
+const b = world.without("paused").with("position", "velocity")
+```
+
+Now `a` and `b` contain exactly the same entities, but they are in fact two completely separate branches of the archetype tree:
+
+```mermaid
+graph TD;
+    A[world]-->B["with('position', 'velocity')"];
+    B-->C["without('paused')"];
+    A-->D["without('paused')"];
+    D-->E["with('position', 'velocity')"];
+```
+
+> **Note** A future version of Miniplex will likely include a way to optimize cases like this automatically, but for now, you should be careful when creating nested archetypes.
 
 ## Questions?
 
