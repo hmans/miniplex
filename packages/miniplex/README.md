@@ -21,6 +21,79 @@
 
 ## Example
 
+```ts
+/* Define an entity type */
+type Entity = {
+  position: { x: number; y: number }
+  velocity: { x: number; y: number }
+  health: {
+    current: number
+    max: number
+  }
+  poisoned?: true
+}
+
+/* Create a world with entities of that type */
+const world = new World<Entity>()
+
+/* Create an entity */
+const player = world.createEntity({
+  position: { x: 0, y: 0 },
+  velocity: { x: 0, y: 0 },
+  health: { current: 100, max: 100 }
+})
+
+/* Create another entity */
+const enemy = world.createEntity({
+  position: { x: 10, y: 10 },
+  velocity: { x: 0, y: 0 },
+  health: { current: 100, max: 100 }
+})
+
+/* Create some archetype queries: */
+const archetypes = {
+  moving: world.with("position", "velocity"),
+  health: world.with("health"),
+  poisoned: archetypes.health.with("poisoned")
+}
+
+/* Create functions that perform actions on entities: */
+function damage({ health }: With<Entity, "health">, amount: number) {
+  health.current -= amount
+}
+
+function points(entity: With<Entity, "poison">) {
+  world.addComponent(entity, "poison", true)
+}
+
+/* Create a bunch of systems: */
+function moveSystem() {
+  for (const { position, velocity } of archetypes.moving) {
+    position.x += velocity.x
+    position.y += velocity.y
+  }
+}
+
+function poisonSystem() {
+  for (const { health, poisoned } of archetypes.poisoned) {
+    health.current -= 1
+  }
+}
+
+function healthSystem() {
+  for (const entity of archetypes.health.where(
+    ({ health }) => health.current <= 0
+  )) {
+    world.removeEntity(entity)
+  }
+}
+
+/* React to entities appearing/disappearing in archetypes: */
+archetypes.poisoned.onEntityAdded((entity) => {
+  console.log("Poisoned:", entity)
+})
+```
+
 ## Overview
 
 **Miniplex is an entity management system for games and similarly demanding applications.** Instead of creating separate buckets for different types of entities (eg. asteroids, enemies, pickups, the player, etc.), you throw all of them into a single store, describe their properties through components, and then write code that performs updates on entities of specific types.
