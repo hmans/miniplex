@@ -5,38 +5,11 @@ import { ECS, Entity } from "../state"
 
 const entities = ECS.world.with("transform", "spatialHashing")
 
-const cells = new Map<string, Entity[]>()
-const entityCells = new WeakMap<Entity, Entity[]>()
-
-export function cellKey(x: number, y: number) {
-  return `${Math.floor(x)}|${Math.floor(y)}`
-}
-
-export function getEntitiesInRadius(
-  p: Vector3,
-  r: number,
-  max = Infinity,
-  out?: Entity[]
-) {
-  const entities = out || []
-  entities.length = 0
-
-  for (let i = -r; i <= r; i++) {
-    for (let j = -r; j <= r; j++) {
-      const key = cellKey(p.x + i, p.y + j)
-      const cell = cells.get(key)
-
-      if (cell) {
-        entities.push(...cell)
-        if (entities.length >= max) return entities
-      }
-    }
-  }
-
-  return entities
-}
-
 export const SpatialHashingSystem = () => {
+  /*
+  When an entity is removed, make sure it is also removed from
+  the spatial hashing grid.
+  */
   useOnEntityRemoved(entities, (entity) => {
     const cell = entityCells.get(entity)
 
@@ -82,4 +55,35 @@ export const SpatialHashingSystem = () => {
   })
 
   return null
+}
+
+const cells = new Map<string, Entity[]>()
+const entityCells = new WeakMap<Entity, Entity[]>()
+
+export function cellKey(x: number, y: number) {
+  return `${Math.floor(x)}|${Math.floor(y)}`
+}
+
+export function getEntitiesInRadius(
+  p: Vector3,
+  r: number,
+  max = Infinity,
+  out?: Entity[]
+) {
+  const entities = out || []
+  entities.length = 0
+
+  for (let i = -r; i <= r; i++) {
+    for (let j = -r; j <= r; j++) {
+      const key = cellKey(p.x + i, p.y + j)
+      const cell = cells.get(key)
+
+      if (cell) {
+        entities.push(...cell)
+        if (entities.length >= max) return entities
+      }
+    }
+  }
+
+  return entities
 }
