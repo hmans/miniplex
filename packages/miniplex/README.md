@@ -269,6 +269,7 @@ function movementSystem() {
 
 /* ⛔️ Avoid: */
 function movementSystem(world) {
+  /* This will work, but now the world needs to check if an archetype for "position" and "velocity" already exists every time this function is called, which is pure overhead. */
   const movingEntities = world.archetype("position", "velocity")
 
   for (const { position, velocity } of movingEntities) {
