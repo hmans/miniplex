@@ -1,7 +1,7 @@
 import { World } from "miniplex"
 import createReactAPI from "miniplex/react"
 import { ReactNode } from "react"
-import { Object3D, Vector3 } from "three"
+import { Object3D } from "three"
 import { PhysicsData } from "./systems/PhysicsSystem"
 
 export const PhysicsLayers = {
