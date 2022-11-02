@@ -5,7 +5,6 @@ import {
   ArchetypeQuery,
   ArchetypeWithoutQuery,
   ArchetypeWithQuery,
-  IEntityIterator,
   Predicate,
   With
 } from "./types"
@@ -62,7 +61,7 @@ export class EntityBucket<E> extends Bucket<E> {
     return bucket
   }
 
-  where<D extends E>(predicate: Predicate<E, D>): IEntityIterator<D> {
+  where<D extends E>(predicate: Predicate<E, D>): Iterable<D> {
     let index = this.entities.length
 
     const next = () => {

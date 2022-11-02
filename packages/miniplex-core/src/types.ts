@@ -14,15 +14,6 @@ export type ArchetypeQuery<E, P extends keyof E> = Partial<
   ArchetypeWithQuery<E, P> & ArchetypeWithoutQuery<E>
 >
 
-export interface IEntityIterator<E> {
-  [Symbol.iterator](): {
-    next: () => {
-      value: E
-      done: boolean
-    }
-  }
-}
-
 /**
  * A utility type that marks the specified properties as required.
  */

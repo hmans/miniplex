@@ -5,7 +5,7 @@ import { Event } from "@hmans/event"
  * performance-optimized methods for adding and removing entities, and events
  * for when entities are added or removed.
  */
-export class Bucket<E> {
+export class Bucket<E> implements Iterable<E> {
   /* Custom iterator that iterates over all entities in reverse order. */
   [Symbol.iterator]() {
     let index = this.entities.length
