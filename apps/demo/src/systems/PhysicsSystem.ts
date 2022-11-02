@@ -3,6 +3,22 @@ import { With } from "miniplex"
 import { MathUtils, Vector3 } from "three"
 import { ECS, Entity } from "../state"
 
+export type PhysicsData = {
+  velocity: Vector3
+  angularVelocity: Vector3
+  linearDamping: number
+  angularDamping: number
+  mass: number
+  radius: number
+  restitution: number
+  groupMask: number
+  sleeping: boolean
+  collisionMask: number
+  contacts: Set<Entity>
+  onContactStart?: (other: Entity, force: number) => void
+  onContactEnd?: (other: Entity) => void
+}
+
 type PhysicsEntity = With<Entity, "transform" | "physics">
 
 const entities = ECS.world.with("transform", "physics")
@@ -121,3 +137,26 @@ function handleBallCollision(a: PhysicsEntity, b: PhysicsEntity) {
     b.physics.onContactEnd?.(a)
   }
 }
+
+/* A constructor for physics data. */
+export const physics = (
+  input: Partial<Entity["physics"]> = {}
+): Entity["physics"] => ({
+  sleeping: false,
+  velocity: new Vector3(0, 0, 0),
+  angularVelocity: new Vector3(0, 0, 0),
+
+  linearDamping: 0,
+  angularDamping: 0,
+
+  mass: 1,
+  radius: 1,
+
+  restitution: 0.5,
+
+  groupMask: 0b1111_1111_1111_1111,
+  collisionMask: 0b1111_1111_1111_1111,
+
+  contacts: new Set(),
+  ...input
+})

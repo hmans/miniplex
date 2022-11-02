@@ -2,6 +2,7 @@ import { World } from "miniplex"
 import createReactAPI from "miniplex/react"
 import { ReactNode } from "react"
 import { Object3D, Vector3 } from "three"
+import { PhysicsData } from "./systems/PhysicsSystem"
 
 export const PhysicsLayers = {
   Player: 1,
@@ -33,42 +34,10 @@ export type Entity = {
   neighbors?: Entity[]
 
   /* Simulate physics. */
-  physics?: {
-    velocity: Vector3
-    angularVelocity: Vector3
-    linearDamping: number
-    angularDamping: number
-    mass: number
-    radius: number
-    restitution: number
-    groupMask: number
-    sleeping: boolean
-    collisionMask: number
-    contacts: Set<Entity>
-    onContactStart?: (other: Entity, force: number) => void
-    onContactEnd?: (other: Entity) => void
-  }
+  physics?: PhysicsData
 
   render?: ReactNode
 }
-
-/* A constructor for physics data. */
-export const physics = (
-  input: Partial<Entity["physics"]> = {}
-): Entity["physics"] => ({
-  sleeping: false,
-  velocity: new Vector3(0, 0, 0),
-  angularVelocity: new Vector3(0, 0, 0),
-  linearDamping: 0,
-  angularDamping: 0,
-  mass: 1,
-  radius: 1,
-  restitution: 0.5,
-  groupMask: 0b1111_1111_1111_1111,
-  collisionMask: 0b1111_1111_1111_1111,
-  contacts: new Set(),
-  ...input
-})
 
 export const lifetime = (maxAge?: number) => ({
   lifetime: { age: 0, maxAge }

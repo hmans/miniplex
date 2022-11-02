@@ -1,4 +1,5 @@
-import { ECS, physics, PhysicsLayers } from "../state"
+import { ECS, PhysicsLayers } from "../state"
+import { physics } from "../systems/PhysicsSystem"
 import { bitmask } from "../util/bitmask"
 
 export const Player = () => {
