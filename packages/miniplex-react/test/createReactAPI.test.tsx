@@ -106,7 +106,7 @@ describe("<Property>", () => {
 
     render(
       <Entity>
-        <Component name="name" value="John" />
+        <Component name="name" data="John" />
       </Entity>
     )
     expect(world.entities[0]).toMatchObject({})
@@ -119,14 +119,14 @@ describe("<Property>", () => {
 
     const { rerender } = render(
       <Entity>
-        <Component name="name" value="John" />
+        <Component name="name" data="John" />
       </Entity>
     )
     expect(world.entities[0].name).toBe("John")
 
     rerender(
       <Entity>
-        <Component name="name" value="Jane" />
+        <Component name="name" data="Jane" />
       </Entity>
     )
     expect(world.entities[0].name).toBe("Jane")
@@ -139,7 +139,7 @@ describe("<Property>", () => {
 
     const { unmount } = render(
       <Entity entity={entity}>
-        <Component name="age" value={50} />
+        <Component name="age" data={50} />
       </Entity>
     )
     expect(world.entities[0].age).toBe(50)
@@ -173,7 +173,7 @@ describe("<Property>", () => {
 
       render(
         <Entity entity={entity}>
-          <Component name="name" value="Jane" />
+          <Component name="name" data="Jane" />
         </Entity>
       )
 

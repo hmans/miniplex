@@ -133,7 +133,7 @@ export const createReactAPI = <E,>(world: World<E>) => {
 
   const Component = <P extends keyof E>(props: {
     name: P
-    value?: E[P]
+    data?: E[P]
     children?: ReactNode
   }) => {
     const entity = useContext(EntityContext)
@@ -144,9 +144,9 @@ export const createReactAPI = <E,>(world: World<E>) => {
 
     /* Handle creation and removal of component with a value prop */
     useIsomorphicLayoutEffect(() => {
-      if (props.value === undefined) return
+      if (props.data === undefined) return
 
-      world.addComponent(entity, props.name, props.value)
+      world.addComponent(entity, props.name, props.data)
 
       return () => {
         world.removeComponent(entity, props.name)
@@ -155,9 +155,9 @@ export const createReactAPI = <E,>(world: World<E>) => {
 
     /* Handle updates to existing component */
     useIsomorphicLayoutEffect(() => {
-      if (props.value === undefined) return
-      entity[props.name] = props.value as typeof entity[P]
-    }, [entity, props.name, props.value])
+      if (props.data === undefined) return
+      entity[props.name] = props.data as typeof entity[P]
+    }, [entity, props.name, props.data])
 
     /* Handle setting of child value */
     if (props.children) {
