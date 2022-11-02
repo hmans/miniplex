@@ -224,7 +224,7 @@ const EnemyShips = () => (
     {(entity) => (
       <ECS.Entity entity={entity}>
         {/* Randomize the value of the health component */}
-        <ECS.Component name="health" value={Math.random() * 1000}>
+        <ECS.Component name="health" data={Math.random() * 1000}>
 
         <ECS.Component name="three">
           <EnemyShipModel />
