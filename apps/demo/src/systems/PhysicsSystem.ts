@@ -3,13 +3,18 @@ import { With } from "miniplex"
 import { MathUtils, Vector3 } from "three"
 import { ECS, Entity } from "../state"
 
-type PhysicsEntity = With<Entity, "transform" | "physics">
-
-const entities = ECS.world.archetype("transform", "physics")
-
 const tmpVec3 = new Vector3()
 
-export function physicsSystem(dt: number) {
+type PhysicsEntity = With<Entity, "transform" | "physics">
+
+const entities = ECS.world.with("transform", "physics")
+
+export const PhysicsSystem = () => {
+  useFrame((_, dt) => physicsSystem(entities, MathUtils.clamp(dt, 0, 0.2)))
+  return null
+}
+
+export function physicsSystem(entities: Iterable<PhysicsEntity>, dt: number) {
   const step = MathUtils.clamp(dt, 0, 0.2)
 
   for (const entity of entities) {
@@ -113,9 +118,4 @@ function handleBallCollision(a: PhysicsEntity, b: PhysicsEntity) {
     b.physics.contacts.delete(a)
     b.physics.onContactEnd?.(a)
   }
-}
-
-export const PhysicsSystem = () => {
-  useFrame((_, dt) => physicsSystem(MathUtils.clamp(dt, 0, 0.2)))
-  return null
 }

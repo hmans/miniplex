@@ -2,7 +2,7 @@ import { useFrame } from "@react-three/fiber"
 import { queueDestroy } from "../actions"
 import { ECS } from "../state"
 
-const withLifetime = ECS.world.archetype("lifetime")
+const withLifetime = ECS.world.with("lifetime")
 
 export const AgeSystem = () => {
   useFrame((_, dt) => {
