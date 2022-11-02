@@ -1,8 +1,8 @@
 import { useOnEntityAdded } from "miniplex/react"
 import { between } from "randomish"
 import { Vector3 } from "three"
-import { Asteroid, spawnAsteroid } from "../entities/Asteroids"
-import { ECS } from "../state"
+import { spawnAsteroid } from "../entities/Asteroids"
+import { Asteroid, ECS } from "../state"
 
 /* Query by archetype, supply custom type of resulting entities */
 const asteroids = ECS.world.with<Asteroid>("isAsteroid")
