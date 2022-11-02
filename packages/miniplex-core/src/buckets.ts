@@ -16,6 +16,13 @@ import {
 export class EntityBucket<E> extends Bucket<E> {
   buckets = new Set<EntityBucket<any>>()
 
+  /**
+   * Returns `true` if the given entity should be in this bucket. Child classes
+   * should override this method to implement custom bucket logic.
+   *
+   * @param entity The entity to check for.
+   * @returns `true` if this bucket wants the specified entity, `false` otherwise.
+   */
   wants(entity: any): entity is E {
     return true
   }
