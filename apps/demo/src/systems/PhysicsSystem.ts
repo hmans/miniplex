@@ -1,7 +1,6 @@
 import { useFrame } from "@react-three/fiber"
-import { With } from "miniplex"
 import { MathUtils, Vector3 } from "three"
-import { ECS, Entity } from "../state"
+import { ECS, Entity, PhysicsEntity } from "../state"
 
 export type PhysicsData = {
   velocity: Vector3
@@ -18,8 +17,6 @@ export type PhysicsData = {
   onContactStart?: (other: Entity, force: number) => void
   onContactEnd?: (other: Entity) => void
 }
-
-type PhysicsEntity = With<Entity, "transform" | "physics">
 
 const entities = ECS.world.with("transform", "physics")
 

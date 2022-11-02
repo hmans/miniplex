@@ -72,6 +72,8 @@ export type Asteroid = With<
 
 export type Player = With<Entity, "isPlayer" | "transform" | "physics">
 
+export type PhysicsEntity = With<Entity, "transform" | "physics">
+
 export const lifetime = (maxAge?: number) => ({
   lifetime: { age: 0, maxAge }
 })
