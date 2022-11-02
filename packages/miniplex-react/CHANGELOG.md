@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.0.0-next.18
+
+### Patch Changes
+
+- 531f4ae: `createReactAPI` no longer returns `useEntities`. Please use the globally exported `useEntities` instead.
+- 531f4ae: The `<Archetype>` component is back:
+
+  ```jsx
+  <Archetype with="isEnemy" without={("dead", "paused")} as={Enemy} />
+  ```
+
+- 78745ab: The `value` prop of `<Component>` has been changed (back) to `data`, to match the 1.0 API.
+
 ## 2.0.0-next.17
 
 ### Patch Changes
