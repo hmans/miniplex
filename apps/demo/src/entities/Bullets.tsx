@@ -12,7 +12,7 @@ export const Bullets = () => (
     <planeGeometry args={[0.15, 0.5]} />
     <meshStandardMaterial color={new Color("orange").multiplyScalar(5)} />
 
-    <ECS.Archetype with="isBullet" as={RenderableEntity} />
+    <ECS.Archetype with="isBullet" children={RenderableEntity} />
   </InstancedParticles>
 )
 

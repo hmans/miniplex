@@ -57,7 +57,7 @@ export type Entity = {
   /* Simulate physics. */
   physics?: PhysicsData
 
-  render?: ReactNode
+  render?: JSX.Element
 }
 
 export type Asteroid = With<

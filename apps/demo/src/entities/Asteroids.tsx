@@ -47,10 +47,10 @@ export const Asteroids = () => {
       </Composable.MeshStandardMaterial>
 
       {segmentedAsteroids.entities.map((segment, i) => (
-        <ECS.Entities key={i} in={segment} as={RenderableEntity} />
+        <ECS.Entities key={i} in={segment} children={RenderableEntity} />
       ))}
 
-      {/* <ECS.Entities bucket={asteroids} as={RenderableEntity} /> */}
+      {/* <ECS.Entities bucket={asteroids} children={RenderableEntity} /> */}
     </InstancedParticles>
   )
 }
