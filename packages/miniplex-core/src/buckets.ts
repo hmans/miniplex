@@ -27,7 +27,7 @@ export class EntityBucket<E> extends Bucket<E> {
     return true
   }
 
-  update(entity: any, future = entity) {
+  protected evaluate(entity: any, future = entity) {
     /* Accept or reject the entity */
     if (this.has(entity) && !this.wants(future)) {
       this.remove(entity)
@@ -38,9 +38,19 @@ export class EntityBucket<E> extends Bucket<E> {
     /* If the entity is still in this bucket, update derived buckets. */
     if (this.has(entity)) {
       for (const bucket of this.buckets) {
-        bucket.update(entity, future)
+        bucket.evaluate(entity, future)
       }
     }
+  }
+
+  update(
+    entity: E,
+    update: Partial<E> | ((e: E) => void) | ((e: E) => Partial<E>)
+  ) {
+    const future = { ...entity }
+    const change = typeof update === "function" ? update(future) : update
+    if (change) Object.assign(future as {}, change)
+    this.evaluate(entity, future)
   }
 
   addBucket<B extends EntityBucket<any>>(bucket: B) {

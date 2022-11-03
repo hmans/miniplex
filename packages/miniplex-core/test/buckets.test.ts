@@ -123,12 +123,10 @@ describe(EntityBucket, () => {
       const withAge = bucket.with("name").with("age")
       expect(withAge.entities).toEqual([entity])
 
-      delete entity.age
-      bucket.update(entity)
+      bucket.update(entity, (e) => delete e.age)
       expect(withAge.entities).toEqual([])
 
-      entity.age = 30
-      bucket.update(entity)
+      bucket.update(entity, (e) => (e.age = 30))
       expect(withAge.entities).toEqual([entity])
     })
   })

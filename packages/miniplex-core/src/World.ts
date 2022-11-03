@@ -24,7 +24,7 @@ export class World<E = any> extends EntityBucket<E> {
 
     /* Touch the entity, triggering re-checks of indices */
     if (this.has(entity)) {
-      this.update(entity)
+      this.evaluate(entity)
     }
   }
 
@@ -36,7 +36,7 @@ export class World<E = any> extends EntityBucket<E> {
     if (this.has(entity)) {
       const future = { ...entity }
       delete future[component]
-      this.update(entity, future)
+      this.evaluate(entity, future)
     }
 
     /* Remove the component. */
