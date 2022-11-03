@@ -42,10 +42,10 @@ export class EntityBucket<E> extends Bucket<E> {
    */
   evaluate(entity: E, future = entity) {
     /* Accept or reject the entity */
-    if (this.has(entity) && !this.wants(future)) {
-      this.remove(entity)
-    } else if (!this.has(entity) && this.wants(future)) {
+    if (this.wants(future)) {
       this.add(entity)
+    } else {
+      this.remove(entity)
     }
 
     /* If the entity is still in this bucket, update derived buckets. */
