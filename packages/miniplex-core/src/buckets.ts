@@ -56,31 +56,6 @@ export class EntityBucket<E> extends Bucket<E> {
     }
   }
 
-  addBucket<B extends EntityBucket<any>>(bucket: B) {
-    this.buckets.add(bucket)
-
-    /* Process existing entities */
-    for (const entity of this.entities) {
-      if (bucket.wants(entity)) {
-        bucket.add(entity)
-      }
-    }
-
-    this.onEntityAdded.add((e) => {
-      if (bucket.wants(e)) {
-        bucket.add(e)
-      }
-    })
-
-    this.onEntityRemoved.add((e) => {
-      if (bucket.has(e)) {
-        bucket.remove(e)
-      }
-    })
-
-    return bucket
-  }
-
   where<D extends E>(predicate: Predicate<E, D>): Iterable<D> {
     let index = this.entities.length
 
@@ -161,7 +136,9 @@ export class EntityBucket<E> extends Bucket<E> {
         }
       }
 
-      return this.addBucket(new PredicateBucket(query))
+      const bucket = new PredicateBucket(this, query)
+      this.buckets.add(bucket)
+      return bucket
     }
 
     /* Handle the string form */
@@ -179,7 +156,29 @@ export class EntityBucket<E> extends Bucket<E> {
     }
 
     /* Create a new bucket */
-    return this.addBucket(new ArchetypeBucket(memoizedQuery))
+    const bucket = new ArchetypeBucket(this, memoizedQuery)
+    this.buckets.add(bucket)
+    return bucket
+  }
+}
+
+export abstract class DerivedEntityBucket<E> extends EntityBucket<E> {
+  constructor(public source: Bucket<any>) {
+    super()
+  }
+
+  protected startIngress() {
+    this.source.onEntityAdded.add((e) => {
+      if (this.wants(e)) this.add(e)
+    })
+
+    this.source.onEntityRemoved.add((e) => {
+      this.remove(e)
+    })
+
+    for (const entity of this.source) {
+      if (this.wants(entity)) this.add(entity)
+    }
   }
 }
 
@@ -187,9 +186,10 @@ export class EntityBucket<E> extends Bucket<E> {
  * A bucket representing a subset of entities that satisfy
  * a given predicate.
  */
-export class PredicateBucket<E> extends EntityBucket<E> {
-  constructor(public predicate: Predicate<E, E>) {
-    super()
+export class PredicateBucket<E> extends DerivedEntityBucket<E> {
+  constructor(public source: Bucket<any>, public predicate: Predicate<E, E>) {
+    super(source)
+    this.startIngress()
   }
 
   wants(entity: any): entity is E {
@@ -201,9 +201,13 @@ export class PredicateBucket<E> extends EntityBucket<E> {
  * A bucket representing a subset of entities that have a
  * specific set of components.
  */
-export class ArchetypeBucket<E> extends EntityBucket<E> {
-  constructor(public query: ArchetypeQuery<E, keyof E>) {
-    super()
+export class ArchetypeBucket<E> extends DerivedEntityBucket<E> {
+  constructor(
+    public source: Bucket<any>,
+    public query: ArchetypeQuery<E, keyof E>
+  ) {
+    super(source)
+    this.startIngress()
   }
 
   wants(entity: any): entity is E {
