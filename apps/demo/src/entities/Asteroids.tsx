@@ -48,7 +48,7 @@ export const Asteroids = () => {
         <ECS.Entities key={i} in={segment} children={RenderableEntity} />
       ))}
 
-      {/* <ECS.Entities bucket={asteroids} children={RenderableEntity} /> */}
+      {/* <ECS.Entities in={archetypes.asteroids} children={RenderableEntity} /> */}
     </InstancedParticles>
   )
 }
