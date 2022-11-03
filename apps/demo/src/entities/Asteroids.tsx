@@ -28,7 +28,9 @@ export const Asteroids = () => {
     }
 
     return () => {
-      ECS.world.remove(archetypes.asteroids)
+      for (const asteroid of archetypes.asteroids) {
+        ECS.world.remove(asteroid)
+      }
     }
   }, [])
 

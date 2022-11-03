@@ -1,5 +1,4 @@
 import { Event } from "@hmans/event"
-import { isIterable } from "./util/isIterable"
 
 /**
  * A class wrapping an array of entities of a specific type, providing
@@ -85,20 +84,9 @@ export class Bucket<E> implements Iterable<E> {
    * happens.
    *
    * @param entity The entity to remove from the bucket.
+   * @returns The entity passed into this function (regardless of whether it was removed or not).
    */
-  remove<D extends E>(entity: D): void
-
-  /**
-   *
-   * @param entities An `Iterable` of entities to remove from the bucket.
-   */
-  remove(entities: Iterable<E>): void
-
-  remove(entity: E | Iterable<E>) {
-    if (isIterable(entity)) {
-      for (const e of entity) this.remove(e)
-    }
-
+  remove(entity: E) {
     if (this.has(entity)) {
       /* Emit our own onEntityRemoved event. */
       this.onEntityRemoved.emit(entity)
@@ -117,6 +105,8 @@ export class Bucket<E> implements Iterable<E> {
       /* Remove the entity from the entities array. */
       this.entities.pop()
     }
+
+    return entity
   }
 
   /**
