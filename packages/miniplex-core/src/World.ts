@@ -15,6 +15,14 @@ export class World<E extends {} = any> extends EntityBucket<E> {
     })
   }
 
+  /**
+   * Updates an entity and notifies any derived buckets about the change.
+   * Please keep in mind that in Miniplex, entities are typically mutated directly.
+   * The primary function of this method is to notify derived buckets about a change.
+   *
+   * @param entity
+   * @param update
+   */
   update(
     entity: E,
     update: Partial<E> | ((e: E) => void) | ((e: E) => Partial<E>) = {}
