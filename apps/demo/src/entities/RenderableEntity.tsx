@@ -1,5 +1,3 @@
 import { Entity } from "../state"
 
-export const RenderableEntity = (props: { entity: Pick<Entity, "render"> }) => (
-  <>{props.entity.render}</>
-)
+export const RenderableEntity = ({ render }: Pick<Entity, "render">) => render!

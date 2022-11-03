@@ -1,7 +1,6 @@
 import { Bucket, With, World } from "@miniplex/core"
 import React, {
   createContext,
-  FunctionComponent,
   memo,
   ReactElement,
   ReactNode,
@@ -19,14 +18,8 @@ const useIsomorphicLayoutEffect =
 
 export type EntityChildren<E> = ReactNode | ((entity: E) => ReactNode)
 
-type AsComponent<E> = FunctionComponent<{
-  entity: E
-  children?: ReactNode
-}>
-
 type CommonProps<E> = {
   children?: EntityChildren<E>
-  as?: AsComponent<E>
 }
 
 export const createReactAPI = <E,>(world: World<E>) => {
@@ -36,8 +29,7 @@ export const createReactAPI = <E,>(world: World<E>) => {
 
   const RawEntity = <D extends E>({
     children: givenChildren,
-    entity = {} as D,
-    as: As
+    entity = {} as D
   }: CommonProps<D> & {
     entity?: D
   }) => {
@@ -57,9 +49,7 @@ export const createReactAPI = <E,>(world: World<E>) => {
         : givenChildren
 
     return (
-      <EntityContext.Provider value={entity}>
-        {As ? <As entity={entity}>{children}</As> : children}
-      </EntityContext.Provider>
+      <EntityContext.Provider value={entity}>{children}</EntityContext.Provider>
     )
   }
 
