@@ -105,6 +105,21 @@ describe(EntityBucket, () => {
           const withAge2 = bucket.archetype(predicate)
           expect(withAge1).toBe(withAge2)
         })
+
+        it("automatically sees updated entities, like magic", () => {
+          const bucket = new EntityBucket<Entity>()
+          const john = bucket.add({ name: "John", age: 30 })
+          const jane = bucket.add({ name: "Jane" })
+
+          const withAge = bucket.archetype((entity) => Number(entity.age) > 25)
+          expect([...withAge]).toEqual([john])
+
+          john.age = 25
+          expect([...withAge]).toEqual([])
+
+          john.age = 30
+          expect([...withAge]).toEqual([john])
+        })
       })
     })
 

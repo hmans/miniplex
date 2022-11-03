@@ -191,6 +191,18 @@ export abstract class DerivedEntityBucket<E> extends EntityBucket<E> {
  * a given predicate.
  */
 export class PredicateBucket<E> extends DerivedEntityBucket<E> {
+  [Symbol.iterator]() {
+    this.update()
+    let index = this.entities.length
+
+    return {
+      next: () => {
+        const value = this.entities[--index]
+        return { value, done: index < 0 }
+      }
+    }
+  }
+
   constructor(public source: Bucket<any>, public predicate: Predicate<E, E>) {
     super(source)
 
