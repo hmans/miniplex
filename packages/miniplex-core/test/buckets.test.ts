@@ -124,11 +124,11 @@ describe(EntityBucket, () => {
       expect(withAge.entities).toEqual([entity])
 
       delete entity.age
-      bucket.update(entity)
+      bucket.evaluate(entity)
       expect(withAge.entities).toEqual([])
 
       entity.age = 30
-      bucket.update(entity)
+      bucket.evaluate(entity)
       expect(withAge.entities).toEqual([entity])
     })
   })

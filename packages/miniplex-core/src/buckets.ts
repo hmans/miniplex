@@ -27,7 +27,20 @@ export class EntityBucket<E> extends Bucket<E> {
     return true
   }
 
-  update(entity: any, future = entity) {
+  /**
+   * Evaluates the given entity (`entity`) to check if it should be in this bucket or not.
+   * The entity will be added or removed from this bucket as necessary.
+   *
+   * If you pass a second argument (`future`) into this function, it will be used
+   * for these checks instead of the entity itself. This is useful in sutations
+   * where you're about to make a destructive change to the entity, and want to
+   * give archetype callbacks a chance to run with the entity intact before actually
+   * making the change.
+   *
+   * @param entity The entity that is being evaluated.
+   * @param future An optional future version of the entity that is used in the check.
+   */
+  evaluate(entity: E, future = entity) {
     /* Accept or reject the entity */
     if (this.has(entity) && !this.wants(future)) {
       this.remove(entity)
@@ -38,7 +51,7 @@ export class EntityBucket<E> extends Bucket<E> {
     /* If the entity is still in this bucket, update derived buckets. */
     if (this.has(entity)) {
       for (const bucket of this.buckets) {
-        bucket.update(entity, future)
+        bucket.evaluate(entity, future)
       }
     }
   }
