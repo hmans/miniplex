@@ -68,7 +68,16 @@ export class Bucket<E> implements Iterable<E> {
    * @param entity The entity to add to the bucket.
    * @returns The entity passed into this function (regardless of whether it was added or not).
    */
-  add<D extends E>(entity: D): D & E {
+  add<D extends E>(entity: D): D & E
+
+  add<D extends E>(entities: Iterable<D & E>): Iterable<D & E>
+
+  add<D extends E>(entity: D | Iterable<D>) {
+    if (isIterable(entity)) {
+      for (const e of entity) this.add(e)
+      return entity
+    }
+
     if (entity && !this.has(entity)) {
       this.entities.push(entity)
       this.entityPositions.set(entity, this.entities.length - 1)

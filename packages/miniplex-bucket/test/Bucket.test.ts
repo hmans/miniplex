@@ -50,6 +50,20 @@ describe(Bucket, () => {
 
       expect(listener).toHaveBeenCalledWith(entity)
     })
+
+    it("can add multiple entities at once", () => {
+      const bucket = new Bucket()
+      const entity1 = { id: "1" }
+      const entity2 = { id: "2" }
+
+      const entities = [entity1, entity2]
+
+      const result = bucket.add(entities)
+
+      expect(result).toBe(entities)
+      expect(bucket.entities).toContain(entity1)
+      expect(bucket.entities).toContain(entity2)
+    })
   })
 
   describe("remove", () => {
