@@ -111,14 +111,14 @@ describe(EntityBucket, () => {
           const john = bucket.add({ name: "John", age: 30 })
           const jane = bucket.add({ name: "Jane" })
 
-          const withAge = bucket.archetype((entity) => Number(entity.age) > 25)
-          expect([...withAge]).toEqual([john])
+          const old = bucket.archetype((entity) => Number(entity.age) > 25)
+          expect([...old]).toEqual([john])
 
           john.age = 25
-          expect([...withAge]).toEqual([])
+          expect([...old]).toEqual([])
 
           john.age = 30
-          expect([...withAge]).toEqual([john])
+          expect([...old]).toEqual([john])
         })
       })
     })
