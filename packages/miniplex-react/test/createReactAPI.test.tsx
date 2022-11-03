@@ -81,18 +81,16 @@ describe("<Entity>", () => {
     })
   })
 
-  describe("given an `as` prop", () => {
+  describe("given `children` prop", () => {
     it("renders the entity using that component, passing the entity to it", () => {
       const world = new World<Entity>()
       const { Entity } = createReactAPI(world)
 
       const entity = world.add({ name: "John" })
 
-      const Person = (props: { entity: Entity }) => (
-        <div>{props.entity.name}</div>
-      )
+      const Person = ({ name }: { name: string }) => <div>{name}</div>
 
-      render(<Entity as={Person} entity={entity} />)
+      render(<Entity entity={entity} children={Person} />)
 
       expect(screen.getByText("John")).toBeInTheDocument()
     })
@@ -252,7 +250,7 @@ describe("<Entities>", () => {
     })
   })
 
-  describe("given an `as` prop", () => {
+  describe("given an `children` prop", () => {
     it("renders the entities using the given component, passing the entity to it", () => {
       const world = new World<Entity>()
       const { Entities } = createReactAPI(world)
@@ -260,9 +258,9 @@ describe("<Entities>", () => {
       world.add({ name: "Alice" })
       world.add({ name: "Bob" })
 
-      const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
+      const User = ({ name }: { name: string }) => <div>{name}</div>
 
-      render(<Entities in={world} as={User} />)
+      render(<Entities in={world} children={User} />)
 
       expect(screen.getByText("Alice")).toBeInTheDocument()
       expect(screen.getByText("Bob")).toBeInTheDocument()
@@ -309,7 +307,7 @@ describe("<Archetype>", () => {
     expect(screen.getByText("Alice")).toBeInTheDocument()
   })
 
-  describe("given an `as` prop", () => {
+  describe("given a `children` prop", () => {
     it("renders the entities using the given component, passing the entity to it", () => {
       const world = new World<Entity>()
       const { Archetype } = createReactAPI(world)
@@ -318,9 +316,9 @@ describe("<Archetype>", () => {
       world.add({ name: "Alice" })
       world.add({ name: "Charlie", age: 32, height: 180 })
 
-      const User = (props: { entity: Entity }) => <div>{props.entity.name}</div>
+      const User = ({ name }: { name: string }) => <div>{name}</div>
 
-      render(<Archetype with="age" as={User} />)
+      render(<Archetype with="age" children={User} />)
 
       expect(screen.getByText("John")).toBeInTheDocument()
       expect(screen.queryByText("Alice")).toBeNull()

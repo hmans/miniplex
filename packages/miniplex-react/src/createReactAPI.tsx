@@ -17,16 +17,10 @@ import { mergeRefs } from "./lib/mergeRefs"
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect
 
-export type EntityChildren<E> = ReactNode | ((entity: E) => ReactNode)
-
-type AsComponent<E> = FunctionComponent<{
-  entity: E
-  children?: ReactNode
-}>
+export type EntityChildren<E> = JSX.Element | FunctionComponent<E>
 
 type CommonProps<E> = {
   children?: EntityChildren<E>
-  as?: AsComponent<E>
 }
 
 export const createReactAPI = <E,>(world: World<E>) => {
@@ -36,8 +30,7 @@ export const createReactAPI = <E,>(world: World<E>) => {
 
   const RawEntity = <D extends E>({
     children: givenChildren,
-    entity = {} as D,
-    as: As
+    entity = {} as D
   }: CommonProps<D> & {
     entity?: D
   }) => {
@@ -57,9 +50,7 @@ export const createReactAPI = <E,>(world: World<E>) => {
         : givenChildren
 
     return (
-      <EntityContext.Provider value={entity}>
-        {As ? <As entity={entity}>{children}</As> : children}
-      </EntityContext.Provider>
+      <EntityContext.Provider value={entity}>{children}</EntityContext.Provider>
     )
   }
 
