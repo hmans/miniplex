@@ -128,14 +128,8 @@ export class EntityBucket<E> extends Bucket<E> {
 
   /* Component name form */
 
-  /**
-   * @deprecated Please use `with(...components)` instead.
-   */
   archetype<P extends keyof E>(...components: P[]): ArchetypeBucket<With<E, P>>
 
-  /**
-   * @deprecated Please use `with(...components)` instead.
-   */
   archetype<D extends With<E, any>>(
     ...components: (keyof D)[]
   ): ArchetypeBucket<D>
