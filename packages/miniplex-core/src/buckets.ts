@@ -138,7 +138,6 @@ export class EntityBucket<E> extends Bucket<E> {
 
       const bucket = new PredicateBucket(this, query)
       this.buckets.add(bucket)
-      bucket.start()
       return bucket
     }
 
@@ -159,17 +158,16 @@ export class EntityBucket<E> extends Bucket<E> {
     /* Create a new bucket */
     const bucket = new ArchetypeBucket(this, memoizedQuery)
     this.buckets.add(bucket)
-    bucket.start()
     return bucket
   }
 }
 
-export class DerivedEntityBucket<E> extends EntityBucket<E> {
+export abstract class DerivedEntityBucket<E> extends EntityBucket<E> {
   constructor(public source: Bucket<any>) {
     super()
   }
 
-  start() {
+  protected startIngress() {
     this.source.onEntityAdded.add((e) => {
       if (this.wants(e)) this.add(e)
     })
@@ -191,6 +189,7 @@ export class DerivedEntityBucket<E> extends EntityBucket<E> {
 export class PredicateBucket<E> extends DerivedEntityBucket<E> {
   constructor(public source: Bucket<any>, public predicate: Predicate<E, E>) {
     super(source)
+    this.startIngress()
   }
 
   wants(entity: any): entity is E {
@@ -208,6 +207,7 @@ export class ArchetypeBucket<E> extends DerivedEntityBucket<E> {
     public query: ArchetypeQuery<E, keyof E>
   ) {
     super(source)
+    this.startIngress()
   }
 
   wants(entity: any): entity is E {
