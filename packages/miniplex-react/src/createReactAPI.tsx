@@ -1,7 +1,6 @@
 import { Bucket, With, World } from "@miniplex/core"
 import React, {
   createContext,
-  FunctionComponent,
   memo,
   ReactElement,
   ReactNode,
@@ -17,7 +16,7 @@ import { mergeRefs } from "./lib/mergeRefs"
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect
 
-export type EntityChildren<E> = ReactElement | FunctionComponent<E>
+export type EntityChildren<E> = ReactNode | ((entity: E) => ReactNode)
 
 type CommonProps<E> = {
   children?: EntityChildren<E>
