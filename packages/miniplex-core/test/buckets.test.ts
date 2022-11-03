@@ -204,4 +204,68 @@ describe(EntityBucket, () => {
       expect(archetype.entities).toEqual([])
     })
   })
+
+  describe("update", () => {
+    it("updates the entity using a function", () => {
+      const bucket = new EntityBucket<Entity>()
+      const entity = bucket.add({ name: "John" })
+      expect(entity.name).toBe("John")
+
+      bucket.update(entity, (e) => (e.age = 45))
+      expect(entity.age).toBe(45)
+    })
+
+    it("updates the entity using an object", () => {
+      const bucket = new EntityBucket<Entity>()
+      const entity = bucket.add({ name: "John" })
+      expect(entity.name).toBe("John")
+
+      bucket.update(entity, { age: 45 })
+      expect(entity.age).toBe(45)
+    })
+
+    it("updates the entity using an object returned by a function", () => {
+      const bucket = new EntityBucket<Entity>()
+      const entity = bucket.add({ name: "John" })
+      expect(entity.name).toBe("John")
+
+      bucket.update(entity, () => ({ age: 45 }))
+      expect(entity.age).toBe(45)
+    })
+
+    it("updates relevant archetypes", () => {
+      const bucket = new EntityBucket<Entity>()
+      const withAge = bucket.with("age")
+
+      const entity = bucket.add({ name: "John" })
+      expect(withAge.entities).toEqual([])
+
+      bucket.update(entity, { age: 45 })
+      expect(withAge.entities).toEqual([entity])
+    })
+
+    it("passes the modified entity to the onEntityAdded callback", () => {
+      const bucket = new EntityBucket<Entity>()
+      const entity = bucket.add({ name: "John" })
+      const withAge = bucket.with("age")
+
+      let age: number | undefined
+      withAge.onEntityAdded.add((e) => (age = e.age))
+
+      bucket.update(entity, (e) => (e.age = 45))
+      expect(age).toEqual(45)
+    })
+
+    it("passes the modified entity to the onEntityRemoved callback", () => {
+      const bucket = new EntityBucket<Entity>()
+      const entity = bucket.add({ name: "John", age: 45 })
+      const withAge = bucket.with("age")
+
+      let age: number | undefined
+      withAge.onEntityRemoved.add((e) => (age = e.age))
+
+      bucket.update(entity, (e) => delete e.age)
+      expect(age).toBeUndefined
+    })
+  })
 })

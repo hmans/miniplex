@@ -47,10 +47,12 @@ export class EntityBucket<E> extends Bucket<E> {
     entity: E,
     update: Partial<E> | ((e: E) => void) | ((e: E) => Partial<E>)
   ) {
-    const future = { ...entity }
-    const change = typeof update === "function" ? update(future) : update
-    if (change) Object.assign(future as {}, change)
-    this.evaluate(entity, future)
+    /* Perform the change (no matter what) */
+    const change = typeof update === "function" ? update(entity) : update
+    if (change) Object.assign(entity as {}, change)
+
+    /* Only if we have the entity, evaluate it */
+    if (this.has(entity)) this.evaluate(entity)
   }
 
   addBucket<B extends EntityBucket<any>>(bucket: B) {

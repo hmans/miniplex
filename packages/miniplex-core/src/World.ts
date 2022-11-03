@@ -19,13 +19,10 @@ export class World<E = any> extends EntityBucket<E> {
     /* Return early if the entity already has the component. */
     if (entity[component] !== undefined) return
 
-    /* Set the component */
-    entity[component] = value
-
-    /* Touch the entity, triggering re-checks of indices */
-    if (this.has(entity)) {
-      this.evaluate(entity)
-    }
+    /* Update the entity */
+    this.update(entity, (e) => {
+      e[component] = value
+    })
   }
 
   removeComponent(entity: E, component: keyof E) {
