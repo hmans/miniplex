@@ -22,7 +22,7 @@ type CommonProps<E> = {
   children?: EntityChildren<E>
 }
 
-export const createReactAPI = <E,>(world: World<E>) => {
+export const createReactAPI = <E extends {}>(world: World<E>) => {
   const EntityContext = createContext<E | null>(null)
 
   const useCurrentEntity = () => useContext(EntityContext)
