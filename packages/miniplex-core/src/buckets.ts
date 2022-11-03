@@ -45,7 +45,7 @@ export class EntityBucket<E> extends Bucket<E> {
 
   update(
     entity: E,
-    update: Partial<E> | ((e: E) => void) | ((e: E) => Partial<E>)
+    update: Partial<E> | ((e: E) => void) | ((e: E) => Partial<E>) = {}
   ) {
     /* Perform the change (no matter what) */
     const change = typeof update === "function" ? update(entity) : update

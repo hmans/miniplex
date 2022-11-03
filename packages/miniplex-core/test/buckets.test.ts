@@ -267,5 +267,17 @@ describe(EntityBucket, () => {
       bucket.update(entity, (e) => delete e.age)
       expect(age).toBeUndefined
     })
+
+    it("can be called without an update payload to trigger the entity's reindexing only", () => {
+      const bucket = new EntityBucket<Entity>()
+      const entity = bucket.add({ name: "John" })
+
+      const withAge = bucket.with("age")
+      expect(withAge.entities).toEqual([])
+
+      entity.age = 45
+      bucket.update(entity)
+      expect(withAge.entities).toEqual([entity])
+    })
   })
 })
