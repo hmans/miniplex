@@ -1,6 +1,6 @@
 import { EntityBucket } from "./buckets"
 
-export class World<E = any> extends EntityBucket<E> {
+export class World<E extends {} = any> extends EntityBucket<E> {
   constructor(entities: E[] = []) {
     super(entities)
 
@@ -13,6 +13,18 @@ export class World<E = any> extends EntityBucket<E> {
         this.entityToId.delete(entity)
       }
     })
+  }
+
+  update(
+    entity: E,
+    update: Partial<E> | ((e: E) => void) | ((e: E) => Partial<E>) = {}
+  ) {
+    /* Perform the change (no matter what) */
+    const change = typeof update === "function" ? update(entity) : update
+    if (change) Object.assign(entity, change)
+
+    /* Only if we have the entity, evaluate it */
+    if (this.has(entity)) this.evaluate(entity)
   }
 
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {

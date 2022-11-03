@@ -65,6 +65,82 @@ describe(World, () => {
     })
   })
 
+  describe("update", () => {
+    it("updates the entity using a function", () => {
+      const world = new World<Entity>()
+      const entity = world.add({ name: "John" })
+      expect(entity.name).toBe("John")
+
+      world.update(entity, (e) => (e.age = 45))
+      expect(entity.age).toBe(45)
+    })
+
+    it("updates the entity using an object", () => {
+      const world = new World<Entity>()
+      const entity = world.add({ name: "John" })
+      expect(entity.name).toBe("John")
+
+      world.update(entity, { age: 45 })
+      expect(entity.age).toBe(45)
+    })
+
+    it("updates the entity using an object returned by a function", () => {
+      const world = new World<Entity>()
+      const entity = world.add({ name: "John" })
+      expect(entity.name).toBe("John")
+
+      world.update(entity, () => ({ age: 45 }))
+      expect(entity.age).toBe(45)
+    })
+
+    it("updates relevant archetypes", () => {
+      const world = new World<Entity>()
+      const withAge = world.with("age")
+
+      const entity = world.add({ name: "John" })
+      expect(withAge.entities).toEqual([])
+
+      world.update(entity, { age: 45 })
+      expect(withAge.entities).toEqual([entity])
+    })
+
+    it("passes the modified entity to the onEntityAdded callback", () => {
+      const world = new World<Entity>()
+      const entity = world.add({ name: "John" })
+      const withAge = world.with("age")
+
+      let age: number | undefined
+      withAge.onEntityAdded.add((e) => (age = e.age))
+
+      world.update(entity, (e) => (e.age = 45))
+      expect(age).toEqual(45)
+    })
+
+    it("passes the modified entity to the onEntityRemoved callback", () => {
+      const world = new World<Entity>()
+      const entity = world.add({ name: "John", age: 45 })
+      const withAge = world.with("age")
+
+      let age: number | undefined
+      withAge.onEntityRemoved.add((e) => (age = e.age))
+
+      world.update(entity, (e) => delete e.age)
+      expect(age).toBeUndefined
+    })
+
+    it("can be called without an update payload to trigger the entity's reindexing only", () => {
+      const world = new World<Entity>()
+      const entity = world.add({ name: "John" })
+
+      const withAge = world.with("age")
+      expect(withAge.entities).toEqual([])
+
+      entity.age = 45
+      world.update(entity)
+      expect(withAge.entities).toEqual([entity])
+    })
+  })
+
   describe("addComponent", () => {
     it("adds a component to an entity", () => {
       const world = new World<Entity>()

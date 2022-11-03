@@ -13,7 +13,7 @@ import {
  * An entity-aware bucket providing methods for creating
  * derived buckets, and tracking the buckets derived from it.
  */
-export class EntityBucket<E> extends Bucket<E> {
+export class EntityBucket<E extends {}> extends Bucket<E> {
   buckets = new Set<EntityBucket<any>>()
 
   /**
@@ -41,18 +41,6 @@ export class EntityBucket<E> extends Bucket<E> {
         bucket.evaluate(entity, future)
       }
     }
-  }
-
-  update(
-    entity: E,
-    update: Partial<E> | ((e: E) => void) | ((e: E) => Partial<E>) = {}
-  ) {
-    /* Perform the change (no matter what) */
-    const change = typeof update === "function" ? update(entity) : update
-    if (change) Object.assign(entity as {}, change)
-
-    /* Only if we have the entity, evaluate it */
-    if (this.has(entity)) this.evaluate(entity)
   }
 
   addBucket<B extends EntityBucket<any>>(bucket: B) {
@@ -186,7 +174,7 @@ export class EntityBucket<E> extends Bucket<E> {
  * A bucket representing a subset of entities that satisfy
  * a given predicate.
  */
-export class PredicateBucket<E> extends EntityBucket<E> {
+export class PredicateBucket<E extends {}> extends EntityBucket<E> {
   constructor(public predicate: Predicate<E, E>) {
     super()
   }
@@ -200,7 +188,7 @@ export class PredicateBucket<E> extends EntityBucket<E> {
  * A bucket representing a subset of entities that have a
  * specific set of components.
  */
-export class ArchetypeBucket<E> extends EntityBucket<E> {
+export class ArchetypeBucket<E extends {}> extends EntityBucket<E> {
   constructor(public query: ArchetypeQuery<E, keyof E>) {
     super()
   }
