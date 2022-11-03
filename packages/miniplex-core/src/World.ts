@@ -47,7 +47,17 @@ export class World<E = any> extends EntityBucket<E> {
     }
   }
 
-  removeComponent(entity: E, component: keyof E) {
+  removeComponent(entity: E, component: keyof E): void
+
+  removeComponent(entities: Iterable<E>, component: keyof E): void
+
+  removeComponent(entity: E | Iterable<E>, component: keyof E) {
+    /* Handle the case of an iterable passed into this function */
+    if (isIterable(entity)) {
+      for (const e of entity) this.removeComponent(e, component)
+      return
+    }
+
     /* Return early if the entity doesn't even have the component. */
     if (entity[component] === undefined) return
 

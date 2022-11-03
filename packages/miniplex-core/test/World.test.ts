@@ -151,5 +151,16 @@ describe(World, () => {
 
       expect(age).toBe(30)
     })
+
+    it("can remove a component from multiple entities at once", () => {
+      const world = new World<Entity>()
+      const withAge = world.with("age")
+      const john = world.add({ name: "John", age: 30 })
+      const jane = world.add({ name: "Jane", age: 35 })
+      expect(withAge.entities).toEqual([john, jane])
+
+      world.removeComponent([john, jane], "age")
+      expect(withAge.entities).toEqual([])
+    })
   })
 })
