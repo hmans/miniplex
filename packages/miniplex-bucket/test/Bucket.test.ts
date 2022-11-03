@@ -63,15 +63,6 @@ describe(Bucket, () => {
       expect(bucket.entities).not.toContain(entity)
     })
 
-    it("returns the entity", () => {
-      const bucket = new Bucket()
-      const entity = { id: "1" }
-
-      const result = bucket.remove(entity)
-
-      expect(result).toBe(entity)
-    })
-
     it("emits the onEntityRemoved event", () => {
       const bucket = new Bucket()
       const entity = bucket.add({ id: "1" })
@@ -81,6 +72,16 @@ describe(Bucket, () => {
       bucket.remove(entity)
 
       expect(listener).toHaveBeenCalledWith(entity)
+    })
+
+    it("can remove all entities from an iterable", () => {
+      const bucket = new Bucket()
+      const entity1 = bucket.add({ id: "1" })
+      const entity2 = bucket.add({ id: "2" })
+
+      bucket.remove([entity1, entity2])
+
+      expect(bucket.entities).toHaveLength(0)
     })
   })
 
