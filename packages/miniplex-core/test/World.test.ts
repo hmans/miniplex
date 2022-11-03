@@ -95,6 +95,16 @@ describe(World, () => {
       world.addComponent(john, "age", 30)
       expect(withAge.entities).toEqual([john])
     })
+
+    it("can add a component to multiple entities at once", () => {
+      const world = new World<Entity>()
+      const withAge = world.with("age")
+      const john = world.add({ name: "John" })
+      const jane = world.add({ name: "Jane" })
+
+      world.addComponent([john, jane], "age", 30)
+      expect(withAge.entities).toEqual([john, jane])
+    })
   })
 
   describe("removeComponent", () => {

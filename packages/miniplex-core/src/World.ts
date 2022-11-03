@@ -1,4 +1,5 @@
 import { EntityBucket } from "./buckets"
+import { isIterable } from "./util/isIterable"
 
 export class World<E = any> extends EntityBucket<E> {
   constructor(entities: E[] = []) {
@@ -15,7 +16,25 @@ export class World<E = any> extends EntityBucket<E> {
     })
   }
 
-  addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
+  addComponent<C extends keyof E>(entity: E, component: C, value: E[C]): void
+
+  addComponent<C extends keyof E>(
+    entities: Iterable<E>,
+    component: C,
+    value: E[C]
+  ): void
+
+  addComponent<C extends keyof E>(
+    entity: E | Iterable<E>,
+    component: C,
+    value: E[C]
+  ) {
+    /* Handle the case of an iterable passed into this function */
+    if (isIterable(entity)) {
+      for (const e of entity) this.addComponent(e, component, value)
+      return
+    }
+
     /* Return early if the entity already has the component. */
     if (entity[component] !== undefined) return
 
