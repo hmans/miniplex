@@ -1,11 +1,9 @@
 // /** @type {import('tailwindcss').Config} */
 
-const theme = require("tailwindcss/defaultTheme");
+const theme = require("tailwindcss/defaultTheme")
 
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx,md,mdx}",
-  ],
+  content: ["./src/**/*.{js,jsx,ts,tsx,md,mdx}"],
   mode: "jit",
   darkMode: "class",
   theme: {
@@ -62,7 +60,7 @@ module.exports = {
             "--tw-prose-invert-quote-borders": theme("colors.solid.mediumgray"),
             // "--tw-prose-pre-bg": "transparent",
             color: "var(--tw-prose-body)",
-            fontFamily: "Gordita",
+            fontFamily: "Helvetica Neue",
             "blockquote p:first-of-type::before": { content: "none" },
             "blockquote p:first-of-type::after": { content: "none" },
             "code::before": { content: "none" },
@@ -92,7 +90,7 @@ module.exports = {
           }
         }
       }),
-      backgroundImage: theme => ({
+      backgroundImage: (theme) => ({
         hero: "url('/src/assets/shapes/header.svg')",
         "blocks-one": "url('/src/assets/shapes/blocks1.svg')",
         "blocks-one-dark": "url('/src/assets/shapes/blocks1-dark.svg')",
@@ -123,4 +121,4 @@ module.exports = {
     }
   },
   plugins: [require("@tailwindcss/typography")]
-};
+}
