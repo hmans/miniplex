@@ -98,19 +98,19 @@ section[role="main"] {
 }
 
 main {
-  flex-grow: 1;
-  flex-shrink: 1;
+  /* flex-grow: 1;
+  flex-shrink: 1; */
 }
 
 /* Sidebars */
 
-div.sidebar-contents {
-  position: fixed;
-}
-
 div.sidebar {
   flex: 0 0 300px;
   padding: 0 2rem;
+}
+
+div.sidebar-contents {
+  position: fixed;
 }
 
 /* Left sidebar */
