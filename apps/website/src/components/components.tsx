@@ -17,61 +17,28 @@ export const components = {
   spa: (props) => <></>,
   p: (props) => <p {...props}>{props.children}</p>,
   a: (props) => {
-    return (
-      <A
-        {...props}
-        style="text-decoration: none"
-        class="dark:text-link-dark break-normal hover:border-opacity-100 duration-100 ease-in  transition font-semibold leading-normal"
-      >
-        {props.children}
-      </A>
-    )
+    return <A {...props}>{props.children}</A>
   },
   "token-link": (props) => {
-    return (
-      <span class="code-step bg-opacity-10 dark:bg-opacity-20 relative rounded px-1 py-[1.5px] border-b-[2px] border-opacity-60 bg-yellow-400 border-yellow-400 text-yellow-600 dark:text-yellow-300">
-        {props.children}
-      </span>
-    )
+    return <span>{props.children}</span>
   },
-  li: (props) => (
-    <li {...props} class="mb-2">
-      {props.children}
-    </li>
-  ),
-  ul: (props) => (
-    <ul {...props} class="list-disc pl-8 mb-2">
-      {props.children}
-    </ul>
-  ),
-  ol: (props) => (
-    <ol {...props} class="list-decimal pl-8 mb-2">
-      {props.children}
-    </ol>
-  ),
+  li: (props) => <li {...props}>{props.children}</li>,
+  ul: (props) => <ul {...props}>{props.children}</ul>,
+  ol: (props) => <ol {...props}>{props.children}</ol>,
   nav: (props) => <nav {...props}>{props.children}</nav>,
   A,
   "table-of-contents": (props) => {},
   code: (props) => {
     return (
       <span class="not-prose">
-        <code
-          className="inline text-code text-secondary dark:text-secondary-dark rounded-md no-underline bg-slate-300 bg-opacity-20"
-          {...props}
-        >
-          {props.children}
-        </code>
+        <code {...props}>{props.children}</code>
       </span>
     )
   },
   pre: (props) => (
     <div>
       <Show when={props.filename?.length > 5}>
-        <div
-          class={`px-3 py-1 w-full text-xs bg-slate-500 rounded-t text-slate-100 ${props.className}`}
-        >
-          {props.filename}
-        </div>
+        <div class={`${props.className}`}>{props.filename}</div>
       </Show>
       <pre
         {...mergeProps(props, {
@@ -99,32 +66,19 @@ export const components = {
 
     return (
       <Tooltip id={id}>
-        <span
-          classList={{
-            "code-step bg-opacity-10 dark:bg-opacity-20 relative rounded px-1 py-[1.5px] border-b-[2px] border-opacity-60 bg-yellow-400 border-yellow-400 text-yellow-600 dark:text-yellow-300":
-              props.style?.borderBottom
-          }}
-        >
-          {props.children}
-        </span>
+        {props.children}
         <div id={id} style="display: none;">
-          <pre class="text-white bg-transparent text-[0.65em] p-0 m-0 border-0 w-full whitespace-pre-wrap">
-            {props.lsp}
-          </pre>
+          <pre>{props.lsp}</pre>
         </div>
       </Tooltip>
     )
   },
-  h5: (props) => (
-    <h5 {...props} class="text-lg mb-4">
-      {props.children}
-    </h5>
-  ),
+  h5: (props) => <h5 {...props}>{props.children}</h5>,
   "docs-error": (props) => {
     return (
       <div class="docs-error">
         <p>
-          <span class="text-red-500">Error:</span>
+          <span>Error:</span>
           {props.children}
         </p>
       </div>
@@ -134,23 +88,20 @@ export const components = {
     return (
       <div class="docs-error">
         <p>
-          <span class="text-red-500">Error:</span>
+          <span>Error:</span>
           {props.children}
         </p>
       </div>
     )
   },
   aside: (props) => (
-    <aside
-      {...props}
-      class="bg-orange-200 text-orange-900 dark:bg-slate-700 p-6 rounded-md space-y-2"
-    >
-      <div class="font-bold uppercase text-sm">WARNING</div>
+    <aside {...props}>
+      <div>WARNING</div>
       <div>{props.children}</div>
     </aside>
   ),
   response: (props) => {
-    return <span class="border-1">{props.children}</span>
+    return <span>{props.children}</span>
   },
   void: (props) => {
     return <span>{props.children}</span>
