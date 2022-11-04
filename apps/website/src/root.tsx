@@ -55,7 +55,7 @@ function Header() {
   )
 }
 
-function Nav() {
+function MainNavigation() {
   const data = createMemo(() => {
     let sections: {
       [key: string]: {
@@ -184,6 +184,41 @@ function Nav() {
 import { components } from "./components/components"
 import { useTableOfContents } from "./components/TableOfContents"
 
+function PageContent() {
+  return (
+    <MDXProvider
+      components={{
+        ...components,
+        "table-of-contents": () => {
+          const headings = useTableOfContents()
+          return (
+            <>
+              <div>
+                <ul>
+                  <Suspense>
+                    <For each={headings()}>
+                      {(h) => (
+                        <li>
+                          <IslandA href={`#${h.slug}`}>{h.text}</IslandA>
+                        </li>
+                      )}
+                    </For>
+                  </Suspense>
+                </ul>
+              </div>
+              <hr />
+            </>
+          )
+        }
+      }}
+    >
+      <Routes>
+        <FileRoutes />
+      </Routes>
+    </MDXProvider>
+  )
+}
+
 export default function Root() {
   return (
     <Html lang="en">
@@ -193,23 +228,13 @@ export default function Root() {
         <Meta property="og:title" content="The Book of Miniplex" />
         <Meta property="og:site_name" content="The Book of Miniplex" />
         <Meta property="og:url" content="https://miniplex.hmans.co/" />
-        <Meta
-          property="og:description"
-          content="Resources for 'Reactivity with SolidJS' for Frontend Masters Course"
-        />
+        <Meta property="og:description" content="" />
         <Meta property="og:type" content="website" />
-        <Meta
-          property="og:image"
-          content="https://www.solidjs.com/og-share.png"
-        />
+        <Meta property="og:image" content="" />
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <Meta
-          name="description"
-          property="og:description"
-          content="Resources for 'Reactivity with SolidJS' for Frontend Masters Course"
-        />
-        <Meta name="author" content="@RyanCarniato" />
+        <Meta name="description" property="og:description" content="" />
+        <Meta name="author" content="@hmans" />
 
         <Link rel="icon" href="/favicon.ico" />
       </Head>
@@ -217,45 +242,14 @@ export default function Root() {
       <Body>
         <Header />
 
-        <Nav />
+        <MainNavigation />
 
         <div>
           <div>
             <ErrorBoundary>
               <Suspense>
                 <main>
-                  <MDXProvider
-                    components={{
-                      ...components,
-                      "table-of-contents": () => {
-                        const headings = useTableOfContents()
-                        return (
-                          <>
-                            <div>
-                              <ul>
-                                <Suspense>
-                                  <For each={headings()}>
-                                    {(h) => (
-                                      <li>
-                                        <IslandA href={`#${h.slug}`}>
-                                          {h.text}
-                                        </IslandA>
-                                      </li>
-                                    )}
-                                  </For>
-                                </Suspense>
-                              </ul>
-                            </div>
-                            <hr />
-                          </>
-                        )
-                      }
-                    }}
-                  >
-                    <Routes>
-                      <FileRoutes />
-                    </Routes>
-                  </MDXProvider>
+                  <PageContent />
                 </main>
               </Suspense>
             </ErrorBoundary>
