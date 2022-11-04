@@ -14,7 +14,7 @@ import {
   unstable_island
 } from "solid-start"
 import { ErrorBoundary } from "solid-start/error-boundary"
-import "./components/index.css"
+import "./resources/styles.css"
 
 const IslandA = unstable_island(() => import("./components/A"))
 const TableOfContents = unstable_island(
