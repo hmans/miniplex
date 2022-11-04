@@ -1,0 +1,91 @@
+---
+title: Introduction
+section: guide
+order: 1
+active: true
+---
+
+import { Counter } from "../../components/Counter"
+
+# Introduction
+
+It's an ECS. The End.
+
+## Testimonials
+
+> Tested @hmans' Miniplex library over the weekend and after having previously implemented an ECS for my wip browser game, I have to say **Miniplex feels like the "right" way to do ECS in #r3f**. - [Brian Breiholz](https://twitter.com/BrianBreiholz/status/1577182839509962752)
+
+## Example
+
+```ts
+/* Define an entity type */
+type Entity = {
+  position: { x: number; y: number }
+  velocity?: { x: number; y: number }
+  health?: {
+    current: number
+    max: number
+  }
+  poisoned?: true
+}
+
+/* Create a world with entities of that type */
+const world = new World<Entity>()
+
+/* Create an entity */
+const player = world.add({
+  position: { x: 0, y: 0 },
+  velocity: { x: 0, y: 0 },
+  health: { current: 100, max: 100 }
+})
+
+/* Create another entity */
+const enemy = world.add({
+  position: { x: 10, y: 10 },
+  velocity: { x: 0, y: 0 },
+  health: { current: 100, max: 100 }
+})
+
+/* Create some archetype queries: */
+const archetypes = {
+  moving: world.with("position", "velocity"),
+  health: world.with("health"),
+  poisoned: archetypes.health.with("poisoned")
+}
+
+/* Create functions that perform actions on entities: */
+function damage({ health }: With<Entity, "health">, amount: number) {
+  health.current -= amount
+}
+
+function points(entity: With<Entity, "poison">) {
+  world.addComponent(entity, "poison", true)
+}
+
+/* Create a bunch of systems: */
+function moveSystem() {
+  for (const { position, velocity } of archetypes.moving) {
+    position.x += velocity.x
+    position.y += velocity.y
+  }
+}
+
+function poisonSystem() {
+  for (const { health, poisoned } of archetypes.poisoned) {
+    health.current -= 1
+  }
+}
+
+function healthSystem() {
+  for (const entity of archetypes.health.where(
+    ({ health }) => health.current <= 0
+  )) {
+    world.removeEntity(entity)
+  }
+}
+
+/* React to entities appearing/disappearing in archetypes: */
+archetypes.poisoned.onEntityAdded((entity) => {
+  console.log("Poisoned:", entity)
+})
+```
