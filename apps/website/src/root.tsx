@@ -192,23 +192,19 @@ function Nav() {
   })
 
   return (
-    <nav class="min-w-[300px] col-start-1 row-start-2 -translate-x-full peer-checked:translate-x-0 px-8 py-8 space-y-4 h-full fixed md:relative left-0 z-20 md:left-auto top-[52px] md:top-auto overflow-auto bg-slate-100 duration-300 ease-in-out md:translate-x-0">
+    <nav>
       <For each={data()}>
         {(r) => (
           <ul>
-            <span class="text-left w-full dark:text-white border-b border-gray-200 dark:border-gray-500 hover:text-gray-400 transition flex flex-wrap content-center justify-between space-x-2 text-xl p-2 py-2">
-              {r.title}
-            </span>
+            {r.title}
             <Show
               when={!r.subsection}
               fallback={
                 <>
                   <For each={[...r.subsection.values()]}>
                     {(s) => (
-                      <ul class="ml-2 mt-4">
-                        <div class="font-bold text-gray-500 text-md mb-3">
-                          {s}
-                        </div>
+                      <ul>
+                        <div>{s}</div>
                         <For each={r.filter((i) => i.subsection === s)}>
                           {({ title, path, href, frontMatter }) => (
                             <li class="ml-2">
@@ -217,9 +213,7 @@ function Nav() {
                                 inactiveClass="text-gray-500"
                                 href={href}
                               >
-                                <span class="block ml-4 pb-2 text-sm break-words hover:text-gray-500 dark:hover:text-gray-300">
-                                  {title}
-                                </span>
+                                {title}
                               </IslandA>
                             </li>
                           )}
@@ -230,7 +224,7 @@ function Nav() {
 
                   <For each={r.filter((i) => !i.subsection)}>
                     {({ title, path, href, frontMatter }) => (
-                      <li class="ml-2">
+                      <li>
                         <IslandA
                           activeClass="text-primary"
                           inactiveClass="text-gray-500"
@@ -246,18 +240,13 @@ function Nav() {
             >
               <For each={r}>
                 {({ title, path, href, frontMatter }) => (
-                  <li
-                    class="ml-2"
-                    classList={{ "text-slate-300": !frontMatter.active }}
-                  >
+                  <li>
                     <IslandA
                       activeClass="text-primary"
                       inactiveClass="text-gray-500"
                       href={href}
                     >
-                      <span class="block dark:text-gray-300 py-1 text-md font-semibold break-words hover:text-gray-400 dark:hover:text-gray-400">
-                        {title}
-                      </span>
+                      {title}
                     </IslandA>
                   </li>
                 )}
