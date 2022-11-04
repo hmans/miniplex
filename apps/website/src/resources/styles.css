@@ -74,7 +74,8 @@ header[role="main"] {
   position: fixed;
   width: 100vw;
 
-  padding: 0.25rem 0 0.25rem 300px;
+  padding: 0.25rem 0 0.25rem 320px;
+  transition: padding 0.2s ease-in-out;
   margin-bottom: 3rem;
 
   font-size: 125%;
@@ -98,6 +99,7 @@ section[role="main"] {
 
 main {
   overflow: hidden;
+  padding: 0 20px;
 }
 
 /* Sidebars */
@@ -112,6 +114,11 @@ div.sidebar-contents {
 }
 
 /* Left sidebar */
+
+div.sidebar-left {
+  margin-left: 0px;
+  transition: margin-left 0.2s ease-in-out;
+}
 
 nav ul {
   list-style: none;
@@ -184,5 +191,15 @@ pre div.line:after {
 @media screen and (max-width: 1024px) {
   div.sidebar-right {
     margin-right: -300px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  header[role="main"] {
+    padding-left: 20px;
+  }
+
+  div.sidebar-left {
+    margin-left: -300px;
   }
 }
