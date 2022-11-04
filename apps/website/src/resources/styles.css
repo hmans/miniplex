@@ -69,7 +69,7 @@ blockquote {
 /* Main header */
 
 header[role="main"] {
-  padding-left: 250px;
+  padding-left: 300px;
   margin: 2rem 0;
 
   font-size: 125%;
@@ -87,11 +87,16 @@ section[role="main"] {
 }
 
 nav[role="main"] {
-  flex: 250px 0;
+  flex: 0 0 300px;
   padding: 0 2rem;
 }
 
-nav[role="main"] > ul {
+nav[role="navigation"] {
+  flex: 0 0 300px;
+  padding: 0 2rem;
+}
+
+nav > ul {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -99,10 +104,6 @@ nav[role="main"] > ul {
 
 nav a.current {
   font-weight: bold;
-}
-
-main {
-  max-width: 800px;
 }
 
 /* Code embeds */

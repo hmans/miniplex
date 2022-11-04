@@ -256,7 +256,9 @@ export default function Root() {
             </ErrorBoundary>
           </main>
 
-          <TableOfContents />
+          <nav role="navigation">
+            <TableOfContents />
+          </nav>
         </section>
         <Scripts />
       </Body>
