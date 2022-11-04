@@ -9,11 +9,27 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Inter", sans-serif;
+
+  font: 16px/1.5 "Inter", sans-serif;
+  background-color: white;
+  color: #555;
+}
+
+a {
+  color: #555;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #333;
+  text-decoration: underline;
 }
 
 header[role="main"] {
-  background-color: #fdd;
+  padding-left: 250px;
+  margin: 2rem 0;
+
+  font-size: 125%;
 }
 
 /* Main pane */
@@ -24,11 +40,16 @@ section[role="main"] {
 }
 
 nav[role="main"] {
+  flex: 250px 0;
   padding: 2rem;
+}
 
-  background-color: #ddf;
+nav[role="main"] > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 main {
-  padding: 2rem 3rem;
+  max-width: 800px;
 }

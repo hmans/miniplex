@@ -198,22 +198,17 @@ function PageContent() {
         "table-of-contents": () => {
           const headings = useTableOfContents()
           return (
-            <>
-              <div>
-                <ul>
-                  <Suspense>
-                    <For each={headings()}>
-                      {(h) => (
-                        <li>
-                          <IslandA href={`#${h.slug}`}>{h.text}</IslandA>
-                        </li>
-                      )}
-                    </For>
-                  </Suspense>
-                </ul>
-              </div>
-              <hr />
-            </>
+            <ul>
+              <Suspense>
+                <For each={headings()}>
+                  {(h) => (
+                    <li>
+                      <IslandA href={`#${h.slug}`}>{h.text}</IslandA>
+                    </li>
+                  )}
+                </For>
+              </Suspense>
+            </ul>
           )
         }
       }}
