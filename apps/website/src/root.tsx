@@ -45,7 +45,7 @@ export const mods = import.meta.glob<true, any, SolidStartFunctions>(
 function PageHeader() {
   return (
     <header role="main">
-      <h1>The Book of Miniplex</h1>
+      <div class="title">The Book of Miniplex</div>
       <div>
         <a href="https://miniplex.hmans.co/" target="_blank">
           miniplex.hmans.co

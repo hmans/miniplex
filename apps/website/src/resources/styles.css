@@ -43,6 +43,7 @@ h1 {
   font-weight: 900;
 }
 
+h1,
 h2,
 h3 {
   font-size: 125%;
@@ -75,7 +76,9 @@ header[role="main"] {
   font-size: 125%;
 }
 
-header h1 {
+header div.title {
+  font-weight: 900;
+  font-size: 200%;
   margin-bottom: 0;
 }
 
@@ -91,12 +94,7 @@ nav[role="main"] {
   padding: 0 2rem;
 }
 
-nav[role="navigation"] {
-  flex: 0 0 300px;
-  padding: 0 2rem;
-}
-
-nav > ul {
+nav ul {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -104,6 +102,22 @@ nav > ul {
 
 nav a.current {
   font-weight: bold;
+}
+
+/* Right sidebar */
+
+nav[role="navigation"] {
+  flex: 0 0 300px;
+  padding: 0 3rem;
+  font-size: 85%;
+}
+
+nav[role="navigation"] li {
+  margin: 0.5rem 0;
+}
+
+div.toc > *:first-child {
+  margin-top: 0;
 }
 
 /* Code embeds */

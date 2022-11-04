@@ -23,7 +23,7 @@ export default function TableOfContents() {
 
   return (
     <div class="toc">
-      <span>On this page:</span>
+      <h4>On this page:</h4>
       <ul>
         <Suspense>
           <For each={headings()}>
