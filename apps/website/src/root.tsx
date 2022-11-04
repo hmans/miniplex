@@ -64,6 +64,7 @@ function Nav() {
         order: number
         subsection: string
         href: string
+        frontMatter: Record<string, any>
       }[] & { subsection?: Set<string>; title?: string; order?: number }
     } = {}
 
