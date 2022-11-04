@@ -97,8 +97,7 @@ section[role="main"] {
 }
 
 main {
-  /* flex-grow: 1;
-  flex-shrink: 1; */
+  overflow: hidden;
 }
 
 /* Sidebars */
@@ -179,7 +178,7 @@ pre div.line:after {
 
 /* Small Screen Overrides */
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 1024px) {
   div.sidebar-right {
     display: none;
   }
