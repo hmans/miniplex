@@ -179,6 +179,11 @@ export abstract class DerivedEntityBucket<E> extends EntityBucket<E> {
     this.update()
   }
 
+  /**
+   * Updates the contents of this bucket by iterating over the entities
+   * in its source bucket, re-checking each one to see if it should be
+   * in this bucket or not.
+   */
   update() {
     for (const entity of this.source) {
       this.evaluate(entity)
