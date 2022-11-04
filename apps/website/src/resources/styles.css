@@ -128,6 +128,9 @@ nav a.current {
 div.sidebar-right {
   padding: 0 3rem;
   font-size: 85%;
+  margin-right: 0;
+
+  transition: margin-right 0.2s ease-in-out;
 }
 
 nav.toc li {
@@ -180,6 +183,6 @@ pre div.line:after {
 
 @media screen and (max-width: 1024px) {
   div.sidebar-right {
-    display: none;
+    margin-right: -300px;
   }
 }
