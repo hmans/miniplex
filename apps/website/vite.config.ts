@@ -1,11 +1,11 @@
-import solid from "solid-start/vite";
-import { defineConfig } from "vite";
-import mdx from "solid-start-mdx";
+import solid from "solid-start/vite"
+import { defineConfig } from "vite"
+import mdx from "solid-start-mdx"
 
 export default defineConfig({
   css: {
     postcss: {
-      plugins: [(await import("tailwindcss")).default]
+      plugins: []
     }
   },
   plugins: [
@@ -14,6 +14,6 @@ export default defineConfig({
       extensions: [".mdx", ".md"],
       islands: true,
       islandsRouter: true
-    }),
-  ],
-});
+    })
+  ]
+})
