@@ -169,9 +169,9 @@ function MainNavigation() {
               <For each={r}>
                 {({ title, path, href, frontMatter }) => (
                   <li>
-                    <A activeClass="current" href={href}>
+                    <IslandA activeClass="current" href={href}>
                       {title}
-                    </A>
+                    </IslandA>
                   </li>
                 )}
               </For>
@@ -185,7 +185,6 @@ function MainNavigation() {
 
 import { components } from "./components/components"
 import { useTableOfContents } from "./components/TableOfContents"
-import { A } from "@solidjs/router"
 
 function PageContent() {
   return (
