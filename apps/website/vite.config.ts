@@ -11,9 +11,9 @@ export default defineConfig({
   plugins: [
     await mdx(),
     solid({
-      extensions: [".mdx", ".md"],
-      islands: true,
-      islandsRouter: true
+      extensions: [".mdx", ".md"]
+      // islands: true,
+      // islandsRouter: true
     })
   ]
 })
