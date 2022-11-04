@@ -74,13 +74,10 @@ const socials = [
 
 function SocialIcon(props) {
   return (
-    <li class="mx-2">
+    <li>
       <a href={props.href} rel="noopener" target="_blank">
-        <span class="sr-only">{props.alt}</span>
-        <svg
-          viewBox="0 0 24 24"
-          class="h-8 transition hover:opacity-50 opacity-60"
-        >
+        {props.alt}
+        <svg viewBox="0 0 24 24">
           <path fill="currentColor" d={props.icon} />
         </svg>
       </a>
@@ -90,29 +87,16 @@ function SocialIcon(props) {
 
 function Header() {
   return (
-    <header class="flex px-8 py-2 shadow-md z-10 md:z-50 relative col-span-3 col-start-1 row-start-1">
-      <div class="flex justify-between w-full">
-        <div class="flex space-x-3">
-          <div class="text-xl mt-2 uppercase hidden md:block">
-            <span class="font-semibold ml-1 text-solid-medium">
-              The Book of Miniplex
-            </span>
-          </div>
+    <header>
+      <div>
+        <div>
+          <div>The Book of Miniplex</div>
         </div>
-        <div class="flex space-x-5">
-          <div class="flex items-center">
-            <a
-              href="https://miniplex.hmans.co/"
-              target="_blank"
-              class="flex items-center space-x-5"
-            >
+        <div>
+          <div>
+            <a href="https://miniplex.hmans.co/" target="_blank">
               miniplex.hmans.co
-              <svg
-                class="h-5 z-50 -mt-1 ltr:ml-1 rtl:mr-1 opacity-30"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -122,7 +106,7 @@ function Header() {
               </svg>
             </a>
           </div>
-          <ul class="flex">
+          <ul>
             <For
               each={socials}
               children={(social) => <SocialIcon {...social} />}
@@ -207,7 +191,7 @@ function Nav() {
                         <div>{s}</div>
                         <For each={r.filter((i) => i.subsection === s)}>
                           {({ title, path, href, frontMatter }) => (
-                            <li class="ml-2">
+                            <li>
                               <IslandA
                                 activeClass="text-primary"
                                 inactiveClass="text-gray-500"
@@ -264,7 +248,7 @@ import { useTableOfContents } from "./components/TableOfContents"
 
 export default function Root() {
   return (
-    <Html lang="en" class="h-full">
+    <Html lang="en">
       <Title>The Book of Miniplex</Title>
       <Head>
         <Meta charset="utf-8" />
@@ -292,25 +276,13 @@ export default function Root() {
         <Link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Body class="h-full grid grid-cols-[auto,1fr,auto] grid-rows-[auto,1fr]">
+      <Body>
         <Header />
 
-        <input
-          type="checkbox"
-          class="peer hidden"
-          name="sidebar-toggle"
-          id="sidebar-toggle"
-        />
+        <input type="checkbox" name="sidebar-toggle" id="sidebar-toggle" />
 
-        <label
-          class="fixed cursor-pointer peer-checked:rotate-90 md:hidden top-20 right-3 text-white rounded-lg transition duration-500 bg-solid-medium reveal-delay opacity-0"
-          for="sidebar-toggle"
-        >
-          <svg
-            class="h-7 w-7"
-            viewBox="0 0 24 24"
-            style="fill: none; stroke: currentcolor;"
-          >
+        <label for="sidebar-toggle">
+          <svg viewBox="0 0 24 24" style="fill: none; stroke: currentcolor;">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -321,11 +293,11 @@ export default function Root() {
 
         <Nav />
 
-        <div class="col-start-2 row-start-2 h-full overflow-auto">
-          <div class="px-8 py-8 h-full container">
+        <div>
+          <div>
             <ErrorBoundary>
               <Suspense>
-                <main class="prose prose-md max-w-none w-full pt-0 pb-10 lg:px-10">
+                <main>
                   <MDXProvider
                     components={{
                       ...components,
@@ -333,21 +305,13 @@ export default function Root() {
                         const headings = useTableOfContents()
                         return (
                           <>
-                            <div class="xl:hidden overflow-hidden">
-                              <ul class="space-y-2 text-[1rem]">
+                            <div>
+                              <ul>
                                 <Suspense>
                                   <For each={headings()}>
                                     {(h) => (
-                                      <li
-                                        classList={{
-                                          "ml-2": h.depth === 2,
-                                          "ml-4": h.depth === 3
-                                        }}
-                                      >
-                                        <IslandA
-                                          class="border-0 no-underline"
-                                          href={`#${h.slug}`}
-                                        >
+                                      <li>
+                                        <IslandA href={`#${h.slug}`}>
                                           {h.text}
                                         </IslandA>
                                       </li>
@@ -356,7 +320,7 @@ export default function Root() {
                                 </Suspense>
                               </ul>
                             </div>
-                            <hr class="xl:hidden" />
+                            <hr />
                           </>
                         )
                       }
