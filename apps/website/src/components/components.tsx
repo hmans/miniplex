@@ -27,39 +27,6 @@ export const components = {
   nav: (props) => <nav {...props}>{props.children}</nav>,
   A,
   "table-of-contents": (props) => {},
-  // code: (props) => {
-  //   return (
-  //     <code {...props} class="inline">
-  //       {props.children}
-  //     </code>
-  //   )
-  // },
-  pre: (props) => (
-    <div>
-      <Show when={props.filename?.length > 5}>
-        <div class={`${props.className}`}>{props.filename}</div>
-      </Show>
-      <pre
-        {...mergeProps(props, {
-          get classList() {
-            return {
-              [props.className]: true,
-              ["rounded-b mt-0 px-0"]: true,
-              ["border-red-400 border-2 bad"]: props.bad,
-              ["border-green-400 border-2 good"]: props.good,
-              ["snippet"]: !props.good && !props.bad,
-              ["rounded-t-none"]: props.filename?.length
-            }
-          },
-          get className() {
-            return undefined
-          }
-        })}
-      >
-        {props.children}
-      </pre>
-    </div>
-  ),
   "data-lsp": (props) => {
     const id = createUniqueId()
 

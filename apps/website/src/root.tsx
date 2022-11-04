@@ -246,7 +246,7 @@ export default function Root() {
         <PageHeader />
 
         <section role="main">
-          <div class="sidebar-left">
+          <div class="sidebar sidebar-left">
             <div class="sidebar-contents">
               <MainNavigation />
             </div>
@@ -260,7 +260,7 @@ export default function Root() {
             </ErrorBoundary>
           </main>
 
-          <div class="sidebar-right">
+          <div class="sidebar sidebar-right">
             <div class="sidebar-contents">
               <TableOfContents />
             </div>
