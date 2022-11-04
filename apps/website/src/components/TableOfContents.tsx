@@ -22,7 +22,7 @@ export default function TableOfContents() {
   const headings = useTableOfContents()
 
   return (
-    <div class="toc">
+    <nav class="toc">
       <h4>On this page:</h4>
       <ul>
         <Suspense>
@@ -35,6 +35,6 @@ export default function TableOfContents() {
           </For>
         </Suspense>
       </ul>
-    </div>
+    </nav>
   )
 }

@@ -96,9 +96,15 @@ section[role="main"] {
   flex-direction: row;
 }
 
-nav[role="main"] {
+/* Left sidebar */
+
+div.sidebar-left {
   flex: 0 0 300px;
   padding: 0 2rem;
+}
+
+div.sidebar-contents {
+  position: fixed;
 }
 
 nav ul {
@@ -113,17 +119,17 @@ nav a.current {
 
 /* Right sidebar */
 
-nav[role="navigation"] {
+div.sidebar-right {
   flex: 0 0 300px;
   padding: 0 3rem;
   font-size: 85%;
 }
 
-nav[role="navigation"] li {
+nav.toc li {
   margin: 0.5rem 0;
 }
 
-div.toc > *:first-child {
+nav.toc > *:first-child {
   margin-top: 0;
 }
 

@@ -246,7 +246,11 @@ export default function Root() {
         <PageHeader />
 
         <section role="main">
-          <MainNavigation />
+          <div class="sidebar-left">
+            <div class="sidebar-contents">
+              <MainNavigation />
+            </div>
+          </div>
 
           <main>
             <ErrorBoundary>
@@ -256,9 +260,11 @@ export default function Root() {
             </ErrorBoundary>
           </main>
 
-          <nav role="navigation">
-            <TableOfContents />
-          </nav>
+          <div class="sidebar-right">
+            <div class="sidebar-contents">
+              <TableOfContents />
+            </div>
+          </div>
         </section>
         <Scripts />
       </Body>
