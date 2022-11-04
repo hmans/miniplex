@@ -46,11 +46,11 @@ function PageHeader() {
   return (
     <header role="main">
       <div class="title">The Book of Miniplex</div>
-      <div>
+      {/* <div>
         <a href="https://miniplex.hmans.co/" target="_blank">
           miniplex.hmans.co
         </a>
-      </div>
+      </div> */}
     </header>
   )
 }

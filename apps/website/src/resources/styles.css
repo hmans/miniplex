@@ -70,10 +70,12 @@ blockquote {
 /* Main header */
 
 header[role="main"] {
-  padding-left: 300px;
-  margin: 2rem 0;
+  padding: 0.5rem 0 0.5rem 300px;
+  margin-bottom: 3rem;
 
   font-size: 125%;
+  border-bottom: 2px solid #ddd;
+  box-shadow: 0px 12px 12px rgba(0, 0, 0, 0.08);
 }
 
 header div.title {
