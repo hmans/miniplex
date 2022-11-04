@@ -127,7 +127,6 @@ nav a.current {
 /* Right sidebar */
 
 div.sidebar-right {
-  flex: 0 0 300px;
   padding: 0 3rem;
   font-size: 85%;
 }
