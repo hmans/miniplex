@@ -1,6 +1,6 @@
 // @refresh reload
-import { createMemo, For, Show, Suspense } from "solid-js";
-import { MDXProvider } from "solid-mdx";
+import { createMemo, For, Show, Suspense } from "solid-js"
+import { MDXProvider } from "solid-mdx"
 import {
   Body,
   FileRoutes,
@@ -10,40 +10,41 @@ import {
   Meta,
   Routes,
   Scripts,
-  Stylesheet,
   Title,
   unstable_island
-} from "solid-start";
-import { ErrorBoundary } from "solid-start/error-boundary";
-import "./components/index.css";
+} from "solid-start"
+import { ErrorBoundary } from "solid-start/error-boundary"
+import "./components/index.css"
 
-const IslandA = unstable_island(() => import("./components/A"));
-const TableOfContents = unstable_island(() => import("./components/TableOfContents"));
+const IslandA = unstable_island(() => import("./components/A"))
+const TableOfContents = unstable_island(
+  () => import("./components/TableOfContents")
+)
 
 export const mods = /*#__PURE__*/ import.meta.glob<
   true,
   any,
   {
     getHeadings: () => {
-      depth: number;
-      text: string;
-      slug: string;
-    }[];
+      depth: number
+      text: string
+      slug: string
+    }[]
     getFrontMatter: () => {
-      title?: string;
-      sectionTitle?: string;
-      order?: number;
-      section?: string;
-      sectionOrder?: number;
-      subsection?: string;
-    };
+      title?: string
+      sectionTitle?: string
+      order?: number
+      section?: string
+      sectionOrder?: number
+      subsection?: string
+    }
   }
 >("./routes/**/*.{md,mdx}", {
   eager: true,
   query: {
     meta: ""
   }
-});
+})
 
 const socials = [
   {
@@ -69,19 +70,22 @@ const socials = [
     alt: "Twitter",
     icon: "M12,0.1c-6.7,0-12,5.3-12,12s5.3,12,12,12s12-5.4,12-12S18.6,0.1,12,0.1z M17,9.4v0.4c0,3.8-2.6,8-7.5,8 c-1.5,0-2.9-0.5-4.1-1.3c0.2,0,0.4,0,0.7,0c1.2,0,2.3-0.5,3.3-1.2c-1.1,0-2.1-0.8-2.4-2c0.2,0.1,0.3,0.1,0.5,0.1 c0.2,0,0.5-0.1,0.7-0.1C6.9,13,6,11.9,6,10.5v-0.1c0.3,0.2,0.8,0.4,1.2,0.4c-0.7-0.5-1.2-1.4-1.2-2.3c0-0.5,0.1-1.1,0.3-1.4 c1.3,1.7,3.2,2.8,5.4,2.9c-0.1-0.2-0.1-0.4-0.1-0.6c0-1.6,1.2-2.8,2.7-2.8c0.8,0,1.4,0.3,1.9,0.9C17,7.3,17.6,7,18.1,6.7 c-0.2,0.7-0.6,1.2-1.1,1.6c0.5-0.1,1-0.2,1.5-0.4C18.1,8.4,17.6,8.9,17,9.4z"
   }
-];
+]
 
 function SocialIcon(props) {
   return (
     <li class="mx-2">
       <a href={props.href} rel="noopener" target="_blank">
         <span class="sr-only">{props.alt}</span>
-        <svg viewBox="0 0 24 24" class="h-8 transition hover:opacity-50 opacity-60">
+        <svg
+          viewBox="0 0 24 24"
+          class="h-8 transition hover:opacity-50 opacity-60"
+        >
           <path fill="currentColor" d={props.icon} />
         </svg>
       </a>
     </li>
-  );
+  )
 }
 
 function Header() {
@@ -90,12 +94,18 @@ function Header() {
       <div class="flex justify-between w-full">
         <div class="flex space-x-3">
           <div class="text-xl mt-2 uppercase hidden md:block">
-            <span class="font-semibold ml-1 text-solid-medium">Reactivity with SolidJS</span>
+            <span class="font-semibold ml-1 text-solid-medium">
+              Reactivity with SolidJS
+            </span>
           </div>
         </div>
         <div class="flex space-x-5">
           <div class="flex items-center">
-            <a href="https://www.solidjs.com" target="_blank" class="flex items-center space-x-5">
+            <a
+              href="https://www.solidjs.com"
+              target="_blank"
+              class="flex items-center space-x-5"
+            >
               solidjs.com
               <svg
                 class="h-5 z-50 -mt-1 ltr:ml-1 rtl:mr-1 opacity-30"
@@ -113,73 +123,78 @@ function Header() {
             </a>
           </div>
           <ul class="flex">
-            <For each={socials} children={social => <SocialIcon {...social} />} />
+            <For
+              each={socials}
+              children={(social) => <SocialIcon {...social} />}
+            />
           </ul>
         </div>
       </div>
     </header>
-  );
+  )
 }
 
 function Nav() {
   const data = createMemo(() => {
     let sections: {
       [key: string]: {
-        title: string;
-        path: string;
-        order: number;
-        subsection: string;
-        href: string;
-      }[] & { subsection?: Set<string>; title?: string; order?: number };
-    } = {};
+        title: string
+        path: string
+        order: number
+        subsection: string
+        href: string
+      }[] & { subsection?: Set<string>; title?: string; order?: number }
+    } = {}
 
-    Object.keys(mods).forEach(key => {
-      let frontMatter = mods[key].getFrontMatter();
+    Object.keys(mods).forEach((key) => {
+      let frontMatter = mods[key].getFrontMatter()
       let {
-        title = mods[key].getHeadings().find(h => h.depth === 1)?.text ?? "",
+        title = mods[key].getHeadings().find((h) => h.depth === 1)?.text ?? "",
         section = "",
         order = 100
-      } = frontMatter ?? {};
+      } = frontMatter ?? {}
       if (!sections[section]) {
-        sections[section] = [];
+        sections[section] = []
       }
 
       if (frontMatter?.subsection) {
         if (!sections[section].subsection) {
-          sections[section].subsection = new Set();
+          sections[section].subsection = new Set()
         }
-        sections[section].subsection.add(frontMatter.subsection);
+        sections[section].subsection.add(frontMatter.subsection)
       }
 
       if (frontMatter?.sectionTitle) {
-        sections[section].title = frontMatter.sectionTitle;
+        sections[section].title = frontMatter.sectionTitle
       }
 
       if (frontMatter?.sectionOrder) {
-        sections[section].order = frontMatter.sectionOrder;
+        sections[section].order = frontMatter.sectionOrder
       }
 
       sections[section].push({
         title,
         path: key,
         order,
-        frontMatter: frontMatter,
+        frontMatter,
         subsection: frontMatter?.subsection,
-        href: key.slice('./routes'.length).replace(/\.mdx?$/, ""),
-      });
-    });
+        href: key.slice("./routes".length).replace(/\.mdx?$/, "")
+      })
+    })
 
-    Object.keys(sections).forEach(key => {
-      sections[key].sort((a, b) => a.order - b.order);
-    });
+    Object.keys(sections).forEach((key) => {
+      sections[key].sort((a, b) => a.order - b.order)
+    })
 
-    return Object.values(sections).sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
-  });
+    return Object.values(sections).sort(
+      (a, b) => (a.order ?? 100) - (b.order ?? 100)
+    )
+  })
 
   return (
     <nav class="min-w-[300px] col-start-1 row-start-2 -translate-x-full peer-checked:translate-x-0 px-8 py-8 space-y-4 h-full fixed md:relative left-0 z-20 md:left-auto top-[52px] md:top-auto overflow-auto bg-slate-100 duration-300 ease-in-out md:translate-x-0">
       <For each={data()}>
-        {r => (
+        {(r) => (
           <ul>
             <span class="text-left w-full dark:text-white border-b border-gray-200 dark:border-gray-500 hover:text-gray-400 transition flex flex-wrap content-center justify-between space-x-2 text-xl p-2 py-2">
               {r.title}
@@ -189,10 +204,12 @@ function Nav() {
               fallback={
                 <>
                   <For each={[...r.subsection.values()]}>
-                    {s => (
+                    {(s) => (
                       <ul class="ml-2 mt-4">
-                        <div class="font-bold text-gray-500 text-md mb-3">{s}</div>
-                        <For each={r.filter(i => i.subsection === s)}>
+                        <div class="font-bold text-gray-500 text-md mb-3">
+                          {s}
+                        </div>
+                        <For each={r.filter((i) => i.subsection === s)}>
                           {({ title, path, href, frontMatter }) => (
                             <li class="ml-2">
                               <IslandA
@@ -211,7 +228,7 @@ function Nav() {
                     )}
                   </For>
 
-                  <For each={r.filter(i => !i.subsection)}>
+                  <For each={r.filter((i) => !i.subsection)}>
                     {({ title, path, href, frontMatter }) => (
                       <li class="ml-2">
                         <IslandA
@@ -229,8 +246,15 @@ function Nav() {
             >
               <For each={r}>
                 {({ title, path, href, frontMatter }) => (
-                  <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
-                    <IslandA activeClass="text-primary" inactiveClass="text-gray-500" href={href}>
+                  <li
+                    class="ml-2"
+                    classList={{ "text-slate-300": !frontMatter.active }}
+                  >
+                    <IslandA
+                      activeClass="text-primary"
+                      inactiveClass="text-gray-500"
+                      href={href}
+                    >
                       <span class="block dark:text-gray-300 py-1 text-md font-semibold break-words hover:text-gray-400 dark:hover:text-gray-400">
                         {title}
                       </span>
@@ -243,11 +267,11 @@ function Nav() {
         )}
       </For>
     </nav>
-  );
+  )
 }
 
-import { components } from "./components/components";
-import { useTableOfContents } from "./components/TableOfContents";
+import { components } from "./components/components"
+import { useTableOfContents } from "./components/TableOfContents"
 
 export default function Root() {
   return (
@@ -263,7 +287,10 @@ export default function Root() {
           content="Resources for 'Reactivity with SolidJS' for Frontend Masters Course"
         />
         <Meta property="og:type" content="website" />
-        <Meta property="og:image" content="https://www.solidjs.com/og-share.png" />
+        <Meta
+          property="og:image"
+          content="https://www.solidjs.com/og-share.png"
+        />
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <Meta
@@ -279,14 +306,27 @@ export default function Root() {
       <Body class="h-full grid grid-cols-[auto,1fr,auto] grid-rows-[auto,1fr]">
         <Header />
 
-        <input type="checkbox" class="peer hidden" name="sidebar-toggle" id="sidebar-toggle" />
+        <input
+          type="checkbox"
+          class="peer hidden"
+          name="sidebar-toggle"
+          id="sidebar-toggle"
+        />
 
         <label
           class="fixed cursor-pointer peer-checked:rotate-90 md:hidden top-20 right-3 text-white rounded-lg transition duration-500 bg-solid-medium reveal-delay opacity-0"
           for="sidebar-toggle"
         >
-          <svg class="h-7 w-7" viewBox="0 0 24 24" style="fill: none; stroke: currentcolor;">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+          <svg
+            class="h-7 w-7"
+            viewBox="0 0 24 24"
+            style="fill: none; stroke: currentcolor;"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 5l7 7-7 7"
+            ></path>
           </svg>
         </label>
 
@@ -301,21 +341,24 @@ export default function Root() {
                     components={{
                       ...components,
                       "table-of-contents": () => {
-                        const headings = useTableOfContents();
+                        const headings = useTableOfContents()
                         return (
                           <>
                             <div class="xl:hidden overflow-hidden">
                               <ul class="space-y-2 text-[1rem]">
                                 <Suspense>
                                   <For each={headings()}>
-                                    {h => (
+                                    {(h) => (
                                       <li
                                         classList={{
                                           "ml-2": h.depth === 2,
                                           "ml-4": h.depth === 3
                                         }}
                                       >
-                                        <IslandA class="border-0 no-underline" href={`#${h.slug}`}>
+                                        <IslandA
+                                          class="border-0 no-underline"
+                                          href={`#${h.slug}`}
+                                        >
                                           {h.text}
                                         </IslandA>
                                       </li>
@@ -326,7 +369,7 @@ export default function Root() {
                             </div>
                             <hr class="xl:hidden" />
                           </>
-                        );
+                        )
                       }
                     }}
                   >
@@ -344,5 +387,5 @@ export default function Root() {
         <Scripts />
       </Body>
     </Html>
-  );
+  )
 }
