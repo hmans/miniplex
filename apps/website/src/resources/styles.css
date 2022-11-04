@@ -100,8 +100,11 @@ main {
 /* Code embeds */
 
 code {
-  font: 14px/1.5 "Fira Code", "Lucida Console", "Source Code Pro", Menlo, Monaco,
+  font-family: "Fira Code", "Lucida Console", "Source Code Pro", Menlo, Monaco,
     Consolas, monospace;
+
+  font-size: 90%;
+  color: rgb(147, 147, 147);
 }
 
 pre.shiki {
