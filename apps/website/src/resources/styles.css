@@ -75,6 +75,10 @@ header[role="main"] {
   font-size: 125%;
 }
 
+header h1 {
+  margin-bottom: 0;
+}
+
 /* Main pane */
 
 section[role="main"] {
