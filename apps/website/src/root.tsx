@@ -225,42 +225,43 @@ function PageContent() {
   )
 }
 
+function DocumentHead() {
+  return (
+    <Head>
+      <Meta charset="utf-8" />
+      <Meta property="og:title" content="The Book of Miniplex" />
+      <Meta property="og:site_name" content="The Book of Miniplex" />
+      <Meta property="og:url" content="https://miniplex.hmans.co/" />
+      <Meta property="og:description" content="" />
+      <Meta property="og:type" content="website" />
+      <Meta property="og:image" content="" />
+      <Meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <Meta name="description" property="og:description" content="" />
+      <Meta name="author" content="@hmans" />
+
+      <Link rel="icon" href="/favicon.ico" />
+    </Head>
+  )
+}
+
 export default function Root() {
   return (
     <Html lang="en">
       <Title>The Book of Miniplex</Title>
-      <Head>
-        <Meta charset="utf-8" />
-        <Meta property="og:title" content="The Book of Miniplex" />
-        <Meta property="og:site_name" content="The Book of Miniplex" />
-        <Meta property="og:url" content="https://miniplex.hmans.co/" />
-        <Meta property="og:description" content="" />
-        <Meta property="og:type" content="website" />
-        <Meta property="og:image" content="" />
-        <Meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <Meta name="description" property="og:description" content="" />
-        <Meta name="author" content="@hmans" />
-
-        <Link rel="icon" href="/favicon.ico" />
-      </Head>
+      <DocumentHead />
 
       <Body>
         <Header />
-
         <MainNavigation />
 
-        <div>
-          <div>
-            <ErrorBoundary>
-              <Suspense>
-                <main>
-                  <PageContent />
-                </main>
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-        </div>
+        <main>
+          <ErrorBoundary>
+            <Suspense>
+              <PageContent />
+            </Suspense>
+          </ErrorBoundary>
+        </main>
 
         <TableOfContents />
         <Scripts />
