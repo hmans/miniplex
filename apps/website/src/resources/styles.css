@@ -14,6 +14,7 @@ html {
 body {
   margin: 0;
   padding: 0;
+  padding-bottom: 10rem;
 
   font: 16px/1.5 "Inter", sans-serif;
   background-color: white;
