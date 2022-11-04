@@ -70,23 +70,28 @@ blockquote {
 /* Main header */
 
 header[role="main"] {
-  padding: 0.5rem 0 0.5rem 300px;
+  position: fixed;
+  width: 100vw;
+
+  padding: 0.25rem 0 0.25rem 300px;
   margin-bottom: 3rem;
 
   font-size: 125%;
+  background-color: rgba(255, 255, 255, 0.95);
   border-bottom: 2px solid #ddd;
   box-shadow: 0px 12px 12px rgba(0, 0, 0, 0.08);
 }
 
 header div.title {
   font-weight: 900;
-  font-size: 200%;
+  font-size: 125%;
   margin-bottom: 0;
 }
 
 /* Main pane */
 
 section[role="main"] {
+  padding-top: 6rem;
   display: flex;
   flex-direction: row;
 }
