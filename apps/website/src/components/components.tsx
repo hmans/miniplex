@@ -6,7 +6,6 @@ import A from "./A"
 const Tooltip = unstable_island(() => import("./tooltip"))
 
 export const components = {
-  strong: (props) => <span class="font-bold">{props.children}</span>,
   h1: (props) => (
     <h1 {...props}>
       <MetaTitle>{props.children}</MetaTitle>

@@ -21,7 +21,7 @@ body {
 }
 
 a {
-  color: #555;
+  color: inherit;
   text-decoration: none;
 }
 
@@ -37,12 +37,19 @@ h4,
 h5,
 h6 {
   margin: 2rem 0 1rem 0;
-  color: #bc4749;
+  color: #75638f;
   text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
 }
 
 outlet-wrapper > *:first-child {
   margin-top: 0;
+}
+
+blockquote {
+  margin: 2rem 0;
+  padding: 0 1rem;
+  border-left: 0.5rem solid #eee;
+  color: #666;
 }
 
 /* Main header */
@@ -84,7 +91,7 @@ code {
 }
 
 pre.shiki {
-  padding: 1.5rem;
+  padding: 1rem;
 
   border-radius: 0.5rem;
   background-color: #f5f5f5;
