@@ -191,47 +191,9 @@ export abstract class DerivedEntityBucket<E> extends EntityBucket<E> {
  * a given predicate.
  */
 export class PredicateBucket<E> extends DerivedEntityBucket<E> {
-  /**
-   * `PredicateBucket` implements a custom iterator that doesn't traverse
-   * its own entities, but its source's entities instead, re-checking each
-   * entity against the predicate.
-   *
-   * TODO: As a future optimization, this could be made more efficient by
-   * only iterating over entities in the source that have been marked
-   * as dirty/changed/updated.
-   */
-  [Symbol.iterator]() {
-    let index = this.source.entities.length
-
-    const next = () => {
-      let value: E
-      let wants = false
-
-      do {
-        /* Get the next entity from the source */
-        value = this.source.entities[--index]
-
-        /* If there is a value (ie. we haven't reached the end of the list),
-        add or remove it from this bucket. */
-        if (value) {
-          wants = this.wants(value)
-          wants ? this.add(value) : this.remove(value)
-        }
-
-        /* Do this until we've found a value that satisfies the predicate. */
-      } while (value && !wants)
-
-      return { value, done: index < 0 }
-    }
-
-    return { next }
-  }
-
   constructor(public source: Bucket<any>, public predicate: Predicate<E, E>) {
     super(source)
-
-    /* Perform an initial update. */
-    this.update()
+    this.startUpdating()
   }
 
   wants(entity: any): entity is E {

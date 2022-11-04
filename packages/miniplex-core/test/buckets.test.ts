@@ -106,7 +106,7 @@ describe(EntityBucket, () => {
           expect(withAge1).toBe(withAge2)
         })
 
-        it("automatically sees updated entities, like magic", () => {
+        it("can be explicitly updated to reindex its source's entities", () => {
           const bucket = new EntityBucket<Entity>()
           const john = bucket.add({ name: "John", age: 30 })
           const jane = bucket.add({ name: "Jane" })
@@ -115,10 +115,12 @@ describe(EntityBucket, () => {
           expect([...old]).toEqual([john])
 
           john.age = 25
-          expect([...old]).toEqual([])
+          old.update()
+          expect(old.entities).toEqual([])
 
           john.age = 30
-          expect([...old]).toEqual([john])
+          old.update()
+          expect(old.entities).toEqual([john])
         })
       })
     })
