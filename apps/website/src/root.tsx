@@ -55,18 +55,24 @@ function Header() {
   )
 }
 
+type Sections = {
+  [key: string]: {
+    title: string
+    path: string
+    order: number
+    subsection: string
+    href: string
+    frontMatter: Record<string, any>
+  }[] & {
+    subsection?: Set<string>
+    title?: string
+    order?: number
+  }
+}
+
 function MainNavigation() {
   const data = createMemo(() => {
-    let sections: {
-      [key: string]: {
-        title: string
-        path: string
-        order: number
-        subsection: string
-        href: string
-        frontMatter: Record<string, any>
-      }[] & { subsection?: Set<string>; title?: string; order?: number }
-    } = {}
+    let sections: Sections = {}
 
     Object.keys(mods).forEach((key) => {
       let frontMatter = mods[key].getFrontMatter()
