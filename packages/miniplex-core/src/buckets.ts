@@ -167,7 +167,7 @@ export abstract class DerivedEntityBucket<E> extends EntityBucket<E> {
     super()
   }
 
-  protected startIngress() {
+  protected startUpdating() {
     this.source.onEntityAdded.add((e) => {
       if (this.wants(e)) this.add(e)
     })
@@ -176,8 +176,17 @@ export abstract class DerivedEntityBucket<E> extends EntityBucket<E> {
       this.remove(e)
     })
 
+    this.update()
+  }
+
+  /**
+   * Updates the contents of this bucket by iterating over the entities
+   * in its source bucket, re-checking each one to see if it should be
+   * in this bucket or not.
+   */
+  update() {
     for (const entity of this.source) {
-      if (this.wants(entity)) this.add(entity)
+      this.evaluate(entity)
     }
   }
 }
@@ -189,7 +198,7 @@ export abstract class DerivedEntityBucket<E> extends EntityBucket<E> {
 export class PredicateBucket<E> extends DerivedEntityBucket<E> {
   constructor(public source: Bucket<any>, public predicate: Predicate<E, E>) {
     super(source)
-    this.startIngress()
+    this.startUpdating()
   }
 
   wants(entity: any): entity is E {
@@ -207,7 +216,7 @@ export class ArchetypeBucket<E> extends DerivedEntityBucket<E> {
     public query: ArchetypeQuery<E, keyof E>
   ) {
     super(source)
-    this.startIngress()
+    this.startUpdating()
   }
 
   wants(entity: any): entity is E {

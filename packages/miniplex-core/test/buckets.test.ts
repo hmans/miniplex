@@ -105,6 +105,23 @@ describe(EntityBucket, () => {
           const withAge2 = bucket.archetype(predicate)
           expect(withAge1).toBe(withAge2)
         })
+
+        it("can be explicitly updated to reindex its source's entities", () => {
+          const bucket = new EntityBucket<Entity>()
+          const john = bucket.add({ name: "John", age: 30 })
+          const jane = bucket.add({ name: "Jane" })
+
+          const old = bucket.archetype((entity) => Number(entity.age) > 25)
+          expect([...old]).toEqual([john])
+
+          john.age = 25
+          old.update()
+          expect(old.entities).toEqual([])
+
+          john.age = 30
+          old.update()
+          expect(old.entities).toEqual([john])
+        })
       })
     })
 
