@@ -126,8 +126,24 @@ nav ul {
   margin: 0;
 }
 
+nav[role="main"] li a {
+  display: block;
+  width: 220px;
+  margin: 0.5rem 0;
+  padding: 4px 13px 3px 13px;
+
+  transition: background-color 0.2s ease-out;
+  border-radius: 5px;
+}
+
+nav[role="main"] li a:hover {
+  background-color: #eee;
+  text-decoration: none;
+}
+
 nav a.current {
   font-weight: bold;
+  background-color: #eee;
 }
 
 /* Right sidebar */
