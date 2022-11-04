@@ -259,9 +259,9 @@ export default function Root() {
               </Suspense>
             </ErrorBoundary>
           </main>
-        </section>
 
-        <TableOfContents />
+          <TableOfContents />
+        </section>
         <Scripts />
       </Body>
     </Html>
