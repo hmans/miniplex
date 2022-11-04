@@ -1,5 +1,5 @@
-import { Navigate } from "solid-start";
+import { Navigate } from "solid-start"
 
 export default function () {
-  return <Navigate href={"/workshop/introduction"} />;
+  return <Navigate href={"/guide/introduction"} />
 }
