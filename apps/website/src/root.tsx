@@ -42,9 +42,9 @@ export const mods = import.meta.glob<true, any, SolidStartFunctions>(
   { eager: true, query: { meta: "" } }
 )
 
-function Header() {
+function PageHeader() {
   return (
-    <header>
+    <header role="main">
       <div>The Book of Miniplex</div>
       <div>
         <a href="https://miniplex.hmans.co/" target="_blank">
@@ -120,7 +120,7 @@ function MainNavigation() {
   })
 
   return (
-    <nav>
+    <nav role="main">
       <For each={data()}>
         {(r) => (
           <ul>
@@ -252,16 +252,19 @@ export default function Root() {
       <DocumentHead />
 
       <Body>
-        <Header />
-        <MainNavigation />
+        <PageHeader />
 
-        <main>
-          <ErrorBoundary>
-            <Suspense>
-              <PageContent />
-            </Suspense>
-          </ErrorBoundary>
-        </main>
+        <section role="main">
+          <MainNavigation />
+
+          <main>
+            <ErrorBoundary>
+              <Suspense>
+                <PageContent />
+              </Suspense>
+            </ErrorBoundary>
+          </main>
+        </section>
 
         <TableOfContents />
         <Scripts />
