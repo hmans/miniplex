@@ -27,13 +27,13 @@ export const components = {
   nav: (props) => <nav {...props}>{props.children}</nav>,
   A,
   "table-of-contents": (props) => {},
-  code: (props) => {
-    return (
-      <span class="not-prose">
-        <code {...props}>{props.children}</code>
-      </span>
-    )
-  },
+  // code: (props) => {
+  //   return (
+  //     <code {...props} class="inline">
+  //       {props.children}
+  //     </code>
+  //   )
+  // },
   pre: (props) => (
     <div>
       <Show when={props.filename?.length > 5}>
