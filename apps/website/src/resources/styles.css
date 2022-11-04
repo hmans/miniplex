@@ -93,6 +93,10 @@ nav[role="main"] > ul {
   margin: 0;
 }
 
+nav a.current {
+  font-weight: bold;
+}
+
 main {
   max-width: 800px;
 }

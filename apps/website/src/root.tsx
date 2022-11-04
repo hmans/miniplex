@@ -169,11 +169,7 @@ function MainNavigation() {
               <For each={r}>
                 {({ title, path, href, frontMatter }) => (
                   <li>
-                    <IslandA
-                      activeClass="text-primary"
-                      inactiveClass="text-gray-500"
-                      href={href}
-                    >
+                    <IslandA activeClass="current" href={href}>
                       {title}
                     </IslandA>
                   </li>
