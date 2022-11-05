@@ -14,33 +14,12 @@ import {
   Title
 } from "solid-start"
 import { ErrorBoundary } from "solid-start/error-boundary"
+import { components } from "./components/components"
+import { MainNavigation } from "./components/MainNavigation"
+import TableOfContents, {
+  useTableOfContents
+} from "./components/TableOfContents"
 import "./css/styles.scss"
-
-/* Moo */
-
-type Document = {
-  getHeadings: () => {
-    depth: number
-    text: string
-    slug: string
-  }[]
-  getFrontMatter: () => {
-    title?: string
-    sectionTitle?: string
-    order?: number
-    section?: string
-    sectionOrder?: number
-    subsection?: string
-  }
-}
-
-export const docs = import.meta.glob("./routes/**/*.{md,mdx}", {
-  eager: true,
-  query: { meta: "" }
-}) as Record<any, Document>
-
-const cleanPath = (path: string) =>
-  path.slice("./routes/".length).replace(/\.mdx?$/, "")
 
 function PageHeader() {
   return (
@@ -54,33 +33,6 @@ function PageHeader() {
     </header>
   )
 }
-
-function MainNavigation() {
-  return (
-    <nav role="main">
-      <ul>
-        <For each={Object.entries(docs)}>
-          {([key, doc]) => {
-            const frontmatter = doc.getFrontMatter()
-
-            return (
-              <li>
-                <A activeClass="current" href={cleanPath(key)}>
-                  {frontmatter.title}
-                </A>
-              </li>
-            )
-          }}
-        </For>
-      </ul>
-    </nav>
-  )
-}
-
-import { components } from "./components/components"
-import TableOfContents, {
-  useTableOfContents
-} from "./components/TableOfContents"
 
 function PageContent() {
   return (

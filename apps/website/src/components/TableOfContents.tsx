@@ -1,6 +1,6 @@
 import { For, Suspense } from "solid-js"
 import { A, useLocation } from "solid-start"
-import { docs } from "../root"
+import { docs } from "~/documents"
 
 export function useTableOfContents() {
   const path = useLocation()
