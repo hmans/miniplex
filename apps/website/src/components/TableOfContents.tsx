@@ -20,6 +20,7 @@ export function useTableOfContents() {
 
 export default function TableOfContents() {
   const headings = useTableOfContents()
+  const location = useLocation()
 
   return (
     <nav class="toc">
@@ -29,7 +30,7 @@ export default function TableOfContents() {
           <For each={headings()}>
             {(h) => (
               <li>
-                <A href={`#${h.slug}`}>{h.text}</A>
+                <A href={`${location.pathname}#${h.slug}`}>{h.text}</A>
               </li>
             )}
           </For>
