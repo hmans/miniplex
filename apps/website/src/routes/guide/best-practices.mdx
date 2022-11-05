@@ -5,9 +5,9 @@ order: 6
 active: true
 ---
 
-## Best Practices
+# Best Practices
 
-### Use `addComponent` and `removeComponent` for adding and removing components
+## Use `addComponent` and `removeComponent` for adding and removing components
 
 Since entities are just normal objects, you might be tempted to just add new properties to (or delete properties from) them directly. **This is a bad idea** because it will skip the indexing step needed to make sure the entity is listed in the correct archetypes. Please always go through `addComponent` and `removeComponent`!
 
@@ -23,7 +23,7 @@ const entity = world.add({ position: { x: 0, y: 0, z: 0 } })
 entity.velocity = { x: 10, y: 0, z: 0 }
 ```
 
-### Iterate over archetypes using `for...of`
+## Iterate over archetypes using `for...of`
 
 The world as well as all archetypes derived from it are _iterable_, meaning you can use them in `for...of` loops. This is the recommended way to iterate over entities in an archetype, as it is highly performant, and iterates over the entities _in reverse order_, which allows you to safely remove entities from within the loop.
 
@@ -52,7 +52,7 @@ withHealth.entities.forEach((entity) => {
 })
 ```
 
-### Reuse archetypes where possible
+## Reuse archetypes where possible
 
 The `archetype` function and its shorthand friends (`with`, `without`) aim to be idempotent and will reuse existing archetypes for the same queries passed to them. Checking if an archetype already exists for the given query is a comparatively heavyweight function, thought, and you are advised to, wherever possible, reuse previously created archetypes.
 
@@ -70,7 +70,9 @@ function movementSystem() {
 
 /* ⛔️ Avoid: */
 function movementSystem(world) {
-  /* This will work, but now the world needs to check if an archetype for "position" and "velocity" already exists every time this function is called, which is pure overhead. */
+  /* This will work, but now the world needs to check if an archetype for
+  "position" and "velocity" already exists every time this function is called,
+  which is pure overhead. */
   const movingEntities = world.archetype("position", "velocity")
 
   for (const { position, velocity } of movingEntities) {
@@ -81,7 +83,7 @@ function movementSystem(world) {
 }
 ```
 
-### Create nested archetypes with caution
+## Create nested archetypes with caution
 
 Miniplex does not optimize queries automatically, so the following code will create more archetypes than you probably need:
 
