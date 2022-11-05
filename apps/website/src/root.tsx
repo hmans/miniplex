@@ -16,6 +16,8 @@ import {
 import { ErrorBoundary } from "solid-start/error-boundary"
 import "./resources/styles.css"
 
+/* Moo */
+
 type SolidStartFunctions = {
   getHeadings: () => {
     depth: number
