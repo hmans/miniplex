@@ -129,6 +129,7 @@ importers:
       '@mdx-js/rollup': ^2.1.5
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.5.0
+      fp-ts: ^2.13.1
       rollup: ^3.2.5
       sass: ^1.56.0
       solid-js: ^1.6.0
@@ -144,6 +145,7 @@ importers:
     dependencies:
       '@solidjs/meta': 0.28.2_solid-js@1.6.1
       '@solidjs/router': 0.5.0_solid-js@1.6.1
+      fp-ts: 2.13.1
       rollup: 3.2.5
       sass: 1.56.0
       solid-js: 1.6.1
