@@ -2,6 +2,7 @@
 import { createMemo, For, Show, Suspense } from "solid-js"
 import { MDXProvider } from "solid-mdx"
 import {
+  A,
   Body,
   FileRoutes,
   Head,
@@ -10,16 +11,12 @@ import {
   Meta,
   Routes,
   Scripts,
-  Title,
-  unstable_island
+  Title
 } from "solid-start"
 import { ErrorBoundary } from "solid-start/error-boundary"
 import "./resources/styles.css"
 
-const IslandA = unstable_island(() => import("./components/A"))
-const TableOfContents = unstable_island(
-  () => import("./components/TableOfContents")
-)
+/* Moo */
 
 type SolidStartFunctions = {
   getHeadings: () => {
@@ -136,13 +133,13 @@ function MainNavigation() {
                         <For each={r.filter((i) => i.subsection === s)}>
                           {({ title, path, href, frontMatter }) => (
                             <li>
-                              <IslandA
+                              <A
                                 activeClass="text-primary"
                                 inactiveClass="text-gray-500"
                                 href={href}
                               >
                                 {title}
-                              </IslandA>
+                              </A>
                             </li>
                           )}
                         </For>
@@ -153,13 +150,13 @@ function MainNavigation() {
                   <For each={r.filter((i) => !i.subsection)}>
                     {({ title, path, href, frontMatter }) => (
                       <li>
-                        <IslandA
+                        <A
                           activeClass="text-primary"
                           inactiveClass="text-gray-500"
                           href={href}
                         >
                           <span>{title}</span>
-                        </IslandA>
+                        </A>
                       </li>
                     )}
                   </For>
@@ -169,9 +166,9 @@ function MainNavigation() {
               <For each={r}>
                 {({ title, path, href, frontMatter }) => (
                   <li>
-                    <IslandA activeClass="current" href={href}>
+                    <A activeClass="current" href={href}>
                       {title}
-                    </IslandA>
+                    </A>
                   </li>
                 )}
               </For>
@@ -184,7 +181,9 @@ function MainNavigation() {
 }
 
 import { components } from "./components/components"
-import { useTableOfContents } from "./components/TableOfContents"
+import TableOfContents, {
+  useTableOfContents
+} from "./components/TableOfContents"
 
 function PageContent() {
   return (
@@ -199,7 +198,7 @@ function PageContent() {
                 <For each={headings()}>
                   {(h) => (
                     <li>
-                      <IslandA href={`#${h.slug}`}>{h.text}</IslandA>
+                      <A href={`#${h.slug}`}>{h.text}</A>
                     </li>
                   )}
                 </For>
