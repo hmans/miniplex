@@ -137,9 +137,7 @@ importers:
       solid-start-mdx: 0.2.5
       solid-start-node: ^0.2.5
       solid-start-vercel: ^0.2.5
-      tippy.js: ^6.3.7
       typescript: ^4.8.4
-      undici: ^5.11.0
       vite: ^3.1.8
     dependencies:
       '@solidjs/meta': 0.28.2_solid-js@1.6.1
@@ -151,11 +149,9 @@ importers:
       solid-start: 0.2.5_vqtaenuqfpqmxqu2kobz7unc2m
       solid-start-mdx: 0.2.5_rnlxscktvi4gwjs2bhlci4ohce
       solid-start-vercel: 0.2.5_hsw5furflsmscoymgta67pkca4
-      undici: 5.12.0
     devDependencies:
       '@mdx-js/rollup': 2.1.5_rollup@3.2.5
-      solid-start-node: 0.2.5_54r5snsyz2xe3zvrbrsyi3kdka
-      tippy.js: 6.3.7
+      solid-start-node: 0.2.5_hsw5furflsmscoymgta67pkca4
       typescript: 4.8.4
       vite: 3.2.2_sass@1.56.0
 
@@ -2170,10 +2166,6 @@ packages:
 
   /@polka/url/1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
-
-  /@popperjs/core/2.11.6:
-    resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
-    dev: true
 
   /@preconstruct/cli/2.2.2:
     resolution: {integrity: sha512-7Zk8g/G+SPusoL1Ir3oslj19QDoFuAKeQO8B6fnNkRRgvIntxnylGZyC4wdKVX/eeDHwca1LNLT/GyjXx1f1nA==}
@@ -7505,7 +7497,7 @@ packages:
       - vite
     dev: false
 
-  /solid-start-node/0.2.5_54r5snsyz2xe3zvrbrsyi3kdka:
+  /solid-start-node/0.2.5_hsw5furflsmscoymgta67pkca4:
     resolution: {integrity: sha512-TulWMS4ChQg6V2+BhRto18fv7YQL6VknZRErqcjHIOR2h20siDwJ26GiHDQ1CgPGOLEu4S8wAeaxaj7OBOWmDQ==}
     peerDependencies:
       solid-start: '*'
@@ -7521,7 +7513,6 @@ packages:
       sirv: 2.0.2
       solid-start: 0.2.5_vqtaenuqfpqmxqu2kobz7unc2m
       terser: 5.15.1
-      undici: 5.12.0
       vite: 3.2.2_sass@1.56.0
     transitivePeerDependencies:
       - supports-color
@@ -7869,12 +7860,6 @@ packages:
   /tiny-inflate/1.0.3:
     resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
     dev: false
-
-  /tippy.js/6.3.7:
-    resolution: {integrity: sha512-E1d3oP2emgJ9dRQZdf3Kkn0qJgI6ZLpyS5z6ZkY1DF3kaQaBsGZsndEpHwx+eC+tYM41HaSNvNtLx8tU57FzTQ==}
-    dependencies:
-      '@popperjs/core': 2.11.6
-    dev: true
 
   /tmp/0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}

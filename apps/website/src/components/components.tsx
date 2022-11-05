@@ -1,9 +1,5 @@
 import { Title as MetaTitle } from "@solidjs/meta"
-import { createUniqueId, mergeProps, Show } from "solid-js"
-import { unstable_island } from "solid-start"
-import "tippy.js/dist/tippy.css"
 import A from "./A"
-const Tooltip = unstable_island(() => import("./tooltip"))
 
 export const components = {
   h1: (props) => (
@@ -27,18 +23,6 @@ export const components = {
   nav: (props) => <nav {...props}>{props.children}</nav>,
   A,
   "table-of-contents": (props) => {},
-  "data-lsp": (props) => {
-    const id = createUniqueId()
-
-    return (
-      <Tooltip id={id}>
-        {props.children}
-        <div id={id} style="display: none;">
-          <pre>{props.lsp}</pre>
-        </div>
-      </Tooltip>
-    )
-  },
   h5: (props) => <h5 {...props}>{props.children}</h5>,
   "docs-error": (props) => {
     return (
