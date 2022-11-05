@@ -21,7 +21,9 @@
     "solid-mdx": "^0.0.6",
     "solid-start": "^0.2.5",
     "solid-start-mdx": "0.2.5",
-    "solid-start-vercel": "^0.2.5"
+    "solid-start-static": "npm:@vinxi/solid-start-static@^0.2.5",
+    "solid-start-vercel": "^0.2.5",
+    "undici": "^5.12.0"
   },
   "engines": {
     "node": ">=16"
