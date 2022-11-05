@@ -7,8 +7,7 @@ export default defineConfig({
     await mdx(),
     solid({
       extensions: [".mdx", ".md"],
-      islands: true,
-      islandsRouter: true
+      adapter: "solid-start-static"
     })
   ]
 })

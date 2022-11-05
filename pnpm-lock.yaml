@@ -136,6 +136,7 @@ importers:
       solid-start: ^0.2.5
       solid-start-mdx: 0.2.5
       solid-start-node: ^0.2.5
+      solid-start-static: ^0.2.5
       solid-start-vercel: ^0.2.5
       tippy.js: ^6.3.7
       typescript: ^4.8.4
@@ -150,6 +151,7 @@ importers:
       solid-mdx: 0.0.6_solid-js@1.6.1+vite@3.2.2
       solid-start: 0.2.5_vqtaenuqfpqmxqu2kobz7unc2m
       solid-start-mdx: 0.2.5_rnlxscktvi4gwjs2bhlci4ohce
+      solid-start-static: 0.2.5_54r5snsyz2xe3zvrbrsyi3kdka
       solid-start-vercel: 0.2.5_hsw5furflsmscoymgta67pkca4
       undici: 5.12.0
     devDependencies:
@@ -3473,6 +3475,11 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
+  /console-clear/1.1.1:
+    resolution: {integrity: sha512-pMD+MVR538ipqkG5JXeOEbKWS5um1H4LUUccUQG68qpeqBYbzYy79Gh55jkd2TtPdRfUaLWdv6LPP//5Zt0aPQ==}
+    engines: {node: '>=4'}
+    dev: false
+
   /convert-source-map/1.9.0:
     resolution: {integrity: sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==}
 
@@ -4515,6 +4522,11 @@ packages:
   /get-package-type/0.1.0:
     resolution: {integrity: sha512-pjzuKtY64GYfWizNAJ0fr9VqttZkNiK2iS430LtIHzjBEr6bX8Am2zm4sW4Ro5wjWW5cAlRL1qAMTcXbjNAO2Q==}
     engines: {node: '>=8.0.0'}
+    dev: false
+
+  /get-port/3.2.0:
+    resolution: {integrity: sha512-x5UJKlgeUiNT8nyo/AcnwLnZuZNcSjSw0kogRB+Whd1fjjFq4B1hySFxSFWWSn4mIBzg3sRNUDFYc4g5gjPoLg==}
+    engines: {node: '>=4'}
     dev: false
 
   /get-port/6.1.2:
@@ -5777,6 +5789,11 @@ packages:
       js-yaml: 3.14.1
       pify: 4.0.1
       strip-bom: 3.0.0
+    dev: false
+
+  /local-access/1.1.0:
+    resolution: {integrity: sha512-XfegD5pyTAfb+GY6chk283Ox5z8WexG56OvM06RWLpAc/UHozO8X6xAxEkIitZOtsSMM1Yr3DkHgW5W+onLhCw==}
+    engines: {node: '>=6'}
     dev: false
 
   /locate-path/5.0.0:
@@ -7290,6 +7307,11 @@ packages:
     dependencies:
       loose-envify: 1.4.0
 
+  /semiver/1.1.0:
+    resolution: {integrity: sha512-QNI2ChmuioGC1/xjyYwyZYADILWyW6AmS1UH6gDj/SFUUUS4MBAWs/7mxnkRPc/F4iHezDP+O8t0dO8WHiEOdg==}
+    engines: {node: '>=6'}
+    dev: false
+
   /semver/5.7.1:
     resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
     hasBin: true
@@ -7422,6 +7444,21 @@ packages:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
     dev: false
 
+  /sirv-cli/2.0.2:
+    resolution: {integrity: sha512-OtSJDwxsF1NWHc7ps3Sa0s+dPtP15iQNJzfKVz+MxkEo3z72mCD+yu30ct79rPr0CaV1HXSOBp+MIY5uIhHZ1A==}
+    engines: {node: '>= 10'}
+    hasBin: true
+    dependencies:
+      console-clear: 1.1.1
+      get-port: 3.2.0
+      kleur: 4.1.5
+      local-access: 1.1.0
+      sade: 1.8.1
+      semiver: 1.1.0
+      sirv: 2.0.2
+      tinydate: 1.3.0
+    dev: false
+
   /sirv/2.0.2:
     resolution: {integrity: sha512-4Qog6aE29nIjAOKe/wowFTxOdmbEZKb+3tsLljaBRzJwtqto0BChD2zzH0LhgCSXiI+V7X+Y45v14wBZQ1TK3w==}
     engines: {node: '>= 10'}
@@ -7477,6 +7514,10 @@ packages:
       '@babel/types': 7.20.0
       solid-js: 1.6.1
 
+  /solid-ssr/1.6.1:
+    resolution: {integrity: sha512-j/4hZOuJq6TsLkQvJMcNrhVKt7Eo6ylsCtqeAe+BzJoOPOo2VeYq1lan1Ww4M05Ld8l72/zodW+rbvVWTqt0cg==}
+    dev: false
+
   /solid-start-mdx/0.2.5_rnlxscktvi4gwjs2bhlci4ohce:
     resolution: {integrity: sha512-QAumQ6o/uiX0n9zw88KDeQ1Lmi23UJgPtg7cngrPbSrbWK2sQBhLngUajqsiLVWNEUGn/6eKQoPGctveCUQGSQ==}
     dependencies:
@@ -7526,6 +7567,20 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /solid-start-static/0.2.5_54r5snsyz2xe3zvrbrsyi3kdka:
+    resolution: {integrity: sha512-jWY6+mWxYeTDAMu0+Eq0vMwHFDs64FfTupJioGvLirY1+nsdNs/4xrMuziSZp0fCX1P2hTO6VuT5vkw2xf1hwQ==}
+    peerDependencies:
+      solid-start: '*'
+      undici: ^5.8.0
+      vite: '*'
+    dependencies:
+      sirv-cli: 2.0.2
+      solid-ssr: 1.6.1
+      solid-start: 0.2.5_vqtaenuqfpqmxqu2kobz7unc2m
+      undici: 5.12.0
+      vite: 3.2.2_sass@1.56.0
+    dev: false
 
   /solid-start-vercel/0.2.5_hsw5furflsmscoymgta67pkca4:
     resolution: {integrity: sha512-jeLVkrf3Y41+CYq83kxF4NEf7n0KRcVplPU5BdmLbOJl8vIsgLW/WRqM7Kj/1WHs9P/OWIhiXSW1KIOK7GAHuQ==}
@@ -7868,6 +7923,11 @@ packages:
 
   /tiny-inflate/1.0.3:
     resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
+    dev: false
+
+  /tinydate/1.3.0:
+    resolution: {integrity: sha512-7cR8rLy2QhYHpsBDBVYnnWXm8uRTr38RoZakFSW7Bs7PzfMPNZthuMLkwqZv7MTu8lhQ91cOFYS5a7iFj2oR3w==}
+    engines: {node: '>=4'}
     dev: false
 
   /tippy.js/6.3.7:
