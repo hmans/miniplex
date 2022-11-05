@@ -14,7 +14,7 @@ import {
   Title
 } from "solid-start"
 import { ErrorBoundary } from "solid-start/error-boundary"
-import "./resources/styles.css"
+import "./css/styles.scss"
 
 /* Moo */
 
