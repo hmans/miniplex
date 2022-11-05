@@ -1,13 +1,13 @@
 import { For, Suspense } from "solid-js"
 import { A, useLocation } from "solid-start"
-import { mods } from "../root"
+import { docs } from "../root"
 
 export function useTableOfContents() {
   const path = useLocation()
   return () => {
     let mod =
-      mods[`./routes${path.pathname}.mdx`] ??
-      mods[`./routes${path.pathname}.md`]
+      docs[`./routes${path.pathname}.mdx`] ??
+      docs[`./routes${path.pathname}.md`]
     if (!mod) return []
     return mod.getHeadings().filter((h) => h.depth > 1 && h.depth <= 3)
   }
