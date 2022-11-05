@@ -1,5 +1,4 @@
 import { Title as MetaTitle } from "@solidjs/meta"
-import "tippy.js/dist/tippy.css"
 import A from "./A"
 
 export const components = {
