@@ -56,7 +56,7 @@ function damage({ health }: With<Entity, "health">, amount: number) {
   health.current -= amount
 }
 
-function points(entity: With<Entity, "poison">) {
+function poison(entity: With<Entity, "poison">) {
   world.addComponent(entity, "poison", true)
 }
 
