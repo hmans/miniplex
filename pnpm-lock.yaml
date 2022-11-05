@@ -139,6 +139,7 @@ importers:
       solid-start-static: npm:@vinxi/solid-start-static@^0.2.5
       solid-start-vercel: ^0.2.5
       typescript: ^4.8.4
+      undici: ^5.12.0
       vite: ^3.1.8
     dependencies:
       '@solidjs/meta': 0.28.2_solid-js@1.6.1
@@ -149,11 +150,12 @@ importers:
       solid-mdx: 0.0.6_solid-js@1.6.1+vite@3.2.2
       solid-start: 0.2.5_vqtaenuqfpqmxqu2kobz7unc2m
       solid-start-mdx: 0.2.5_rnlxscktvi4gwjs2bhlci4ohce
-      solid-start-static: /@vinxi/solid-start-static/0.2.5_hsw5furflsmscoymgta67pkca4
+      solid-start-static: /@vinxi/solid-start-static/0.2.5_54r5snsyz2xe3zvrbrsyi3kdka
       solid-start-vercel: 0.2.5_hsw5furflsmscoymgta67pkca4
+      undici: 5.12.0
     devDependencies:
       '@mdx-js/rollup': 2.1.5_rollup@3.2.5
-      solid-start-node: 0.2.5_hsw5furflsmscoymgta67pkca4
+      solid-start-node: 0.2.5_54r5snsyz2xe3zvrbrsyi3kdka
       typescript: 4.8.4
       vite: 3.2.2_sass@1.56.0
 
@@ -2849,7 +2851,7 @@ packages:
       source-map: 0.7.4
       yargs: 17.6.0
 
-  /@vinxi/solid-start-static/0.2.5_hsw5furflsmscoymgta67pkca4:
+  /@vinxi/solid-start-static/0.2.5_54r5snsyz2xe3zvrbrsyi3kdka:
     resolution: {integrity: sha512-4ncvSjC34OmQbC/bnjgOPCpZ0VXW7BPgi8r0E8duN8zU+xj6N1J+D6yIMgBEEAu0ilzA4qNhFy8fgJgffzRDMg==}
     peerDependencies:
       solid-start: '*'
@@ -2863,6 +2865,7 @@ packages:
       sirv-cli: 2.0.2
       solid-ssr: 1.6.1
       solid-start: 0.2.5_vqtaenuqfpqmxqu2kobz7unc2m
+      undici: 5.12.0
       vite: 3.2.2_sass@1.56.0
     dev: false
 
@@ -7555,7 +7558,7 @@ packages:
       - vite
     dev: false
 
-  /solid-start-node/0.2.5_hsw5furflsmscoymgta67pkca4:
+  /solid-start-node/0.2.5_54r5snsyz2xe3zvrbrsyi3kdka:
     resolution: {integrity: sha512-TulWMS4ChQg6V2+BhRto18fv7YQL6VknZRErqcjHIOR2h20siDwJ26GiHDQ1CgPGOLEu4S8wAeaxaj7OBOWmDQ==}
     peerDependencies:
       solid-start: '*'
@@ -7571,6 +7574,7 @@ packages:
       sirv: 2.0.2
       solid-start: 0.2.5_vqtaenuqfpqmxqu2kobz7unc2m
       terser: 5.15.1
+      undici: 5.12.0
       vite: 3.2.2_sass@1.56.0
     transitivePeerDependencies:
       - supports-color
