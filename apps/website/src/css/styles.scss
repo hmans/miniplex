@@ -108,6 +108,10 @@ main a {
   color: hotpink;
 }
 
+main > *:first-child {
+  margin-top: 0;
+}
+
 /* Sidebars */
 
 div.sidebar {
