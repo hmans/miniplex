@@ -34,36 +34,6 @@ function PageHeader() {
   )
 }
 
-function PageContent() {
-  return (
-    <MDXProvider
-      components={{
-        ...components,
-        "table-of-contents": () => {
-          const headings = useTableOfContents()
-          return (
-            <ul>
-              <Suspense>
-                <For each={headings()}>
-                  {(h) => (
-                    <li>
-                      <A href={`#${h.slug}`}>{h.text}</A>
-                    </li>
-                  )}
-                </For>
-              </Suspense>
-            </ul>
-          )
-        }
-      }}
-    >
-      <Routes>
-        <FileRoutes />
-      </Routes>
-    </MDXProvider>
-  )
-}
-
 function DocumentHead() {
   return (
     <Head>
@@ -103,7 +73,9 @@ export default function Root() {
           <main>
             <ErrorBoundary>
               <Suspense>
-                <PageContent />
+                <Routes>
+                  <FileRoutes />
+                </Routes>
               </Suspense>
             </ErrorBoundary>
           </main>
