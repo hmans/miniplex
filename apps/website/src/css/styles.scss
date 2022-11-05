@@ -107,11 +107,12 @@ main {
 
 div.sidebar {
   flex: 0 0 300px;
-  padding: 0 2rem;
+  padding: 0 25px;
 }
 
 div.sidebar-contents {
   position: fixed;
+  width: 250;
 }
 
 /* Left sidebar */
@@ -129,7 +130,7 @@ nav ul {
 
 nav[role="main"] li a {
   display: block;
-  width: 220px;
+  width: 100%;
   margin: 0.5rem 0;
   padding: 4px 13px 3px 13px;
 
