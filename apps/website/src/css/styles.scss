@@ -27,7 +27,6 @@ a {
 }
 
 a:hover {
-  color: #333;
   text-decoration: underline;
 }
 
@@ -62,7 +61,7 @@ outlet-wrapper > *:first-child {
 }
 
 blockquote {
-  margin: 2rem 0;
+  margin-left: 0;
   padding: 0 1rem;
   border-left: 0.5rem solid #eee;
   color: #666;
@@ -102,6 +101,11 @@ main {
   flex-grow: 1;
   overflow: hidden;
   padding: 0 20px;
+}
+
+main a {
+  font-weight: bold;
+  color: hotpink;
 }
 
 /* Sidebars */
