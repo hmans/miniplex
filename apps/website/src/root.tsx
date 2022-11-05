@@ -18,7 +18,7 @@ import "./css/styles.scss"
 
 /* Moo */
 
-type SolidStartFunctions = {
+type Document = {
   getHeadings: () => {
     depth: number
     text: string
@@ -37,7 +37,7 @@ type SolidStartFunctions = {
 export const docs = import.meta.glob("./routes/**/*.{md,mdx}", {
   eager: true,
   query: { meta: "" }
-}) as Record<any, SolidStartFunctions>
+}) as Record<any, Document>
 
 const cleanPath = (path: string) =>
   path.slice("./routes/".length).replace(/\.mdx?$/, "")
