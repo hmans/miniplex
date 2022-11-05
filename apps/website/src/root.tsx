@@ -1,8 +1,6 @@
 // @refresh reload
-import { For, Suspense } from "solid-js"
-import { MDXProvider } from "solid-mdx"
+import { Suspense } from "solid-js"
 import {
-  A,
   Body,
   FileRoutes,
   Head,
@@ -14,11 +12,8 @@ import {
   Title
 } from "solid-start"
 import { ErrorBoundary } from "solid-start/error-boundary"
-import { components } from "./components/components"
 import { MainNavigation } from "./components/MainNavigation"
-import TableOfContents, {
-  useTableOfContents
-} from "./components/TableOfContents"
+import TableOfContents from "./components/TableOfContents"
 import "./css/styles.scss"
 
 function PageHeader() {
