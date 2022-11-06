@@ -1,7 +1,14 @@
-import { pipe } from "fp-ts/lib/function"
 import { For } from "solid-js"
 import { A } from "solid-start"
 import { cleanPath, docs, Document } from "~/documents"
+
+import importedConfig from "~/routes/config"
+
+type Configuration = {
+  sidebar: Entry[]
+}
+
+const configuration: Configuration = importedConfig
 
 type Page = {
   href: string
@@ -31,45 +38,6 @@ type Entry = {
   title: string
   children?: Entry[]
 }
-
-const sections: Entry[] = [
-  {
-    path: "manual",
-    title: "Manual",
-    children: [
-      {
-        path: "introduction",
-        title: "Introduction"
-      },
-      {
-        path: "installation",
-        title: "Installation"
-      },
-      {
-        path: "basic-usage",
-        title: "Basic Usage"
-      },
-      {
-        path: "advanced-usage",
-        title: "Advanced Usage"
-      },
-      {
-        path: "best-practices",
-        title: "Best Practices"
-      }
-    ]
-  },
-  {
-    path: "guides",
-    title: "Guides",
-    children: [
-      {
-        path: "performance",
-        title: "Performance"
-      }
-    ]
-  }
-]
 
 function NavigationList({
   entries,
@@ -101,7 +69,7 @@ function NavigationList({
 export function MainNavigation() {
   return (
     <nav role="main">
-      <NavigationList entries={sections} />
+      <NavigationList entries={configuration.sidebar} />
     </nav>
   )
 }
