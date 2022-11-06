@@ -137,6 +137,15 @@ nav ul {
   margin: 0;
 }
 
+/* Top level navigation */
+nav[role="main"] > ul > li {
+  margin-bottom: 2rem;
+
+  & > *:first-child {
+    font-weight: bold;
+  }
+}
+
 nav[role="main"] li a {
   display: block;
   width: 100%;
