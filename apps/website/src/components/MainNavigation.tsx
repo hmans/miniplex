@@ -76,7 +76,7 @@ function NavigationList({
   prefix = "/"
 }: {
   entries: Entry[]
-  prefix: string
+  prefix?: string
 }) {
   return (
     <ul>
