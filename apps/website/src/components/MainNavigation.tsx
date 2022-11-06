@@ -26,24 +26,38 @@ const getPages = () =>
 
 const sortByOrder = (pages: Page[]) => pages.sort((a, b) => a.order - b.order)
 
+const sections = [
+  {
+    path: "manual",
+    title: "Manual"
+  },
+  {
+    path: "guides",
+    title: "Guides"
+  }
+]
+
 export function MainNavigation() {
   const pages = pipe(getPages(), sortByOrder)
 
   return (
     <nav role="main">
-      <ul>
-        <For each={pages}>
-          {(page) => {
-            return (
-              <li>
-                <A activeClass="current" href={page.href}>
-                  {page.title}
-                </A>
-              </li>
-            )
-          }}
-        </For>
-      </ul>
+      <For each={sections}>
+        {({ title, path }) => (
+          <div>
+            <h3>{title}</h3>
+            <ul>
+              <For each={pages.filter((page) => page.section === path)}>
+                {(page) => (
+                  <li>
+                    <A href={page.href}>{page.title}</A>
+                  </li>
+                )}
+              </For>
+            </ul>
+          </div>
+        )}
+      </For>
     </nav>
   )
 }
