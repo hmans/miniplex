@@ -40,36 +40,68 @@ const sections: Entry[] = [
       {
         path: "introduction",
         title: "Introduction"
+      },
+      {
+        path: "installation",
+        title: "Installation"
+      },
+      {
+        path: "basic-usage",
+        title: "Basic Usage"
+      },
+      {
+        path: "advanced-usage",
+        title: "Advanced Usage"
+      },
+      {
+        path: "best-practices",
+        title: "Best Practices"
       }
     ]
   },
   {
     path: "guides",
-    title: "Guides"
+    title: "Guides",
+    children: [
+      {
+        path: "performance",
+        title: "Performance"
+      }
+    ]
   }
 ]
 
-export function MainNavigation() {
-  const pages = getPages()
+function NavigationList({
+  entries,
+  prefix = "/"
+}: {
+  entries: Entry[]
+  prefix: string
+}) {
+  return (
+    <ul>
+      <For each={entries}>
+        {(entry) => {
+          const url = prefix + entry.path
+          return (
+            <li>
+              <A href={url}>{entry.title}</A>
 
+              {entry.children && (
+                <NavigationList entries={entry.children} prefix={`${url}/`} />
+              )}
+            </li>
+          )
+        }}
+      </For>
+    </ul>
+  )
+}
+
+export function MainNavigation() {
   return (
     <nav role="main">
-      <For each={sections}>
-        {({ title, path, children }) => (
-          <div>
-            <h3>{title}</h3>
-            <ul>
-              <For each={children}>
-                {({ title, path }) => (
-                  <li>
-                    <A href={path}>{title}</A>
-                  </li>
-                )}
-              </For>
-            </ul>
-          </div>
-        )}
-      </For>
+      <NavigationList entries={sections} />
     </nav>
   )
 }
