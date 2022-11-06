@@ -26,10 +26,22 @@ const getPages = () =>
 
 const sortByOrder = (pages: Page[]) => pages.sort((a, b) => a.order - b.order)
 
-const sections = [
+type Entry = {
+  path: string
+  title: string
+  children?: Entry[]
+}
+
+const sections: Entry[] = [
   {
     path: "manual",
-    title: "Manual"
+    title: "Manual",
+    children: [
+      {
+        path: "introduction",
+        title: "Introduction"
+      }
+    ]
   },
   {
     path: "guides",
@@ -38,19 +50,19 @@ const sections = [
 ]
 
 export function MainNavigation() {
-  const pages = pipe(getPages(), sortByOrder)
+  const pages = getPages()
 
   return (
     <nav role="main">
       <For each={sections}>
-        {({ title, path }) => (
+        {({ title, path, children }) => (
           <div>
             <h3>{title}</h3>
             <ul>
-              <For each={pages.filter((page) => page.section === path)}>
-                {(page) => (
+              <For each={children}>
+                {({ title, path }) => (
                   <li>
-                    <A href={page.href}>{page.title}</A>
+                    <A href={path}>{title}</A>
                   </li>
                 )}
               </For>
