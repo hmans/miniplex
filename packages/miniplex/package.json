@@ -15,7 +15,7 @@
     "state-management"
   ],
   "sideEffects": false,
-  "version": "2.0.0-next.19",
+  "version": "2.0.0-next.20",
   "main": "dist/miniplex.cjs.js",
   "module": "dist/miniplex.esm.js",
   "types": "dist/miniplex.cjs.d.ts",
@@ -38,8 +38,8 @@
   },
   "dependencies": {
     "@hmans/queue": "^0.0.1",
-    "@miniplex/core": "2.0.0-next.19",
-    "@miniplex/react": "2.0.0-next.19"
+    "@miniplex/core": "2.0.0-next.20",
+    "@miniplex/react": "2.0.0-next.20"
   },
   "peerDependencies": {
     "react": ">=16.8"

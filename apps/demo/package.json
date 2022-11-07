@@ -16,7 +16,7 @@
     "add": "^2.0.6",
     "material-composer": "^0.2.6",
     "material-composer-r3f": "^0.2.5",
-    "miniplex": "workspace:2.0.0-next.19",
+    "miniplex": "workspace:2.0.0-next.20",
     "postprocessing": "^6.29.1",
     "r3f-perf": "^6.5.0",
     "randomish": "^0.1.6",

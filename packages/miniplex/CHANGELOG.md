@@ -1,5 +1,16 @@
 # miniplex
 
+## 2.0.0-next.20
+
+### Patch Changes
+
+- Updated dependencies [b01cf43]
+- Updated dependencies [6f44ee7]
+- Updated dependencies [26cedc6]
+- Updated dependencies [2bcec9b]
+  - @miniplex/core@2.0.0-next.20
+  - @miniplex/react@2.0.0-next.20
+
 ## 2.0.0-next.19
 
 ### Patch Changes
