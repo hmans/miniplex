@@ -16,42 +16,34 @@ import { MainNavigation } from "./components/MainNavigation"
 import TableOfContents from "./components/TableOfContents"
 import "./css/styles.scss"
 
-const PageHeader = () => (
-  <header role="main">
-    <div class="title">The Book of Miniplex</div>
-    {/* <div>
-        <a href="https://miniplex.hmans.co/" target="_blank">
-          miniplex.hmans.co
-        </a>
-      </div> */}
-  </header>
-)
-
-const DocumentHead = () => (
-  <Head>
-    <Meta charset="utf-8" />
-    <Meta property="og:title" content="The Book of Miniplex" />
-    <Meta property="og:site_name" content="The Book of Miniplex" />
-    <Meta property="og:url" content="https://miniplex.hmans.co/" />
-    <Meta property="og:description" content="" />
-    <Meta property="og:type" content="website" />
-    <Meta property="og:image" content="" />
-    <Meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <Meta name="description" property="og:description" content="" />
-    <Meta name="author" content="@hmans" />
-
-    <Link rel="icon" href="/favicon.ico" />
-  </Head>
-)
-
 export default () => (
   <Html lang="en">
     <Title>The Book of Miniplex</Title>
-    <DocumentHead />
+    <Head>
+      <Meta charset="utf-8" />
+      <Meta property="og:title" content="The Book of Miniplex" />
+      <Meta property="og:site_name" content="The Book of Miniplex" />
+      <Meta property="og:url" content="https://miniplex.hmans.co/" />
+      <Meta property="og:description" content="" />
+      <Meta property="og:type" content="website" />
+      <Meta property="og:image" content="" />
+      <Meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <Meta name="description" property="og:description" content="" />
+      <Meta name="author" content="@hmans" />
+
+      <Link rel="icon" href="/favicon.ico" />
+    </Head>
 
     <Body>
-      <PageHeader />
+      <header role="main">
+        <div class="title">The Book of Miniplex</div>
+        {/* <div>
+          <a href="https://miniplex.hmans.co/" target="_blank">
+            miniplex.hmans.co
+          </a>
+        </div> */}
+      </header>
 
       <section role="main">
         <div class="sidebar sidebar-left">
