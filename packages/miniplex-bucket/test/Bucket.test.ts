@@ -82,6 +82,21 @@ describe(Bucket, () => {
 
       expect(listener).toHaveBeenCalledWith(entity)
     })
+
+    it("nulls the entity's entry in the entities array", () => {
+      const bucket = new Bucket()
+      const entity = bucket.add({ id: "1" })
+      bucket.remove(entity)
+      expect(bucket.entities).toEqual([null])
+    })
+
+    it("doesn't yield nulled entried when iterating", () => {
+      const bucket = new Bucket()
+      const entity = bucket.add({ id: "1" })
+      bucket.remove(entity)
+      expect(bucket.entities).toEqual([null])
+      expect([...bucket]).toEqual([])
+    })
   })
 
   describe("size", () => {

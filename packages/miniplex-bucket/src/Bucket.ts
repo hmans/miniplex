@@ -12,7 +12,12 @@ export class Bucket<E> implements Iterable<E> {
 
     return {
       next: () => {
-        const value = this.entities[--index]
+        let value: E | null = null
+
+        do {
+          value = this.entities[--index]
+        } while (value === null && index >= 0)
+
         return { value, done: index < 0 }
       }
     }
@@ -47,7 +52,7 @@ export class Bucket<E> implements Iterable<E> {
    * Returns the total size of the bucket, i.e. the number of entities it contains.
    */
   get size() {
-    return this.entities.length
+    return this.entityPositions.size
   }
 
   /**
@@ -95,15 +100,10 @@ export class Bucket<E> implements Iterable<E> {
       const index = this.entityPositions.get(entity)!
       this.entityPositions.delete(entity)
 
-      /* Perform shuffle-pop if there is more than one entity. */
-      const other = this.entities[this.entities.length - 1]
-      if (other !== entity) {
-        this.entities[index] = other
-        this.entityPositions.set(other, index)
-      }
+      /* Null the entry */
+      this.entities[index] = null as any
 
-      /* Remove the entity from the entities array. */
-      this.entities.pop()
+      /* Maybe TODO: track the freed position so we can reuse it */
     }
 
     return entity

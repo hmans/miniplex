@@ -116,11 +116,11 @@ describe(EntityBucket, () => {
 
           john.age = 25
           old.update()
-          expect(old.entities).toEqual([])
+          expect([...old]).toEqual([])
 
           john.age = 30
           old.update()
-          expect(old.entities).toEqual([john])
+          expect([...old]).toEqual([john])
         })
       })
     })
@@ -142,11 +142,11 @@ describe(EntityBucket, () => {
 
       delete entity.age
       bucket.evaluate(entity)
-      expect(withAge.entities).toEqual([])
+      expect([...withAge]).toEqual([])
 
       entity.age = 30
       bucket.evaluate(entity)
-      expect(withAge.entities).toEqual([entity])
+      expect([...withAge]).toEqual([entity])
     })
   })
 
@@ -210,7 +210,7 @@ describe(EntityBucket, () => {
       expect(bucket.entities).toEqual([entity])
 
       bucket.remove(entity)
-      expect(bucket.entities).toEqual([])
+      expect([...bucket]).toEqual([])
     })
 
     it("removes the entity from any relevant archetypes", () => {
@@ -220,7 +220,7 @@ describe(EntityBucket, () => {
       expect(archetype.entities).toEqual([entity])
 
       bucket.remove(entity)
-      expect(archetype.entities).toEqual([])
+      expect([...archetype]).toEqual([])
     })
   })
 })
