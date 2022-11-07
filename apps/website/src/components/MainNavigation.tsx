@@ -50,30 +50,26 @@ const configuration: Configuration = {
   ]
 }
 
-function NavigationList({ entries }: { entries: Entry[]; prefix?: string }) {
-  return (
-    <ul>
-      <For each={entries}>
-        {(entry) => (
-          <li>
-            {entry.path ? (
-              <A href={entry.path} activeClass="current">
-                {entry.title}
-              </A>
-            ) : (
-              <div class="section-title">{entry.title}</div>
-            )}
-          </li>
-        )}
-      </For>
-    </ul>
-  )
-}
+const NavigationList = ({ entries }: { entries: Entry[]; prefix?: string }) => (
+  <ul>
+    <For each={entries}>
+      {(entry) => (
+        <li>
+          {entry.path ? (
+            <A href={entry.path} activeClass="current">
+              {entry.title}
+            </A>
+          ) : (
+            <div class="section-title">{entry.title}</div>
+          )}
+        </li>
+      )}
+    </For>
+  </ul>
+)
 
-export function MainNavigation() {
-  return (
-    <nav role="main">
-      <NavigationList entries={configuration.sidebar} />
-    </nav>
-  )
-}
+export const MainNavigation = () => (
+  <nav role="main">
+    <NavigationList entries={configuration.sidebar} />
+  </nav>
+)
