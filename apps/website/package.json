@@ -6,6 +6,7 @@
     "build": "solid-start build",
     "start": "solid-start start"
   },
+  "type": "module",
   "devDependencies": {
     "@mdx-js/rollup": "^2.1.5",
     "solid-start-node": "^0.2.5",
