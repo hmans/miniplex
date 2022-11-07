@@ -1,6 +1,6 @@
 import { EntityBucket } from "./buckets"
 
-export class World<E = any> extends EntityBucket<E> {
+export class World<E extends {} = any> extends EntityBucket<E> {
   constructor(entities: E[] = []) {
     super(entities)
 
@@ -13,6 +13,16 @@ export class World<E = any> extends EntityBucket<E> {
         this.entityToId.delete(entity)
       }
     })
+  }
+
+  update(entity: E, update: Partial<E>) {
+    /* Update the entity. */
+    Object.assign(entity, update)
+
+    /* If this world knows about the entity, notify any derived buckets about the change. */
+    if (this.has(entity)) {
+      this.evaluate(entity)
+    }
   }
 
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {

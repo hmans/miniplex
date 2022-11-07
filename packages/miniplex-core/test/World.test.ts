@@ -34,6 +34,29 @@ describe(World, () => {
     })
   })
 
+  describe("update", () => {
+    it("updates the entity", () => {
+      const world = new World<Entity>()
+      const entity = world.add({ name: "John" })
+      expect(entity.name).toEqual("John")
+
+      world.update(entity, { name: "Jane" })
+      expect(entity.name).toEqual("Jane")
+    })
+
+    it("triggers a reindexing of the entity by any derived buckets", () => {
+      const world = new World<Entity>()
+      const entity = world.add({ name: "John" })
+      expect(entity.name).toEqual("John")
+
+      const hasAge = world.archetype("age")
+      expect(hasAge.entities).toEqual([])
+
+      world.update(entity, { age: 28 })
+      expect(hasAge.entities).toEqual([entity])
+    })
+  })
+
   describe("id", () => {
     it("returns undefined for entities not in the world", () => {
       const world = new World<Entity>()
