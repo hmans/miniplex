@@ -16,73 +16,67 @@ import { MainNavigation } from "./components/MainNavigation"
 import TableOfContents from "./components/TableOfContents"
 import "./css/styles.scss"
 
-function PageHeader() {
-  return (
-    <header role="main">
-      <div class="title">The Book of Miniplex</div>
-      {/* <div>
+const PageHeader = () => (
+  <header role="main">
+    <div class="title">The Book of Miniplex</div>
+    {/* <div>
         <a href="https://miniplex.hmans.co/" target="_blank">
           miniplex.hmans.co
         </a>
       </div> */}
-    </header>
-  )
-}
+  </header>
+)
 
-function DocumentHead() {
-  return (
-    <Head>
-      <Meta charset="utf-8" />
-      <Meta property="og:title" content="The Book of Miniplex" />
-      <Meta property="og:site_name" content="The Book of Miniplex" />
-      <Meta property="og:url" content="https://miniplex.hmans.co/" />
-      <Meta property="og:description" content="" />
-      <Meta property="og:type" content="website" />
-      <Meta property="og:image" content="" />
-      <Meta name="viewport" content="width=device-width, initial-scale=1" />
+const DocumentHead = () => (
+  <Head>
+    <Meta charset="utf-8" />
+    <Meta property="og:title" content="The Book of Miniplex" />
+    <Meta property="og:site_name" content="The Book of Miniplex" />
+    <Meta property="og:url" content="https://miniplex.hmans.co/" />
+    <Meta property="og:description" content="" />
+    <Meta property="og:type" content="website" />
+    <Meta property="og:image" content="" />
+    <Meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <Meta name="description" property="og:description" content="" />
-      <Meta name="author" content="@hmans" />
+    <Meta name="description" property="og:description" content="" />
+    <Meta name="author" content="@hmans" />
 
-      <Link rel="icon" href="/favicon.ico" />
-    </Head>
-  )
-}
+    <Link rel="icon" href="/favicon.ico" />
+  </Head>
+)
 
-export default function Root() {
-  return (
-    <Html lang="en">
-      <Title>The Book of Miniplex</Title>
-      <DocumentHead />
+export default () => (
+  <Html lang="en">
+    <Title>The Book of Miniplex</Title>
+    <DocumentHead />
 
-      <Body>
-        <PageHeader />
+    <Body>
+      <PageHeader />
 
-        <section role="main">
-          <div class="sidebar sidebar-left">
-            <div class="sidebar-contents">
-              <MainNavigation />
-            </div>
+      <section role="main">
+        <div class="sidebar sidebar-left">
+          <div class="sidebar-contents">
+            <MainNavigation />
           </div>
+        </div>
 
-          <main>
-            <ErrorBoundary>
-              <Suspense>
-                <Routes>
-                  <FileRoutes />
-                </Routes>
-              </Suspense>
-            </ErrorBoundary>
-          </main>
+        <main>
+          <ErrorBoundary>
+            <Suspense>
+              <Routes>
+                <FileRoutes />
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
+        </main>
 
-          <div class="sidebar sidebar-right">
-            <div class="sidebar-contents">
-              <TableOfContents />
-            </div>
+        <div class="sidebar sidebar-right">
+          <div class="sidebar-contents">
+            <TableOfContents />
           </div>
-        </section>
-        <Scripts />
-      </Body>
-    </Html>
-  )
-}
+        </div>
+      </section>
+      <Scripts />
+    </Body>
+  </Html>
+)
