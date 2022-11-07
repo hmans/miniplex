@@ -15,6 +15,8 @@ export class World<E extends {} = any> extends EntityBucket<E> {
     })
   }
 
+  update(entity: E, update: Partial<E>): E
+
   update(entity: E, update: Partial<E>) {
     /* Update the entity. */
     Object.assign(entity, update)
@@ -23,6 +25,8 @@ export class World<E extends {} = any> extends EntityBucket<E> {
     if (this.has(entity)) {
       this.evaluate(entity)
     }
+
+    return entity
   }
 
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {

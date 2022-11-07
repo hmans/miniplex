@@ -55,6 +55,12 @@ describe(World, () => {
       world.update(entity, { age: 28 })
       expect(hasAge.entities).toEqual([entity])
     })
+
+    it("returns the entity", () => {
+      const world = new World<Entity>()
+      const entity = world.add({ name: "John" })
+      expect(world.update(entity, { name: "Jane" })).toEqual(entity)
+    })
   })
 
   describe("id", () => {
