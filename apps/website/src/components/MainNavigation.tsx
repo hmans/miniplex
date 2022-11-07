@@ -21,10 +21,6 @@ const configuration: Configuration = {
       title: "Manual"
     },
     {
-      path: "/manual/introduction",
-      title: "Introduction"
-    },
-    {
       path: "/manual/installation",
       title: "Installation"
     },
