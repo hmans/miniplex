@@ -91,7 +91,7 @@ profile("remove (random)", () => {
   return () => {
     while (world.size > 0) {
       /* Get a random entity... */
-      const entity = world.entities[Math.floor(Math.random() * world.size)]
+      const [entity] = world
 
       /* ...and delete it */
       world.remove(entity)
@@ -115,7 +115,7 @@ profile("remove (random, with archetypes)", () => {
   return () => {
     while (world.size > 0) {
       /* Get a random entity... */
-      const entity = world.entities[Math.floor(Math.random() * world.size)]
+      const [entity] = world
 
       /* ...and delete it */
       world.remove(entity)
