@@ -30,7 +30,7 @@ describe(World, () => {
       expect(world.entities).toEqual([entity])
 
       world.remove(entity)
-      expect(world.entities).toEqual([])
+      expect([...world]).toEqual([])
     })
   })
 
@@ -81,8 +81,8 @@ describe(World, () => {
       const jane = world.add({ name: "Jane" })
 
       world.addComponent(john, "age", 30)
-      expect(withAge.entities).toEqual([john])
-      expect(withoutAge.entities).toEqual([jane])
+      expect([...withAge]).toEqual([john])
+      expect([...withoutAge]).toEqual([jane])
     })
 
     it("adds the entity to nested archetypes", () => {
@@ -113,7 +113,7 @@ describe(World, () => {
       expect(withAge.entities).toEqual([john, jane])
 
       world.removeComponent(john, "age")
-      expect(withAge.entities).toEqual([jane])
+      expect([...withAge]).toEqual([jane])
     })
 
     it("removes the entity from nested archetypes", () => {
@@ -124,7 +124,7 @@ describe(World, () => {
       expect(withAge.entities).toEqual([john])
 
       world.removeComponent(john, "age")
-      expect(withAge.entities).toEqual([])
+      expect([...withAge]).toEqual([])
     })
 
     it("uses a future check, so in onEntityRemoved, the entity is still intact", () => {
