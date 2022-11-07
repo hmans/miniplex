@@ -15,7 +15,7 @@
     "state-management"
   ],
   "sideEffects": false,
-  "version": "2.0.0-next.19",
+  "version": "2.0.0-next.20",
   "main": "dist/miniplex-core.cjs.js",
   "module": "dist/miniplex-core.esm.js",
   "types": "dist/miniplex-core.cjs.d.ts",

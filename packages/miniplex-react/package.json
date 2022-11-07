@@ -17,7 +17,7 @@
     "hooks"
   ],
   "sideEffects": false,
-  "version": "2.0.0-next.19",
+  "version": "2.0.0-next.20",
   "main": "dist/miniplex-react.cjs.js",
   "module": "dist/miniplex-react.esm.js",
   "types": "dist/miniplex-react.cjs.d.ts",
@@ -28,7 +28,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@miniplex/core": "2.0.0-next.19",
+    "@miniplex/core": "2.0.0-next.20",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

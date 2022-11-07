@@ -10,7 +10,8 @@
     "@hmans/queue": "0.0.1",
     "@hmans/id": "0.0.1",
     "vanilla-demo": "0.0.0",
-    "@miniplex/bucket": "2.0.0-next.11"
+    "@miniplex/bucket": "2.0.0-next.11",
+    "website": "1.0.0"
   },
   "changesets": [
     "afraid-bats-matter",
@@ -28,6 +29,7 @@
     "fluffy-spiders-float",
     "forty-kings-shop",
     "four-singers-sip",
+    "friendly-camels-yell",
     "funny-hounds-love",
     "gentle-dodos-shake",
     "good-phones-kneel",
@@ -56,10 +58,13 @@
     "sixty-mirrors-type",
     "slow-mirrors-remain",
     "stupid-crews-invite",
+    "stupid-mayflies-refuse",
     "swift-radios-decide",
     "ten-pans-reply",
+    "thick-zoos-watch",
     "tiny-bananas-sniff",
     "violet-stingrays-hear",
+    "warm-kids-provide",
     "weak-rules-decide"
   ]
 }

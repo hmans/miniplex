@@ -2,4 +2,4 @@
 "@miniplex/core": patch
 ---
 
-`world.update` has been renamed to `world.evaluate`.
+The former `world.update` function has been renamed to `world.evaluate`.
