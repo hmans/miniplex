@@ -1,6 +1,5 @@
 import { For } from "solid-js"
 import { A } from "solid-start"
-import { cleanPath, docs, Document } from "~/documents"
 
 type Configuration = {
   sidebar: Entry[]
