@@ -15,9 +15,9 @@ describe("<Entity>", () => {
     const world = new World<Entity>()
     const { Entity } = createReactAPI(world)
 
-    expect(world.entities.length).toBe(0)
+    expect(world.size).toBe(0)
     render(<Entity />)
-    expect(world.entities.length).toBe(1)
+    expect(world.size).toBe(1)
   })
 
   it("removes the entity on unmount", () => {
@@ -25,9 +25,9 @@ describe("<Entity>", () => {
     const { Entity } = createReactAPI(world)
 
     const { unmount } = render(<Entity />)
-    expect(world.entities.length).toBe(1)
+    expect(world.size).toBe(1)
     unmount()
-    expect(world.entities.length).toBe(0)
+    expect(world.size).toBe(0)
   })
 
   it("accepts a function as its child", () => {
@@ -63,9 +63,9 @@ describe("<Entity>", () => {
       const { Entity } = createReactAPI(world)
       const entity = { name: "John" }
 
-      expect(world.entities.length).toBe(0)
+      expect(world.size).toBe(0)
       render(<Entity entity={entity} />)
-      expect(world.entities.length).toBe(1)
+      expect(world.size).toBe(1)
       expect(world.entities[0]).toBe(entity)
     })
 
@@ -75,9 +75,9 @@ describe("<Entity>", () => {
       const entity = { name: "John" }
 
       const { unmount } = render(<Entity entity={entity} />)
-      expect(world.entities.length).toBe(1)
+      expect(world.size).toBe(1)
       unmount()
-      expect(world.entities.length).toBe(0)
+      expect(world.size).toBe(0)
     })
   })
 
@@ -120,14 +120,14 @@ describe("<Component>", () => {
         <Component name="name" data="John" />
       </Entity>
     )
-    expect(world.entities[0].name).toBe("John")
+    expect([...world]).toEqual([{ name: "John" }])
 
     rerender(
       <Entity>
         <Component name="name" data="Jane" />
       </Entity>
     )
-    expect(world.entities[0].name).toBe("Jane")
+    expect([...world]).toEqual([{ name: "Jane" }])
   })
 
   it("removes the component when the component is unmounted", () => {
