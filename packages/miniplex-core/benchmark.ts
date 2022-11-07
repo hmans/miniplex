@@ -25,7 +25,7 @@ const profile = (name: string, setup: () => () => () => boolean) => {
   const ops = entityCount / (after - before)
 
   console.log(
-    `${name.padStart(40)}  ${duration.toFixed(2).padStart(8)}ms ${ops
+    `${name.padStart(50)}  ${duration.toFixed(2).padStart(8)}ms ${ops
       .toFixed(1)
       .padStart(10)} ops/ms`
   )
@@ -281,5 +281,107 @@ profile("value predicate check (filter 👎)", () => {
     }
 
     return () => i > 0
+  }
+})
+
+heading("ooflorent's packed_5")
+
+profile("1000x iterating over array of 1000 entities", () => {
+  const ecs = new World()
+
+  for (let i = 0; i < 1000; i++) {
+    ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
+  }
+
+  const withA = ecs.archetype("A")
+  const withB = ecs.archetype("B")
+  const withC = ecs.archetype("C")
+  const withD = ecs.archetype("D")
+  const withE = ecs.archetype("E")
+
+  return () => {
+    for (let i = 0; i < 1000; i++) {
+      for (const entity of withA.entities) entity.A *= 2
+      for (const entity of withB.entities) entity.B *= 2
+      for (const entity of withC.entities) entity.C *= 2
+      for (const entity of withD.entities) entity.D *= 2
+      for (const entity of withE.entities) entity.E *= 2
+    }
+
+    return () => true
+  }
+})
+
+profile("1000x iterating over iterator with 1000 entities", () => {
+  const ecs = new World()
+
+  for (let i = 0; i < 1000; i++) {
+    ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
+  }
+
+  const withA = ecs.archetype("A")
+  const withB = ecs.archetype("B")
+  const withC = ecs.archetype("C")
+  const withD = ecs.archetype("D")
+  const withE = ecs.archetype("E")
+
+  return () => {
+    for (let i = 0; i < 1000; i++) {
+      for (const entity of withA) entity.A *= 2
+      for (const entity of withB) entity.B *= 2
+      for (const entity of withC) entity.C *= 2
+      for (const entity of withD) entity.D *= 2
+      for (const entity of withE) entity.E *= 2
+    }
+
+    return () => true
+  }
+})
+
+profile("1x iterating over array of 1m entities", () => {
+  const ecs = new World()
+
+  for (let i = 0; i < entityCount; i++) {
+    ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
+  }
+
+  const withA = ecs.archetype("A")
+  const withB = ecs.archetype("B")
+  const withC = ecs.archetype("C")
+  const withD = ecs.archetype("D")
+  const withE = ecs.archetype("E")
+
+  return () => {
+    for (const entity of withA.entities) entity.A *= 2
+    for (const entity of withB.entities) entity.B *= 2
+    for (const entity of withC.entities) entity.C *= 2
+    for (const entity of withD.entities) entity.D *= 2
+    for (const entity of withE.entities) entity.E *= 2
+
+    return () => true
+  }
+})
+
+profile("1x iterating over iterator with 1m entities", () => {
+  const ecs = new World()
+
+  for (let i = 0; i < entityCount; i++) {
+    ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
+  }
+
+  const withA = ecs.archetype("A")
+  const withB = ecs.archetype("B")
+  const withC = ecs.archetype("C")
+  const withD = ecs.archetype("D")
+  const withE = ecs.archetype("E")
+
+  return () => {
+    for (const entity of withA) entity.A *= 2
+    for (const entity of withB) entity.B *= 2
+    for (const entity of withC) entity.C *= 2
+    for (const entity of withD) entity.D *= 2
+    for (const entity of withE) entity.E *= 2
+
+    return () => true
   }
 })
