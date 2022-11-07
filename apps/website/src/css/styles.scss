@@ -9,6 +9,7 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -18,7 +19,7 @@ body {
 
   font: 16px/1.5 "Inter", sans-serif;
   background-color: white;
-  color: #555;
+  color: #222;
 }
 
 a {
@@ -27,7 +28,6 @@ a {
 }
 
 a:hover {
-  color: #333;
   text-decoration: underline;
 }
 
@@ -38,6 +38,7 @@ h4,
 h5,
 h6 {
   margin: 2rem 0 1rem 0;
+  scroll-margin-top: 6rem;
 }
 
 h1 {
@@ -62,7 +63,7 @@ outlet-wrapper > *:first-child {
 }
 
 blockquote {
-  margin: 2rem 0;
+  margin-left: 0;
   padding: 0 1rem;
   border-left: 0.5rem solid #eee;
   color: #666;
@@ -73,22 +74,22 @@ blockquote {
 header[role="main"] {
   position: fixed;
   width: 100vw;
-
-  padding: 0.5rem 0 0.5rem 320px;
-  transition: padding 0.2s ease-in-out;
   margin-bottom: 3rem;
+  padding: 0.5rem 0 0.5rem 320px;
 
-  font-size: 125%;
   background-color: rgba(255, 255, 255, 0.95);
-  color: #888;
   border-bottom: 2px solid #eee;
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.05);
-}
 
-header div.title {
-  font-weight: 900;
-  font-size: 125%;
-  margin-bottom: 0;
+  transition: padding 0.2s ease-in-out;
+
+  div.title {
+    margin-bottom: 0;
+
+    font-weight: 900;
+    font-size: 150%;
+    text-transform: uppercase;
+  }
 }
 
 /* Main pane */
@@ -102,6 +103,15 @@ main {
   flex-grow: 1;
   overflow: hidden;
   padding: 0 20px;
+}
+
+main a {
+  font-weight: bold;
+  color: hotpink;
+}
+
+main > *:first-child {
+  margin-top: 0;
 }
 
 /* Sidebars */
@@ -129,11 +139,20 @@ nav ul {
   margin: 0;
 }
 
+/* Top level navigation */
+nav[role="main"] > ul > li {
+  margin-bottom: 2rem;
+
+  & > *:first-child {
+    font-weight: bold;
+  }
+}
+
 nav[role="main"] li a {
   display: block;
   width: 100%;
-  margin: 0.5rem 0;
-  padding: 4px 13px 3px 13px;
+  margin: 2px 0;
+  padding: 8px 16px 7px 16px;
 
   transition: background-color 0.2s ease-out;
   border-radius: 5px;
@@ -174,20 +193,26 @@ code {
     Consolas, monospace;
 
   font-size: 90%;
-  color: rgb(147, 147, 147);
+  font-weight: bold;
+  color: rgb(255, 105, 105);
 }
 
 pre.shiki {
-  padding: 1rem;
+  margin: 1.5rem 0;
+  padding: 1.5rem;
 
   border-radius: 0.5rem;
   background-color: #f5f5f5;
   overflow: auto;
   max-width: 100%;
+
+  box-shadow: inset 5px 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 pre.shiki code {
   padding: 0;
+  color: inherit;
+  font-weight: inherit;
   background-color: transparent;
 }
 

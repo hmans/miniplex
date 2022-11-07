@@ -1,8 +1,6 @@
 // @refresh reload
-import { createMemo, For, Show, Suspense } from "solid-js"
-import { MDXProvider } from "solid-mdx"
+import { Suspense } from "solid-js"
 import {
-  A,
   Body,
   FileRoutes,
   Head,
@@ -14,30 +12,9 @@ import {
   Title
 } from "solid-start"
 import { ErrorBoundary } from "solid-start/error-boundary"
+import { MainNavigation } from "./components/MainNavigation"
+import TableOfContents from "./components/TableOfContents"
 import "./css/styles.scss"
-
-/* Moo */
-
-type SolidStartFunctions = {
-  getHeadings: () => {
-    depth: number
-    text: string
-    slug: string
-  }[]
-  getFrontMatter: () => {
-    title?: string
-    sectionTitle?: string
-    order?: number
-    section?: string
-    sectionOrder?: number
-    subsection?: string
-  }
-}
-
-export const mods = import.meta.glob<true, any, SolidStartFunctions>(
-  "./routes/**/*.{md,mdx}",
-  { eager: true, query: { meta: "" } }
-)
 
 function PageHeader() {
   return (
@@ -49,169 +26,6 @@ function PageHeader() {
         </a>
       </div> */}
     </header>
-  )
-}
-
-type Sections = {
-  [key: string]: {
-    title: string
-    path: string
-    order: number
-    subsection: string
-    href: string
-    frontMatter: Record<string, any>
-  }[] & {
-    subsection?: Set<string>
-    title?: string
-    order?: number
-  }
-}
-
-function MainNavigation() {
-  const data = createMemo(() => {
-    let sections: Sections = {}
-
-    Object.keys(mods).forEach((key) => {
-      let frontMatter = mods[key].getFrontMatter()
-      let {
-        title = mods[key].getHeadings().find((h) => h.depth === 1)?.text ?? "",
-        section = "",
-        order = 100
-      } = frontMatter ?? {}
-      if (!sections[section]) {
-        sections[section] = []
-      }
-
-      if (frontMatter?.subsection) {
-        if (!sections[section].subsection) {
-          sections[section].subsection = new Set()
-        }
-        sections[section].subsection.add(frontMatter.subsection)
-      }
-
-      if (frontMatter?.sectionTitle) {
-        sections[section].title = frontMatter.sectionTitle
-      }
-
-      if (frontMatter?.sectionOrder) {
-        sections[section].order = frontMatter.sectionOrder
-      }
-
-      sections[section].push({
-        title,
-        path: key,
-        order,
-        frontMatter,
-        subsection: frontMatter?.subsection,
-        href: key.slice("./routes".length).replace(/\.mdx?$/, "")
-      })
-    })
-
-    Object.keys(sections).forEach((key) => {
-      sections[key].sort((a, b) => a.order - b.order)
-    })
-
-    return Object.values(sections).sort(
-      (a, b) => (a.order ?? 100) - (b.order ?? 100)
-    )
-  })
-
-  return (
-    <nav role="main">
-      <For each={data()}>
-        {(r) => (
-          <ul>
-            {r.title}
-            <Show
-              when={!r.subsection}
-              fallback={
-                <>
-                  <For each={[...r.subsection.values()]}>
-                    {(s) => (
-                      <ul>
-                        <div>{s}</div>
-                        <For each={r.filter((i) => i.subsection === s)}>
-                          {({ title, path, href, frontMatter }) => (
-                            <li>
-                              <A
-                                activeClass="text-primary"
-                                inactiveClass="text-gray-500"
-                                href={href}
-                              >
-                                {title}
-                              </A>
-                            </li>
-                          )}
-                        </For>
-                      </ul>
-                    )}
-                  </For>
-
-                  <For each={r.filter((i) => !i.subsection)}>
-                    {({ title, path, href, frontMatter }) => (
-                      <li>
-                        <A
-                          activeClass="text-primary"
-                          inactiveClass="text-gray-500"
-                          href={href}
-                        >
-                          <span>{title}</span>
-                        </A>
-                      </li>
-                    )}
-                  </For>
-                </>
-              }
-            >
-              <For each={r}>
-                {({ title, path, href, frontMatter }) => (
-                  <li>
-                    <A activeClass="current" href={href}>
-                      {title}
-                    </A>
-                  </li>
-                )}
-              </For>
-            </Show>
-          </ul>
-        )}
-      </For>
-    </nav>
-  )
-}
-
-import { components } from "./components/components"
-import TableOfContents, {
-  useTableOfContents
-} from "./components/TableOfContents"
-
-function PageContent() {
-  return (
-    <MDXProvider
-      components={{
-        ...components,
-        "table-of-contents": () => {
-          const headings = useTableOfContents()
-          return (
-            <ul>
-              <Suspense>
-                <For each={headings()}>
-                  {(h) => (
-                    <li>
-                      <A href={`#${h.slug}`}>{h.text}</A>
-                    </li>
-                  )}
-                </For>
-              </Suspense>
-            </ul>
-          )
-        }
-      }}
-    >
-      <Routes>
-        <FileRoutes />
-      </Routes>
-    </MDXProvider>
   )
 }
 
@@ -254,7 +68,9 @@ export default function Root() {
           <main>
             <ErrorBoundary>
               <Suspense>
-                <PageContent />
+                <Routes>
+                  <FileRoutes />
+                </Routes>
               </Suspense>
             </ErrorBoundary>
           </main>

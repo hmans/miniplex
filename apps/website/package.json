@@ -15,6 +15,7 @@
   "dependencies": {
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.5.0",
+    "fp-ts": "^2.13.1",
     "rollup": "^3.2.5",
     "sass": "^1.56.0",
     "solid-js": "^1.6.0",
