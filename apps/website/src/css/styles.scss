@@ -140,12 +140,10 @@ nav ul {
 }
 
 /* Top level navigation */
-nav[role="main"] > ul > li {
-  margin-bottom: 2rem;
-
-  & > *:first-child {
-    font-weight: bold;
-  }
+div.section-title {
+  margin-top: 2rem;
+  font-weight: bold;
+  padding: 8px 16px 7px 16px;
 }
 
 nav[role="main"] li a {
