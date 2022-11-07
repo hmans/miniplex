@@ -15,11 +15,17 @@ export class World<E extends {} = any> extends EntityBucket<E> {
     })
   }
 
+  update(entity: E): E
+
   update(entity: E, update: Partial<E>): E
 
-  update(entity: E, update: Partial<E>) {
+  update(entity: E, fun: (entity: E) => Partial<E> | void): E
+
+  update(entity: E, update?: Partial<E> | ((entity: E) => Partial<E> | void)) {
+    const changes = typeof update === "function" ? update(entity) : update
+
     /* Update the entity. */
-    Object.assign(entity, update)
+    if (changes) Object.assign(entity, changes)
 
     /* If this world knows about the entity, notify any derived buckets about the change. */
     if (this.has(entity)) {
