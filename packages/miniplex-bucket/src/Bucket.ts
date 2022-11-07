@@ -12,8 +12,10 @@ export class Bucket<E> implements Iterable<E> {
 
     return {
       next: () => {
-        const value = this.entities[--index]
-        return { value, done: index < 0 }
+        return {
+          value: this.entities[--index],
+          done: index < 0
+        }
       }
     }
   }
