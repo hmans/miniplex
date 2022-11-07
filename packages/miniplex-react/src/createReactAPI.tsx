@@ -62,9 +62,10 @@ export const createReactAPI = <E,>(world: World<E>) => {
     entities: D[]
   }) => (
     <>
-      {entities.map((entity) => (
-        <Entity key={world.id(entity)} entity={entity} {...props} />
-      ))}
+      {entities.map(
+        (entity) =>
+          entity && <Entity key={world.id(entity)} entity={entity} {...props} />
+      )}
     </>
   )
 
