@@ -53,7 +53,9 @@ function NavigationList({
           const url = prefix + entry.path
           return (
             <li>
-              <A href={url}>{entry.title}</A>
+              <A href={url} activeClass="current">
+                {entry.title}
+              </A>
 
               {entry.children && (
                 <NavigationList entries={entry.children} prefix={`${url}/`} />
