@@ -82,6 +82,15 @@ describe(World, () => {
       expect(entity.name).toEqual("Jane")
     })
 
+    it("accepts a component name and value", () => {
+      const world = new World<Entity>()
+      const entity = world.add({ name: "John" })
+      expect(entity.name).toEqual("John")
+
+      world.update(entity, "name", "Jane")
+      expect(entity.name).toEqual("Jane")
+    })
+
     it("can be called without a second argument to trigger the reindexing only", () => {
       const world = new World<Entity>()
       const entity = world.add({ name: "John" })
