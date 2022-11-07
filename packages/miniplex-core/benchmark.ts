@@ -286,7 +286,7 @@ profile("value predicate check (filter 👎)", () => {
 
 heading("ooflorent's packed_5")
 
-profile("1000x iterating over array of 1000 entities", () => {
+profile("1000x for entity of 1000 entities", () => {
   const ecs = new World()
 
   for (let i = 0; i < 1000; i++) {
@@ -381,6 +381,60 @@ profile("1x iterating over iterator with 1m entities", () => {
     for (const entity of withC) entity.C *= 2
     for (const entity of withD) entity.D *= 2
     for (const entity of withE) entity.E *= 2
+
+    return () => true
+  }
+})
+
+profile("1x for index of 1m entities", () => {
+  const ecs = new World()
+
+  for (let i = 0; i < entityCount; i++) {
+    ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
+  }
+
+  const withA = ecs.archetype("A")
+  const withB = ecs.archetype("B")
+  const withC = ecs.archetype("C")
+  const withD = ecs.archetype("D")
+  const withE = ecs.archetype("E")
+
+  return () => {
+    for (let i = 0; i < withA.size; i++) withA.entities[i].A *= 2
+    for (let i = 0; i < withB.size; i++) withB.entities[i].B *= 2
+    for (let i = 0; i < withC.size; i++) withC.entities[i].C *= 2
+    for (let i = 0; i < withD.size; i++) withD.entities[i].D *= 2
+    for (let i = 0; i < withE.size; i++) withE.entities[i].E *= 2
+
+    return () => true
+  }
+})
+
+profile("1x for index of 1m entities (cached length)", () => {
+  const ecs = new World()
+
+  for (let i = 0; i < entityCount; i++) {
+    ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
+  }
+
+  const withA = ecs.archetype("A")
+  const withB = ecs.archetype("B")
+  const withC = ecs.archetype("C")
+  const withD = ecs.archetype("D")
+  const withE = ecs.archetype("E")
+
+  return () => {
+    const withASize = withA.size
+    const withBSize = withB.size
+    const withCSize = withC.size
+    const withDSize = withD.size
+    const withESize = withE.size
+
+    for (let i = 0; i < withASize; i++) withA.entities[i].A *= 2
+    for (let i = 0; i < withBSize; i++) withB.entities[i].B *= 2
+    for (let i = 0; i < withCSize; i++) withC.entities[i].C *= 2
+    for (let i = 0; i < withDSize; i++) withD.entities[i].D *= 2
+    for (let i = 0; i < withESize; i++) withE.entities[i].E *= 2
 
     return () => true
   }
