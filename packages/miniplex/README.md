@@ -6,6 +6,10 @@
 
 > **Warning** You are looking at the work-in-progress documentation for the upcoming **version 2.0** of Miniplex and its companion libraries. If you're looking for 1.0 documentation, [please go here](https://github.com/hmans/miniplex/tree/miniplex%401.0.0).
 
+## Miniplex 2.0 Beta 1 now available!
+
+⚠️ **The first beta of this library's upcoming 2.0 release is out. Please check the [announcement post](https://github.com/hmans/miniplex/discussions/258) for details, including upgrade instructions.**
+
 ## Testimonials
 
 > Tested @hmans' Miniplex library over the weekend and after having previously implemented an ECS for my wip browser game, I have to say **Miniplex feels like the "right" way to do ECS in #r3f**. - [Brian Breiholz](https://twitter.com/BrianBreiholz/status/1577182839509962752)
@@ -141,7 +145,6 @@ Most interactions with Miniplex are using **object identity** to identify entiti
 ## Installation
 
 > **Warning** Since this is the documentation for the upcoming 2.0 version of Miniplex, we will be using the `next` tag for installation. If you'd rather use the stable release of the library, [please refer to the 1.0 documentation](https://github.com/hmans/miniplex/tree/miniplex%401.0.0).
-
 
 Add the `miniplex` package to your project using your favorite package manager:
 
