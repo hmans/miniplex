@@ -10,5 +10,7 @@
     "@miniplex/core": "2.0.0-next.20",
     "@miniplex/react": "2.0.0-next.20"
   },
-  "changesets": []
+  "changesets": [
+    "2-0-beta-1"
+  ]
 }
