@@ -22,7 +22,7 @@ export type With<E, P extends keyof E> = E & Required<Pick<E, P>>
 /**
  * A utility type that removes all optional properties.
  */
-export type Strictly<T> = WithoutOptional<T>
+export type Strict<T> = WithoutOptional<T>
 
 /* Utility types */
 

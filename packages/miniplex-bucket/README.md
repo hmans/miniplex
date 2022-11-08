@@ -1,1 +1,1 @@
-# Bucketeer
+# @miniplex/bucket
