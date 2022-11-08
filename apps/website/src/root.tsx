@@ -46,9 +46,7 @@ export default () => (
       </header>
 
       <div class="sidebar sidebar-left">
-        <div class="sidebar-contents">
-          <MainNavigation />
-        </div>
+        <MainNavigation />
       </div>
 
       <main>
@@ -62,9 +60,7 @@ export default () => (
       </main>
 
       <div class="sidebar sidebar-right">
-        <div class="sidebar-contents">
-          <TableOfContents />
-        </div>
+        <TableOfContents />
       </div>
       <Scripts />
     </Body>

@@ -145,6 +145,10 @@ div.section-title {
   padding: 8px 16px 7px 16px;
 }
 
+nav[role="main"] {
+  position: fixed;
+}
+
 nav[role="main"] li a {
   display: block;
   width: 100%;
@@ -173,6 +177,10 @@ div.sidebar-right {
   margin-right: 0;
 
   transition: margin-right 0.2s ease-in-out;
+}
+
+nav.toc {
+  position: fixed;
 }
 
 nav.toc li {
