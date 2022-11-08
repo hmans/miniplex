@@ -35,7 +35,7 @@
   "dependencies": {
     "@hmans/use-const": "^0.0.1",
     "@hmans/use-rerender": "^0.0.2",
-    "react-merge-refs": "^1.1.0"
+    "react-merge-refs": "^2.0.1"
   },
   "peerDependencies": {
     "@miniplex/core": "^2.0.0-beta.1",
