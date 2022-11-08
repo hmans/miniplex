@@ -21,6 +21,9 @@ export default function TableOfContents() {
       <h4>On this page:</h4>
       <ul>
         <Suspense>
+          <li>
+            <a href="#top">Top of Page</a>
+          </li>
           <For each={headings()}>
             {(h) => (
               <li>

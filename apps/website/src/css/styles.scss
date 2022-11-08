@@ -20,6 +20,9 @@ body {
   font: 16px/1.5 "Inter", sans-serif;
   background-color: white;
   color: #222;
+
+  display: flex;
+  padding-top: 6rem;
 }
 
 a {
@@ -43,9 +46,11 @@ h6 {
 
 h1 {
   font-weight: 900;
+  font-size: 175%;
+  border-bottom: 5px solid #eee;
+  text-transform: uppercase;
 }
 
-h1,
 h2,
 h3 {
   font-size: 125%;
@@ -63,16 +68,21 @@ outlet-wrapper > *:first-child {
 }
 
 blockquote {
-  margin-left: 0;
+  margin: 1.5rem 0;
   padding: 0 1rem;
   border-left: 0.5rem solid #eee;
   color: #666;
+}
+
+img {
+  max-width: 100%;
 }
 
 /* Main header */
 
 header[role="main"] {
   position: fixed;
+  top: 0;
   width: 100vw;
   margin-bottom: 3rem;
   padding: 0.5rem 0 0.5rem 320px;
@@ -94,11 +104,6 @@ header[role="main"] {
 
 /* Main pane */
 
-section[role="main"] {
-  padding-top: 6rem;
-  display: flex;
-}
-
 main {
   flex-grow: 1;
   overflow: hidden;
@@ -116,19 +121,15 @@ main > *:first-child {
 
 /* Sidebars */
 
-div.sidebar {
+div.main-navigation,
+div.toc-navigation {
   flex: 0 0 300px;
   padding: 0 25px;
 }
 
-div.sidebar-contents {
-  position: fixed;
-  width: 250;
-}
-
 /* Left sidebar */
 
-div.sidebar-left {
+div.main-navigation {
   margin-left: 0px;
   transition: margin-left 0.2s ease-in-out;
 }
@@ -140,12 +141,14 @@ nav ul {
 }
 
 /* Top level navigation */
-nav[role="main"] > ul > li {
-  margin-bottom: 2rem;
+div.section-title {
+  margin-top: 2rem;
+  font-weight: bold;
+  padding: 8px 16px 7px 16px;
+}
 
-  & > *:first-child {
-    font-weight: bold;
-  }
+nav[role="main"] {
+  position: fixed;
 }
 
 nav[role="main"] li a {
@@ -170,12 +173,16 @@ nav a.current {
 
 /* Right sidebar */
 
-div.sidebar-right {
+div.toc-navigation {
   padding: 0 3rem;
   font-size: 85%;
   margin-right: 0;
 
   transition: margin-right 0.2s ease-in-out;
+}
+
+nav.toc {
+  position: fixed;
 }
 
 nav.toc li {

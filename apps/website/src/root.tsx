@@ -16,21 +16,9 @@ import { MainNavigation } from "./components/MainNavigation"
 import TableOfContents from "./components/TableOfContents"
 import "./css/styles.scss"
 
-function PageHeader() {
-  return (
-    <header role="main">
-      <div class="title">The Book of Miniplex</div>
-      {/* <div>
-        <a href="https://miniplex.hmans.co/" target="_blank">
-          miniplex.hmans.co
-        </a>
-      </div> */}
-    </header>
-  )
-}
-
-function DocumentHead() {
-  return (
+export default () => (
+  <Html lang="en">
+    <Title>The Book of Miniplex</Title>
     <Head>
       <Meta charset="utf-8" />
       <Meta property="og:title" content="The Book of Miniplex" />
@@ -46,43 +34,36 @@ function DocumentHead() {
 
       <Link rel="icon" href="/favicon.ico" />
     </Head>
-  )
-}
 
-export default function Root() {
-  return (
-    <Html lang="en">
-      <Title>The Book of Miniplex</Title>
-      <DocumentHead />
+    <Body>
+      <header role="main">
+        <div class="title">The Book of Miniplex</div>
+        {/* <div>
+          <a href="https://miniplex.hmans.co/" target="_blank">
+            miniplex.hmans.co
+          </a>
+        </div> */}
+      </header>
 
-      <Body>
-        <PageHeader />
+      <div class="main-navigation">
+        <MainNavigation />
+      </div>
 
-        <section role="main">
-          <div class="sidebar sidebar-left">
-            <div class="sidebar-contents">
-              <MainNavigation />
-            </div>
-          </div>
+      <main>
+        <ErrorBoundary>
+          <Suspense>
+            <Routes>
+              <FileRoutes />
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
+      </main>
 
-          <main>
-            <ErrorBoundary>
-              <Suspense>
-                <Routes>
-                  <FileRoutes />
-                </Routes>
-              </Suspense>
-            </ErrorBoundary>
-          </main>
+      <div class="toc-navigation">
+        <TableOfContents />
+      </div>
 
-          <div class="sidebar sidebar-right">
-            <div class="sidebar-contents">
-              <TableOfContents />
-            </div>
-          </div>
-        </section>
-        <Scripts />
-      </Body>
-    </Html>
-  )
-}
+      <Scripts />
+    </Body>
+  </Html>
+)
