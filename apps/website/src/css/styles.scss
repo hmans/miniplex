@@ -241,7 +241,7 @@ pre div.line:after {
 /* Small Screen Overrides */
 
 @media screen and (max-width: 1024px) {
-  div.sidebar-right {
+  div.toc-navigation {
     margin-right: -300px;
   }
 }
@@ -251,7 +251,7 @@ pre div.line:after {
     padding-left: 20px;
   }
 
-  div.sidebar-left {
+  div.main-navigation {
     margin-left: -300px;
   }
 }
