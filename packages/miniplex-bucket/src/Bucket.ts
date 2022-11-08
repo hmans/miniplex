@@ -10,10 +10,16 @@ export class Bucket<E> implements Iterable<E> {
   [Symbol.iterator]() {
     let index = this.entities.length
 
+    const result = {
+      value: undefined as E,
+      done: false
+    }
+
     return {
       next: () => {
-        const value = this.entities[--index]
-        return { value, done: index < 0 }
+        result.value = this.entities[--index]
+        result.done = index < 0
+        return result
       }
     }
   }
