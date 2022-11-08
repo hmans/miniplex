@@ -62,6 +62,7 @@ export default () => (
       <div class="sidebar sidebar-right">
         <TableOfContents />
       </div>
+
       <Scripts />
     </Body>
   </Html>
