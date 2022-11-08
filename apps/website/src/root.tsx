@@ -45,7 +45,7 @@ export default () => (
         </div> */}
       </header>
 
-      <div class="sidebar sidebar-left">
+      <div class="main-navigation">
         <MainNavigation />
       </div>
 
@@ -59,7 +59,7 @@ export default () => (
         </ErrorBoundary>
       </main>
 
-      <div class="sidebar sidebar-right">
+      <div class="toc-navigation">
         <TableOfContents />
       </div>
 

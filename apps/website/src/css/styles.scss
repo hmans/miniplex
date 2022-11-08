@@ -115,19 +115,15 @@ main > *:first-child {
 
 /* Sidebars */
 
-div.sidebar {
+div.main-navigation,
+div.toc-navigation {
   flex: 0 0 300px;
   padding: 0 25px;
 }
 
-div.sidebar-contents {
-  position: fixed;
-  width: 250;
-}
-
 /* Left sidebar */
 
-div.sidebar-left {
+div.main-navigation {
   margin-left: 0px;
   transition: margin-left 0.2s ease-in-out;
 }
@@ -171,7 +167,7 @@ nav a.current {
 
 /* Right sidebar */
 
-div.sidebar-right {
+div.toc-navigation {
   padding: 0 3rem;
   font-size: 85%;
   margin-right: 0;
