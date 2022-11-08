@@ -1,0 +1,14 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "demo": "0.0.0",
+    "vanilla-demo": "0.0.0",
+    "website": "1.0.0",
+    "miniplex": "2.0.0-next.20",
+    "@miniplex/bucket": "2.0.0-next.18",
+    "@miniplex/core": "2.0.0-next.20",
+    "@miniplex/react": "2.0.0-next.20"
+  },
+  "changesets": []
+}
