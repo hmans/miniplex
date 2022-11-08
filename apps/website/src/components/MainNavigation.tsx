@@ -18,6 +18,10 @@ const configuration: Configuration = {
       title: "Introduction"
     },
     {
+      path: "what-is-ecs",
+      title: "What is ECS?"
+    },
+    {
       title: "Manual"
     },
     {

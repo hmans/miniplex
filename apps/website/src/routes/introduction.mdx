@@ -26,9 +26,9 @@ From [Brian Breiholz](https://twitter.com/BrianBreiholz/status/15771828395099627
 
 **Miniplex is an entity management system for games and similarly demanding applications.** Instead of creating separate buckets for different types of entities (eg. asteroids, enemies, pickups, the player, etc.), you throw all of them into a single store, describe their properties through components, and then write code that performs updates on entities of specific types.
 
-If you're familiar with **Entity Component System** architecture, this will sound familiar to you -- and rightfully so, for Miniplex is, first and foremost, a very straight-forward ECS implementation!
+If you're familiar with **Entity Component System** architecture, this will sound familiar to you &ndash; and rightfully so, for Miniplex is, first and foremost, a very straight-forward ECS implementation!
 
-If you're hearing about this approach for the first time, maybe it will sound a little counter-intuitive -- but once you dive into it, you will understand how it can help you decouple concerns and keep your codebase well-structured and maintainable. [This post](https://community.amethyst.rs/t/archetypal-vs-grouped-ecs-architectures-my-take/1344) has a nice summary:
+If you're hearing about this approach for the first time, maybe it will sound a little counter-intuitive &ndash; but once you dive into it, you will understand how it can help you decouple concerns and keep your codebase well-structured and maintainable. [This post](https://community.amethyst.rs/t/archetypal-vs-grouped-ecs-architectures-my-take/1344) has a nice summary:
 
 > An ECS library can essentially thought of as an API for performing a loop over a homogeneous set of entities, filtering them by some condition, and pulling out a subset of the data associated with each entity. The goal of the library is to provide a usable API for this, and to do it as fast as possible.
 
