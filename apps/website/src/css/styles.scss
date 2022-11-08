@@ -20,6 +20,9 @@ body {
   font: 16px/1.5 "Inter", sans-serif;
   background-color: white;
   color: #222;
+
+  display: flex;
+  padding-top: 6rem;
 }
 
 a {
@@ -73,6 +76,7 @@ blockquote {
 
 header[role="main"] {
   position: fixed;
+  top: 0;
   width: 100vw;
   margin-bottom: 3rem;
   padding: 0.5rem 0 0.5rem 320px;
@@ -93,11 +97,6 @@ header[role="main"] {
 }
 
 /* Main pane */
-
-section[role="main"] {
-  padding-top: 6rem;
-  display: flex;
-}
 
 main {
   flex-grow: 1;

@@ -45,29 +45,27 @@ export default () => (
         </div> */}
       </header>
 
-      <section role="main">
-        <div class="sidebar sidebar-left">
-          <div class="sidebar-contents">
-            <MainNavigation />
-          </div>
+      <div class="sidebar sidebar-left">
+        <div class="sidebar-contents">
+          <MainNavigation />
         </div>
+      </div>
 
-        <main>
-          <ErrorBoundary>
-            <Suspense>
-              <Routes>
-                <FileRoutes />
-              </Routes>
-            </Suspense>
-          </ErrorBoundary>
-        </main>
+      <main>
+        <ErrorBoundary>
+          <Suspense>
+            <Routes>
+              <FileRoutes />
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
+      </main>
 
-        <div class="sidebar sidebar-right">
-          <div class="sidebar-contents">
-            <TableOfContents />
-          </div>
+      <div class="sidebar sidebar-right">
+        <div class="sidebar-contents">
+          <TableOfContents />
         </div>
-      </section>
+      </div>
       <Scripts />
     </Body>
   </Html>
