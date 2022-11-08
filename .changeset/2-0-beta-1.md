@@ -121,7 +121,7 @@ pnpm add miniplex@beta
   const player = world.archetype<Player>("player")
   ```
 
-- Miniplex provides the new `Strictly` and `With` types which you can use to compose types from your entity main type:
+- Miniplex provides the new `Strict` and `With` types which you can use to compose types from your entity main type:
 
   ```ts
   type Entity = {
@@ -129,7 +129,7 @@ pnpm add miniplex@beta
     velocity: { x: number; y: number }
   }
 
-  type Player = With<Entity, "position" | "velocity">
+  type Player = Strict<With<Entity, "position" | "velocity">>
 
   const player = world.archetype<Player>("player")
   ```
