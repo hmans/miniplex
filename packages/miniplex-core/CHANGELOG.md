@@ -1,213 +1,192 @@
 # miniplex
 
-## 2.0.0-next.20
+## 2.0.0-beta.1
 
 ### Patch Changes
 
-- b01cf43: You can now call `update()` on any derived bucket to make it reindex all of the entities containeed in the source bucket it's derived from.
-- 6f44ee7: The former `world.update` function has been renamed to `world.evaluate`.
-- 26cedc6: Added an `update` function to the `World` class that allows the user to update an entity. This is intended to complement the other two mutating functions (`addComponent`, `removeComponent`), simply to allow for the use of syntactic sugar (component constructor functions, entity factories, etc.) in a streamlined fashion:
+- 42134bc: **Hooray, it's the first beta release of Miniplex 2.0!** While the new documentation website is still deeply work in progress, I'd like to provide you with a summary of the changes so you can start giving this thing a go in your projects.
 
-  ```js
-  /* With an object with changes */
-  world.update(entity, { age: entity.age + 1 })
+  ### Focus:
 
-  /* With a function returning an object with changes */
-  const increaseAge = ({age}) => ({ age: age + 1 }
-  world.update(entity, increaseAge)
+  Miniplex 2.0 is a complete rewrite of the library, but while it does bring some breaking changes, it will still allow you to do everything that you've been doing with 1.0. When upgrading a 1.0 project to 2.0, most changes you will need to do are related to things having been renamed.
 
-  /* With a function that mutates the entity directly: */
-  const mutatingIncreaseAge = (entity) => entity.age++
-  world.update(entity, mutatingIncreaseAge)
+  The headline changes in 2.0:
+
+  - **A lot more relaxed and lightweight!** Where Miniplex 1.0 would immediately crash your entire application when, for example, adding a component to an entity that already has the component, Miniplex 2.0 will simply no-op and continue.
+  - **Much more flexible!** Miniplex 2.0 finally lets you create archetypes of entities that do _not_ have a specific component, and goes even further than that; you can now create _predicate_-based archetypes using any kind of function.
+  - **Better type support!** If you're using TypeScript, you will be happy to hear that type support has been significantly improved, with much better narrowed types for created archetypes, and support for both predicates with type guards as well as type generics.
+  - The **React API** has been significantly simplified.
+
+  ### Installing:
+
+  Miniplex 2.0 is still in beta, so you will need to install it using the `beta` tag:
+
+  ```bash
+  npm add miniplex@beta
+  yarn add miniplex@beta
+  pnpm add miniplex@beta
   ```
 
-  The main job of the function is to re-index the updated entity against known derived buckets, and since in Miniplex you'll typically mutate entities directly, it can even be called with _only_ an entity. All of the above are essentially equivalent to:
+  ### Core:
 
-  ```js
-  entity.age++
-  world.update(entity)
-  ```
+  - `world.createEntity` has been renamed and simplified to just `world.add` (which now returns the correct type for the entity, too), and `world.destroyEntity` to `world.remove`. `addComponent` and `removeComponent` have not been changed.
 
-## 2.0.0-next.19
+    ```js
+    const entity = world.add({ position: { x: 0, y: 0 } })
+    world.addComponent(entity, { velocity: { x: 0, y: 0 } })
+    world.remove(entity)
+    ```
 
-### Patch Changes
+  - There is a new `world.update` function that you may use to update an entity and make sure it is reindexed across the various archetypes. It provides a number of different overloads to provide some flexibility in how you update the entity.
 
-- e0684cd: Removed `IEntityIterator<T>`, just use `Iterable<T>` instead.
+    ```js
+    world.update(entity, { position: { x: 1, y: 1 } })
+    world.update(entity, "position", { x: 1, y: 1 })
+    world.update(entity, () => ({ position: { x: 1, y: 1 } }))
+    world.update(entity, (e) => (e.position = { x: 1, y: 1 }))
+    ```
 
-## 2.0.0-next.18
+    Please keep in mind that in Miniplex, you'll typically _mutate_ your entities anyway, so going through this function is not strictly necessary.
 
-### Patch Changes
+  - The `Tag` type and constant have been removed. For tag-like components, simply use `true` (which `Tag` was just an alias for.)
+  - Entities added to a world no longer receive a `__miniplex` component. This component has always been an internal implementation detail, but you might have used it in the past to get a unique identifier for an entity. This can now be done through `world.id(entity)`, with ID lookups being available through `world.entity(id)`.
+  - Archetypes can now be iterated over directly. Example:
 
-- 531f4ae: **Breaking Change:** The friendlier, cozier 1.0 API is back. You now create archetypes once again through `world.archetype`:
+    ```js
+    const moving = world.archetype("position", "velocity")
 
-  ```js
-  /* Component name form */
-  world.archetype("name")
-  world.archetype("name", "age")
+    for (const { position, velocity } of moving) {
+      position.x += velocity.x
+      position.y += velocity.y
+    }
+    ```
 
-  /* Query form (allows for without checks) */
-  world.archetype({ with: ["age"], without: ["height"] })
-  ```
+    You can use this to neatly fetch the first entity from an archetype that you only expect to have a single entity in it:
 
-  These can now be nested:
+    ```js
+    const [player] = world.archetype("player")
+    ```
 
-  ```js
-  world.archetype("name").archetype("age")
-  ```
+  - **The queuing functionality that was built into the `World` class has been removed.** If you've relied on this in the past, `miniplex` now exports a `queue` object that you can use instead. Example:
 
-  `archetype` also takes a function predicate:
+    ```js
+    import { queue } from "miniplex"
 
-  ```js
-  world.archetype("age").archetype((e) => e.age > 18)
-  ```
+    queue(() => {
+      // Do something
+    })
 
-  > **Warning** This will only be evaluated whenever the entity is added to the archetype from its source, and every time components are added to or removed from it, but not when any of the actual component values change.
+    /* Later */
+    queue.flush()
+    ```
 
-  **`where` produces a short-lived iterator** that allows a system to only operate on a subset of entities, without creating a new archetype, which in some situations will be much more efficient than creating value-based archetypes and keeping them updated:
+    Please note that this is being provided to make upgrading to 2.0 a little easier, and will likely be removed in a future version.
 
-  ```js
-  const withAge = world.archetype("age")
+  - `world.archetype` can now take a predicate! You can use this as an escape hatch for creating any kind of archetype based on the conditions you specify. Example:
 
-  for (const entity of withAge.where((e) => e.age > 18)) {
-    /* Do something with entity */
-  }
-  ```
+    ```js
+    const almostDead = world.archetype((entity) => entity.health < 10)
+    ```
 
-- c6abd0b: Added `.with(...components)` and `.without(...components)` functions to all entity buckets.
+    Please note that his requires entities with the `health` component to be updated through the `world.update` function in order to keep the archetype up to date.
 
-  ```js
-  /* Equivalent */
-  world.with("foo")
-  world.archetype("foo")
+  - You can use `with` and `without` as an alternative API for creating archetypes. Example:
 
-  /* Equivalent */
-  world.without("foo")
-  world.archetype({ without: ["foo"] })
-  ```
+    ```js
+    const moving = world.with("position", "velocity")
+    const alive = world.without("dead")
+    ```
 
-- Updated dependencies [531f4ae]
-  - @miniplex/bucket@2.0.0-next.18
+  - You can use `where` to create a predicate-based iterator. This allows you to quickly filter a set of entities without creating new archetypes or other objects. Example:
 
-## 2.0.0-next.16
+    ```js
+    for (const entity of world.where((entity) => entity.health < 10)) {
+      // Do something
+    }
+    ```
 
-### Patch Changes
+  - **All of these can be nested!**
 
-- 682caf4: Renamed the `WithComponent<E, P>` helper type to `With<E, P>`. Also added the `Strictly<T>` type that removes all non-required properties from a given type. These can be combined to create a type that is a strict version of a specificy type of entity:
+    ```js
+    world
+      .with("position", "velocity")
+      .without("dead")
+      .where((entity) => entity.health < 10)
+    ```
 
-  ```ts
-  type Player = With<Entity, "isPlayer" | "transform" | "health">
+  - Entities fetched from an archetype will have much improved types, but you can also specify a type to narrow to via these functions' generics:
 
-  const players = world.where<Strictly<Player>>(archetype("isPlayer"))
-  ```
+    ```ts
+    const player = world.archetype<Player>("player")
+    ```
 
-- 8ff926c: Experimental new `tagged` predicate factory.
+  - Miniplex provides the new `Strict` and `With` types which you can use to compose types from your entity main type:
 
-## 2.0.0-next.15
+    ```ts
+    type Entity = {
+      position: { x: number; y: number }
+      velocity: { x: number; y: number }
+    }
 
-### Patch Changes
+    type Player = Strict<With<Entity, "position" | "velocity">>
 
-- 5bf4733: Removed `IEntity` - amazingly, we no longer need it at all!
-- 2efcd9e: `isArchetype(entity, query)`, `hasComponents(entity, ...c)`, `hasAnyComponents(entity, ...c)` and `hasNoComponents(entity, ...c)` helpers.
-- Updated dependencies [6eee056]
-  - @miniplex/bucket@2.0.0-next.13
+    const player = world.archetype<Player>("player")
+    ```
 
-## 2.0.0-next.12
+  ### React:
 
-### Patch Changes
+  - The React package's main import and initialization has been changed:
 
-- 252cc0f: `world.archetype` is gone. Instead, there is `world.where(predicate)`. For archetype queries, please use `world.where(archetype("foo", "bar"))`.
-- Updated dependencies [252cc0f]
-  - @miniplex/bucket@2.0.0-next.12
+    ```js
+    import { World } from "miniplex"
+    import { createReactAPI } from "miniplex/react" // !
 
-## 2.0.0-next.11
+    /* It now expects a world as its argument, so you need to create one first: */
+    const world = new World()
+    const ECS = createReactAPI(world)
+    ```
 
-### Patch Changes
+  - The `<Archetype>` component now supports the `with` and `without` properties:
 
-- b11083d: Aaaaah, another rewrite of the core library! `@miniplex/core` kept the same lightweight core, but the `World` is now much more aware of archetypes and what kind of entities they represent. This was done to allow for better introspection and to fix some remaining issues like [#204](https://github.com/hmans/miniplex/issues/204)].
+    ```jsx
+    <Archetype with={["position", "velocity"]} without="dead">
+      {/* ... */}
+    </Archetype>
+    ```
 
-  The `WithRequiredKeys` type has been renamed to `WithComponents`.
+  - If you already have a reference to an archetype, you can pass it to the newly improved `<Entities>` component to automatically render all entities contained within it, and have them automatically update when the archetype changes:
 
-  `world.archetype()` now allows two forms:
+    ```jsx
+    <Entities in={archetype}>{/* ... */}</Entities>
+    ```
 
-  ```ts
-  world.archetype("position", "velocity")
-  world.archetype({ all: ["position", "velocity"] })
-  ```
+    If you ever want to list a simple array of entities, you can use the same component (but it will not automatically update if the array contents change):
 
-  The second form involves a query object that can also have `any` and `none` keys:
+    ```jsx
+    <Entities in={[entity1, entity2]}>{/* ... */}</Entities>
+    ```
 
-  ```ts
-  world.archetype({
-    all: ["position", "velocity"],
-    none: ["dead"]
-  })
-  ```
+  - **`<ManagedEntities>` has been removed.** You were probably not using it. If you were, you can replicate the same behavior using a combination of the `<Entities>` or `<Archetype>` components and a `useEffect` hook.
+  - The `useEntity` hook has been renamed to `useCurrentEntity`.
+  - The world-scoped `useArchetype` hook has been removed, and superceded by the new global `useEntities` hook:
 
-  **Breaking Change:** `bucket.derive()` has been removed. It was cool and fun and cute, but also a little too generic to be useful. Similar to Miniplex 1.0, there is only the _world_ and a series of _archetypes_ now. (But both share the same lightweight `Bucket` base class that can also be used standalone.)
+    ```js
+    /* Before */
+    const entities = useArchetype("position", "velocity")
 
-- 43f9cae: Upgraded to a newer `@hmans/event` that uses `.add` and `.remove` instead of `.addListener` and `.removeListener`.
+    /* Now */
+    const entities = useEntities(world.with("position", "velocity"))
+    ```
 
-## 2.0.0-next.10
+  ## Feedback and Questions?
 
-### Patch Changes
+  This is the first beta of a big new release for this library, and since it is a complete rewrite, there are bound to be some bugs and rough edges.
 
-- 504086b: Miniplex will now log errors (but not throw) when trying to add components that already exist on the entity, or remove or update components that don't.
-- 504086b: Fixed a bug around removal of entities from buckets.
+  - Got feedback? Please post it [under this post in the Miniplex Discussions hub](https://github.com/hmans/miniplex/discussions/258)!
+  - Found an issue? Please [open an issue](https://github.com/hmans/miniplex/issues)!
 
-## 2.0.0-next.9
-
-### Patch Changes
-
-- 873381c: Changed type signature of `add` to return the input entity's type. This is an experimental change that may be reverted.
-
-## 2.0.0-next.8
-
-### Patch Changes
-
-- 5a5244e: The global `id(entity)` export has been removed, and replaced with a `World`-specific ID mechanism, `world.id(entity)` and `world.entity(id)`.
-- 6808a5d: All buckets can now be instantiated with an initial list of entities.
-- c28a404: From "properties" back to "components". The methods on `World` are now once again called `addComponent`, `setComponent` and `removeComponent`, and the React component has been renamed from `<Property>` to `<Component>`.
-
-## 2.0.0-next.6
-
-### Patch Changes
-
-- 10c60f8: Implemented `Bucket.dispose`, which will also dispose of derived buckets properly.
-- f92b5f7: Added the `Bucket.onCleared` event, which is emitted when the bucket's `clear` function is invoked.
-
-## 2.0.0-next.5
-
-### Patch Changes
-
-- 16cef4e: Massive performance improvements!
-- 1c63f90: Added `World.setProperty`.
-
-## 2.0.0-next.4
-
-### Patch Changes
-
-- 1d26060: Restructured the packages into `@miniplex/core` and `@miniplex/react`, with a main `miniplex` package re-exporting these.
-
-## 2.0.0-next.3
-
-### Patch Changes
-
-- f81bf3e: The `EntityPredicate` type has been renamed to just `Predicate`.
-- cf0212e: Iterating over a bucket will now iterate over its entities _in reverse order_, which makes it a little safer to synchronously remove entities from within a system.
-- 2af57a6: The `EntityWith` type has been renamed to `WithRequiredKeys`.
-- aa3d6d2: `Bucket` can represent any type, not just types extending `IEntity`, so its type parameter has been changed to reflect this.
-
-## 2.0.0-next.1
-
-### Patch Changes
-
-- da62d8c: Fixed the return type of `World.archetype()`.
-
-## 2.0.0-next.0
-
-### Major Changes
-
-- f2406db: 2.0!
+- Updated dependencies [42134bc]
+  - @miniplex/bucket@2.0.0-beta.1
 
 ## 1.0.0
 
