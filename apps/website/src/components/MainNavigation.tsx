@@ -41,6 +41,13 @@ const configuration: Configuration = {
       title: "Best Practices"
     },
     {
+      title: "Frameworks"
+    },
+    {
+      path: "/frameworks/react",
+      title: "React"
+    },
+    {
       title: "Guides"
     },
     {

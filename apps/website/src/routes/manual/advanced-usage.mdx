@@ -2,9 +2,9 @@
 title: Advanced Usage
 ---
 
-## Advanced Usage
+# Advanced Usage
 
-### Nested Archetypes
+## Nested Archetypes
 
 Archetypes are the main way to query entities in Miniplex. They are created by calling the `with` method on a world, and can be thought of as something akin to database indices.
 
@@ -31,7 +31,7 @@ Every time an entity is added to the world or has a component added or removed, 
 
 In larger projects, the structure of your archetype waterfall can have a significant impact on performance; in some cases, it can be beneficial to create a large number of small, nested archetypes, while in other cases it can be beneficial to create fewer, larger archetypes.
 
-### Combining `with` and `without` queries
+## Combining `with` and `without` queries
 
 You can create a combined query that looks for both the presence as well as the absence of specific components through the `archetype` function:
 
