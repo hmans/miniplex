@@ -57,6 +57,13 @@ export class Bucket<E> implements Iterable<E> {
   }
 
   /**
+   * Returns the first entity in the bucket, or `undefined` if the bucket is empty.
+   */
+  get first(): E | undefined {
+    return this.entities[0]
+  }
+
+  /**
    * Returns true if the bucket contains the given entity.
    *
    * @param entity The entity to check for.
