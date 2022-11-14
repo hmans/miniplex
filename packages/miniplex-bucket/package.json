@@ -29,7 +29,7 @@
     "build": "preconstruct build"
   },
   "dependencies": {
-    "@hmans/event": "^0.2.0"
+    "@hmans/event": "^0.3.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
