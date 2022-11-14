@@ -14,8 +14,8 @@ export const CameraRigSystem = ({
   offset?: Vector3
 }) => {
   useFrame((_, dt) => {
-    const [player] = players
-    const [camera] = cameras
+    const player = players.first
+    const camera = cameras.first
 
     if (!player || !camera) return
 

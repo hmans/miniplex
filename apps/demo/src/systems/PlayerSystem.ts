@@ -14,7 +14,7 @@ export const PlayerSystem = () => {
   const keyboard = useKeyboard()
 
   useFrame((_, dt) => {
-    const [player] = players
+    const player = players.first
     if (!player) return
 
     const input = {

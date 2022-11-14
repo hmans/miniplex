@@ -95,6 +95,16 @@ describe(Bucket, () => {
     })
   })
 
+  describe("first", () => {
+    it("returns the first entity in the bucket", () => {
+      const bucket = new Bucket()
+      const entity = bucket.add({ id: "1" })
+      bucket.add({ id: "2" })
+
+      expect(bucket.first).toBe(entity)
+    })
+  })
+
   describe("clear", () => {
     it("removes all entities from the bucket", () => {
       const bucket = new Bucket()
