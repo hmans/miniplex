@@ -1,3 +1,4 @@
 {
-  "deno.enablePaths": ["./apps/website/"]
+  "deno.enablePaths": ["./apps/website/"],
+  "deno.config": "./apps/website/deno.json"
 }
