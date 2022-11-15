@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/styles/code.css" inline>
+    <link rel="stylesheet" href="/styles/styles.css" inline>
+    {# <link rel="preload" href="/fonts/Mona-Sans.woff2" as="font" type="font/woff2" crossorigin> #}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script defer src="/_vercel/insights/script.js"></script>
+  </head>
+  <body>
+    <header role="main">
+      <a href="/" class="title">Miniplex</a>
+    </header>
+
+    <main>
+      {{ content | safe }}
+    </main>
+
+    <footer role="main">
+      Yay!
+    </footer>
+  </body>
+</html>
