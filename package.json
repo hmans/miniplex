@@ -53,10 +53,13 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
     "tslib": "^2.4.1",
-    "typedoc": "^0.23.21",
     "typescript": "^4.9.3"
   },
   "stackblitz": {
     "startCommand": "pnpm demo:react"
+  },
+  "devDependencies": {
+    "typedoc": "^0.23.21",
+    "typedoc-plugin-markdown": "^3.13.6"
   }
 }
