@@ -7,16 +7,17 @@ import { physics } from "../systems/PhysicsSystem"
 import { bitmask } from "../util/bitmask"
 import { RenderableEntity } from "./RenderableEntity"
 
+const players = ECS.world.with("isPlayer")
+const bullets = ECS.world.with("isBullet")
+
 export const Bullets = () => (
   <InstancedParticles>
     <planeGeometry args={[0.15, 0.5]} />
     <meshStandardMaterial color={new Color("orange").multiplyScalar(5)} />
 
-    <ECS.Archetype with="isBullet" children={RenderableEntity} />
+    <ECS.Entities in={bullets} children={RenderableEntity} />
   </InstancedParticles>
 )
-
-const players = ECS.world.with("isPlayer")
 
 const jitter = new Quaternion()
 const axisZ = new Vector3(0, 0, 1)
