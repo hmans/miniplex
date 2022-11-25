@@ -1,4 +1,4 @@
-import { Bucket, With, World } from "@miniplex/core"
+import { Bucket, World } from "@miniplex/core"
 import React, {
   createContext,
   memo,
@@ -7,7 +7,6 @@ import React, {
   useContext,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef
 } from "react"
 import { useEntities as useEntitiesGlobal } from "./hooks"
@@ -97,31 +96,6 @@ export const createReactAPI = <E extends {}>(world: World<E>) => {
     }
   }
 
-  function Archetype<P extends keyof E>({
-    with: _with,
-    without,
-    ...props
-  }: CommonProps<With<E, P>> & {
-    with?: P | P[]
-    without?: keyof E | (keyof E)[]
-  }) {
-    const query = useMemo(
-      () => ({
-        with: _with ? (Array.isArray(_with) ? _with : [_with]) : undefined,
-        without: without
-          ? Array.isArray(without)
-            ? without
-            : [without]
-          : undefined
-      }),
-      [_with, without]
-    )
-
-    const bucket = useMemo(() => world.archetype(query), [world, query])
-
-    return <EntitiesInBucket {...props} bucket={bucket} />
-  }
-
   const Component = <P extends keyof E>(props: {
     name: P
     data?: E[P]
@@ -162,7 +136,6 @@ export const createReactAPI = <E extends {}>(world: World<E>) => {
     world,
     Component,
     Entity,
-    Archetype,
     Entities,
     useCurrentEntity
   }
