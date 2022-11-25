@@ -8,7 +8,10 @@
 /* Before: */
 <Archetype with={["enemy", "attacking"]} without="dead" />
 
-/* After: */
+/* After (inline): */
+<Entities in={world.with("enemy", "attacking").without("dead")} />
+
+/* After (out of band): */
 const attackingEnemies = world.with("enemy", "attacking").without("dead")
 <Entities in={attackingEnemies} />
 ```
