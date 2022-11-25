@@ -6,8 +6,9 @@
 
 ```jsx
 /* Before: */
-<Archetype with={["enemy", "alive"]} />
+<Archetype with={["enemy", "attacking"]} without="dead" />
 
 /* After: */
-<Entities in={world.with("enemy", "alive")} />
+const attackingEnemies = world.with("enemy", "attacking").without("dead")
+<Entities in={attackingEnemies} />
 ```
