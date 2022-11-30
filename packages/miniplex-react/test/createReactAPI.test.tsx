@@ -2,6 +2,7 @@ import { World } from "@miniplex/core"
 import "@testing-library/jest-dom"
 import { act, render, screen } from "@testing-library/react"
 import React from "react"
+import { Context } from "typedoc"
 import createReactAPI from "../src"
 
 type Entity = {
@@ -293,6 +294,45 @@ describe("<Entities>", () => {
 
       expect(screen.getByText("Alice")).toBeInTheDocument()
       expect(screen.getByText("Bob")).toBeInTheDocument()
+    })
+  })
+})
+
+describe("useCurrentEntity", () => {
+  describe("when invoked within an entity context", () => {
+    it("returns the context's entity", () => {
+      const world = new World<Entity>()
+      const { Entity, useCurrentEntity } = createReactAPI(world)
+
+      const entity = world.add({ name: "John" })
+
+      const Test = () => {
+        const currentEntity = useCurrentEntity()
+        return <p>{currentEntity.name}</p>
+      }
+
+      render(
+        <Entity entity={entity}>
+          <Test />
+        </Entity>
+      )
+
+      expect(screen.getByText("John")).toBeInTheDocument()
+    })
+  })
+
+  describe("when invoked outside of an entity context", () => {
+    it("throws an error", () => {
+      const { useCurrentEntity } = createReactAPI(new World<Entity>())
+
+      const Test = () => {
+        useCurrentEntity()
+        return null
+      }
+
+      expect(() => render(<Test />)).toThrow(
+        "useCurrentEntity must be called from a child of <Entity>."
+      )
     })
   })
 })

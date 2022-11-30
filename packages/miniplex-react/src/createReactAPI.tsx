@@ -29,7 +29,17 @@ type CommonProps<E> = {
 export const createReactAPI = <E extends {}>(world: World<E>) => {
   const EntityContext = createContext<E | null>(null)
 
-  const useCurrentEntity = () => useContext(EntityContext)
+  const useCurrentEntity = () => {
+    const entity = useContext(EntityContext)
+
+    if (!entity) {
+      throw new Error(
+        "useCurrentEntity must be called from a child of <Entity>."
+      )
+    }
+
+    return entity
+  }
 
   type EntityProps<D extends E> = CommonProps<D> & { entity?: D }
 
