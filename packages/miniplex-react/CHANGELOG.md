@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.0.0-beta.3
+
+### Patch Changes
+
+- 80b944f: `useCurrentEntity` will now throw an error if it is invoked outside of an entity context (instead of returning `undefined`).
+- 20a0904: Upgraded to building with TypeScript 4.9.
+- 728feb4: `<Entity>` now accepts a forwarded ref that will be set to the created entity.
+- 48f88f2: Fixed a bug ([#269](https://github.com/hmans/miniplex/issues/269)) where `<Entity>` would destroy and recreate its entity every time it was rendered.
+- a96901f: **Breaking Change:** Removed the `<Archetype>` component. Please use `<Entities in={...} />` instead:
+
+  ```jsx
+  /* Before: */
+  <Archetype with={["enemy", "attacking"]} without="dead" />
+
+  /* After (inline): */
+  <Entities in={world.with("enemy", "attacking").without("dead")} />
+
+  /* After (out of band): */
+  const attackingEnemies = world.with("enemy", "attacking").without("dead")
+  <Entities in={attackingEnemies} />
+  ```
+
 ## 2.0.0-beta.1
 
 ### Patch Changes

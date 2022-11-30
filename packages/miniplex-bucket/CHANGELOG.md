@@ -1,5 +1,11 @@
 # @miniplex/bucket
 
+## 2.0.0-beta.3
+
+### Patch Changes
+
+- 20a0904: Upgraded to building with TypeScript 4.9.
+
 ## 2.0.0-beta.2
 
 ### Patch Changes
