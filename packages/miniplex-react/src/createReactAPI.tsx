@@ -1,11 +1,15 @@
 import { Bucket, World } from "@miniplex/core"
 import React, {
   createContext,
+  ForwardedRef,
+  forwardRef,
   memo,
+  PropsWithRef,
   ReactElement,
   ReactNode,
   useContext,
   useEffect,
+  useImperativeHandle,
   useLayoutEffect,
   useRef,
   useState
@@ -27,12 +31,12 @@ export const createReactAPI = <E extends {}>(world: World<E>) => {
 
   const useCurrentEntity = () => useContext(EntityContext)
 
-  const RawEntity = <D extends E>({
-    children: givenChildren,
-    entity: givenEntity
-  }: CommonProps<D> & {
-    entity?: D
-  }) => {
+  type EntityProps<D extends E> = CommonProps<D> & { entity?: D }
+
+  const RawEntity = <D extends E>(
+    { children: givenChildren, entity: givenEntity }: EntityProps<D>,
+    ref: ForwardedRef<D>
+  ) => {
     const [defaultEntity] = useState(() => ({} as D))
     const entity = givenEntity || defaultEntity
 
@@ -51,12 +55,17 @@ export const createReactAPI = <E extends {}>(world: World<E>) => {
         ? givenChildren(entity)
         : givenChildren
 
+    useImperativeHandle(ref, () => entity)
+
     return (
       <EntityContext.Provider value={entity}>{children}</EntityContext.Provider>
     )
   }
 
-  const Entity = memo(RawEntity) as typeof RawEntity
+  /* We need to typecast here because forwardRef doesn't support generics. */
+  const Entity = memo(forwardRef(RawEntity)) as <D extends E>(
+    props: PropsWithRef<EntityProps<D> & { ref?: ForwardedRef<D> }>
+  ) => ReactElement
 
   const EntitiesInList = <D extends E>({
     entities,

@@ -20,6 +20,17 @@ describe("<Entity>", () => {
     expect(world.entities.length).toBe(1)
   })
 
+  it("allows ref forwarding", () => {
+    const world = new World<Entity>()
+    const { Entity } = createReactAPI(world)
+    const ref = React.createRef<Entity>()
+
+    render(<Entity ref={ref} />)
+
+    expect(ref.current).not.toBeNull()
+    expect(ref.current).toBe(world.first)
+  })
+
   it("keeps the entity when the component is rerendered", () => {
     const world = new World<Entity>()
     const { Entity } = createReactAPI(world)
