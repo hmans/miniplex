@@ -7,7 +7,8 @@ import React, {
   useContext,
   useEffect,
   useLayoutEffect,
-  useRef
+  useRef,
+  useState
 } from "react"
 import { useEntities as useEntitiesGlobal } from "./hooks"
 import { mergeRefs } from "./lib/mergeRefs"
@@ -28,10 +29,13 @@ export const createReactAPI = <E extends {}>(world: World<E>) => {
 
   const RawEntity = <D extends E>({
     children: givenChildren,
-    entity = {} as D
+    entity: givenEntity
   }: CommonProps<D> & {
     entity?: D
   }) => {
+    const [defaultEntity] = useState(() => ({} as D))
+    const entity = givenEntity || defaultEntity
+
     /* Add the entity to the bucket represented by this component if it isn't already part of it. */
     useIsomorphicLayoutEffect(() => {
       if (world.has(entity)) return

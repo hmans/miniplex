@@ -20,6 +20,24 @@ describe("<Entity>", () => {
     expect(world.entities.length).toBe(1)
   })
 
+  it("keeps the entity when the component is rerendered", () => {
+    const world = new World<Entity>()
+    const { Entity } = createReactAPI(world)
+
+    expect(world.entities.length).toBe(0)
+
+    /* Create a new entity and make sure the component is not memozied. */
+    const Test = () => <Entity>{Math.random()}</Entity>
+
+    const { rerender } = render(<Test />)
+    expect(world.entities.length).toBe(1)
+    const entity = world.first
+
+    rerender(<Test />)
+    expect(world.entities.length).toBe(1)
+    expect(world.first).toBe(entity)
+  })
+
   it("removes the entity on unmount", () => {
     const world = new World<Entity>()
     const { Entity } = createReactAPI(world)
