@@ -1,5 +1,18 @@
 # miniplex
 
+## 2.0.0-beta.3
+
+### Patch Changes
+
+- 20a0904: Upgraded to building with TypeScript 4.9.
+- Updated dependencies [80b944f]
+- Updated dependencies [20a0904]
+- Updated dependencies [728feb4]
+- Updated dependencies [48f88f2]
+- Updated dependencies [a96901f]
+  - @miniplex/react@2.0.0-beta.3
+  - @miniplex/core@2.0.0-beta.3
+
 ## 2.0.0-beta.2
 
 ### Patch Changes
