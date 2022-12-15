@@ -129,4 +129,27 @@ describe(Bucket, () => {
       expect(listener).toHaveBeenCalledWith(entity2)
     })
   })
+
+  describe("onEntityAdded", () => {
+    it("is invoked whenever a new entity is added to the bucket", () => {
+      const bucket = new Bucket()
+      const listener = jest.fn()
+
+      bucket.onEntityAdded.add(listener)
+      const entity = { id: "1" }
+      bucket.add(entity)
+
+      expect(listener).toHaveBeenCalledWith(entity)
+    })
+
+    it("is automatically invoked for entities that already are in the bucket", () => {
+      const entity = { id: "1" }
+      const bucket = new Bucket([entity])
+      const listener = jest.fn()
+
+      bucket.onEntityAdded.add(listener)
+
+      expect(listener).toHaveBeenCalledWith(entity)
+    })
+  })
 })
