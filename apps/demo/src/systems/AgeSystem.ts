@@ -14,7 +14,7 @@ export const AgeSystem = () => {
 
       /* If entity has a max age, and it's reached, mark it for destruction. */
       if (
-        entity.lifetime.maxAge &&
+        entity.lifetime.maxAge !== undefined &&
         entity.lifetime.age >= entity.lifetime.maxAge
       ) {
         queueDestroy(entity)
