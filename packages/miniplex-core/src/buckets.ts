@@ -56,26 +56,6 @@ export class EntityBucket<E> extends Bucket<E> {
     }
   }
 
-  where<D extends E>(predicate: Predicate<E, D>): Iterable<D> {
-    let index = this.entities.length
-
-    const next = () => {
-      let value: D | undefined
-
-      do {
-        value = this.entities[--index] as D
-      } while (value && !predicate(value))
-
-      return { value, done: index < 0 }
-    }
-
-    return {
-      [Symbol.iterator]() {
-        return { next }
-      }
-    }
-  }
-
   /* with */
 
   with<P extends keyof E>(...props: P[]): ArchetypeBucket<With<E, P>>
