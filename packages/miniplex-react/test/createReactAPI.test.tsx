@@ -2,7 +2,6 @@ import { World } from "@miniplex/core"
 import "@testing-library/jest-dom"
 import { act, render, screen } from "@testing-library/react"
 import React from "react"
-import { Context } from "typedoc"
 import createReactAPI from "../src"
 
 type Entity = {
@@ -10,6 +9,21 @@ type Entity = {
   age?: number
   height?: number
 }
+
+/*
+Hide errors thrown by React (we're testing for them.)
+See: https://dev.to/martinemmert/hide-red-console-error-log-wall-while-testing-errors-with-jest-2bfn
+*/
+beforeEach(() => {
+  jest.spyOn(console, "error")
+  // @ts-ignore jest.spyOn adds this functionallity
+  console.error.mockImplementation(() => null)
+})
+
+afterEach(() => {
+  // @ts-ignore jest.spyOn adds this functionallity
+  console.error.mockRestore()
+})
 
 describe("<Entity>", () => {
   it("creates an entity", () => {
