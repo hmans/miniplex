@@ -95,10 +95,10 @@ function poisonSystem() {
 }
 
 function healthSystem() {
-  for (const entity of archetypes.health.where(
-    ({ health }) => health.current <= 0
-  )) {
-    world.removeEntity(entity)
+  for (const entity of archetypes.health) {
+    if (entity.health.current <= 0) {
+      world.removeEntity(entity)
+    }
   }
 }
 

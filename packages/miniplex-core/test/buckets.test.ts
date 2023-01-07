@@ -7,25 +7,6 @@ type Entity = {
 }
 
 describe(EntityBucket, () => {
-  describe("where", () => {
-    it("returns an iterator that allows us to iterate over the entities in the bucket that satisfy the given predicate", () => {
-      const bucket = new EntityBucket<Entity>()
-
-      const john = bucket.add({ name: "John", age: 45 })
-      const jane = bucket.add({ name: "Jane", age: 42 })
-      const bob = bucket.add({ name: "Bob", age: 35 })
-      const sally = bucket.add({ name: "Sally" })
-
-      const results = []
-
-      for (const e of bucket.where((e) => Number(e.age) > 40)) {
-        results.push(e)
-      }
-
-      expect(results).toEqual([jane, john])
-    })
-  })
-
   describe("archetype", () => {
     describe("with a query object", () => {
       it("returns an archetype bucket wrapping that query", () => {
