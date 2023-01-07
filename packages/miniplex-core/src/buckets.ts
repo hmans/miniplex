@@ -13,6 +13,7 @@ import {
  * An entity-aware bucket providing methods for creating
  * derived buckets, and tracking the buckets derived from it.
  */
+// TODO: maybe make this abstract?
 export class EntityBucket<E> extends Bucket<E> {
   buckets = new Set<EntityBucket<any>>()
 
@@ -44,15 +45,13 @@ export class EntityBucket<E> extends Bucket<E> {
     /* Accept or reject the entity */
     if (this.wants(future)) {
       this.add(entity)
-    } else {
-      this.remove(entity)
-    }
 
-    /* If the entity is still in this bucket, update derived buckets. */
-    if (this.has(entity)) {
+      /* Evaluate the entity in all derived buckets */
       for (const bucket of this.buckets) {
         bucket.evaluate(entity, future)
       }
+    } else {
+      this.remove(entity)
     }
   }
 

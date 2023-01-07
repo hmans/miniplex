@@ -100,6 +100,7 @@ export class Bucket<E> implements Iterable<E> {
    * @returns The entity passed into this function (regardless of whether it was removed or not).
    */
   remove(entity: E) {
+    /* TODO: Return early if entity is not in bucket. */
     if (this.has(entity)) {
       /* Emit our own onEntityRemoved event. */
       this.onEntityRemoved.emit(entity)
