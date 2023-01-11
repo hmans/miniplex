@@ -19,6 +19,8 @@ export type ArchetypeQuery<E, P extends keyof E> = Partial<
  */
 export type With<E, P extends keyof E> = E & Required<Pick<E, P>>
 
+export type Without<E, P extends keyof E> = Omit<E, P>
+
 /**
  * A utility type that removes all optional properties.
  */

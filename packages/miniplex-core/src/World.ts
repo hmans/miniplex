@@ -1,8 +1,16 @@
-import { EntityBucket } from "./buckets"
+import { Bucket } from "@miniplex/bucket"
+import { Query } from "./Query"
 
-export class World<E extends {} = any> extends EntityBucket<E> {
+export class World<E extends {} = any> extends Bucket<E> {
+  queries: Query<any>[] = []
+
   constructor(entities: E[] = []) {
     super(entities)
+
+    /* When entities are added, reindex them immediately */
+    this.onEntityAdded.add((entity) => {
+      this.reindex(entity)
+    })
 
     /* When entities are removed, also make sure to forget about their IDs. */
     this.onEntityRemoved.add((entity) => {
@@ -15,6 +23,14 @@ export class World<E extends {} = any> extends EntityBucket<E> {
     })
   }
 
+  query<D extends E>(builder: (query: Query<E>) => Query<D>) {
+    // TODO: memoize queries
+
+    const query = builder(new Query())
+    this.queries.push(query)
+    return query
+  }
+
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
     /* Return early if the entity already has the component. */
     if (entity[component] !== undefined) return
@@ -24,7 +40,7 @@ export class World<E extends {} = any> extends EntityBucket<E> {
 
     /* Touch the entity, triggering re-checks of indices */
     if (this.has(entity)) {
-      this.evaluate(entity)
+      this.reindex(entity)
     }
   }
 
@@ -36,11 +52,17 @@ export class World<E extends {} = any> extends EntityBucket<E> {
     if (this.has(entity)) {
       const future = { ...entity }
       delete future[component]
-      this.evaluate(entity, future)
+      this.reindex(entity, future)
     }
 
     /* Remove the component. */
     delete entity[component]
+  }
+
+  protected reindex(entity: E, future = entity) {
+    for (const query of this.queries) {
+      query.evaluate(entity, future)
+    }
   }
 
   /* IDs */

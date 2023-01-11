@@ -1,5 +1,4 @@
 export * from "@miniplex/bucket"
-export * from "./buckets"
 export * from "./predicates"
 export * from "./queries"
 export * from "./types"

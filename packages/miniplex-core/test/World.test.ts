@@ -65,6 +65,23 @@ describe(World, () => {
     })
   })
 
+  describe("query", () => {
+    it("accepts a query builder function", () => {
+      const world = new World<Entity>()
+      const qqqq = world.query((q) => q.with("age").without("height"))
+      expect(world.queries).toEqual([qqqq])
+    })
+
+    it("contains matching entities", () => {
+      const world = new World<Entity>()
+      const query = world.query((q) => q.with("age").without("height"))
+      const john = world.add({ name: "John", age: 30 })
+      const jane = world.add({ name: "Jane", age: 28, height: 160 })
+      expect(query.entities).toHaveLength(1)
+      expect(query.entities).toEqual([john])
+    })
+  })
+
   describe("addComponent", () => {
     it("adds a component to an entity", () => {
       const world = new World<Entity>()
@@ -73,27 +90,12 @@ describe(World, () => {
       expect(entity).toEqual({ name: "John", age: 30 })
     })
 
-    it("adds the entity to any relevant archetypes", () => {
+    it("adds the entity to any relevant queries", () => {
       const world = new World<Entity>()
-      const withAge = world.with("age")
-      const withoutAge = world.without("age")
-      const john = world.add({ name: "John" })
-      const jane = world.add({ name: "Jane" })
-
-      world.addComponent(john, "age", 30)
-      expect(withAge.entities).toEqual([john])
-      expect(withoutAge.entities).toEqual([jane])
-    })
-
-    it("adds the entity to nested archetypes", () => {
-      const world = new World<Entity>()
-      const withAge = world.with("name").with("age")
-
-      const john = world.add({ name: "John" })
-      expect(withAge.entities).toEqual([])
-
-      world.addComponent(john, "age", 30)
-      expect(withAge.entities).toEqual([john])
+      const query = world.query((q) => q.with("age").without("height"))
+      const entity = world.add({ name: "John" })
+      world.addComponent(entity, "age", 30)
+      expect(query.entities).toEqual([entity])
     })
   })
 
@@ -107,39 +109,27 @@ describe(World, () => {
 
     it("removes the entity from any relevant archetypes", () => {
       const world = new World<Entity>()
-      const withAge = world.archetype({ with: ["age"] })
-      const john = world.add({ name: "John", age: 30 })
-      const jane = world.add({ name: "Jane", age: 35 })
-      expect(withAge.entities).toEqual([john, jane])
+      const query = world.query((q) => q.with("age").without("height"))
+      const entity = world.add({ name: "John", age: 30 })
+      expect(query.entities).toEqual([entity])
 
-      world.removeComponent(john, "age")
-      expect(withAge.entities).toEqual([jane])
-    })
-
-    it("removes the entity from nested archetypes", () => {
-      const world = new World<Entity>()
-      const withAge = world.with("name").with("age")
-
-      const john = world.add({ name: "John", age: 30 })
-      expect(withAge.entities).toEqual([john])
-
-      world.removeComponent(john, "age")
-      expect(withAge.entities).toEqual([])
+      world.removeComponent(entity, "age")
+      expect(query.entities).toEqual([])
     })
 
     it("uses a future check, so in onEntityRemoved, the entity is still intact", () => {
       const world = new World<Entity>()
-      const withAge = world.with("age")
-      const john = world.add({ name: "John", age: 30 })
+      const query = world.query((q) => q.with("age").without("height"))
+      const entity = world.add({ name: "John", age: 30 })
+      expect(query.entities).toEqual([entity])
 
-      let age: number | undefined
-      withAge.onEntityRemoved.add((entity) => {
-        age = entity.age
+      query.onEntityRemoved.add((removedEntity) => {
+        expect(removedEntity).toEqual(entity)
+        expect(removedEntity.age).toEqual(30)
       })
 
-      world.removeComponent(john, "age")
-
-      expect(age).toBe(30)
+      world.removeComponent(entity, "age")
+      expect(query.entities).toEqual([])
     })
   })
 })
