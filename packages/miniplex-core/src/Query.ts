@@ -1,12 +1,11 @@
 import { Bucket } from "@miniplex/bucket"
 import { Predicate, With, Without } from "./types"
-import { ArchetypeQuery } from "./types"
 
 export const normalizeComponents = (components: any[]) => [
   ...new Set(components.sort().filter((c) => !!c && c !== ""))
 ]
 
-export const normalizeQuery = (query: ArchetypeQuery<any, any>) =>
+export const normalizeQuery = (query: QueryConfiguration<any>) =>
   ({
     with: query.with !== undefined ? normalizeComponents(query.with) : [],
     without:

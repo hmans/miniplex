@@ -1,4 +1,5 @@
 import { World } from "../src"
+import { Query } from "../src/Query"
 
 type Entity = {
   name: string
@@ -70,6 +71,13 @@ describe(World, () => {
       const world = new World<Entity>()
       const qqqq = world.query((q) => q.with("age").without("height"))
       expect(world.queries).toEqual([qqqq])
+    })
+
+    it("accepts a query instance", () => {
+      const world = new World<Entity>()
+      const withAge = world.query((q) => q.with("age"))
+      const withAgeButNoHeight = world.query(withAge.without("height"))
+      expect(world.queries).toEqual([withAge, withAgeButNoHeight])
     })
 
     it("contains matching entities", () => {

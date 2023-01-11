@@ -23,10 +23,10 @@ export class World<E extends {} = any> extends Bucket<E> {
     })
   }
 
-  query<D extends E>(builder: (query: Query<E>) => Query<D>) {
+  query<D extends E>(input: Query<D> | ((query: Query<E>) => Query<D>)) {
     // TODO: memoize queries
 
-    const query = builder(new Query())
+    const query = input instanceof Query ? input : input(new Query<E>())
     this.queries.push(query)
 
     /* Reindex all entities to see if they match the query. */
