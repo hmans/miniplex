@@ -28,6 +28,12 @@ export class World<E extends {} = any> extends Bucket<E> {
 
     const query = builder(new Query())
     this.queries.push(query)
+
+    /* Reindex all entities to see if they match the query. */
+    for (const entity of this.entities) {
+      query.evaluate(entity)
+    }
+
     return query
   }
 

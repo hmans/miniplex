@@ -9,21 +9,23 @@ describe("useEntities", () => {
     world.add({ name: "Alice" })
     world.add({ name: "Bob" })
 
-    const { result } = renderHook(() => useEntities(world.archetype("name")))
+    const { result } = renderHook(() =>
+      useEntities(world.query((q) => q.with("name")))
+    )
 
     const { entities } = result.current
 
     expect(entities).toHaveLength(2)
-    expect(entities[0].name).toBe("Bob")
-    expect(entities[1].name).toBe("Alice")
+    expect(entities[0].name).toBe("Alice")
+    expect(entities[1].name).toBe("Bob")
 
     act(() => {
       world.add({ name: "Charlie" })
     })
 
     expect(entities).toHaveLength(3)
-    expect(entities[0].name).toBe("Bob")
-    expect(entities[1].name).toBe("Alice")
+    expect(entities[0].name).toBe("Alice")
+    expect(entities[1].name).toBe("Bob")
     expect(entities[2].name).toBe("Charlie")
   })
 })

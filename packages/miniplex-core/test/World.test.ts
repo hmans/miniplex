@@ -80,6 +80,17 @@ describe(World, () => {
       expect(query.entities).toHaveLength(1)
       expect(query.entities).toEqual([john])
     })
+
+    it("contains matching entities that were created before the query", () => {
+      const world = new World<Entity>()
+      const john = world.add({ name: "John", age: 30 })
+      const jane = world.add({ name: "Jane", age: 28, height: 160 })
+
+      const query = world.query((q) => q.with("age").without("height"))
+
+      expect(query.entities).toHaveLength(1)
+      expect(query.entities).toEqual([john])
+    })
   })
 
   describe("addComponent", () => {

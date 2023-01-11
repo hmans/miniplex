@@ -35,7 +35,7 @@ export class Query<E> extends Bucket<E> {
     )
   }
 
-  evaluate(entity: E, future = entity) {
+  evaluate(entity: any, future = entity) {
     const wanted = this.want(future)
     const has = this.has(entity)
 
