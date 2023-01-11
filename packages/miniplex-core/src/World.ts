@@ -15,36 +15,6 @@ export class World<E extends {} = any> extends EntityBucket<E> {
     })
   }
 
-  update(entity: E): E
-
-  update<C extends keyof E>(entity: E, component: C, value: E[C]): E
-
-  update(entity: E, update: Partial<E>): E
-
-  update(entity: E, fun: (entity: E) => Partial<E> | void): E
-
-  update(
-    entity: E,
-    update?: Partial<E> | keyof E | ((entity: E) => Partial<E> | void),
-    value?: any
-  ) {
-    if (typeof update === "function") {
-      const partial = update(entity)
-      partial && Object.assign(entity, partial)
-    } else if (typeof update === "string") {
-      entity[update] = value
-    } else if (update) {
-      Object.assign(entity, update)
-    }
-
-    /* If this world knows about the entity, notify any derived buckets about the change. */
-    if (this.has(entity)) {
-      this.evaluate(entity)
-    }
-
-    return entity
-  }
-
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
     /* Return early if the entity already has the component. */
     if (entity[component] !== undefined) return
