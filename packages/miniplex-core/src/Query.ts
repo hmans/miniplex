@@ -1,5 +1,5 @@
 import { Bucket } from "@miniplex/bucket"
-import { With, Without } from "./types"
+import { Predicate, With, Without } from "./types"
 import { ArchetypeQuery } from "./types"
 
 export const normalizeComponents = (components: any[]) => [
@@ -16,7 +16,7 @@ export const normalizeQuery = (query: ArchetypeQuery<any, any>) =>
 export type QueryConfiguration<E> = {
   with: (keyof E)[]
   without: (keyof E)[]
-  filter?: (entity: E) => boolean
+  filter?: Predicate<E, any>
 }
 
 export class Query<E> extends Bucket<E> {
