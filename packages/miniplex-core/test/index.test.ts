@@ -1,5 +1,4 @@
-import { World } from "../src"
-import { Query } from "../src/Query"
+import { World, Query } from "../src"
 
 type Entity = {
   name: string
