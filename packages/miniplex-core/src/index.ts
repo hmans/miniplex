@@ -110,15 +110,15 @@ export class World<E extends {} = any>
     return query
   }
 
-  with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
-    return this.query({
+  with<C extends keyof E>(...components: C[]) {
+    return this.query<With<E, C>>({
       with: components,
       without: []
     })
   }
 
-  without<C extends keyof E>(...components: C[]): Query<Without<E, C>> {
-    return this.query({
+  without<C extends keyof E>(...components: C[]) {
+    return this.query<Without<E, C>>({
       with: [],
       without: components
     })
@@ -217,15 +217,15 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
     return this
   }
 
-  with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
-    return this.world.query({
+  with<C extends keyof E>(...components: C[]) {
+    return this.world.query<With<E, C>>({
       ...this.config,
       with: [...this.config.with, ...components]
     })
   }
 
-  without<C extends keyof E>(...components: C[]): Query<Without<E, C>> {
-    return this.world.query({
+  without<C extends keyof E>(...components: C[]) {
+    return this.world.query<Without<E, C>>({
       ...this.config,
       without: [...this.config.without, ...components]
     })
