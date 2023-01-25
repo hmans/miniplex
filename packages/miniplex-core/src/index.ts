@@ -30,11 +30,13 @@ type WithoutOptional<T> = Pick<T, Exclude<keyof T, OptionalKeys<T>[keyof T]>>
 export type QueryConfiguration<E> = {
   with: any[]
   without: any[]
+  predicate?: Function
 }
 
 interface IQueryableBucket<E> {
   with<C extends keyof E>(...components: C[]): Query<With<E, C>>
   without<C extends keyof E>(...components: C[]): Query<Without<E, C>>
+  where<D extends E>(predicate: Predicate<E, D>): Query<D>
 }
 
 export class World<E extends {} = any>
@@ -92,7 +94,13 @@ export class World<E extends {} = any>
     /* Normalize query */
     const normalizedConfig = {
       with: normalizeComponents(config.with),
-      without: normalizeComponents(config.without)
+      without: normalizeComponents(config.without),
+      predicate: config.predicate
+    }
+
+    /* If we're using a predicate, never cache! */
+    if (normalizedConfig.predicate) {
+      return new Query<D>(this, normalizedConfig)
     }
 
     const key = configKey(normalizedConfig)
@@ -121,6 +129,14 @@ export class World<E extends {} = any>
     return this.query<Without<E, C>>({
       with: [],
       without: components
+    })
+  }
+
+  where<D extends E>(predicate: Predicate<E, D>) {
+    return this.query<D>({
+      with: [],
+      without: [],
+      predicate
     })
   }
 
@@ -177,10 +193,6 @@ export class World<E extends {} = any>
   }
 }
 
-export const normalizeComponents = (components: any[]) => [
-  ...new Set(components.sort().filter((c) => !!c && c !== ""))
-]
-
 export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
   get connected() {
     return this.world.isQueryConnected(this)
@@ -231,6 +243,15 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
     })
   }
 
+  where<D extends E>(predicate: Predicate<E, D>) {
+    return this.world.query<D>({
+      ...this.config,
+      predicate: this.config.predicate
+        ? (e: any) => this.config.predicate!(e) && predicate(e)
+        : predicate
+    })
+  }
+
   want(entity: E) {
     return (
       this.config.with.every(
@@ -238,7 +259,8 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
       ) &&
       this.config.without.every(
         (component) => entity[component as keyof typeof entity] === undefined
-      )
+      ) &&
+      (!this.config.predicate || this.config.predicate(entity))
     )
   }
 
@@ -253,6 +275,10 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
     }
   }
 }
+
+const normalizeComponents = (components: any[]) => [
+  ...new Set(components.sort().filter((c) => !!c && c !== ""))
+]
 
 function configKey(config: QueryConfiguration<any>) {
   return `${config.with.join(",")}:${config.without.join(",")}`

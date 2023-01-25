@@ -1,4 +1,4 @@
-import { World, Query } from "../src"
+import { World, Query, With } from "../src"
 
 type Entity = {
   name: string
@@ -199,6 +199,22 @@ describe(World, () => {
 
       withAge.onEntityRemoved.subscribe(() => {})
       expect(world.isQueryConnected(withAge)).toBe(true)
+    })
+  })
+
+  describe("where", () => {
+    it("returns a query that applies the given predicate", () => {
+      const world = new World<Entity>()
+
+      const john = world.add({ name: "John", age: 40 })
+      const jane = world.add({ name: "Jane", age: 25 })
+      const paul = world.add({ name: "Paul", age: 32 })
+
+      const over30 = world.with("age").where(({ age }) => age > 30)
+      expect(over30.entities).toEqual([paul, john])
+
+      const startsWithJ = over30.where(({ name }) => name.startsWith("J"))
+      expect(startsWithJ.entities).toEqual([john])
     })
   })
 
