@@ -65,6 +65,37 @@ describe(World, () => {
     })
   })
 
+  describe("produceQuery", () => {
+    it("returns a query for the given configuration", () => {
+      const world = new World<Entity>()
+
+      const query = world.produceQuery({
+        with: ["age"],
+        without: ["height"]
+      })
+
+      expect(query).toBeInstanceOf(Query)
+      expect(query.config).toEqual({
+        with: ["age"],
+        without: ["height"]
+      })
+    })
+
+    it("normalizes the incoming query configuration", () => {
+      const world = new World<Entity>()
+
+      const query = world.produceQuery({
+        with: ["age", "age"],
+        without: ["height", "height", "dead"]
+      })
+
+      expect(query.config).toEqual({
+        with: ["age"],
+        without: ["dead", "height"]
+      })
+    })
+  })
+
   describe("with and without", () => {
     it("returns a new query instance", () => {
       const world = new World<Entity>()
