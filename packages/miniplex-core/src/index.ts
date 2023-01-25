@@ -25,6 +25,13 @@ type OptionalKeys<T> = {
 
 type WithoutOptional<T> = Pick<T, Exclude<keyof T, OptionalKeys<T>[keyof T]>>
 
+/* Query configuration */
+
+export type QueryConfiguration<E> = {
+  with: any[]
+  without: any[]
+}
+
 export class World<E extends {} = any> extends Bucket<E> {
   constructor(entities: E[] = []) {
     super(entities)
@@ -73,17 +80,22 @@ export class World<E extends {} = any> extends Bucket<E> {
     delete entity[component]
   }
 
-  // produceQuery<D extends keyof E>(
-  //   withComponents: (keyof E)[],
-  //   withoutComponents: (keyof E)[] = []
-  // ): Query<D> {}
+  produceQuery<D>(config: QueryConfiguration<D>): Query<D> {
+    return new Query(this, config)
+  }
 
   with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
-    return new Query(this, components)
+    return this.produceQuery({
+      with: components,
+      without: []
+    })
   }
 
   without<C extends keyof E>(...components: C[]): Query<Without<E, C>> {
-    return new Query(this, [], components)
+    return this.produceQuery<Without<E, C>>({
+      with: [],
+      without: components
+    })
   }
 
   protected connectedQueries = new Set<Query<any>>()
@@ -147,11 +159,7 @@ export class Query<E> extends Bucket<E> {
     return this.world.isQueryConnected(this)
   }
 
-  constructor(
-    public world: World,
-    public withComponents: any[],
-    public withoutComponents: any[] = []
-  ) {
+  constructor(public world: World, public config: QueryConfiguration<E>) {
     super()
 
     this.onEntityAdded.onSubscribe.subscribe(() => this.connect())
@@ -177,26 +185,25 @@ export class Query<E> extends Bucket<E> {
   }
 
   with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
-    return new Query<With<E, C>>(
-      this.world,
-      [...this.withComponents, ...components],
-      this.withoutComponents
-    )
+    return new Query<With<E, C>>(this.world, {
+      ...this.config,
+      with: [...this.config.with, ...components]
+    })
   }
 
   without<C extends keyof E>(...components: C[]): Query<Without<E, C>> {
-    return new Query<Without<E, C>>(this.world, this.withComponents, [
-      ...this.withoutComponents,
-      ...components
-    ])
+    return new Query<Without<E, C>>(this.world, {
+      ...this.config,
+      without: [...this.config.without, ...components]
+    })
   }
 
   want(entity: E) {
     return (
-      this.withComponents.every(
+      this.config.with.every(
         (component) => entity[component as keyof typeof entity] !== undefined
       ) &&
-      this.withoutComponents.every(
+      this.config.without.every(
         (component) => entity[component as keyof typeof entity] === undefined
       )
     )
