@@ -26,8 +26,6 @@ type OptionalKeys<T> = {
 type WithoutOptional<T> = Pick<T, Exclude<keyof T, OptionalKeys<T>[keyof T]>>
 
 export class World<E extends {} = any> extends Bucket<E> {
-  connectedQueries = new Set<Query<any>>()
-
   constructor(entities: E[] = []) {
     super(entities)
 
@@ -89,6 +87,28 @@ export class World<E extends {} = any> extends Bucket<E> {
     })
   }
 
+  protected connectedQueries = new Set<Query<any>>()
+
+  connectQuery(query: Query<any>) {
+    if (this.connectedQueries.has(query)) return
+
+    this.connectedQueries.add(query)
+
+    for (const entity of this) {
+      if (query.want(entity)) {
+        query.add(entity)
+      }
+    }
+  }
+
+  disconnectQuery(query: Query<any>) {
+    this.connectedQueries.delete(query)
+  }
+
+  isQueryConnected(query: Query<any>) {
+    return this.connectedQueries.has(query)
+  }
+
   protected reindex(entity: E, future = entity) {
     for (const query of this.connectedQueries) {
       query.evaluate(entity, future)
@@ -137,7 +157,9 @@ export type QueryConfiguration<E> = {
 }
 
 export class Query<E> extends Bucket<E> {
-  public connected = false
+  get connected() {
+    return this.world.isQueryConnected(this)
+  }
 
   constructor(public world: World, public config: QueryConfiguration<E>) {
     super()
@@ -147,33 +169,21 @@ export class Query<E> extends Bucket<E> {
   }
 
   get entities() {
-    if (!this.connected) this.connect()
+    this.connect()
     return super.entities
   }
 
   [Symbol.iterator]() {
-    if (!this.connected) this.connect()
+    this.connect()
     return super[Symbol.iterator]()
   }
 
   connect() {
-    if (this.connected) return
-    this.connected = true
-
-    this.world.connectedQueries.add(this)
-
-    for (const entity of this.world) {
-      if (this.want(entity)) {
-        this.add(entity)
-      }
-    }
+    this.world.connectQuery(this)
   }
 
   disconnect() {
-    if (!this.connected) return
-    this.connected = false
-
-    this.world.connectedQueries.delete(this)
+    this.world.disconnectQuery(this)
   }
 
   with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
