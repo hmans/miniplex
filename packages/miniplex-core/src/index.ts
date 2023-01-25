@@ -98,7 +98,7 @@ export class World<E extends {} = any>
     const key = configKey(normalizedConfig)
 
     /* Use existing query if we can find one */
-    for (const query of this.queries) {
+    for (const query of this.cachedQueries) {
       if (query.key === key) {
         return query as Query<D>
       }
@@ -106,7 +106,7 @@ export class World<E extends {} = any>
 
     /* Otherwise, create new query */
     const query = new Query<D>(this, normalizedConfig)
-    this.queries.add(query)
+    this.cachedQueries.add(query)
     return query
   }
 
@@ -124,7 +124,7 @@ export class World<E extends {} = any>
     })
   }
 
-  protected queries = new Set<Query<any>>()
+  protected cachedQueries = new Set<Query<any>>()
   protected connectedQueries = new Set<Query<any>>()
 
   connectQuery(query: Query<any>) {
