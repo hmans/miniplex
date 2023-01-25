@@ -69,7 +69,7 @@ describe(World, () => {
     it("returns a query for the given configuration", () => {
       const world = new World<Entity>()
 
-      const query = world.produceQuery({
+      const query = world.query({
         with: ["age"],
         without: ["height"]
       })
@@ -84,7 +84,7 @@ describe(World, () => {
     it("normalizes the incoming query configuration", () => {
       const world = new World<Entity>()
 
-      const query = world.produceQuery({
+      const query = world.query({
         with: ["age", "age"],
         without: ["height", "height", "dead"]
       })
@@ -98,12 +98,12 @@ describe(World, () => {
     it("reuses existing connected queries if they have the same configuration", () => {
       const world = new World<Entity>()
 
-      const query1 = world.produceQuery({
+      const query1 = world.query({
         with: ["age"],
         without: ["height"]
       })
 
-      const query2 = world.produceQuery({
+      const query2 = world.query({
         with: ["age"],
         without: ["height"]
       })

@@ -88,7 +88,7 @@ export class World<E extends {} = any>
     delete entity[component]
   }
 
-  produceQuery<D>(config: QueryConfiguration<D>): Query<D> {
+  query<D>(config: QueryConfiguration<D>): Query<D> {
     /* Normalize query */
     const normalizedConfig = {
       with: normalizeComponents(config.with),
@@ -111,14 +111,14 @@ export class World<E extends {} = any>
   }
 
   with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
-    return this.produceQuery({
+    return this.query({
       with: components,
       without: []
     })
   }
 
   without<C extends keyof E>(...components: C[]): Query<Without<E, C>> {
-    return this.produceQuery({
+    return this.query({
       with: [],
       without: components
     })
@@ -218,14 +218,14 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
   }
 
   with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
-    return this.world.produceQuery({
+    return this.world.query({
       ...this.config,
       with: [...this.config.with, ...components]
     })
   }
 
   without<C extends keyof E>(...components: C[]): Query<Without<E, C>> {
-    return this.world.produceQuery({
+    return this.world.query({
       ...this.config,
       without: [...this.config.without, ...components]
     })
