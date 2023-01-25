@@ -94,6 +94,22 @@ describe(World, () => {
         without: ["dead", "height"]
       })
     })
+
+    it("reuses existing connected queries if they have the same configuration", () => {
+      const world = new World<Entity>()
+
+      const query1 = world.produceQuery({
+        with: ["age"],
+        without: ["height"]
+      })
+
+      const query2 = world.produceQuery({
+        with: ["age"],
+        without: ["height"]
+      })
+
+      expect(query1).toBe(query2)
+    })
   })
 
   describe("with and without", () => {
@@ -101,6 +117,14 @@ describe(World, () => {
       const world = new World<Entity>()
       const withAge = world.with("age")
       expect(withAge).toBeInstanceOf(Query)
+    })
+
+    it("reuses existing query instances", () => {
+      const world = new World<Entity>()
+      const withAge = world.with("age")
+
+      const withAge2 = world.with("age")
+      expect(withAge).toBe(withAge2)
     })
 
     it("can be chained", () => {
@@ -117,6 +141,14 @@ describe(World, () => {
 
       expect(world.isQueryConnected(withAge)).toBe(false)
       expect(world.isQueryConnected(withoutHeight)).toBe(true)
+    })
+
+    it("when chained, also reuses matching query instances", () => {
+      const world = new World<Entity>()
+      const queryA = world.with("age").without("height")
+      const queryB = world.without("height").with("age")
+
+      expect(queryA).toBe(queryB)
     })
 
     it("does not automatically connect the new query instance", () => {

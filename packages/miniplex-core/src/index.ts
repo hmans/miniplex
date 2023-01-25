@@ -95,10 +95,19 @@ export class World<E extends {} = any>
       without: normalizeComponents(config.without)
     }
 
+    const key = configKey(normalizedConfig)
+
     /* Use existing query if we can find one */
+    for (const query of this.queries) {
+      if (query.key === key) {
+        return query as Query<D>
+      }
+    }
 
     /* Otherwise, create new query */
-    return new Query(this, normalizedConfig)
+    const query = new Query<D>(this, normalizedConfig)
+    this.queries.add(query)
+    return query
   }
 
   with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
@@ -115,6 +124,7 @@ export class World<E extends {} = any>
     })
   }
 
+  protected queries = new Set<Query<any>>()
   protected connectedQueries = new Set<Query<any>>()
 
   connectQuery(query: Query<any>) {
@@ -176,8 +186,12 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
     return this.world.isQueryConnected(this)
   }
 
+  public key: string
+
   constructor(public world: World, public config: QueryConfiguration<E>) {
     super()
+
+    this.key = configKey(config)
 
     this.onEntityAdded.onSubscribe.subscribe(() => this.connect())
     this.onEntityRemoved.onSubscribe.subscribe(() => this.connect())
@@ -195,10 +209,12 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
 
   connect() {
     this.world.connectQuery(this)
+    return this
   }
 
   disconnect() {
     this.world.disconnectQuery(this)
+    return this
   }
 
   with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
@@ -236,4 +252,8 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
       this.remove(entity)
     }
   }
+}
+
+function configKey(config: QueryConfiguration<any>) {
+  return `${config.with.join(",")}:${config.without.join(",")}`
 }
