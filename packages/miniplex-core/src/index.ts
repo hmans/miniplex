@@ -283,3 +283,10 @@ const normalizeComponents = (components: any[]) => [
 function configKey(config: QueryConfiguration<any>) {
   return `${config.with.join(",")}:${config.without.join(",")}`
 }
+
+export function hasComponents<E, C extends keyof E>(
+  entity: E,
+  ...components: C[]
+): entity is With<E, C> {
+  return components.every((c) => entity[c] !== undefined)
+}
