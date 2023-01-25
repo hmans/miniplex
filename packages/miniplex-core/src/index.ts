@@ -100,7 +100,7 @@ export class World<E extends {} = any>
   }
 
   without<C extends keyof E>(...components: C[]): Query<Without<E, C>> {
-    return this.produceQuery<Without<E, C>>({
+    return this.produceQuery({
       with: [],
       without: components
     })
@@ -193,7 +193,7 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
   }
 
   with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
-    return this.world.produceQuery<With<E, C>>({
+    return this.world.produceQuery({
       ...this.config,
       with: [...this.config.with, ...components]
     })
