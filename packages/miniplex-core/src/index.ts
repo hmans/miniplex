@@ -32,7 +32,15 @@ export type QueryConfiguration<E> = {
   without: any[]
 }
 
-export class World<E extends {} = any> extends Bucket<E> {
+interface IQueryableBucket<E> {
+  with<C extends keyof E>(...components: C[]): Query<With<E, C>>
+  without<C extends keyof E>(...components: C[]): Query<Without<E, C>>
+}
+
+export class World<E extends {} = any>
+  extends Bucket<E>
+  implements IQueryableBucket<E>
+{
   constructor(entities: E[] = []) {
     super(entities)
 
@@ -154,7 +162,7 @@ export const normalizeComponents = (components: any[]) => [
   ...new Set(components.sort().filter((c) => !!c && c !== ""))
 ]
 
-export class Query<E> extends Bucket<E> {
+export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
   get connected() {
     return this.world.isQueryConnected(this)
   }
