@@ -185,14 +185,14 @@ export class Query<E> extends Bucket<E> {
   }
 
   with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
-    return new Query<With<E, C>>(this.world, {
+    return this.world.produceQuery<With<E, C>>({
       ...this.config,
       with: [...this.config.with, ...components]
     })
   }
 
   without<C extends keyof E>(...components: C[]): Query<Without<E, C>> {
-    return new Query<Without<E, C>>(this.world, {
+    return this.world.produceQuery({
       ...this.config,
       without: [...this.config.without, ...components]
     })
