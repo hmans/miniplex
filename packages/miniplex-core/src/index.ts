@@ -73,18 +73,17 @@ export class World<E extends {} = any> extends Bucket<E> {
     delete entity[component]
   }
 
+  // produceQuery<D extends keyof E>(
+  //   withComponents: (keyof E)[],
+  //   withoutComponents: (keyof E)[] = []
+  // ): Query<D> {}
+
   with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
-    return new Query(this, {
-      with: components,
-      without: []
-    })
+    return new Query(this, components)
   }
 
   without<C extends keyof E>(...components: C[]): Query<Without<E, C>> {
-    return new Query(this, {
-      with: [],
-      without: components as any
-    })
+    return new Query(this, [], components)
   }
 
   protected connectedQueries = new Set<Query<any>>()
@@ -143,25 +142,16 @@ export const normalizeComponents = (components: any[]) => [
   ...new Set(components.sort().filter((c) => !!c && c !== ""))
 ]
 
-export const normalizeQuery = (query: QueryConfiguration<any>) =>
-  ({
-    with: query.with !== undefined ? normalizeComponents(query.with) : [],
-    without:
-      query.without !== undefined ? normalizeComponents(query.without) : []
-  } as typeof query)
-
-export type QueryConfiguration<E> = {
-  with: (keyof E)[]
-  without: (keyof E)[]
-  filter?: Predicate<E, any>
-}
-
 export class Query<E> extends Bucket<E> {
   get connected() {
     return this.world.isQueryConnected(this)
   }
 
-  constructor(public world: World, public config: QueryConfiguration<E>) {
+  constructor(
+    public world: World,
+    public withComponents: any[],
+    public withoutComponents: any[] = []
+  ) {
     super()
 
     this.onEntityAdded.onSubscribe.subscribe(() => this.connect())
@@ -187,23 +177,28 @@ export class Query<E> extends Bucket<E> {
   }
 
   with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
-    return new Query(this.world, {
-      ...this.config,
-      with: [...this.config.with, ...components]
-    }) as any
+    return new Query<With<E, C>>(
+      this.world,
+      [...this.withComponents, ...components],
+      this.withoutComponents
+    )
   }
 
   without<C extends keyof E>(...components: C[]): Query<Without<E, C>> {
-    return new Query(this.world, {
-      ...this.config,
-      without: [...this.config.without, ...components]
-    }) as any // TODO: resolve `any`
+    return new Query<Without<E, C>>(this.world, this.withComponents, [
+      ...this.withoutComponents,
+      ...components
+    ])
   }
 
   want(entity: E) {
     return (
-      this.config.with.every((component) => entity[component] !== undefined) &&
-      this.config.without.every((component) => entity[component] === undefined)
+      this.withComponents.every(
+        (component) => entity[component as keyof typeof entity] !== undefined
+      ) &&
+      this.withoutComponents.every(
+        (component) => entity[component as keyof typeof entity] === undefined
+      )
     )
   }
 
