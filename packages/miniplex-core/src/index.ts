@@ -89,7 +89,16 @@ export class World<E extends {} = any>
   }
 
   produceQuery<D>(config: QueryConfiguration<D>): Query<D> {
-    return new Query(this, config)
+    /* Normalize query */
+    const normalizedConfig = {
+      with: normalizeComponents(config.with),
+      without: normalizeComponents(config.without)
+    }
+
+    /* Use existing query if we can find one */
+
+    /* Otherwise, create new query */
+    return new Query(this, normalizedConfig)
   }
 
   with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
