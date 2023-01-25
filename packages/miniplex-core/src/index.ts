@@ -26,7 +26,7 @@ type OptionalKeys<T> = {
 type WithoutOptional<T> = Pick<T, Exclude<keyof T, OptionalKeys<T>[keyof T]>>
 
 export class World<E extends {} = any> extends Bucket<E> {
-  queries: Query<any>[] = []
+  connectedQueries = new Set<Query<any>>()
 
   constructor(entities: E[] = []) {
     super(entities)
@@ -45,20 +45,6 @@ export class World<E extends {} = any> extends Bucket<E> {
         this.entityToId.delete(entity)
       }
     })
-  }
-
-  query<D extends E>(input: Query<D> | ((query: Query<E>) => Query<D>)) {
-    // TODO: memoize queries
-
-    const query = input instanceof Query ? input : input(new Query<E>())
-    this.queries.push(query)
-
-    /* Reindex all entities to see if they match the query. */
-    for (const entity of this.entities) {
-      query.evaluate(entity)
-    }
-
-    return query
   }
 
   addComponent<C extends keyof E>(entity: E, component: C, value: E[C]) {
@@ -89,8 +75,22 @@ export class World<E extends {} = any> extends Bucket<E> {
     delete entity[component]
   }
 
+  with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
+    return new Query(this, {
+      with: components,
+      without: []
+    })
+  }
+
+  without<C extends keyof E>(...components: C[]): Query<Without<E, C>> {
+    return new Query(this, {
+      with: [],
+      without: components as any
+    })
+  }
+
   protected reindex(entity: E, future = entity) {
-    for (const query of this.queries) {
+    for (const query of this.connectedQueries) {
       query.evaluate(entity, future)
     }
   }
@@ -137,21 +137,54 @@ export type QueryConfiguration<E> = {
 }
 
 export class Query<E> extends Bucket<E> {
-  constructor(
-    protected config: QueryConfiguration<E> = { with: [], without: [] }
-  ) {
+  public connected = false
+
+  constructor(public world: World, public config: QueryConfiguration<E>) {
     super()
+
+    this.onEntityAdded.onSubscribe.subscribe(() => this.connect())
+    this.onEntityRemoved.onSubscribe.subscribe(() => this.connect())
+  }
+
+  get entities() {
+    if (!this.connected) this.connect()
+    return super.entities
+  }
+
+  [Symbol.iterator]() {
+    if (!this.connected) this.connect()
+    return super[Symbol.iterator]()
+  }
+
+  connect() {
+    if (this.connected) return
+    this.connected = true
+
+    this.world.connectedQueries.add(this)
+
+    for (const entity of this.world) {
+      if (this.want(entity)) {
+        this.add(entity)
+      }
+    }
+  }
+
+  disconnect() {
+    if (!this.connected) return
+    this.connected = false
+
+    this.world.connectedQueries.delete(this)
   }
 
   with<C extends keyof E>(...components: C[]): Query<With<E, C>> {
-    return new Query({
+    return new Query(this.world, {
       ...this.config,
       with: [...this.config.with, ...components]
     }) as any
   }
 
   without<C extends keyof E>(...components: C[]): Query<Without<E, C>> {
-    return new Query({
+    return new Query(this.world, {
       ...this.config,
       without: [...this.config.without, ...components]
     }) as any // TODO: resolve `any`

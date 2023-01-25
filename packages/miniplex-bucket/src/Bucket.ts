@@ -6,9 +6,13 @@ import { Event } from "eventery"
  * for when entities are added or removed.
  */
 export class Bucket<E> implements Iterable<E> {
+  get entities() {
+    return this._entities
+  }
+
   /* Custom iterator that iterates over all entities in reverse order. */
   [Symbol.iterator]() {
-    let index = this.entities.length
+    let index = this._entities.length
 
     const result = {
       value: undefined as E,
@@ -17,20 +21,20 @@ export class Bucket<E> implements Iterable<E> {
 
     return {
       next: () => {
-        result.value = this.entities[--index]
+        result.value = this._entities[--index]
         result.done = index < 0
         return result
       }
     }
   }
 
-  constructor(public entities: E[] = []) {
+  constructor(protected _entities: E[] = []) {
     this.add = this.add.bind(this)
     this.remove = this.remove.bind(this)
 
     /* Register all entity positions */
-    for (let i = 0; i < entities.length; i++) {
-      this.entityPositions.set(entities[i], i)
+    for (let i = 0; i < _entities.length; i++) {
+      this.entityPositions.set(_entities[i], i)
     }
   }
 

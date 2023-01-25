@@ -65,38 +65,77 @@ describe(World, () => {
     })
   })
 
-  describe("query", () => {
-    it("accepts a query builder function", () => {
+  describe("with and without", () => {
+    it("returns a new query instance", () => {
       const world = new World<Entity>()
-      const qqqq = world.query((q) => q.with("age").without("height"))
-      expect(world.queries).toEqual([qqqq])
+      const withAge = world.with("age")
+      expect(withAge).toBeInstanceOf(Query)
     })
 
-    it("accepts a query instance", () => {
+    it("can be chained", () => {
       const world = new World<Entity>()
-      const withAge = world.query((q) => q.with("age"))
-      const withAgeButNoHeight = world.query(withAge.without("height"))
-      expect(world.queries).toEqual([withAge, withAgeButNoHeight])
+      const withAge = world.with("age")
+      const withoutHeight = withAge.without("height")
+
+      expect(withAge).toBeInstanceOf(Query)
+      expect(withoutHeight).toBeInstanceOf(Query)
+
+      for (const _ of withoutHeight) {
+        /* no-op */
+      }
+
+      expect(world.connectedQueries).not.toContain(withAge)
+      expect(world.connectedQueries).toContain(withoutHeight)
     })
 
-    it("contains matching entities", () => {
+    it("does not automatically connect the new query instance", () => {
       const world = new World<Entity>()
-      const query = world.query((q) => q.with("age").without("height"))
-      const john = world.add({ name: "John", age: 30 })
-      const jane = world.add({ name: "Jane", age: 28, height: 160 })
-      expect(query.entities).toHaveLength(1)
-      expect(query.entities).toEqual([john])
+      const withAge = world.with("age")
+      expect(world.connectedQueries).not.toContain(withAge)
+
+      withAge.connect()
+      expect(world.connectedQueries).toContain(withAge)
     })
 
-    it("contains matching entities that were created before the query", () => {
+    it("automatically connects the query the first time its entities are accessed", () => {
       const world = new World<Entity>()
-      const john = world.add({ name: "John", age: 30 })
-      const jane = world.add({ name: "Jane", age: 28, height: 160 })
+      const withAge = world.with("age")
+      expect(world.connectedQueries).not.toContain(withAge)
 
-      const query = world.query((q) => q.with("age").without("height"))
+      withAge.entities
+      expect(world.connectedQueries).toContain(withAge)
+    })
 
-      expect(query.entities).toHaveLength(1)
-      expect(query.entities).toEqual([john])
+    it("automatically connects the query the first time it is iterated over", () => {
+      const world = new World<Entity>()
+      world.add({ name: "John", age: 30 })
+
+      const withAge = world.with("age")
+      expect(world.connectedQueries).not.toContain(withAge)
+
+      for (const entity of withAge) {
+        expect(entity).toBeDefined()
+      }
+
+      expect(world.connectedQueries).toContain(withAge)
+    })
+
+    it("automatically connects the query when something subscribes to onEntityAdded", () => {
+      const world = new World<Entity>()
+      const withAge = world.with("age")
+      expect(world.connectedQueries).not.toContain(withAge)
+
+      withAge.onEntityAdded.subscribe(() => {})
+      expect(world.connectedQueries).toContain(withAge)
+    })
+
+    it("automatically connects the query when something subscribes to onEntityRemoves", () => {
+      const world = new World<Entity>()
+      const withAge = world.with("age")
+      expect(world.connectedQueries).not.toContain(withAge)
+
+      withAge.onEntityRemoved.subscribe(() => {})
+      expect(world.connectedQueries).toContain(withAge)
     })
   })
 
@@ -110,7 +149,7 @@ describe(World, () => {
 
     it("adds the entity to any relevant queries", () => {
       const world = new World<Entity>()
-      const query = world.query((q) => q.with("age").without("height"))
+      const query = world.with("age").without("height")
       const entity = world.add({ name: "John" })
       world.addComponent(entity, "age", 30)
       expect(query.entities).toEqual([entity])
@@ -127,7 +166,7 @@ describe(World, () => {
 
     it("removes the entity from any relevant archetypes", () => {
       const world = new World<Entity>()
-      const query = world.query((q) => q.with("age").without("height"))
+      const query = world.with("age").without("height")
       const entity = world.add({ name: "John", age: 30 })
       expect(query.entities).toEqual([entity])
 
@@ -137,7 +176,7 @@ describe(World, () => {
 
     it("uses a future check, so in onEntityRemoved, the entity is still intact", () => {
       const world = new World<Entity>()
-      const query = world.query((q) => q.with("age").without("height"))
+      const query = world.with("age").without("height")
       const entity = world.add({ name: "John", age: 30 })
       expect(query.entities).toEqual([entity])
 
