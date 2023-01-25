@@ -45,7 +45,7 @@ describe(Bucket, () => {
       const entity = { id: "1" }
       const listener = jest.fn()
 
-      bucket.onEntityAdded.add(listener)
+      bucket.onEntityAdded.subscribe(listener)
       bucket.add(entity)
 
       expect(listener).toHaveBeenCalledWith(entity)
@@ -77,7 +77,7 @@ describe(Bucket, () => {
       const entity = bucket.add({ id: "1" })
       const listener = jest.fn()
 
-      bucket.onEntityRemoved.add(listener)
+      bucket.onEntityRemoved.subscribe(listener)
       bucket.remove(entity)
 
       expect(listener).toHaveBeenCalledWith(entity)
@@ -122,7 +122,7 @@ describe(Bucket, () => {
       const entity2 = bucket.add({ id: "2" })
       const listener = jest.fn()
 
-      bucket.onEntityRemoved.add(listener)
+      bucket.onEntityRemoved.subscribe(listener)
       bucket.clear()
 
       expect(listener).toHaveBeenCalledWith(entity1)

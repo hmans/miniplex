@@ -1,4 +1,4 @@
-import { Event } from "@hmans/event"
+import { Event } from "eventery"
 
 /**
  * A class wrapping an array of entities of a specific type, providing
@@ -37,12 +37,12 @@ export class Bucket<E> implements Iterable<E> {
   /**
    * Fired when an entity has been added to the bucket.
    */
-  onEntityAdded = new Event<E>()
+  onEntityAdded = new Event<[entity: E]>()
 
   /**
    * Fired when an entity is about to be removed from the bucket.
    */
-  onEntityRemoved = new Event<E>()
+  onEntityRemoved = new Event<[entity: E]>()
 
   /**
    * A map of entity positions, used for fast lookups.

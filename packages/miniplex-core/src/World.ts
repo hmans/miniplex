@@ -8,12 +8,12 @@ export class World<E extends {} = any> extends Bucket<E> {
     super(entities)
 
     /* When entities are added, reindex them immediately */
-    this.onEntityAdded.add((entity) => {
+    this.onEntityAdded.subscribe((entity) => {
       this.reindex(entity)
     })
 
     /* When entities are removed, also make sure to forget about their IDs. */
-    this.onEntityRemoved.add((entity) => {
+    this.onEntityRemoved.subscribe((entity) => {
       /* Remove the entity from the ID map */
       if (this.entityToId.has(entity)) {
         const id = this.entityToId.get(entity)!

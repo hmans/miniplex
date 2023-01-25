@@ -6,12 +6,12 @@ export function useEntities<T extends Bucket<any>>(bucket: T): T {
   const rerender = useRerender()
 
   useIsomorphicLayoutEffect(() => {
-    bucket.onEntityAdded.add(rerender)
-    bucket.onEntityRemoved.add(rerender)
+    bucket.onEntityAdded.subscribe(rerender)
+    bucket.onEntityRemoved.subscribe(rerender)
 
     return () => {
-      bucket.onEntityAdded.remove(rerender)
-      bucket.onEntityRemoved.remove(rerender)
+      bucket.onEntityAdded.unsubscribe(rerender)
+      bucket.onEntityRemoved.unsubscribe(rerender)
     }
   }, [rerender])
 
@@ -25,7 +25,7 @@ export function useOnEntityAdded<E>(
   callback: (entity: E) => void
 ) {
   useIsomorphicLayoutEffect(
-    () => bucket.onEntityAdded.add(callback),
+    () => bucket.onEntityAdded.subscribe(callback),
     [bucket, callback]
   )
 }
@@ -35,7 +35,7 @@ export function useOnEntityRemoved<E>(
   callback: (entity: E) => void
 ) {
   useIsomorphicLayoutEffect(
-    () => bucket.onEntityRemoved.add(callback),
+    () => bucket.onEntityRemoved.subscribe(callback),
     [bucket, callback]
   )
 }

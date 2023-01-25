@@ -142,7 +142,7 @@ describe(World, () => {
       const entity = world.add({ name: "John", age: 30 })
       expect(query.entities).toEqual([entity])
 
-      query.onEntityRemoved.add((removedEntity) => {
+      query.onEntityRemoved.subscribe((removedEntity) => {
         expect(removedEntity).toEqual(entity)
         expect(removedEntity.age).toEqual(30)
       })
