@@ -201,10 +201,10 @@ export class World<E extends {} = any>
 }
 
 export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
-  protected _connected = false
+  protected _isConnected = false
 
-  get connected() {
-    return this._connected
+  get isConnected() {
+    return this._isConnected
   }
 
   public key: string
@@ -221,18 +221,18 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
   }
 
   get entities() {
-    if (!this._connected) this.connect()
+    if (!this._isConnected) this.connect()
     return super.entities
   }
 
   [Symbol.iterator]() {
-    if (!this._connected) this.connect()
+    if (!this._isConnected) this.connect()
     return super[Symbol.iterator]()
   }
 
   connect() {
-    if (!this._connected) {
-      this._connected = true
+    if (!this._isConnected) {
+      this._isConnected = true
 
       /* Evaluate all entities in the world */
       for (const entity of this.world) {
@@ -244,7 +244,7 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
   }
 
   disconnect() {
-    this._connected = false
+    this._isConnected = false
     return this
   }
 
@@ -282,7 +282,7 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
   }
 
   evaluate(entity: any, future = entity) {
-    if (!this.connected) return
+    if (!this.isConnected) return
 
     const wanted = this.want(future)
     const has = this.has(entity)
