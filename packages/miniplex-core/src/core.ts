@@ -324,6 +324,34 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
   }
 }
 
+export class Monitor<E> {
+  constructor(
+    public query: Query<E>,
+    protected setup: (entity: E) => void,
+    protected teardown: (entity: E) => void
+  ) {
+    this.connect()
+  }
+
+  connect() {
+    /* Setup all existing entities */
+    for (const entity of this.query) {
+      this.setup(entity)
+    }
+
+    /* Setup new entities as they are added */
+    this.query.onEntityAdded.subscribe(this.setup)
+
+    /* Teardown entities as they are removed */
+    this.query.onEntityRemoved.subscribe(this.teardown)
+  }
+
+  disconnect() {
+    this.query.onEntityAdded.unsubscribe(this.setup)
+    this.query.onEntityRemoved.unsubscribe(this.teardown)
+  }
+}
+
 const normalizeComponents = (components: any[]) => [
   ...new Set(components.sort().filter((c) => !!c && c !== ""))
 ]
