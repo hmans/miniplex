@@ -1,25 +1,23 @@
-import { Monitor, World } from "miniplex"
+import { World } from "miniplex"
 import { Entity } from "./engine"
 
 export function createTransformSystem(world: World<Entity>) {
   const entities = world.with("transform")
   const engines = world.with("engine")
 
-  const monitor = new Monitor(
-    entities,
+  const monitor = entities.monitor(
+    ({ transform, parent }) => {
+      const { engine } = engines.first!
 
-    (entity) => {
-      const [{ engine }] = engines
-
-      if (entity.parent?.transform) {
-        entity.parent.transform.add(entity.transform)
+      if (parent?.transform) {
+        parent.transform.add(transform)
       } else {
-        engine.scene.add(entity.transform)
+        engine.scene.add(transform)
       }
     },
 
-    (entity) => {
-      entity.transform.parent?.remove(entity.transform)
+    ({ transform }) => {
+      transform.parent?.remove(transform)
     }
   )
 

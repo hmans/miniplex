@@ -59,6 +59,8 @@ interface IQueryableBucket<E> {
    * @param predicate The predicate to query for.
    */
   where<D extends E>(predicate: Predicate<E, D>): Query<D>
+
+  monitor(setup: (entity: E) => void, teardown: (entity: E) => void): Monitor<E>
 }
 
 export class World<E extends {} = any>
@@ -188,6 +190,10 @@ export class World<E extends {} = any>
     })
   }
 
+  monitor(setup: (entity: E) => void, teardown: (entity: E) => void) {
+    return new Monitor(this, setup, teardown)
+  }
+
   protected reindex(entity: E, future = entity) {
     /* Return early if this world doesn't know about the entity. */
     if (!this.has(entity)) return
@@ -311,6 +317,10 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
     )
   }
 
+  monitor(setup: (entity: E) => void, teardown: (entity: E) => void) {
+    return new Monitor(this, setup, teardown)
+  }
+
   evaluate(entity: any, future = entity) {
     if (!this.isConnected) return
 
@@ -332,7 +342,7 @@ export class Monitor<E> {
   protected queueDisconnect = createQueue()
 
   constructor(
-    public query: Query<E>,
+    public bucket: Bucket<E>,
     protected setup: (entity: E) => void,
     protected teardown: (entity: E) => void
   ) {
@@ -341,20 +351,20 @@ export class Monitor<E> {
 
   connect() {
     /* Setup all existing entities */
-    for (const entity of this.query) {
+    for (const entity of this.bucket) {
       this.queueSetup(() => this.setup(entity))
     }
 
     /* Setup new entities as they are added */
     this.queueDisconnect(
-      this.query.onEntityAdded.subscribe((entity) => {
+      this.bucket.onEntityAdded.subscribe((entity) => {
         this.queueSetup(() => this.setup(entity))
       })
     )
 
     /* Teardown entities as they are removed */
     this.queueDisconnect(
-      this.query.onEntityRemoved.subscribe((entity) => {
+      this.bucket.onEntityRemoved.subscribe((entity) => {
         this.queueSetup(() => this.teardown(entity))
       })
     )

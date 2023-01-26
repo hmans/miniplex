@@ -392,7 +392,7 @@ describe(Monitor, () => {
     /* Create a monitor */
     const setup = jest.fn()
     const teardown = jest.fn()
-    const monitor = new Monitor(query, setup, teardown)
+    const monitor = query.monitor(setup, teardown)
 
     /* The setup callback should be called with the existing entity */
     monitor.run()
