@@ -2,13 +2,9 @@ import { useOnEntityAdded } from "miniplex/react"
 import { between } from "randomish"
 import { Vector3 } from "three"
 import { spawnAsteroid } from "../entities/Asteroids"
-import { Asteroid, ECS } from "../state"
+import { archetypes, Asteroid } from "../state"
 
-/* Query by archetype, supply custom type of resulting entities */
-const asteroids = ECS.world.with<Asteroid>("isAsteroid")
-
-/* Nest queries to get more specific results */
-const destroyedAsteroids = asteroids.with("destroy")
+const destroyedAsteroids = archetypes.asteroids.with("destroy")
 
 export const AsteroidsSystem = () => {
   /* Every time a new destroyed asteroid "appears", spawn some new ones! */
