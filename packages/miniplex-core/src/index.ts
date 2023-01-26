@@ -221,12 +221,12 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
   }
 
   get entities() {
-    this.connect()
+    if (!this._connected) this.connect()
     return super.entities
   }
 
   [Symbol.iterator]() {
-    this.connect()
+    if (!this._connected) this.connect()
     return super[Symbol.iterator]()
   }
 

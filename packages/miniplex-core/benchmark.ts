@@ -63,8 +63,8 @@ profile("add", () => {
 
 profile("add (with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.with("position")
-  const withVelocity = world.with("velocity")
+  const withPosition = world.with("position").connect()
+  const withVelocity = world.with("velocity").connect()
 
   return () => {
     for (let i = 0; i < entityCount; i++) {
@@ -103,8 +103,8 @@ profile("remove (random)", () => {
 
 profile("remove (random, with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.with("position")
-  const withVelocity = world.with("velocity")
+  const withPosition = world.with("position").connect()
+  const withVelocity = world.with("velocity").connect()
 
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -143,8 +143,8 @@ profile("clear", () => {
 
 profile("clear (with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.with("position")
-  const withVelocity = world.with("velocity")
+  const withPosition = world.with("position").connect()
+  const withVelocity = world.with("velocity").connect()
 
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -162,7 +162,7 @@ profile("clear (with archetypes)", () => {
 
 heading("Iteration")
 
-profile("simulate (iterator)", () => {
+profile("simulate (iterator, world)", () => {
   const world = new World<Entity>()
 
   for (let i = 0; i < entityCount; i++)
@@ -185,9 +185,9 @@ profile("simulate (iterator)", () => {
   }
 })
 
-profile("simulate (iterator, archetypes)", () => {
+profile("simulate (iterator, archetype)", () => {
   const world = new World<Entity>()
-  const withVelocity = world.with("velocity")
+  const withVelocity = world.with("velocity").connect()
 
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -209,7 +209,7 @@ profile("simulate (iterator, archetypes)", () => {
   }
 })
 
-profile("simulate (array 👎)", () => {
+profile("simulate (iterator, array)", () => {
   const world = new World<Entity>()
 
   for (let i = 0; i < entityCount; i++)
@@ -232,7 +232,59 @@ profile("simulate (array 👎)", () => {
   }
 })
 
+profile("simulate (for, array)", () => {
+  const world = new World<Entity>()
+
+  for (let i = 0; i < entityCount; i++)
+    world.add({
+      position: { x: Math.random() * 200 - 100, y: i, z: 0 },
+      velocity: { x: 1, y: 2, z: 3 }
+    })
+
+  return () => {
+    let count = 0
+
+    for (let i = 0; i < world.entities.length; i++) {
+      count++
+      const { position, velocity } = world.entities[i]
+      if (!velocity) continue
+
+      position.x += velocity.x
+      position.y += velocity.y
+      position.z += velocity.z
+    }
+
+    return () => count === entityCount
+  }
+})
+
 heading("Iteration with predicates")
+
+profile(".where() query", () => {
+  const world = new World<Entity>()
+
+  const positiveX = world.where((e) => e.position.x > 0).connect()
+
+  for (let i = 0; i < entityCount; i++)
+    world.add({
+      position: { x: Math.random() * 200 - 100, y: i, z: 0 },
+      velocity: { x: 1, y: 2, z: 3 }
+    })
+
+  return () => {
+    let i = 0
+
+    for (const { position, velocity } of positiveX) {
+      i++
+      if (!velocity) continue
+      position.x += velocity.x
+      position.y += velocity.y
+      position.z += velocity.z
+    }
+
+    return () => i > 0
+  }
+})
 
 profile("value predicate check (filter 👎)", () => {
   const world = new World<Entity>()
@@ -309,108 +361,6 @@ profile("1000x iterating over iterator with 1000 entities", () => {
       for (const entity of withD) entity.D *= 2
       for (const entity of withE) entity.E *= 2
     }
-
-    return () => true
-  }
-})
-
-profile("1x iterating over array of 1m entities", () => {
-  const ecs = new World()
-
-  for (let i = 0; i < entityCount; i++) {
-    ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
-  }
-
-  const withA = ecs.with("A")
-  const withB = ecs.with("B")
-  const withC = ecs.with("C")
-  const withD = ecs.with("D")
-  const withE = ecs.with("E")
-
-  return () => {
-    for (const entity of withA.entities) entity.A *= 2
-    for (const entity of withB.entities) entity.B *= 2
-    for (const entity of withC.entities) entity.C *= 2
-    for (const entity of withD.entities) entity.D *= 2
-    for (const entity of withE.entities) entity.E *= 2
-
-    return () => true
-  }
-})
-
-profile("1x iterating over iterator with 1m entities", () => {
-  const ecs = new World()
-
-  for (let i = 0; i < entityCount; i++) {
-    ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
-  }
-
-  const withA = ecs.with("A")
-  const withB = ecs.with("B")
-  const withC = ecs.with("C")
-  const withD = ecs.with("D")
-  const withE = ecs.with("E")
-
-  return () => {
-    for (const entity of withA) entity.A *= 2
-    for (const entity of withB) entity.B *= 2
-    for (const entity of withC) entity.C *= 2
-    for (const entity of withD) entity.D *= 2
-    for (const entity of withE) entity.E *= 2
-
-    return () => true
-  }
-})
-
-profile("1x for index of 1m entities", () => {
-  const ecs = new World()
-
-  for (let i = 0; i < entityCount; i++) {
-    ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
-  }
-
-  const withA = ecs.with("A")
-  const withB = ecs.with("B")
-  const withC = ecs.with("C")
-  const withD = ecs.with("D")
-  const withE = ecs.with("E")
-
-  return () => {
-    for (let i = 0; i < withA.size; i++) withA.entities[i].A *= 2
-    for (let i = 0; i < withB.size; i++) withB.entities[i].B *= 2
-    for (let i = 0; i < withC.size; i++) withC.entities[i].C *= 2
-    for (let i = 0; i < withD.size; i++) withD.entities[i].D *= 2
-    for (let i = 0; i < withE.size; i++) withE.entities[i].E *= 2
-
-    return () => true
-  }
-})
-
-profile("1x for index of 1m entities (cached length)", () => {
-  const ecs = new World()
-
-  for (let i = 0; i < entityCount; i++) {
-    ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
-  }
-
-  const withA = ecs.with("A")
-  const withB = ecs.with("B")
-  const withC = ecs.with("C")
-  const withD = ecs.with("D")
-  const withE = ecs.with("E")
-
-  return () => {
-    const withASize = withA.size
-    const withBSize = withB.size
-    const withCSize = withC.size
-    const withDSize = withD.size
-    const withESize = withE.size
-
-    for (let i = 0; i < withASize; i++) withA.entities[i].A *= 2
-    for (let i = 0; i < withBSize; i++) withB.entities[i].B *= 2
-    for (let i = 0; i < withCSize; i++) withC.entities[i].C *= 2
-    for (let i = 0; i < withDSize; i++) withD.entities[i].D *= 2
-    for (let i = 0; i < withESize; i++) withE.entities[i].E *= 2
 
     return () => true
   }
