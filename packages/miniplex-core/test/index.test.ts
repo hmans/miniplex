@@ -71,13 +71,15 @@ describe(World, () => {
 
       const query = world.query({
         with: ["age"],
-        without: ["height"]
+        without: ["height"],
+        predicates: []
       })
 
       expect(query).toBeInstanceOf(Query)
       expect(query.config).toEqual({
         with: ["age"],
-        without: ["height"]
+        without: ["height"],
+        predicates: []
       })
     })
 
@@ -86,12 +88,14 @@ describe(World, () => {
 
       const query = world.query({
         with: ["age", "age"],
-        without: ["height", "height", "dead"]
+        without: ["height", "height", "dead"],
+        predicates: []
       })
 
       expect(query.config).toEqual({
         with: ["age"],
-        without: ["dead", "height"]
+        without: ["dead", "height"],
+        predicates: []
       })
     })
 
@@ -100,12 +104,14 @@ describe(World, () => {
 
       const query1 = world.query({
         with: ["age"],
-        without: ["height"]
+        without: ["height"],
+        predicates: []
       })
 
       const query2 = world.query({
         with: ["age"],
-        without: ["height"]
+        without: ["height"],
+        predicates: []
       })
 
       expect(query1).toBe(query2)

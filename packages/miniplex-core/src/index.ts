@@ -30,7 +30,7 @@ type WithoutOptional<T> = Pick<T, Exclude<keyof T, OptionalKeys<T>[keyof T]>>
 export type QueryConfiguration<E> = {
   with: any[]
   without: any[]
-  predicate?: Function
+  predicates: Function[]
 }
 
 interface IQueryableBucket<E> {
@@ -101,7 +101,7 @@ export class World<E extends {} = any>
     const normalizedConfig = normalizeQueryConfiguration(config)
 
     /* If we're using a predicate, never cache! */
-    if (normalizedConfig.predicate) {
+    if (normalizedConfig.predicates.length > 0) {
       return new Query<D>(this, normalizedConfig)
     }
 
@@ -123,14 +123,16 @@ export class World<E extends {} = any>
   with<C extends keyof E>(...components: C[]) {
     return this.query<With<E, C>>({
       with: components,
-      without: []
+      without: [],
+      predicates: []
     })
   }
 
   without<C extends keyof E>(...components: C[]) {
     return this.query<Without<E, C>>({
       with: [],
-      without: components
+      without: components,
+      predicates: []
     })
   }
 
@@ -138,7 +140,7 @@ export class World<E extends {} = any>
     return this.query<D>({
       with: [],
       without: [],
-      predicate
+      predicates: [predicate]
     })
   }
 
@@ -238,9 +240,7 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
   where<D extends E>(predicate: Predicate<E, D>) {
     return this.world.query<D>({
       ...this.config,
-      predicate: this.config.predicate
-        ? (e: any) => this.config.predicate!(e) && predicate(e)
-        : predicate
+      predicates: [...this.config.predicates, predicate]
     })
   }
 
@@ -252,7 +252,7 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
       this.config.without.every(
         (component) => entity[component as keyof typeof entity] === undefined
       ) &&
-      (!this.config.predicate || this.config.predicate(entity))
+      this.config.predicates.every((predicate) => predicate(entity))
     )
   }
 
@@ -274,11 +274,15 @@ const normalizeComponents = (components: any[]) => [
   ...new Set(components.sort().filter((c) => !!c && c !== ""))
 ]
 
+function normalizePredicates(predicates: Function[]) {
+  return [...new Set(predicates)]
+}
+
 function normalizeQueryConfiguration(config: QueryConfiguration<any>) {
   return {
     with: normalizeComponents(config.with),
     without: normalizeComponents(config.without),
-    predicate: config.predicate
+    predicates: normalizePredicates(config.predicates)
   }
 }
 
