@@ -46,15 +46,14 @@ export class World<E extends {} = any>
   constructor(entities: E[] = []) {
     super(entities)
 
-    /* When entities are added, reindex them immediately */
     this.onEntityAdded.subscribe((entity) => {
+      /* When entities are added, reindex them immediately */
       this.reindex(entity)
     })
 
-    /* When entities are removed, also make sure to forget about their IDs. */
     this.onEntityRemoved.subscribe((entity) => {
       /* Remove the entity from all known queries */
-      this.cachedQueries.forEach((query) => query.remove(entity))
+      this.queries.forEach((query) => query.remove(entity))
 
       /* Remove the entity from the ID map */
       if (this.entityToId.has(entity)) {
@@ -95,7 +94,7 @@ export class World<E extends {} = any>
 
   /* QUERIES */
 
-  protected cachedQueries = new Set<Query<any>>()
+  protected queries = new Set<Query<any>>()
   protected connectedQueries = new Set<Query<any>>()
 
   query<D>(config: QueryConfiguration<D>): Query<D> {
@@ -114,7 +113,7 @@ export class World<E extends {} = any>
     const key = configKey(normalizedConfig)
 
     /* Use existing query if we can find one */
-    for (const query of this.cachedQueries) {
+    for (const query of this.queries) {
       if (query.key === key) {
         return query as Query<D>
       }
@@ -122,7 +121,7 @@ export class World<E extends {} = any>
 
     /* Otherwise, create new query */
     const query = new Query<D>(this, normalizedConfig)
-    this.cachedQueries.add(query)
+    this.queries.add(query)
     return query
   }
 
