@@ -6,7 +6,7 @@ describe("useEntities", () => {
   it("returns the entities of the specified archetype and re-renders the component when the archetype updates", () => {
     const world = new World<{ name: string }>()
 
-    world.add({ name: "Alice" })
+    const alice = world.add({ name: "Alice" })
     world.add({ name: "Bob" })
 
     const { result } = renderHook(() => useEntities(world.with("name")))
@@ -25,6 +25,14 @@ describe("useEntities", () => {
     expect(entities[0].name).toBe("Bob")
     expect(entities[1].name).toBe("Alice")
     expect(entities[2].name).toBe("Charlie")
+
+    act(() => {
+      world.remove(alice)
+    })
+
+    expect(entities).toHaveLength(2)
+    expect(entities[0].name).toBe("Bob")
+    expect(entities[1].name).toBe("Charlie")
   })
 })
 

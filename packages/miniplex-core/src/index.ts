@@ -53,6 +53,9 @@ export class World<E extends {} = any>
 
     /* When entities are removed, also make sure to forget about their IDs. */
     this.onEntityRemoved.subscribe((entity) => {
+      /* Remove the entity from all known queries */
+      this.cachedQueries.forEach((query) => query.remove(entity))
+
       /* Remove the entity from the ID map */
       if (this.entityToId.has(entity)) {
         const id = this.entityToId.get(entity)!
