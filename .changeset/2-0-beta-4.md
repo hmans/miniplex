@@ -1,8 +1,5 @@
 ---
 "miniplex": patch
-"@miniplex/bucket": patch
-"@miniplex/core": patch
-"@miniplex/react": patch
 ---
 
 **Aaaaah, it's Miniplex 2.0 Beta 4!** The library received some major refactoring for this beta, making it significantly less complex, and at the same time easier to explain. Which, sadly, also means **breaking changes** -- but most of them are just renames, so you shouldn't have any trouble upgrading. (If you do, let me know!)
