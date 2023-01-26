@@ -28,7 +28,7 @@ type WithoutOptional<T> = Pick<T, Exclude<keyof T, OptionalKeys<T>[keyof T]>>
 
 /* Query configuration */
 
-export type QueryConfiguration<E> = {
+export type QueryConfiguration = {
   with: any[]
   without: any[]
   predicates: Function[]
@@ -97,7 +97,7 @@ export class World<E extends {} = any>
 
   protected queries = new Set<Query<any>>()
 
-  query<D>(config: QueryConfiguration<D>): Query<D> {
+  query<D>(config: QueryConfiguration): Query<D> {
     /* Normalize query */
     const normalizedConfig = normalizeQueryConfiguration(config)
     const key = configKey(normalizedConfig)
@@ -179,7 +179,7 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
 
   public key: string
 
-  constructor(public world: World, public config: QueryConfiguration<E>) {
+  constructor(public world: World, public config: QueryConfiguration) {
     super()
 
     this.key = configKey(config)
@@ -273,7 +273,7 @@ function normalizePredicates(predicates: Function[]) {
   return [...new Set(predicates)]
 }
 
-function normalizeQueryConfiguration(config: QueryConfiguration<any>) {
+function normalizeQueryConfiguration(config: QueryConfiguration) {
   return {
     with: normalizeComponents(config.with),
     without: normalizeComponents(config.without),
@@ -281,7 +281,7 @@ function normalizeQueryConfiguration(config: QueryConfiguration<any>) {
   }
 }
 
-function configKey(config: QueryConfiguration<any>) {
+function configKey(config: QueryConfiguration) {
   return `${config.with.join(",")}:${config.without.join(
     ","
   )}:${config.predicates.map((p) => id(p)).join(",")}`
