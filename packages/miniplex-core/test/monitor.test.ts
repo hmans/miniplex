@@ -1,6 +1,11 @@
-import { World } from "../src"
+import { World } from "../src/core"
 import { Monitor } from "../src/monitor"
-import { Entity } from "./core.test"
+
+export type Entity = {
+  name: string
+  age?: number
+  height?: number
+}
 
 describe(Monitor, () => {
   it("executes the setup callback on all entities in a query, and all future entities added to it", () => {
@@ -14,7 +19,7 @@ describe(Monitor, () => {
     /* Create a monitor */
     const setup = jest.fn()
     const teardown = jest.fn()
-    const monitor = query.monitor(setup, teardown)
+    const monitor = new Monitor(query).setup(setup).teardown(teardown)
 
     /* The setup callback should be called with the existing entity */
     monitor.run()
@@ -30,21 +35,5 @@ describe(Monitor, () => {
     monitor.run()
     expect(teardown).toHaveBeenCalledWith(john)
     expect(teardown).toHaveBeenCalledWith(jane)
-  })
-
-  describe("connect", () => {
-    it("returns the monitor instance", () => {
-      const world = new World<Entity>()
-      const monitor = world.with("age").monitor()
-      expect(monitor.connect()).toBe(monitor)
-    })
-  })
-
-  describe("disconnect", () => {
-    it("returns the monitor instance", () => {
-      const world = new World<Entity>()
-      const monitor = world.with("age").monitor()
-      expect(monitor.disconnect()).toBe(monitor)
-    })
   })
 })

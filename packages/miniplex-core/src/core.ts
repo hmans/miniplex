@@ -60,10 +60,7 @@ interface IQueryableBucket<E> {
    */
   where<D extends E>(predicate: Predicate<E, D>): Query<D>
 
-  monitor(
-    setup?: (entity: E) => void,
-    teardown?: (entity: E) => void
-  ): Monitor<E>
+  monitor(): Monitor<E>
 }
 
 export class World<E extends {} = any>
@@ -193,8 +190,8 @@ export class World<E extends {} = any>
     })
   }
 
-  monitor(setup?: (entity: E) => void, teardown?: (entity: E) => void) {
-    return new Monitor(this, setup, teardown)
+  monitor() {
+    return new Monitor(this)
   }
 
   protected reindex(entity: E, future = entity) {
@@ -320,8 +317,8 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
     )
   }
 
-  monitor(setup?: (entity: E) => void, teardown?: (entity: E) => void) {
-    return new Monitor(this, setup, teardown)
+  monitor() {
+    return new Monitor(this)
   }
 
   evaluate(entity: any, future = entity) {

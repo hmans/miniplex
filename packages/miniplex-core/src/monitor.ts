@@ -5,42 +5,34 @@ export class Monitor<E> {
   protected queue = createQueue()
   protected queueDisconnect = createQueue()
 
-  constructor(
-    public readonly bucket: Bucket<E>,
-    protected readonly setup: ((entity: E) => void) | undefined = undefined,
-    protected readonly teardown: ((entity: E) => void) | undefined = undefined
-  ) {
-    this.connect()
-  }
+  constructor(public readonly bucket: Bucket<E>) {}
 
-  connect() {
-    /* Setup all existing entities */
-    if (this.setup) {
-      for (const entity of this.bucket) {
-        this.queue(() => this.setup!(entity))
-      }
-
-      /* Setup new entities as they are added */
-      this.queueDisconnect(
-        this.bucket.onEntityAdded.subscribe((entity) => {
-          this.queue(() => this.setup!(entity))
-        })
-      )
+  setup(setup: (entity: E) => void) {
+    for (const entity of this.bucket) {
+      this.queue(() => setup(entity))
     }
 
-    /* Teardown entities as they are removed */
-    if (this.teardown) {
-      this.queueDisconnect(
-        this.bucket.onEntityRemoved.subscribe((entity) => {
-          this.queue(() => this.teardown!(entity))
-        })
-      )
-    }
+    /* Setup new entities as they are added */
+    this.queueDisconnect(
+      this.bucket.onEntityAdded.subscribe((entity) => {
+        this.queue(() => setup(entity))
+      })
+    )
 
     return this
   }
 
-  disconnect() {
+  teardown(teardown: (entity: E) => void) {
+    this.queueDisconnect(
+      this.bucket.onEntityRemoved.subscribe((entity) => {
+        this.queue(() => teardown(entity))
+      })
+    )
+
+    return this
+  }
+
+  stop() {
     this.queueDisconnect.flush()
     return this
   }
