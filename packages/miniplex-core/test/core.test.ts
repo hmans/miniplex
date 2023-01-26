@@ -409,4 +409,20 @@ describe(Monitor, () => {
     expect(teardown).toHaveBeenCalledWith(john)
     expect(teardown).toHaveBeenCalledWith(jane)
   })
+
+  describe("connect", () => {
+    it("returns the monitor instance", () => {
+      const world = new World<Entity>()
+      const monitor = world.with("age").monitor()
+      expect(monitor.connect()).toBe(monitor)
+    })
+  })
+
+  describe("disconnect", () => {
+    it("returns the monitor instance", () => {
+      const world = new World<Entity>()
+      const monitor = world.with("age").monitor()
+      expect(monitor.disconnect()).toBe(monitor)
+    })
+  })
 })

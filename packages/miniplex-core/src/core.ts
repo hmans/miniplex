@@ -60,7 +60,10 @@ interface IQueryableBucket<E> {
    */
   where<D extends E>(predicate: Predicate<E, D>): Query<D>
 
-  monitor(setup: (entity: E) => void, teardown: (entity: E) => void): Monitor<E>
+  monitor(
+    setup?: (entity: E) => void,
+    teardown?: (entity: E) => void
+  ): Monitor<E>
 }
 
 export class World<E extends {} = any>
@@ -190,7 +193,7 @@ export class World<E extends {} = any>
     })
   }
 
-  monitor(setup: (entity: E) => void, teardown: (entity: E) => void) {
+  monitor(setup?: (entity: E) => void, teardown?: (entity: E) => void) {
     return new Monitor(this, setup, teardown)
   }
 
@@ -317,7 +320,7 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
     )
   }
 
-  monitor(setup: (entity: E) => void, teardown: (entity: E) => void) {
+  monitor(setup?: (entity: E) => void, teardown?: (entity: E) => void) {
     return new Monitor(this, setup, teardown)
   }
 
@@ -340,36 +343,43 @@ export class Monitor<E> {
   protected queueDisconnect = createQueue()
 
   constructor(
-    public bucket: Bucket<E>,
-    protected setup: (entity: E) => void,
-    protected teardown: (entity: E) => void
+    public readonly bucket: Bucket<E>,
+    protected readonly setup: ((entity: E) => void) | undefined = undefined,
+    protected readonly teardown: ((entity: E) => void) | undefined = undefined
   ) {
     this.connect()
   }
 
   connect() {
     /* Setup all existing entities */
-    for (const entity of this.bucket) {
-      this.queue(() => this.setup(entity))
+    if (this.setup) {
+      for (const entity of this.bucket) {
+        this.queue(() => this.setup!(entity))
+      }
+
+      /* Setup new entities as they are added */
+      this.queueDisconnect(
+        this.bucket.onEntityAdded.subscribe((entity) => {
+          this.queue(() => this.setup!(entity))
+        })
+      )
     }
 
-    /* Setup new entities as they are added */
-    this.queueDisconnect(
-      this.bucket.onEntityAdded.subscribe((entity) => {
-        this.queue(() => this.setup(entity))
-      })
-    )
-
     /* Teardown entities as they are removed */
-    this.queueDisconnect(
-      this.bucket.onEntityRemoved.subscribe((entity) => {
-        this.queue(() => this.teardown(entity))
-      })
-    )
+    if (this.teardown) {
+      this.queueDisconnect(
+        this.bucket.onEntityRemoved.subscribe((entity) => {
+          this.queue(() => this.teardown!(entity))
+        })
+      )
+    }
+
+    return this
   }
 
   disconnect() {
     this.queueDisconnect.flush()
+    return this
   }
 
   run() {
