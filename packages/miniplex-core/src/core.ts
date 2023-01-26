@@ -316,10 +316,3 @@ function configKey(config: QueryConfiguration) {
     ","
   )}:${config.predicates.map((p) => id(p)).join(",")}`
 }
-
-export function hasComponents<E, C extends keyof E>(
-  entity: E,
-  ...components: C[]
-): entity is With<E, C> {
-  return components.every((c) => entity[c] !== undefined)
-}
