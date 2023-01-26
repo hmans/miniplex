@@ -1,4 +1,5 @@
 import { Bucket } from "@miniplex/bucket"
+import { id } from "@hmans/id"
 export * from "@miniplex/bucket"
 
 export type Predicate<E, D extends E> =
@@ -99,12 +100,6 @@ export class World<E extends {} = any>
   query<D>(config: QueryConfiguration<D>): Query<D> {
     /* Normalize query */
     const normalizedConfig = normalizeQueryConfiguration(config)
-
-    /* If we're using a predicate, never cache! */
-    if (normalizedConfig.predicates.length > 0) {
-      return new Query<D>(this, normalizedConfig)
-    }
-
     const key = configKey(normalizedConfig)
 
     /* Use existing query if we can find one */
@@ -287,7 +282,9 @@ function normalizeQueryConfiguration(config: QueryConfiguration<any>) {
 }
 
 function configKey(config: QueryConfiguration<any>) {
-  return `${config.with.join(",")}:${config.without.join(",")}`
+  return `${config.with.join(",")}:${config.without.join(
+    ","
+  )}:${config.predicates.map((p) => id(p)).join(",")}`
 }
 
 export function hasComponents<E, C extends keyof E>(

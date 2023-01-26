@@ -192,6 +192,7 @@ importers:
   packages/miniplex-core:
     specifiers:
       '@hmans/event': ^0.2.0
+      '@hmans/id': ^0.0.1
       '@miniplex/bucket': workspace:2.0.0-beta.3
       '@types/node': ^18.11.9
       chalk: ^4.1.2
@@ -199,6 +200,7 @@ importers:
       typescript: ^4.9.3
     dependencies:
       '@hmans/event': 0.2.0
+      '@hmans/id': 0.0.1
       '@miniplex/bucket': link:../miniplex-bucket
     devDependencies:
       '@types/node': 18.11.9
@@ -2747,6 +2749,10 @@ packages:
 
   /@hmans/event/0.2.0:
     resolution: {integrity: sha512-VrDaUafGrcT2yuC59yTxpxT7KsWoST6zNd/JdATgU4y/jEHghL5yqY9sNftNajo5VpzJkF9XxwxBixz6UlGNfg==}
+    dev: false
+
+  /@hmans/id/0.0.1:
+    resolution: {integrity: sha512-2BxHxZziST8F0P5Dt+UuttF2lwCaKK7QFR814PwEp708l6dm86pjWJAFr7BKyAGu27mRpYcghvCAUAucNdsCdw==}
     dev: false
 
   /@hmans/queue/0.0.1:

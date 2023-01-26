@@ -236,12 +236,24 @@ describe(World, () => {
 
     it("returns the same query for the same predicate", () => {
       const world = new World<Entity>()
+      const john = world.add({ name: "John", age: 40 })
+      const jane = world.add({ name: "Jane", age: 25 })
+      const paul = world.add({ name: "Paul", age: 32 })
+
       const isOver30 = ({ age }: { age: number }) => age > 30
 
       const a = world.with("age").where(isOver30)
       const b = world.with("age").where(isOver30)
 
       expect(a).toBe(b)
+      expect(a.entities).toEqual([paul, john])
+
+      const isOver35 = ({ age }: { age: number }) => age > 35
+
+      const c = a.where(isOver35)
+
+      expect(c).not.toBe(a)
+      expect(c.entities).toEqual([john])
     })
   })
 
