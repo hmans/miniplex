@@ -98,11 +98,7 @@ export class World<E extends {} = any>
 
   query<D>(config: QueryConfiguration<D>): Query<D> {
     /* Normalize query */
-    const normalizedConfig = {
-      with: normalizeComponents(config.with),
-      without: normalizeComponents(config.without),
-      predicate: config.predicate
-    }
+    const normalizedConfig = normalizeQueryConfiguration(config)
 
     /* If we're using a predicate, never cache! */
     if (normalizedConfig.predicate) {
@@ -277,6 +273,14 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
 const normalizeComponents = (components: any[]) => [
   ...new Set(components.sort().filter((c) => !!c && c !== ""))
 ]
+
+function normalizeQueryConfiguration(config: QueryConfiguration<any>) {
+  return {
+    with: normalizeComponents(config.with),
+    without: normalizeComponents(config.without),
+    predicate: config.predicate
+  }
+}
 
 function configKey(config: QueryConfiguration<any>) {
   return `${config.with.join(",")}:${config.without.join(",")}`
