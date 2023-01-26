@@ -227,6 +227,16 @@ describe(World, () => {
       const world = new World<Entity>()
       const named = world.where(isNamedPerson)
     })
+
+    it("returns the same query for the same predicate", () => {
+      const world = new World<Entity>()
+      const isOver30 = ({ age }: { age: number }) => age > 30
+
+      const a = world.with("age").where(isOver30)
+      const b = world.with("age").where(isOver30)
+
+      expect(a).toBe(b)
+    })
   })
 
   describe("addComponent", () => {
