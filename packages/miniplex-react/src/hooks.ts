@@ -5,17 +5,9 @@ import useIsomorphicLayoutEffect from "./isomorphicLayoutEffect"
 export function useEntities<T extends Bucket<any>>(bucket: T): T {
   const rerender = useRerender()
 
-  useIsomorphicLayoutEffect(() => {
-    bucket.onEntityAdded.subscribe(rerender)
-    bucket.onEntityRemoved.subscribe(rerender)
-
-    return () => {
-      bucket.onEntityAdded.unsubscribe(rerender)
-      bucket.onEntityRemoved.unsubscribe(rerender)
-    }
-  }, [rerender])
-
-  useIsomorphicLayoutEffect(rerender, [])
+  /* Re-render when entities are added or removed */
+  useOnEntityAdded(bucket, rerender)
+  useOnEntityRemoved(bucket, rerender)
 
   return bucket
 }
