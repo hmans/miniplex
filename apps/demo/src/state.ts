@@ -1,4 +1,4 @@
-import { Query, With, World } from "miniplex"
+import { hasComponents, Query, With, World } from "miniplex"
 import createReactAPI from "miniplex/react"
 import { ReactNode } from "react"
 import { Object3D } from "three"
@@ -83,7 +83,7 @@ const world = new World<Entity>()
 export const ECS = createReactAPI(world)
 
 function isAsteroid(entity: Entity): entity is Asteroid {
-  return !!entity.isAsteroid
+  return hasComponents(entity, "isAsteroid")
 }
 
 export const archetypes = {

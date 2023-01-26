@@ -1,4 +1,5 @@
 import { useFrame } from "@react-three/fiber"
+import { hasComponents } from "miniplex"
 import { Vector3 } from "three"
 import { spawnBullet } from "../entities/Bullets"
 import { ECS, Player } from "../state"
@@ -7,7 +8,7 @@ import { useKeyboard } from "../util/useKeyboard"
 const tmpVec3 = new Vector3()
 
 function isPlayer(entity: any): entity is Player {
-  return !!entity.isPlayer
+  return hasComponents(entity, "isPlayer")
 }
 
 const players = ECS.world.where(isPlayer)
