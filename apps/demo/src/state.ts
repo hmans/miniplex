@@ -82,6 +82,10 @@ const world = new World<Entity>()
 
 export const ECS = createReactAPI(world)
 
+function isAsteroid(entity: Entity): entity is Asteroid {
+  return !!entity.isAsteroid
+}
+
 export const archetypes = {
-  asteroids: world.with("isAsteroid") as Query<Asteroid>
+  asteroids: world.where(isAsteroid)
 }

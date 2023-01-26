@@ -1,5 +1,4 @@
 import { useFrame } from "@react-three/fiber"
-import { Query } from "miniplex"
 import { Vector3 } from "three"
 import { spawnBullet } from "../entities/Bullets"
 import { ECS, Player } from "../state"
@@ -7,7 +6,11 @@ import { useKeyboard } from "../util/useKeyboard"
 
 const tmpVec3 = new Vector3()
 
-const players = ECS.world.with("isPlayer") as Query<Player>
+function isPlayer(entity: any): entity is Player {
+  return !!entity.isPlayer
+}
+
+const players = ECS.world.where(isPlayer)
 
 let lastFireTime = 0
 
