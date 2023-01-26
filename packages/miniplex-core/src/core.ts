@@ -1,5 +1,6 @@
 import { Bucket } from "@miniplex/bucket"
 import { id } from "@hmans/id"
+import { createQueue } from "@hmans/queue"
 export * from "@miniplex/bucket"
 
 export type Predicate<E, D extends E> =
@@ -325,6 +326,11 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
 }
 
 export class Monitor<E> {
+  protected queueSetup = createQueue()
+  protected queueTeardown = createQueue()
+
+  protected queueDisconnect = createQueue()
+
   constructor(
     public query: Query<E>,
     protected setup: (entity: E) => void,
@@ -336,19 +342,31 @@ export class Monitor<E> {
   connect() {
     /* Setup all existing entities */
     for (const entity of this.query) {
-      this.setup(entity)
+      this.queueSetup(() => this.setup(entity))
     }
 
     /* Setup new entities as they are added */
-    this.query.onEntityAdded.subscribe(this.setup)
+    this.queueDisconnect(
+      this.query.onEntityAdded.subscribe((entity) => {
+        this.queueSetup(() => this.setup(entity))
+      })
+    )
 
     /* Teardown entities as they are removed */
-    this.query.onEntityRemoved.subscribe(this.teardown)
+    this.queueDisconnect(
+      this.query.onEntityRemoved.subscribe((entity) => {
+        this.queueSetup(() => this.teardown(entity))
+      })
+    )
   }
 
   disconnect() {
-    this.query.onEntityAdded.unsubscribe(this.setup)
-    this.query.onEntityRemoved.unsubscribe(this.teardown)
+    this.queueDisconnect.flush()
+  }
+
+  run() {
+    this.queueSetup.flush()
+    this.queueTeardown.flush()
   }
 }
 
