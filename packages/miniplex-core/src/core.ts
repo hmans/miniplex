@@ -35,8 +35,28 @@ type QueryConfiguration = {
 }
 
 interface IQueryableBucket<E> {
+  /**
+   * Queries for entities that have all of the given components. If this is called on
+   * an existing query, the query will be extended to include this new criterion.
+   *
+   * @param components The components to query for.
+   */
   with<C extends keyof E>(...components: C[]): Query<With<E, C>>
+
+  /**
+   * Queries for entities that have none of the given components. If this is called on
+   * an existing query, the query will be extended to include this new criterion.
+   *
+   * @param components The components to query for.
+   */
   without<C extends keyof E>(...components: C[]): Query<Without<E, C>>
+
+  /**
+   * Queries for entities that match the given predicate. If this is called on
+   * an existing query, the query will be extended to include this new criterion.
+   *
+   * @param predicate The predicate to query for.
+   */
   where<D extends E>(predicate: Predicate<E, D>): Query<D>
 }
 
@@ -47,16 +67,16 @@ export class World<E extends {} = any>
   constructor(entities: E[] = []) {
     super(entities)
 
+    /* When entities are added, reindex them immediately */
     this.onEntityAdded.subscribe((entity) => {
-      /* When entities are added, reindex them immediately */
       this.reindex(entity)
     })
 
+    /* When entities are removed, remove them from all known queries, and delete
+    their IDs */
     this.onEntityRemoved.subscribe((entity) => {
-      /* Remove the entity from all known queries */
       this.queries.forEach((query) => query.remove(entity))
 
-      /* Remove the entity from the ID map */
       if (this.entityToId.has(entity)) {
         const id = this.entityToId.get(entity)!
         this.idToEntity.delete(id)
@@ -78,6 +98,7 @@ export class World<E extends {} = any>
     update?: Partial<E> | keyof E | ((entity: E) => Partial<E> | void),
     value?: any
   ) {
+    /* Apply the update */
     if (typeof update === "function") {
       const partial = update(entity)
       partial && Object.assign(entity, partial)
@@ -88,9 +109,7 @@ export class World<E extends {} = any>
     }
 
     /* If this world knows about the entity, reindex it. */
-    if (this.has(entity)) {
-      this.reindex(entity)
-    }
+    this.reindex(entity)
 
     return entity
   }
@@ -102,10 +121,8 @@ export class World<E extends {} = any>
     /* Set the component */
     entity[component] = value
 
-    /* Touch the entity, triggering re-checks of indices */
-    if (this.has(entity)) {
-      this.reindex(entity)
-    }
+    /* Trigger a reindexing */
+    this.reindex(entity)
   }
 
   removeComponent(entity: E, component: keyof E) {
@@ -116,6 +133,7 @@ export class World<E extends {} = any>
     if (this.has(entity)) {
       const future = { ...entity }
       delete future[component]
+
       this.reindex(entity, future)
     }
 
@@ -127,8 +145,8 @@ export class World<E extends {} = any>
 
   protected queries = new Set<Query<any>>()
 
+  // TODO: maybe rename this to something scarier, like `produceQuery`? Users are not expected to use this directly.
   query<D>(config: QueryConfiguration): Query<D> {
-    /* Normalize query */
     const normalizedConfig = normalizeQueryConfiguration(config)
     const key = configKey(normalizedConfig)
 
@@ -170,6 +188,10 @@ export class World<E extends {} = any>
   }
 
   protected reindex(entity: E, future = entity) {
+    /* Return early if this world doesn't know about the entity. */
+    if (!this.has(entity)) return
+
+    /* Notify all queries about the change. */
     for (const query of this.queries) {
       query.evaluate(entity, future)
     }
@@ -203,11 +225,18 @@ export class World<E extends {} = any>
 export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
   protected _isConnected = false
 
+  /**
+   * True if this query is connected to the world, and will automatically
+   * re-evaluate when entities are added or removed.
+   */
   get isConnected() {
     return this._isConnected
   }
 
-  public key: string
+  /**
+   * A unique, string-based key for this query, based on its configuration.
+   */
+  public readonly key: string
 
   constructor(public world: World, public config: QueryConfiguration) {
     super()
