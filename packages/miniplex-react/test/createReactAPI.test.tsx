@@ -1,7 +1,7 @@
 import { World } from "@miniplex/core"
 import "@testing-library/jest-dom"
 import { act, render, screen } from "@testing-library/react"
-import React from "react"
+import React, { StrictMode } from "react"
 import createReactAPI from "../src"
 
 type Entity = {
@@ -271,7 +271,11 @@ describe("<Entities>", () => {
       const alice = world.add({ name: "Alice" })
       world.add({ name: "Bob" })
 
-      render(<Entities in={world}>{(entity) => <p>{entity.name}</p>}</Entities>)
+      render(
+        <StrictMode>
+          <Entities in={world}>{(entity) => <p>{entity.name}</p>}</Entities>
+        </StrictMode>
+      )
 
       expect(screen.getByText("Alice")).toBeInTheDocument()
       expect(screen.getByText("Bob")).toBeInTheDocument()

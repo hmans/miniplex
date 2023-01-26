@@ -103,7 +103,7 @@ function healthSystem() {
 }
 
 /* React to entities appearing/disappearing in archetypes: */
-archetypes.poisoned.onEntityAdded((entity) => {
+archetypes.poisoned.onEntityAdded.subscribe((entity) => {
   console.log("Poisoned:", entity)
 })
 ```
@@ -205,7 +205,7 @@ const entity = world.add({ position: { x: 0, y: 0, z: 0 } })
 
 We've directly added a `position` component to the entity. If you're using TypeScript, the component values here will be type-checked against the type you provided to the `World` constructor.
 
-> **Note** Adding the entity will make it known to the world and all relevant archetypes, but it will not change the entity object itself in any way. In Miniplex, entities can _live in multiple worlds at the same time_!
+> **Note** Adding the entity will make it known to the world and all relevant queries, but it will not change the entity object itself in any way. In Miniplex, entities can _live in multiple worlds at the same time_!
 
 ### Adding Components
 
@@ -221,7 +221,7 @@ Now the entity has two components: `position` and `velocity`.
 
 We're going to write some code that moves entities according to their velocity. You will typically implement this as something called a **system**, which, in Miniplex, are typically just normal functions that fetch the entities they are interested in, and then perform some operation on them.
 
-Fetching only the entities that a system is interested in is the most important part in all this, and it is done through something called **archetypes** that can be thought of as something akin to database indices.
+Fetching only the entities that a system is interested in is the most important part in all this, and it is done through something called **queries** that can be thought of as something akin to database indices.
 
 Since we're going to move entities, we're interested in entities that have both the `position` and `velocity` components, so let's create an archetype for that:
 
@@ -241,8 +241,6 @@ const movingEntities = world.with("position", "velocity")
 > ```ts
 > const movingEntities = world.with("position", "velocity").without("paused")
 > ```
->
-> Please read the "Advanced Usage" chapter below for some important notes on these!
 
 ### Implementing Systems
 
@@ -268,57 +266,21 @@ At some point we may want to remove an entity from the world (for example, an en
 world.remove(entity)
 ```
 
-This will immediately remove the entity from the Miniplex world and all associated archetypes.
+This will immediately remove the entity from the Miniplex world and all existing queries.
 
 > **Note** While this will remove the entity object from the world, it will not destroy or otherwise change the object itself. In fact, you can just add it right back into the world if you want to!
 
 ## Advanced Usage
 
-### Nested Archetypes
+### Predicate Queries using `where`
 
-Archetypes are the main way to query entities in Miniplex. They are created by calling the `with` method on a world, and can be thought of as something akin to database indices.
-
-Next to `with`, there is also `without`, which creates an archetype that matches entities that do _not_ have any of the specified components.
-
-`with` and `without` can be nested:
-
-```ts
-const movable = world.with("position", "velocity")
-const movableAndActive = movable.without("paused")
-const movableAndDead = movable.with("dead")
-```
-
-It is very important to understand that this will create _three_ archetypes; one that matches entities that have both `position` and `velocity`, another that matches entities from the first archetype that also do not have the `paused` component, and a third that matches entities from the first archetype that also have the `dead` component.
-
-```mermaid
-graph TD;
-    A[world]-->B["with('position', 'velocity')"];
-    B-->C["without('paused')"];
-    B-->D["with('dead')"];
-```
-
-Every time an entity is added to the world or has a component added or removed, all relevant archetypes are updated and asked to re-evaluate the changed entity. This update trickles down to all archetypes, and stops with archetypes that reject the entity.
-
-In larger projects, the structure of your archetype waterfall can have a significant impact on performance; in some cases, it can be beneficial to create a large number of small, nested archetypes, while in other cases it can be beneficial to create fewer, larger archetypes.
-
-### Combining `with` and `without` queries
-
-You can create a combined query that looks for both the presence as well as the absence of specific components through the `archetype` function:
-
-```ts
-const movableAndActive = world.archetype({
-  with: ["position", "velocity"],
-  without: ["paused"]
-})
-```
-
-This will create a single archetype wrapping the two queries, matching entities that have both `position` and `velocity` components, but do not have the `paused` component.
+**TODO**
 
 ## Best Practices
 
 ### Use `addComponent` and `removeComponent` for adding and removing components
 
-Since entities are just normal objects, you might be tempted to just add new properties to (or delete properties from) them directly. **This is a bad idea** because it will skip the indexing step needed to make sure the entity is listed in the correct archetypes. Please always go through `addComponent` and `removeComponent`!
+Since entities are just normal objects, you might be tempted to just add new properties to (or delete properties from) them directly. **This is a bad idea** because it will skip the indexing step needed to make sure the entity is listed in the correct queries. Please always go through `addComponent` and `removeComponent`!
 
 It is perfectly fine to mutate component _values_ directly, though.
 
@@ -332,12 +294,12 @@ const entity = world.add({ position: { x: 0, y: 0, z: 0 } })
 entity.velocity = { x: 10, y: 0, z: 0 }
 ```
 
-### Iterate over archetypes using `for...of`
+### Iterate over queries using `for...of`
 
-The world as well as all archetypes derived from it are _iterable_, meaning you can use them in `for...of` loops. This is the recommended way to iterate over entities in an archetype, as it is highly performant, and iterates over the entities _in reverse order_, which allows you to safely remove entities from within the loop.
+The world as well as all queries derived from it are _iterable_, meaning you can use them in `for...of` loops. This is the recommended way to iterate over entities in a query, as it is highly performant, and iterates over the entities _in reverse order_, which allows you to safely remove entities from within the loop.
 
 ```ts
-const withHealth = world.archetype("health")
+const withHealth = world.with("health")
 
 /* ✅ Recommended: */
 for (const entity of withHealth) {
@@ -361,13 +323,13 @@ withHealth.entities.forEach((entity) => {
 })
 ```
 
-### Reuse archetypes where possible
+### Reuse queries where possible
 
-The `archetype` function and its shorthand friends (`with`, `without`) aim to be idempotent and will reuse existing archetypes for the same queries passed to them. Checking if an archetype already exists for the given query is a comparatively heavyweight function, thought, and you are advised to, wherever possible, reuse previously created archetypes.
+The functions creating and returning queries (`with`, `without`, `where`) aim to be idempotent and will reuse existing queries for the same set of query attributes. Checking if a query for a specific set of query attributes already exists is a comparatively heavyweight function, though, and you are advised to, wherever possible, reuse previously created queries.
 
 ```ts
 /* ✅ Recommended: */
-const movingEntities = world.archetype("position", "velocity")
+const movingEntities = world.with("position", "velocity")
 
 function movementSystem() {
   for (const { position, velocity } of movingEntities) {
@@ -379,10 +341,8 @@ function movementSystem() {
 
 /* ⛔️ Avoid: */
 function movementSystem(world) {
-  /* This will work, but now the world needs to check if an archetype for "position" and "velocity" already exists every time this function is called, which is pure overhead. */
-  const movingEntities = world.archetype("position", "velocity")
-
-  for (const { position, velocity } of movingEntities) {
+  /* This will work, but now the world needs to check if a query for "position" and "velocity" already exists every time this function is called, which is pure overhead. */
+  for (const { position, velocity } of world.with("position", "velocity")) {
     position.x += velocity.x
     position.y += velocity.y
     position.z += velocity.z
@@ -390,37 +350,14 @@ function movementSystem(world) {
 }
 ```
 
-### Create nested archetypes with caution
-
-Miniplex does not optimize queries automatically, so the following code will create more archetypes than you probably need:
-
-```ts
-const a = world.with("position", "velocity").without("paused")
-const b = world.without("paused").with("position", "velocity")
-```
-
-Now `a` and `b` contain exactly the same entities, but they are in fact two completely separate branches of the archetype tree:
-
-```mermaid
-graph TD;
-    A[world]-->B["with('position', 'velocity')"];
-    B-->C["without('paused')"];
-    A-->D["without('paused')"];
-    D-->E["with('position', 'velocity')"];
-```
-
-Everything will still work fine, but now the system is unnecessarily doing work twice.
-
-> **Note** A future version of Miniplex will likely include a way to optimize cases like this automatically, but for now, you should be careful when creating nested archetypes.
-
 ## Questions?
 
-Find me on [Twitter](https://twitter.com/hmans) or the [Poimandres Discord](https://discord.gg/aAYjm2p7c7).
+Find me on [Twitter](https://twitter.com/hmans) or the [WebGameDev Discord](https://webgamedev.com/discord).
 
 ## License
 
 ```
-Copyright (c) 2022 Hendrik Mans
+Copyright (c) 2023 Hendrik Mans
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

@@ -1,4 +1,4 @@
-import { Event } from "@hmans/event"
+import { Event } from "eventery"
 
 /**
  * A class wrapping an array of entities of a specific type, providing
@@ -6,9 +6,13 @@ import { Event } from "@hmans/event"
  * for when entities are added or removed.
  */
 export class Bucket<E> implements Iterable<E> {
+  get entities() {
+    return this._entities
+  }
+
   /* Custom iterator that iterates over all entities in reverse order. */
   [Symbol.iterator]() {
-    let index = this.entities.length
+    let index = this._entities.length
 
     const result = {
       value: undefined as E,
@@ -17,32 +21,32 @@ export class Bucket<E> implements Iterable<E> {
 
     return {
       next: () => {
-        result.value = this.entities[--index]
+        result.value = this._entities[--index]
         result.done = index < 0
         return result
       }
     }
   }
 
-  constructor(public entities: E[] = []) {
+  constructor(protected _entities: E[] = []) {
     this.add = this.add.bind(this)
     this.remove = this.remove.bind(this)
 
     /* Register all entity positions */
-    for (let i = 0; i < entities.length; i++) {
-      this.entityPositions.set(entities[i], i)
+    for (let i = 0; i < _entities.length; i++) {
+      this.entityPositions.set(_entities[i], i)
     }
   }
 
   /**
    * Fired when an entity has been added to the bucket.
    */
-  onEntityAdded = new Event<E>()
+  onEntityAdded = new Event<[entity: E]>()
 
   /**
    * Fired when an entity is about to be removed from the bucket.
    */
-  onEntityRemoved = new Event<E>()
+  onEntityRemoved = new Event<[entity: E]>()
 
   /**
    * A map of entity positions, used for fast lookups.
