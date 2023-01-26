@@ -95,7 +95,6 @@ export class World<E extends {} = any>
   /* QUERIES */
 
   protected queries = new Set<Query<any>>()
-  protected connectedQueries = new Set<Query<any>>()
 
   query<D>(config: QueryConfiguration<D>): Query<D> {
     /* Normalize query */
@@ -147,28 +146,8 @@ export class World<E extends {} = any>
     })
   }
 
-  connectQuery(query: Query<any>) {
-    if (this.connectedQueries.has(query)) return
-
-    this.connectedQueries.add(query)
-
-    for (const entity of this) {
-      if (query.want(entity)) {
-        query.add(entity)
-      }
-    }
-  }
-
-  disconnectQuery(query: Query<any>) {
-    this.connectedQueries.delete(query)
-  }
-
-  isQueryConnected(query: Query<any>) {
-    return this.connectedQueries.has(query)
-  }
-
   protected reindex(entity: E, future = entity) {
-    for (const query of this.connectedQueries) {
+    for (const query of this.queries) {
       query.evaluate(entity, future)
     }
   }
@@ -199,8 +178,10 @@ export class World<E extends {} = any>
 }
 
 export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
+  protected _connected = false
+
   get connected() {
-    return this.world.isQueryConnected(this)
+    return this._connected
   }
 
   public key: string
@@ -210,6 +191,8 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
 
     this.key = configKey(config)
 
+    /* Automatically connect this query if event listeners are added to our
+    onEntityAdded or onEntityRemoved events. */
     this.onEntityAdded.onSubscribe.subscribe(() => this.connect())
     this.onEntityRemoved.onSubscribe.subscribe(() => this.connect())
   }
@@ -225,12 +208,20 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
   }
 
   connect() {
-    this.world.connectQuery(this)
+    if (!this._connected) {
+      this._connected = true
+
+      /* Evaluate all entities in the world */
+      for (const entity of this.world) {
+        this.evaluate(entity)
+      }
+    }
+
     return this
   }
 
   disconnect() {
-    this.world.disconnectQuery(this)
+    this._connected = false
     return this
   }
 
@@ -270,6 +261,8 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
   }
 
   evaluate(entity: any, future = entity) {
+    if (!this.connected) return
+
     const wanted = this.want(future)
     const has = this.has(entity)
 

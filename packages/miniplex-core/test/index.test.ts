@@ -1,4 +1,4 @@
-import { World, Query, With } from "../src"
+import { Query, World } from "../src"
 
 type Entity = {
   name: string
@@ -139,8 +139,8 @@ describe(World, () => {
         /* no-op */
       }
 
-      expect(world.isQueryConnected(withAge)).toBe(false)
-      expect(world.isQueryConnected(withoutHeight)).toBe(true)
+      expect(withAge.connected).toBe(false)
+      expect(withoutHeight.connected).toBe(true)
     })
 
     it("when chained, also reuses matching query instances", () => {
@@ -154,19 +154,19 @@ describe(World, () => {
     it("does not automatically connect the new query instance", () => {
       const world = new World<Entity>()
       const withAge = world.with("age")
-      expect(world.isQueryConnected(withAge)).toBe(false)
+      expect(withAge.connected).toBe(false)
 
       withAge.connect()
-      expect(world.isQueryConnected(withAge)).toBe(true)
+      expect(withAge.connected).toBe(true)
     })
 
     it("automatically connects the query the first time its entities are accessed", () => {
       const world = new World<Entity>()
       const withAge = world.with("age")
-      expect(world.isQueryConnected(withAge)).toBe(false)
+      expect(withAge.connected).toBe(false)
 
       withAge.entities
-      expect(world.isQueryConnected(withAge)).toBe(true)
+      expect(withAge.connected).toBe(true)
     })
 
     it("automatically connects the query the first time it is iterated over", () => {
@@ -174,31 +174,31 @@ describe(World, () => {
       world.add({ name: "John", age: 30 })
 
       const withAge = world.with("age")
-      expect(world.isQueryConnected(withAge)).toBe(false)
+      expect(withAge.connected).toBe(false)
 
       for (const entity of withAge) {
         expect(entity).toBeDefined()
       }
 
-      expect(world.isQueryConnected(withAge)).toBe(true)
+      expect(withAge.connected).toBe(true)
     })
 
     it("automatically connects the query when something subscribes to onEntityAdded", () => {
       const world = new World<Entity>()
       const withAge = world.with("age")
-      expect(world.isQueryConnected(withAge)).toBe(false)
+      expect(withAge.connected).toBe(false)
 
       withAge.onEntityAdded.subscribe(() => {})
-      expect(world.isQueryConnected(withAge)).toBe(true)
+      expect(withAge.connected).toBe(true)
     })
 
     it("automatically connects the query when something subscribes to onEntityRemoves", () => {
       const world = new World<Entity>()
       const withAge = world.with("age")
-      expect(world.isQueryConnected(withAge)).toBe(false)
+      expect(withAge.connected).toBe(false)
 
       withAge.onEntityRemoved.subscribe(() => {})
-      expect(world.isQueryConnected(withAge)).toBe(true)
+      expect(withAge.connected).toBe(true)
     })
   })
 
