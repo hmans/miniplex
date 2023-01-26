@@ -216,6 +216,17 @@ describe(World, () => {
       const startsWithJ = over30.where(({ name }) => name.startsWith("J"))
       expect(startsWithJ.entities).toEqual([john])
     })
+
+    it("supports type narrowing", () => {
+      type NamedPerson = { name: string }
+
+      function isNamedPerson(entity: Entity): entity is NamedPerson {
+        return "name" in entity
+      }
+
+      const world = new World<Entity>()
+      const named = world.where(isNamedPerson)
+    })
   })
 
   describe("addComponent", () => {
