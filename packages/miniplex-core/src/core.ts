@@ -336,9 +336,7 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
 }
 
 export class Monitor<E> {
-  protected queueSetup = createQueue()
-  protected queueTeardown = createQueue()
-
+  protected queue = createQueue()
   protected queueDisconnect = createQueue()
 
   constructor(
@@ -352,20 +350,20 @@ export class Monitor<E> {
   connect() {
     /* Setup all existing entities */
     for (const entity of this.bucket) {
-      this.queueSetup(() => this.setup(entity))
+      this.queue(() => this.setup(entity))
     }
 
     /* Setup new entities as they are added */
     this.queueDisconnect(
       this.bucket.onEntityAdded.subscribe((entity) => {
-        this.queueSetup(() => this.setup(entity))
+        this.queue(() => this.setup(entity))
       })
     )
 
     /* Teardown entities as they are removed */
     this.queueDisconnect(
       this.bucket.onEntityRemoved.subscribe((entity) => {
-        this.queueSetup(() => this.teardown(entity))
+        this.queue(() => this.teardown(entity))
       })
     )
   }
@@ -375,8 +373,7 @@ export class Monitor<E> {
   }
 
   run() {
-    this.queueSetup.flush()
-    this.queueTeardown.flush()
+    this.queue.flush()
   }
 }
 
