@@ -242,18 +242,17 @@ describe(World, () => {
 
       const isOver30 = ({ age }: { age: number }) => age > 30
 
-      const a = world.with("age").where(isOver30)
-      const b = world.with("age").where(isOver30)
+      const over30s = world.with("age").where(isOver30)
 
-      expect(a).toBe(b)
-      expect(a.entities).toEqual([paul, john])
+      expect(over30s).toBe(world.with("age").where(isOver30))
+      expect(over30s.entities).toEqual([paul, john])
 
       const isOver35 = ({ age }: { age: number }) => age > 35
 
-      const c = a.where(isOver35)
+      const over35s = over30s.where(isOver35)
 
-      expect(c).not.toBe(a)
-      expect(c.entities).toEqual([john])
+      expect(over35s).not.toBe(over30s)
+      expect(over35s.entities).toEqual([john])
     })
   })
 
