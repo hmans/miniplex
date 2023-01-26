@@ -28,7 +28,7 @@ type WithoutOptional<T> = Pick<T, Exclude<keyof T, OptionalKeys<T>[keyof T]>>
 
 /* Query configuration */
 
-export type QueryConfiguration = {
+type QueryConfiguration = {
   with: any[]
   without: any[]
   predicates: Function[]
