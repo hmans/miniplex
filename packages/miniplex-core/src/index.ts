@@ -93,6 +93,11 @@ export class World<E extends {} = any>
     delete entity[component]
   }
 
+  /* QUERIES */
+
+  protected cachedQueries = new Set<Query<any>>()
+  protected connectedQueries = new Set<Query<any>>()
+
   query<D>(config: QueryConfiguration<D>): Query<D> {
     /* Normalize query */
     const normalizedConfig = {
@@ -143,9 +148,6 @@ export class World<E extends {} = any>
     })
   }
 
-  protected cachedQueries = new Set<Query<any>>()
-  protected connectedQueries = new Set<Query<any>>()
-
   connectQuery(query: Query<any>) {
     if (this.connectedQueries.has(query)) return
 
@@ -173,6 +175,7 @@ export class World<E extends {} = any>
   }
 
   /* IDs */
+
   private entityToId = new Map<E, number>()
   private idToEntity = new Map<number, E>()
   private nextId = 0
