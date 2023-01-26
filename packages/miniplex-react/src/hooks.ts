@@ -1,15 +1,11 @@
 import { useRerender } from "@hmans/use-rerender"
-import { Bucket, Query } from "@miniplex/core"
+import { Bucket } from "@miniplex/core"
 import useIsomorphicLayoutEffect from "./isomorphicLayoutEffect"
 
 export function useEntities<T extends Bucket<any>>(bucket: T): T {
   const rerender = useRerender()
 
   useIsomorphicLayoutEffect(() => {
-    if (bucket instanceof Query) {
-      bucket.connect()
-    }
-
     bucket.onEntityAdded.subscribe(rerender)
     bucket.onEntityRemoved.subscribe(rerender)
 
