@@ -273,7 +273,7 @@ This will immediately remove the entity from the Miniplex world and all existing
 
 ## Advanced Usage
 
-### Reacting to added/removed entities
+### Monitors
 
 **TODO**
 
