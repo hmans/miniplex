@@ -1,4 +1,4 @@
-import { Query, World } from "../src"
+import { Query, World } from "../src/core"
 
 type Entity = {
   name: string
