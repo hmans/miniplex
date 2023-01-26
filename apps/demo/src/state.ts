@@ -1,4 +1,4 @@
-import { hasComponents, Query, With, World } from "miniplex"
+import { hasComponents, With, World } from "miniplex"
 import createReactAPI from "miniplex/react"
 import { ReactNode } from "react"
 import { Object3D } from "three"
