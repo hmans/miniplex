@@ -63,8 +63,8 @@ profile("add", () => {
 
 profile("add (with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.archetype("position")
-  const withVelocity = world.archetype("velocity")
+  const withPosition = world.with("position")
+  const withVelocity = world.with("velocity")
 
   return () => {
     for (let i = 0; i < entityCount; i++) {
@@ -103,8 +103,8 @@ profile("remove (random)", () => {
 
 profile("remove (random, with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.archetype("position")
-  const withVelocity = world.archetype("velocity")
+  const withPosition = world.with("position")
+  const withVelocity = world.with("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -143,8 +143,8 @@ profile("clear", () => {
 
 profile("clear (with archetypes)", () => {
   const world = new World<Entity>()
-  const withPosition = world.archetype("position")
-  const withVelocity = world.archetype("velocity")
+  const withPosition = world.with("position")
+  const withVelocity = world.with("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -187,7 +187,7 @@ profile("simulate (iterator)", () => {
 
 profile("simulate (iterator, archetypes)", () => {
   const world = new World<Entity>()
-  const withVelocity = world.archetype("velocity")
+  const withVelocity = world.with("velocity")
 
   for (let i = 0; i < entityCount; i++)
     world.add({
@@ -269,11 +269,11 @@ profile("1000x for entity of 1000 entities", () => {
     ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
   }
 
-  const withA = ecs.archetype("A")
-  const withB = ecs.archetype("B")
-  const withC = ecs.archetype("C")
-  const withD = ecs.archetype("D")
-  const withE = ecs.archetype("E")
+  const withA = ecs.with("A")
+  const withB = ecs.with("B")
+  const withC = ecs.with("C")
+  const withD = ecs.with("D")
+  const withE = ecs.with("E")
 
   return () => {
     for (let i = 0; i < 1000; i++) {
@@ -295,11 +295,11 @@ profile("1000x iterating over iterator with 1000 entities", () => {
     ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
   }
 
-  const withA = ecs.archetype("A")
-  const withB = ecs.archetype("B")
-  const withC = ecs.archetype("C")
-  const withD = ecs.archetype("D")
-  const withE = ecs.archetype("E")
+  const withA = ecs.with("A")
+  const withB = ecs.with("B")
+  const withC = ecs.with("C")
+  const withD = ecs.with("D")
+  const withE = ecs.with("E")
 
   return () => {
     for (let i = 0; i < 1000; i++) {
@@ -321,11 +321,11 @@ profile("1x iterating over array of 1m entities", () => {
     ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
   }
 
-  const withA = ecs.archetype("A")
-  const withB = ecs.archetype("B")
-  const withC = ecs.archetype("C")
-  const withD = ecs.archetype("D")
-  const withE = ecs.archetype("E")
+  const withA = ecs.with("A")
+  const withB = ecs.with("B")
+  const withC = ecs.with("C")
+  const withD = ecs.with("D")
+  const withE = ecs.with("E")
 
   return () => {
     for (const entity of withA.entities) entity.A *= 2
@@ -345,11 +345,11 @@ profile("1x iterating over iterator with 1m entities", () => {
     ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
   }
 
-  const withA = ecs.archetype("A")
-  const withB = ecs.archetype("B")
-  const withC = ecs.archetype("C")
-  const withD = ecs.archetype("D")
-  const withE = ecs.archetype("E")
+  const withA = ecs.with("A")
+  const withB = ecs.with("B")
+  const withC = ecs.with("C")
+  const withD = ecs.with("D")
+  const withE = ecs.with("E")
 
   return () => {
     for (const entity of withA) entity.A *= 2
@@ -369,11 +369,11 @@ profile("1x for index of 1m entities", () => {
     ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
   }
 
-  const withA = ecs.archetype("A")
-  const withB = ecs.archetype("B")
-  const withC = ecs.archetype("C")
-  const withD = ecs.archetype("D")
-  const withE = ecs.archetype("E")
+  const withA = ecs.with("A")
+  const withB = ecs.with("B")
+  const withC = ecs.with("C")
+  const withD = ecs.with("D")
+  const withE = ecs.with("E")
 
   return () => {
     for (let i = 0; i < withA.size; i++) withA.entities[i].A *= 2
@@ -393,11 +393,11 @@ profile("1x for index of 1m entities (cached length)", () => {
     ecs.add({ A: 1, B: 1, C: 1, D: 1, E: 1 })
   }
 
-  const withA = ecs.archetype("A")
-  const withB = ecs.archetype("B")
-  const withC = ecs.archetype("C")
-  const withD = ecs.archetype("D")
-  const withE = ecs.archetype("E")
+  const withA = ecs.with("A")
+  const withB = ecs.with("B")
+  const withC = ecs.with("C")
+  const withD = ecs.with("D")
+  const withE = ecs.with("E")
 
   return () => {
     const withASize = withA.size
