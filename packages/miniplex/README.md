@@ -31,6 +31,7 @@ From [VERYBOMB](https://twitter.com/verybomb):
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
 - [Advanced Usage](#advanced-usage)
+- [Usage with React](#usage-with-react)
 - [Best Practices](#best-practices)
 
 ## Example
@@ -272,7 +273,23 @@ This will immediately remove the entity from the Miniplex world and all existing
 
 ## Advanced Usage
 
+### Reacting to added/removed entities
+
+**TODO**
+
 ### Predicate Queries using `where`
+
+**TODO**
+
+### Queueing
+
+**TODO**
+
+### ID Generation
+
+**TODO**
+
+## Usage with React
 
 **TODO**
 
