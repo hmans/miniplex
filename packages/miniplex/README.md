@@ -297,20 +297,30 @@ monitor.onRemove((entity) => {
 
 A monitor will also make sure that the `onAdd` callback is run for all entities that are already in the query when the monitor is created.
 
-By default, monitors will queue these callbacks and expect you to invoke their `.run()` function in order to actually execute them. This gives you exact control over when these callbacks are run:
+You can configure multiple callbacks of each type.
+
+By default, monitors will queue these callbacks and expect you to invoke their `run` function in order to actually execute them. This gives you exact control over when these callbacks are run:
 
 ```ts
 /* Somewhere in your game loop, among your other systems: */
 monitor.run()
 ```
 
-You can also configure the monitor to run the callbacks immediately, like this:
+You can also configure the monitor to run the callbacks immediately:
 
 ```ts
 monitor.immediate()
 ```
 
 Now configured callbacks will be executed _immediately_ after entities have been added to or removed from the monitored bucket, instead of being queued.
+
+If you ever need to stop a monitor, just call its `stop` function:
+
+```ts
+monitor.stop()
+```
+
+This will remove all callbacks and stop the monitor from performing any actions.
 
 **TODO**
 
