@@ -39,5 +39,6 @@ export class Monitor<E> {
 
   run() {
     this.queue.flush()
+    return this
   }
 }
