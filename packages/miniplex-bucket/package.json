@@ -29,6 +29,7 @@
     "build": "preconstruct build"
   },
   "dependencies": {
+    "@hmans/queue": "^0.0.1",
     "eventery": "^0.0.4"
   },
   "devDependencies": {

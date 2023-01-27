@@ -1,4 +1,4 @@
-import { Bucket } from "@miniplex/bucket"
+import { Bucket } from "./Bucket"
 import { createQueue } from "@hmans/queue"
 
 export class Monitor<E> {

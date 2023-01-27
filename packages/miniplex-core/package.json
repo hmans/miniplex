@@ -32,7 +32,6 @@
   "dependencies": {
     "@hmans/event": "^0.2.0",
     "@hmans/id": "^0.0.1",
-    "@hmans/queue": "^0.0.1",
     "@miniplex/bucket": "workspace:2.0.0-beta.3"
   },
   "devDependencies": {
