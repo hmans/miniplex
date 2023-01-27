@@ -1,4 +1,4 @@
-import { Bucket } from "../src"
+import { Bucket, Monitor } from "../src"
 
 describe(Bucket, () => {
   it("can be instantiated", () => {
@@ -127,6 +127,15 @@ describe(Bucket, () => {
 
       expect(listener).toHaveBeenCalledWith(entity1)
       expect(listener).toHaveBeenCalledWith(entity2)
+    })
+  })
+
+  describe("monitor", () => {
+    it("returns a Monitor instance", () => {
+      const bucket = new Bucket()
+      const monitor = bucket.monitor()
+      expect(monitor).toBeInstanceOf(Monitor)
+      expect(monitor.bucket).toBe(bucket)
     })
   })
 })

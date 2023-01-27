@@ -58,8 +58,6 @@ interface IQueryableBucket<E> {
    * @param predicate The predicate to query for.
    */
   where<D extends E>(predicate: Predicate<E, D>): Query<D>
-
-  monitor(): Monitor<E>
 }
 
 export class World<E extends {} = any>
@@ -189,10 +187,6 @@ export class World<E extends {} = any>
     })
   }
 
-  monitor() {
-    return new Monitor(this)
-  }
-
   protected reindex(entity: E, future = entity) {
     /* Return early if this world doesn't know about the entity. */
     if (!this.has(entity)) return
@@ -314,10 +308,6 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
       ) &&
       this.config.predicates.every((predicate) => predicate(entity))
     )
-  }
-
-  monitor() {
-    return new Monitor(this)
   }
 
   evaluate(entity: any, future = entity) {

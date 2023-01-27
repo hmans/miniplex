@@ -1,4 +1,5 @@
 import { Event } from "eventery"
+import { Monitor } from "./Monitor"
 
 /**
  * A class wrapping an array of entities of a specific type, providing
@@ -135,5 +136,9 @@ export class Bucket<E> implements Iterable<E> {
     for (const entity of this) {
       this.remove(entity)
     }
+  }
+
+  monitor() {
+    return new Monitor(this)
   }
 }
