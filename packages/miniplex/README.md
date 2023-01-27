@@ -307,8 +307,10 @@ monitor.run()
 You can also configure the monitor to run the callbacks immediately, like this:
 
 ```ts
-
+monitor.immediate()
 ```
+
+Now configured callbacks will be executed _immediately_ after entities have been added to or removed from the monitored bucket, instead of being queued.
 
 **TODO**
 
