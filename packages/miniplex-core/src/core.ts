@@ -1,5 +1,5 @@
-import { Bucket, Monitor } from "@miniplex/bucket"
 import { id } from "@hmans/id"
+import { Bucket } from "@miniplex/bucket"
 export * from "@miniplex/bucket"
 
 export type Predicate<E, D extends E> =
