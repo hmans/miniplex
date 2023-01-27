@@ -9,7 +9,7 @@ export function createTransformSystem(world: World<Entity>) {
     .monitor()
 
     /* Mount a callback that will be executed for every entity arriving in this query */
-    .setup(({ transform, parent }) => {
+    .onAdd(({ transform, parent }) => {
       /* If the entity has a parent, add the transform to the parent's transform */
       if (parent?.transform) {
         parent.transform.add(transform)
@@ -22,7 +22,7 @@ export function createTransformSystem(world: World<Entity>) {
     })
 
     /* Mount a callback that will be executed for every entity leaving this query */
-    .teardown(({ transform }) => {
+    .onRemove(({ transform }) => {
       /* Remove the transform from its parent */
       transform.parent?.remove(transform)
     })

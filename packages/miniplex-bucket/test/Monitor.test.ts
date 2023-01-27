@@ -10,7 +10,7 @@ describe(Monitor, () => {
     /* Create a monitor */
     const setup = jest.fn()
     const teardown = jest.fn()
-    const monitor = new Monitor(bucket).setup(setup).teardown(teardown)
+    const monitor = new Monitor(bucket).onAdd(setup).onRemove(teardown)
 
     /* The setup callback should be called with the existing entity */
     monitor.run()
@@ -28,10 +28,10 @@ describe(Monitor, () => {
     expect(teardown).toHaveBeenCalledWith(baz)
   })
 
-  describe("setup", () => {
+  describe("onAdd", () => {
     it("returns the monitor", () => {
       const monitor = new Monitor(new Bucket())
-      expect(monitor.setup(() => {})).toBe(monitor)
+      expect(monitor.onAdd(() => {})).toBe(monitor)
     })
 
     it("registers a callback to be run for every item that has been or will be added to the bucket", () => {
@@ -39,7 +39,7 @@ describe(Monitor, () => {
       const monitor = new Monitor(bucket)
 
       const setup = jest.fn()
-      monitor.setup(setup)
+      monitor.onAdd(setup)
 
       const bar = bucket.add({ foo: "bar" })
       monitor.run()
@@ -56,7 +56,7 @@ describe(Monitor, () => {
 
       const setup1 = jest.fn()
       const setup2 = jest.fn()
-      monitor.setup(setup1).setup(setup2)
+      monitor.onAdd(setup1).onAdd(setup2)
 
       const bar = bucket.add({ foo: "bar" })
       monitor.run()
@@ -65,10 +65,10 @@ describe(Monitor, () => {
     })
   })
 
-  describe("teardown", () => {
+  describe("onRemove", () => {
     it("returns the monitor", () => {
       const monitor = new Monitor(new Bucket())
-      expect(monitor.teardown(() => {})).toBe(monitor)
+      expect(monitor.onRemove(() => {})).toBe(monitor)
     })
 
     it("registers a callback to be run for every item that has been removed from the bucket", () => {
@@ -76,7 +76,7 @@ describe(Monitor, () => {
       const monitor = new Monitor(bucket)
 
       const teardown = jest.fn()
-      monitor.teardown(teardown)
+      monitor.onRemove(teardown)
 
       const bar = bucket.add({ foo: "bar" })
       bucket.remove(bar)
@@ -90,7 +90,7 @@ describe(Monitor, () => {
 
       const teardown1 = jest.fn()
       const teardown2 = jest.fn()
-      monitor.teardown(teardown1).teardown(teardown2)
+      monitor.onRemove(teardown1).onRemove(teardown2)
 
       const bar = bucket.add({ foo: "bar" })
       bucket.remove(bar)
@@ -112,7 +112,7 @@ describe(Monitor, () => {
 
       const setup = jest.fn()
       const teardown = jest.fn()
-      monitor.setup(setup).teardown(teardown)
+      monitor.onAdd(setup).onRemove(teardown)
 
       const bar = bucket.add({ foo: "bar" })
       monitor.run()
@@ -142,7 +142,7 @@ describe(Monitor, () => {
 
       const setup = jest.fn()
       const teardown = jest.fn()
-      monitor.setup(setup).teardown(teardown)
+      monitor.onAdd(setup).onRemove(teardown)
 
       const bar = bucket.add({ foo: "bar" })
       const baz = bucket.add({ foo: "baz" })

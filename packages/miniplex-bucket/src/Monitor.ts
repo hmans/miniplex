@@ -7,7 +7,7 @@ export class Monitor<E> {
 
   constructor(public readonly bucket: Bucket<E>) {}
 
-  setup(setup: (entity: E) => void) {
+  onAdd(setup: (entity: E) => void) {
     for (const entity of this.bucket) {
       this.queue(() => setup(entity))
     }
@@ -22,7 +22,7 @@ export class Monitor<E> {
     return this
   }
 
-  teardown(teardown: (entity: E) => void) {
+  onRemove(teardown: (entity: E) => void) {
     this.queueDisconnect(
       this.bucket.onEntityRemoved.subscribe((entity) => {
         this.queue(() => teardown(entity))
