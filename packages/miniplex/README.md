@@ -275,6 +275,41 @@ This will immediately remove the entity from the Miniplex world and all existing
 
 ### Monitors
 
+Monitors allow you to react to entities appearing in or disappearing from queries, and running code when that happens. This is useful for running side-effects when entities are added or removed.
+
+You can create a new monitor through the `.monitor()` function on the world or any query object:
+
+```ts
+const monitor = world.with("foo").monitor()
+```
+
+You can now configure `onAdd` and `onRemove` callbacks that will be run for every entity in the query when it is added or removed, respectively:
+
+```ts
+monitor.onAdd((entity) => {
+  console.log("Entity added:", entity)
+})
+
+monitor.onRemove((entity) => {
+  console.log("Entity removed:", entity)
+})
+```
+
+A monitor will also make sure that the `onAdd` callback is run for all entities that are already in the query when the monitor is created.
+
+By default, monitors will queue these callbacks and expect you to invoke their `.run()` function in order to actually execute them. This gives you exact control over when these callbacks are run:
+
+```ts
+/* Somewhere in your game loop, among your other systems: */
+monitor.run()
+```
+
+You can also configure the monitor to run the callbacks immediately, like this:
+
+```ts
+
+```
+
 **TODO**
 
 ### Predicate Queries using `where`
