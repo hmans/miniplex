@@ -1,5 +1,6 @@
 import { useRerender } from "@hmans/use-rerender"
-import { Bucket } from "@miniplex/core"
+import { Bucket, Monitor } from "@miniplex/core"
+import { useMemo } from "react"
 import useIsomorphicLayoutEffect from "./isomorphicLayoutEffect"
 
 export function useEntities<T extends Bucket<any>>(bucket: T): T {
@@ -30,4 +31,21 @@ export function useOnEntityRemoved<E>(
     () => bucket.onEntityRemoved.subscribe(callback),
     [bucket, callback]
   )
+}
+
+export function useMonitor<E>(
+  bucket: Bucket<E>,
+  builder: (monitor: Monitor<E>) => void
+) {
+  const monitor = useMemo(() => bucket.monitor(), [bucket, builder])
+
+  useIsomorphicLayoutEffect(() => {
+    builder(monitor)
+
+    return () => {
+      monitor.stop()
+    }
+  }, [monitor, bucket, builder])
+
+  return monitor
 }

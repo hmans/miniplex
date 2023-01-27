@@ -1,3 +1,4 @@
+import { useMonitor } from "miniplex/react"
 import { between } from "randomish"
 import { Color, Quaternion, Vector3 } from "three"
 import { InstancedParticles, Particle } from "vfx-composer-r3f"
@@ -10,14 +11,23 @@ import { RenderableEntity } from "./RenderableEntity"
 const players = ECS.world.with("isPlayer")
 const bullets = ECS.world.with("isBullet")
 
-export const Bullets = () => (
-  <InstancedParticles>
-    <planeGeometry args={[0.15, 0.5]} />
-    <meshStandardMaterial color={new Color("orange").multiplyScalar(5)} />
+export const Bullets = () => {
+  useMonitor(bullets, (monitor) =>
+    monitor
+      .onAdd(() => console.log("Hello bullet"))
+      .onRemove(() => console.log("Goodbye bullet"))
+      .immediate()
+  )
 
-    <ECS.Entities in={bullets} children={RenderableEntity} />
-  </InstancedParticles>
-)
+  return (
+    <InstancedParticles>
+      <planeGeometry args={[0.15, 0.5]} />
+      <meshStandardMaterial color={new Color("orange").multiplyScalar(5)} />
+
+      <ECS.Entities in={bullets} children={RenderableEntity} />
+    </InstancedParticles>
+  )
+}
 
 const jitter = new Quaternion()
 const axisZ = new Vector3(0, 0, 1)
