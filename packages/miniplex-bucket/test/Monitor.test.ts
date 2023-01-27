@@ -156,4 +156,42 @@ describe(Monitor, () => {
       expect(teardown).not.toHaveBeenCalledWith(baz)
     })
   })
+
+  describe("immediate", () => {
+    it("returns the monitor instance", () => {
+      const monitor = new Monitor(new Bucket())
+      expect(monitor.immediate()).toBe(monitor)
+    })
+
+    it("sets the monitor into immediate mode", () => {
+      const monitor = new Monitor(new Bucket())
+      expect(monitor.isImmediate).toBe(false)
+      monitor.immediate()
+      expect(monitor.isImmediate).toBe(true)
+    })
+
+    it("when immediate mode is enabled, callbacks are executed immediately, instead of waiting for .run() to be invoked", () => {
+      const bucket = new Bucket()
+      const monitor = bucket.monitor().immediate()
+
+      const setup = jest.fn()
+      const teardown = jest.fn()
+      monitor.onAdd(setup).onRemove(teardown)
+
+      const bar = bucket.add({ foo: "bar" })
+      expect(setup).toHaveBeenCalledWith(bar)
+
+      bucket.remove(bar)
+      expect(teardown).toHaveBeenCalledWith(bar)
+
+      /* Now disable immediate mode */
+      monitor.immediate(false)
+
+      const baz = bucket.add({ foo: "baz" })
+      expect(setup).not.toHaveBeenCalledWith(baz)
+
+      monitor.run()
+      expect(setup).toHaveBeenCalledWith(baz)
+    })
+  })
 })

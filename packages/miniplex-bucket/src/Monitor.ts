@@ -2,8 +2,13 @@ import { Bucket } from "./Bucket"
 import { createQueue } from "@hmans/queue"
 
 export class Monitor<E> {
-  protected queue = createQueue()
-  protected queueDisconnect = createQueue()
+  get isImmediate() {
+    return this._isImmediate
+  }
+
+  protected _isImmediate = false
+  protected _queue = createQueue()
+  protected _queueDisconnect = createQueue()
 
   constructor(public readonly bucket: Bucket<E>) {}
 
@@ -13,7 +18,7 @@ export class Monitor<E> {
     }
 
     /* Setup new entities as they are added */
-    this.queueDisconnect(
+    this._queueDisconnect(
       this.bucket.onEntityAdded.subscribe((entity) => {
         this.queue(() => setup(entity))
       })
@@ -23,7 +28,7 @@ export class Monitor<E> {
   }
 
   onRemove(teardown: (entity: E) => void) {
-    this.queueDisconnect(
+    this._queueDisconnect(
       this.bucket.onEntityRemoved.subscribe((entity) => {
         this.queue(() => teardown(entity))
       })
@@ -33,12 +38,22 @@ export class Monitor<E> {
   }
 
   stop() {
-    this.queueDisconnect.flush()
+    this._queueDisconnect.flush()
     return this
   }
 
   run() {
-    this.queue.flush()
+    this._queue.flush()
     return this
+  }
+
+  immediate(enable = true) {
+    this._isImmediate = enable
+    return this
+  }
+
+  protected queue(fn: () => void) {
+    if (this.isImmediate) fn()
+    else this._queue(fn)
   }
 }
