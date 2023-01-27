@@ -8,11 +8,10 @@ export function createTransformSystem(world: World<Entity>) {
   const monitor = entities
     .monitor()
     .setup(({ transform, parent }) => {
-      const { engine } = engines.first!
-
       if (parent?.transform) {
         parent.transform.add(transform)
       } else {
+        const { engine } = engines.first!
         engine.scene.add(transform)
       }
     })
