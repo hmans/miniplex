@@ -367,6 +367,10 @@ function movementSystem(world) {
 }
 ```
 
+### Use entity factories
+
+**TODO**
+
 ## Questions?
 
 Find me on [Twitter](https://twitter.com/hmans) or the [WebGameDev Discord](https://webgamedev.com/discord).
