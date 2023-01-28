@@ -275,7 +275,7 @@ This will immediately remove the entity from the Miniplex world and all existing
 
 ### Monitors
 
-Monitors allow you to react to entities appearing in or disappearing from queries, and running code when that happens. This is useful for running side-effects when entities are added or removed.
+Monitors allow you to automatically run code every time an entity is added to or removed from a query, or the world.
 
 You can create a new monitor through the `.monitor()` function on the world or any query object:
 
@@ -295,24 +295,30 @@ monitor.onRemove((entity) => {
 })
 ```
 
-A monitor will also make sure that the `onAdd` callback is run for all entities that are already in the query when the monitor is created.
+> **Note:** A monitor will also make sure that the `onAdd` callback is run for all entities that are already in the query when the monitor is created. If this is not desired, please hook into the query's `onEntityAdded` and `onEntityRemoved` events instead.
 
-You can configure multiple callbacks of each type.
-
-By default, monitors will queue these callbacks and expect you to invoke their `run` function in order to actually execute them. This gives you exact control over when these callbacks are run:
+You can configure multiple callbacks of each type, and these calls can be chained:
 
 ```ts
-/* Somewhere in your game loop, among your other systems: */
+monitor
+  .onAdd((entity) => console.log("Foo:", entity))
+  .onAdd((entity) => console.log("Bar:", entity))
+```
+
+By default, these callbacks will be run _immediately_ after the entity has been added or removed. In some situations, you may want a little more control over when they are executed. For this, you can set the monitor to `manual` mode, and invoke it explicitly:
+
+```ts
+/* Configure monitor */
+const monitor = world
+  .with("foo")
+  .monitor()
+  .manual()
+  .onAdd((e) => console.log("Hello", e))
+  .onRemove((e) => console.log("Goodbye", e))
+
+/* Later, in your per-frame game loop: */
 monitor.run()
 ```
-
-You can also configure the monitor to run the callbacks immediately:
-
-```ts
-monitor.immediate()
-```
-
-Now configured callbacks will be executed _immediately_ after entities have been added to or removed from the monitored bucket, instead of being queued.
 
 If you ever need to stop a monitor, just call its `stop` function:
 

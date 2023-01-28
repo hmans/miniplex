@@ -5,7 +5,7 @@ export function createTransformSystem(world: World<Entity>) {
   const entities = world.with("transform")
   const engines = world.with("engine")
 
-  const monitor = entities
+  entities
     .monitor()
 
     /* Mount a callback that will be executed for every entity arriving in this query */
@@ -27,8 +27,5 @@ export function createTransformSystem(world: World<Entity>) {
       transform.parent?.remove(transform)
     })
 
-  /* Return a function that will execute every frame */
-  return () => {
-    monitor.run()
-  }
+  return () => {}
 }

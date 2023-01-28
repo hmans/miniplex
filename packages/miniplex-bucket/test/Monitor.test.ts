@@ -10,20 +10,17 @@ describe(Monitor, () => {
     /* Create a monitor */
     const setup = jest.fn()
     const teardown = jest.fn()
-    const monitor = new Monitor(bucket).onAdd(setup).onRemove(teardown)
+    new Monitor(bucket).onAdd(setup).onRemove(teardown)
 
     /* The setup callback should be called with the existing entity */
-    monitor.run()
     expect(setup).toHaveBeenCalledWith(bar)
 
     /* Add another entity. The setup callback should be called with it */
     const baz = bucket.add({ foo: "baz" })
-    monitor.run()
     expect(setup).toHaveBeenCalledWith(baz)
 
     /* Remove all entities. The teardown callback should be called with both entities */
     bucket.clear()
-    monitor.run()
     expect(teardown).toHaveBeenCalledWith(bar)
     expect(teardown).toHaveBeenCalledWith(baz)
   })
@@ -42,11 +39,9 @@ describe(Monitor, () => {
       monitor.onAdd(setup)
 
       const bar = bucket.add({ foo: "bar" })
-      monitor.run()
       expect(setup).toHaveBeenCalledWith(bar)
 
       const baz = bucket.add({ foo: "baz" })
-      monitor.run()
       expect(setup).toHaveBeenCalledWith(baz)
     })
 
@@ -59,7 +54,6 @@ describe(Monitor, () => {
       monitor.onAdd(setup1).onAdd(setup2)
 
       const bar = bucket.add({ foo: "bar" })
-      monitor.run()
       expect(setup1).toHaveBeenCalledWith(bar)
       expect(setup2).toHaveBeenCalledWith(bar)
     })
@@ -115,17 +109,14 @@ describe(Monitor, () => {
       monitor.onAdd(setup).onRemove(teardown)
 
       const bar = bucket.add({ foo: "bar" })
-      monitor.run()
       expect(setup).toHaveBeenCalledWith(bar)
 
       monitor.stop()
 
       const baz = bucket.add({ foo: "baz" })
-      monitor.run()
       expect(setup).not.toHaveBeenCalledWith(baz)
 
       bucket.remove(bar)
-      monitor.run()
       expect(teardown).not.toHaveBeenCalledWith(bar)
     })
   })
@@ -157,40 +148,42 @@ describe(Monitor, () => {
     })
   })
 
-  describe("immediate", () => {
+  describe("manual", () => {
     it("returns the monitor instance", () => {
       const monitor = new Monitor(new Bucket())
-      expect(monitor.immediate()).toBe(monitor)
+      expect(monitor.manual()).toBe(monitor)
     })
 
-    it("sets the monitor into immediate mode", () => {
+    it("sets the monitor to manual mode", () => {
       const monitor = new Monitor(new Bucket())
-      expect(monitor.isImmediate).toBe(false)
-      monitor.immediate()
-      expect(monitor.isImmediate).toBe(true)
+      expect(monitor.isAutomatic).toBe(true)
+      monitor.manual()
+      expect(monitor.isAutomatic).toBe(false)
+      expect(monitor.isManual).toBe(true)
     })
 
-    it("when immediate mode is enabled, callbacks are executed immediately, instead of waiting for .run() to be invoked", () => {
+    it("when manual mode is enabled, callbacks are queued until .run() is invoked", () => {
       const bucket = new Bucket()
-      const monitor = bucket.monitor().immediate()
+      const monitor = bucket.monitor().manual()
 
       const setup = jest.fn()
       const teardown = jest.fn()
       monitor.onAdd(setup).onRemove(teardown)
 
       const bar = bucket.add({ foo: "bar" })
+      expect(setup).not.toHaveBeenCalledWith(bar)
+      monitor.run()
       expect(setup).toHaveBeenCalledWith(bar)
 
       bucket.remove(bar)
+      expect(teardown).not.toHaveBeenCalledWith(bar)
+      monitor.run()
       expect(teardown).toHaveBeenCalledWith(bar)
 
       /* Now disable immediate mode */
-      monitor.immediate(false)
+      monitor.automatic()
 
       const baz = bucket.add({ foo: "baz" })
-      expect(setup).not.toHaveBeenCalledWith(baz)
-
-      monitor.run()
       expect(setup).toHaveBeenCalledWith(baz)
     })
   })

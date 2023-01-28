@@ -2,11 +2,15 @@ import { Bucket } from "./Bucket"
 import { createQueue } from "@hmans/queue"
 
 export class Monitor<E> {
-  get isImmediate() {
-    return this._isImmediate
+  get isAutomatic() {
+    return this._isAutomatic
   }
 
-  protected _isImmediate = false
+  get isManual() {
+    return !this._isAutomatic
+  }
+
+  protected _isAutomatic = true
   protected _queue = createQueue()
   protected _queueDisconnect = createQueue()
 
@@ -14,13 +18,13 @@ export class Monitor<E> {
 
   onAdd(setup: (entity: E) => void) {
     for (const entity of this.bucket) {
-      this.queue(() => setup(entity))
+      this.perform(() => setup(entity))
     }
 
     /* Setup new entities as they are added */
     this._queueDisconnect(
       this.bucket.onEntityAdded.subscribe((entity) => {
-        this.queue(() => setup(entity))
+        this.perform(() => setup(entity))
       })
     )
 
@@ -30,7 +34,7 @@ export class Monitor<E> {
   onRemove(teardown: (entity: E) => void) {
     this._queueDisconnect(
       this.bucket.onEntityRemoved.subscribe((entity) => {
-        this.queue(() => teardown(entity))
+        this.perform(() => teardown(entity))
       })
     )
 
@@ -47,13 +51,18 @@ export class Monitor<E> {
     return this
   }
 
-  immediate(enable = true) {
-    this._isImmediate = enable
+  manual() {
+    this._isAutomatic = false
     return this
   }
 
-  protected queue(fn: () => void) {
-    if (this.isImmediate) fn()
+  automatic() {
+    this._isAutomatic = true
+    return this
+  }
+
+  protected perform(fn: () => void) {
+    if (this.isAutomatic) fn()
     else this._queue(fn)
   }
 }
