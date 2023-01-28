@@ -16,7 +16,6 @@ export const Bullets = () => {
     monitor
       .onAdd(() => console.log("Hello bullet"))
       .onRemove(() => console.log("Goodbye bullet"))
-      .immediate()
   )
 
   return (
