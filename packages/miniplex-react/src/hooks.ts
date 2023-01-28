@@ -45,7 +45,7 @@ export function useMonitor<E>(
     return () => {
       monitor.stop()
     }
-  }, [monitor, bucket, builder])
+  }, [monitor, builder])
 
   return monitor
 }
