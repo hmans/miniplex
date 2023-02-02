@@ -129,4 +129,26 @@ describe(Bucket, () => {
       expect(listener).toHaveBeenCalledWith(entity2)
     })
   })
+
+  describe("onEnter event", () => {
+    it("is emitted when an entity is added to the bucket", () => {
+      const bucket = new Bucket()
+      const entity = { id: "1" }
+      const listener = jest.fn()
+
+      bucket.onEnter.subscribe(listener)
+      bucket.add(entity)
+
+      expect(listener).toHaveBeenCalledWith(entity)
+    })
+
+    it("automatically applies to entities that are already in the bucket", () => {
+      const bucket = new Bucket([1, 2, 3])
+      const listener = jest.fn()
+
+      bucket.onEnter.subscribe(listener)
+
+      expect(listener).toHaveBeenCalledTimes(3)
+    })
+  })
 })

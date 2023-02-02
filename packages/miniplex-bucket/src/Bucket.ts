@@ -36,6 +36,13 @@ export class Bucket<E> implements Iterable<E> {
     for (let i = 0; i < _entities.length; i++) {
       this.entityPositions.set(_entities[i], i)
     }
+
+    /* React to listeners being added to onEnter */
+    this.onEnter.onSubscribe.subscribe((listener) => {
+      for (const entity of this) {
+        listener(entity)
+      }
+    })
   }
 
   /**
@@ -47,6 +54,13 @@ export class Bucket<E> implements Iterable<E> {
    * Fired when an entity is about to be removed from the bucket.
    */
   onEntityRemoved = new Event<[entity: E]>()
+
+  /**
+   * Fired when an entity enters this bucket. The main difference between this and
+   * `onAdd` is that when new listeners are added to this event, they will also
+   * be applied to all entities that are already in the bucket.
+   */
+  onEnter = new Event<[entity: E]>()
 
   /**
    * A map of entity positions, used for fast lookups.
@@ -89,8 +103,9 @@ export class Bucket<E> implements Iterable<E> {
       this.entities.push(entity)
       this.entityPositions.set(entity, this.entities.length - 1)
 
-      /* Emit our own onEntityAdded event */
+      /* Emit relevant events */
       this.onEntityAdded.emit(entity)
+      this.onEnter.emit(entity)
     }
 
     return entity
