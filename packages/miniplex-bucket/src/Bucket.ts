@@ -48,12 +48,12 @@ export class Bucket<E> implements Iterable<E> {
   /**
    * Fired when an entity has been added to the bucket.
    */
-  onEntityAdded = new Event<[entity: E]>()
+  onAdd = new Event<[entity: E]>()
 
   /**
    * Fired when an entity is about to be removed from the bucket.
    */
-  onEntityRemoved = new Event<[entity: E]>()
+  onRemove = new Event<[entity: E]>()
 
   /**
    * Fired when an entity enters this bucket. The main difference between this and
@@ -104,7 +104,7 @@ export class Bucket<E> implements Iterable<E> {
       this.entityPositions.set(entity, this.entities.length - 1)
 
       /* Emit relevant events */
-      this.onEntityAdded.emit(entity)
+      this.onAdd.emit(entity)
       this.onEnter.emit(entity)
     }
 
@@ -122,7 +122,7 @@ export class Bucket<E> implements Iterable<E> {
     /* TODO: Return early if entity is not in bucket. */
     if (this.has(entity)) {
       /* Emit our own onEntityRemoved event. */
-      this.onEntityRemoved.emit(entity)
+      this.onRemove.emit(entity)
 
       /* Get the entity's current position. */
       const index = this.entityPositions.get(entity)!

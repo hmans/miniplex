@@ -40,12 +40,12 @@ describe(Bucket, () => {
       expect(bucket.entities).toHaveLength(0)
     })
 
-    it("emits the onEntityAdded event", () => {
+    it("emits the onAdd event", () => {
       const bucket = new Bucket()
       const entity = { id: "1" }
       const listener = jest.fn()
 
-      bucket.onEntityAdded.subscribe(listener)
+      bucket.onAdd.subscribe(listener)
       bucket.add(entity)
 
       expect(listener).toHaveBeenCalledWith(entity)
@@ -72,12 +72,12 @@ describe(Bucket, () => {
       expect(result).toBe(entity)
     })
 
-    it("emits the onEntityRemoved event", () => {
+    it("emits the onRemove event", () => {
       const bucket = new Bucket()
       const entity = bucket.add({ id: "1" })
       const listener = jest.fn()
 
-      bucket.onEntityRemoved.subscribe(listener)
+      bucket.onRemove.subscribe(listener)
       bucket.remove(entity)
 
       expect(listener).toHaveBeenCalledWith(entity)
@@ -122,7 +122,7 @@ describe(Bucket, () => {
       const entity2 = bucket.add({ id: "2" })
       const listener = jest.fn()
 
-      bucket.onEntityRemoved.subscribe(listener)
+      bucket.onRemove.subscribe(listener)
       bucket.clear()
 
       expect(listener).toHaveBeenCalledWith(entity1)
@@ -149,6 +149,41 @@ describe(Bucket, () => {
       bucket.onEnter.subscribe(listener)
 
       expect(listener).toHaveBeenCalledTimes(3)
+    })
+  })
+
+  describe("onAdd event", () => {
+    it("is emitted when an entity is added to the bucket", () => {
+      const bucket = new Bucket()
+      const entity = { id: "1" }
+      const listener = jest.fn()
+
+      bucket.onAdd.subscribe(listener)
+      bucket.add(entity)
+
+      expect(listener).toHaveBeenCalledWith(entity)
+    })
+
+    it("is not applied to entities already in the bucket", () => {
+      const bucket = new Bucket([1, 2, 3])
+      const listener = jest.fn()
+
+      bucket.onAdd.subscribe(listener)
+
+      expect(listener).toHaveBeenCalledTimes(0)
+    })
+  })
+
+  describe("onRemove event", () => {
+    it("is emitted when an entity is removed from the bucket", () => {
+      const bucket = new Bucket()
+      const entity = bucket.add({ id: "1" })
+      const listener = jest.fn()
+
+      bucket.onRemove.subscribe(listener)
+      bucket.remove(entity)
+
+      expect(listener).toHaveBeenCalledWith(entity)
     })
   })
 })

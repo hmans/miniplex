@@ -266,7 +266,7 @@ describe(World, () => {
       const withAge = world.with("age")
       expect(withAge.isConnected).toBe(false)
 
-      withAge.onEntityAdded.subscribe(() => {})
+      withAge.onAdd.subscribe(() => {})
       expect(withAge.isConnected).toBe(true)
     })
 
@@ -275,7 +275,7 @@ describe(World, () => {
       const withAge = world.with("age")
       expect(withAge.isConnected).toBe(false)
 
-      withAge.onEntityRemoved.subscribe(() => {})
+      withAge.onRemove.subscribe(() => {})
       expect(withAge.isConnected).toBe(true)
     })
   })
@@ -369,7 +369,7 @@ describe(World, () => {
       const entity = world.add({ name: "John", age: 30 })
       expect(query.entities).toEqual([entity])
 
-      query.onEntityRemoved.subscribe((removedEntity) => {
+      query.onRemove.subscribe((removedEntity) => {
         expect(removedEntity).toEqual(entity)
         expect(removedEntity.age).toEqual(30)
       })

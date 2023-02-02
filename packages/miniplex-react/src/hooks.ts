@@ -17,7 +17,7 @@ export function useOnEntityAdded<E>(
   callback: (entity: E) => void
 ) {
   useIsomorphicLayoutEffect(
-    () => bucket.onEntityAdded.subscribe(callback),
+    () => bucket.onAdd.subscribe(callback),
     [bucket, callback]
   )
 }
@@ -27,7 +27,7 @@ export function useOnEntityRemoved<E>(
   callback: (entity: E) => void
 ) {
   useIsomorphicLayoutEffect(
-    () => bucket.onEntityRemoved.subscribe(callback),
+    () => bucket.onRemove.subscribe(callback),
     [bucket, callback]
   )
 }

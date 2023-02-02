@@ -68,13 +68,13 @@ export class World<E extends {} = any>
     super(entities)
 
     /* When entities are added, reindex them immediately */
-    this.onEntityAdded.subscribe((entity) => {
+    this.onAdd.subscribe((entity) => {
       this.reindex(entity)
     })
 
     /* When entities are removed, remove them from all known queries, and delete
     their IDs */
-    this.onEntityRemoved.subscribe((entity) => {
+    this.onRemove.subscribe((entity) => {
       this.queries.forEach((query) => query.remove(entity))
 
       if (this.entityToId.has(entity)) {
@@ -245,8 +245,8 @@ export class Query<E> extends Bucket<E> implements IQueryableBucket<E> {
 
     /* Automatically connect this query if event listeners are added to our
     onEntityAdded or onEntityRemoved events. */
-    this.onEntityAdded.onSubscribe.subscribe(() => this.connect())
-    this.onEntityRemoved.onSubscribe.subscribe(() => this.connect())
+    this.onAdd.onSubscribe.subscribe(() => this.connect())
+    this.onRemove.onSubscribe.subscribe(() => this.connect())
   }
 
   get entities() {
