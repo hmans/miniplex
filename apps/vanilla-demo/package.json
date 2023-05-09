@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@types/three": "^0.144.0",
+    "@types/three": "^0.152.0",
     "typescript": "^5.0.4",
     "vite": "^4.3.5"
   },
@@ -17,6 +17,6 @@
     "fp-ts": "^2.15.0",
     "miniplex": "workspace:2.0.0-beta.3",
     "randomish": "^0.1.6",
-    "three": "^0.145.0"
+    "three": "^0.152.2"
   }
 }
