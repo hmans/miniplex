@@ -32,7 +32,7 @@
     "eventery": "^0.0.4"
   },
   "devDependencies": {
-    "@types/node": "^18.11.9",
+    "@types/node": "^18.16.6",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   }
