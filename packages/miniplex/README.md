@@ -77,8 +77,8 @@ function damage({ health }: With<Entity, "health">, amount: number) {
   health.current -= amount
 }
 
-function points(entity: With<Entity, "poison">) {
-  world.addComponent(entity, "poison", true)
+function points(entity: With<Entity, "poisoned">) {
+  world.addComponent(entity, "poisoned", true)
 }
 
 /* Create a bunch of systems: */
@@ -98,13 +98,13 @@ function poisonSystem() {
 function healthSystem() {
   for (const entity of archetypes.health) {
     if (entity.health.current <= 0) {
-      world.removeEntity(entity)
+      world.remove(entity)
     }
   }
 }
 
 /* React to entities appearing/disappearing in archetypes: */
-archetypes.poisoned.onEntityAdded.subscribe((entity) => {
+archetypes.poisoned.onEntityAdded.add((entity) => {
   console.log("Poisoned:", entity)
 })
 ```
