@@ -37,7 +37,7 @@ export const Asteroids = () => {
   const rand = InstanceRNG()
 
   return (
-    <InstancedParticles capacity={20000}>
+    <InstancedParticles capacity={20000} frustumCulled={false}>
       <icosahedronGeometry />
 
       <Composable.MeshStandardMaterial metalness={0.1} roughness={0.8}>
