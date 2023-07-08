@@ -11,7 +11,7 @@ const players = ECS.world.with("isPlayer")
 const bullets = ECS.world.with("isBullet")
 
 export const Bullets = () => (
-  <InstancedParticles>
+  <InstancedParticles frustumCulled={false}>
     <planeGeometry args={[0.15, 0.5]} />
     <meshStandardMaterial color={new Color("orange").multiplyScalar(5)} />
 
