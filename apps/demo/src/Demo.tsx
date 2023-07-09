@@ -1,4 +1,4 @@
-import { PerspectiveCamera } from "@react-three/drei"
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 import { insideSphere } from "randomish"
 import { StrictMode, useLayoutEffect } from "react"
@@ -36,6 +36,7 @@ export default function Demo() {
         <ambientLight intensity={0.2} />
         <directionalLight position={[1, 2, 3]} intensity={0.8} />
         <PerspectiveCamera makeDefault position={[0, 0, 20]} />
+        <OrbitControls autoRotate autoRotateSpeed={0.3} />
 
         <Boids />
       </StrictMode>
