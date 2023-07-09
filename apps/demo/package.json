@@ -13,7 +13,7 @@
     "@react-three/fiber": "^8.13.4",
     "miniplex": "workspace:2.0.0-beta.3",
     "postprocessing": "^6.32.2",
-    "r3f-perf": "^6.7.0",
+    "r3f-perf": "^7.1.2",
     "randomish": "^0.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
