@@ -83,6 +83,9 @@ importers:
       miniplex:
         specifier: workspace:2.0.0-beta.4
         version: link:../../packages/miniplex
+      miniplex-react:
+        specifier: workspace:2.0.0-beta.4
+        version: link:../../packages/miniplex-react
       postprocessing:
         specifier: ^6.32.2
         version: 6.32.2(three@0.154.0)
