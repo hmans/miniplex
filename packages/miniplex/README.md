@@ -98,7 +98,7 @@ function healthSystem() {
 }
 
 /* React to entities appearing/disappearing in queries: */
-queries.poisoned.onEntityAdded.add((entity) => {
+queries.poisoned.onEntityAdded.subscribe((entity) => {
   console.log("Poisoned:", entity)
 })
 ```
