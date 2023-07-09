@@ -3,10 +3,10 @@ import { useEntities } from "miniplex/react"
 import { JSXEntity } from "./JSXEntity"
 import { ECS } from "./state"
 
-const asteroids = ECS.world.with("boid", "jsx")
+const boids = ECS.world.with("boid", "jsx")
 
 export default function Boids() {
-  const { entities } = useEntities(asteroids)
+  const { entities } = useEntities(boids)
 
   return (
     <Instances>
