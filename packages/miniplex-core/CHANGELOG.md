@@ -1,5 +1,16 @@
 # miniplex
 
+## 2.0.0-beta.4
+
+### Patch Changes
+
+- 4448080: **Breaking Change:** the core `Bucket` class now uses [Eventery](https://github.com/hmans/eventery) for its `onEntityAdded` and `onEntityRemoved` events, which has a slightly different API than the library used before, since it uses `.subscribe(listener)` and `.unsubscribe(listener)` instead of `.add` and `.remove`.
+- 1258841: All packages are now built using TypeScript 5.0.
+- 4448080: **Breaking Change:** `world.archetype()` is gone. In its place, you can simply use `world.with()` instead.
+- Updated dependencies [4448080]
+- Updated dependencies [1258841]
+  - @miniplex/bucket@2.0.0-beta.4
+
 ## 2.0.0-beta.3
 
 ### Patch Changes
