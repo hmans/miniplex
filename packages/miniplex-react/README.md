@@ -308,7 +308,7 @@ Find me on [Twitter](https://twitter.com/hmans) or the [Poimandres Discord](http
 ## License
 
 ```
-Copyright (c) 2022 Hendrik Mans
+Copyright (c) 2023 Hendrik Mans
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
