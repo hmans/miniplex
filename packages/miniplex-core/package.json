@@ -1,5 +1,5 @@
 {
-  "name": "miniplex",
+  "name": "@miniplex/core",
   "author": {
     "name": "Hendrik Mans",
     "email": "hendrik@mans.de",
@@ -16,22 +16,27 @@
   ],
   "sideEffects": false,
   "version": "2.0.0-beta.4",
-  "main": "dist/miniplex.cjs.js",
-  "module": "dist/miniplex.esm.js",
-  "types": "dist/miniplex.cjs.d.ts",
-  "preconstruct": {
-    "entrypoints": [
-      "index.ts"
-    ]
-  },
+  "main": "dist/miniplex-core.cjs.js",
+  "module": "dist/miniplex-core.esm.js",
+  "types": "dist/miniplex-core.cjs.d.ts",
   "files": [
     "dist/**",
     "LICENSE",
     "README.md"
   ],
   "license": "MIT",
+  "scripts": {
+    "benchmark": "ts-node -O '{\"module\": \"commonjs\"}' benchmark.ts",
+    "build": "preconstruct build"
+  },
   "dependencies": {
-    "@hmans/queue": "^0.0.1",
-    "@miniplex/core": "2.0.0-beta.4"
+    "@hmans/id": "^0.0.1",
+    "@miniplex/bucket": "2.0.0-beta.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.1",
+    "chalk": "^4.1.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
   }
 }
