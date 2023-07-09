@@ -1,6 +1,5 @@
 import { Instance, InstanceProps, Instances } from "@react-three/drei"
 import { useEntities } from "miniplex/react"
-import { JSXEntity } from "./JSXEntity"
 import { ECS } from "./state"
 
 const boids = ECS.world.with("boid", "jsx")
@@ -13,7 +12,7 @@ export default function Boids() {
       <icosahedronGeometry />
       <meshStandardMaterial color="hotpink" />
 
-      <ECS.Entities in={entities} children={JSXEntity} />
+      <ECS.Entities in={entities} children={(e) => e.jsx} />
     </Instances>
   )
 }
