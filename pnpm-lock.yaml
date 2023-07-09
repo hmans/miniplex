@@ -212,7 +212,7 @@ importers:
         version: 1.1.0
     devDependencies:
       miniplex:
-        specifier: workspace:*
+        specifier: workspace:2.0.0-beta.4
         version: link:../miniplex
       react:
         specifier: ^18.2.0
