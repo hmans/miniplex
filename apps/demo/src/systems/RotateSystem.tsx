@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber"
-import { ECS } from "../state"
 import { useEntities } from "miniplex/react"
+import { ECS } from "../state"
 
 const withObject3D = ECS.world.with("object3d")
 
