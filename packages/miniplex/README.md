@@ -12,9 +12,9 @@
 
 ## Testimonials
 
-From [Jonathan Verrecchia](https://twitter.com/verekia):
+From [verekia](https://twitter.com/verekia):
 
-> **Miniplex has been the backbone of my games for the past 6 months and it has been a delightful experience.** The TypeScript support and React integration are excellent, and the API is very clear and easy to use, even as a first ECS experience.
+> **Miniplex has been the backbone of my games for the past year and it has been a delightful experience.** The TypeScript support and React integration are excellent, and the API is very clear and easy to use, even as a first ECS experience.
 
 From [Brian Breiholz](https://twitter.com/BrianBreiholz/status/1577182839509962752):
 
