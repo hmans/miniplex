@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@hmans/id": "^0.0.1",
-    "@miniplex/bucket": "workspace:2.0.0-beta.4"
+    "@miniplex/bucket": "2.0.0-beta.4"
   },
   "devDependencies": {
     "@types/node": "^20.4.1",

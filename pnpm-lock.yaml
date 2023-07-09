@@ -183,7 +183,7 @@ importers:
         specifier: ^0.0.1
         version: 0.0.1
       '@miniplex/bucket':
-        specifier: workspace:2.0.0-beta.4
+        specifier: 2.0.0-beta.4
         version: link:../miniplex-bucket
     devDependencies:
       '@types/node':
