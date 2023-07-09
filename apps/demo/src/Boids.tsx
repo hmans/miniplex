@@ -1,6 +1,5 @@
 import { Instance, InstanceProps, Instances } from "@react-three/drei"
 import { useEntities } from "miniplex/react"
-import { useLayoutEffect } from "react"
 import { JSXEntity } from "./JSXEntity"
 import { ECS } from "./state"
 
