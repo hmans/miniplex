@@ -19,11 +19,6 @@
   "main": "dist/miniplex.cjs.js",
   "module": "dist/miniplex.esm.js",
   "types": "dist/miniplex.cjs.d.ts",
-  "preconstruct": {
-    "entrypoints": [
-      "index.ts"
-    ]
-  },
   "files": [
     "dist/**",
     "LICENSE",
@@ -31,7 +26,8 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@hmans/id": "^0.0.1",
     "@hmans/queue": "^0.0.1",
-    "@miniplex/core": "2.0.0-beta.4"
+    "@miniplex/bucket": "2.0.0-beta.4"
   }
 }

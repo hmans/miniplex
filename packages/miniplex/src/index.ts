@@ -1,5 +1,7 @@
-/* Export everything from the core package. */
-export * from "@miniplex/core"
+export { Bucket } from "@miniplex/bucket"
+export { Query, World } from "./core"
+export type { Strict, With, Without } from "./core"
+export { hasAnyComponents, hasComponents, hasNoComponents } from "./helpers"
 
 /* Create and export a queue instance */
 import { createQueue } from "@hmans/queue"
