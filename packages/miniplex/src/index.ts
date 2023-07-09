@@ -1,3 +1,4 @@
+/* Export everything from the core package. */
 export * from "@miniplex/core"
 
 /* Create and export a queue instance */
