@@ -186,9 +186,6 @@ importers:
 
   packages/miniplex-core:
     dependencies:
-      '@hmans/event':
-        specifier: ^0.2.0
-        version: 0.2.0
       '@hmans/id':
         specifier: ^0.0.1
         version: 0.0.1
@@ -1996,10 +1993,6 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
-
-  /@hmans/event@0.2.0:
-    resolution: {integrity: sha512-VrDaUafGrcT2yuC59yTxpxT7KsWoST6zNd/JdATgU4y/jEHghL5yqY9sNftNajo5VpzJkF9XxwxBixz6UlGNfg==}
-    dev: false
 
   /@hmans/id@0.0.1:
     resolution: {integrity: sha512-2BxHxZziST8F0P5Dt+UuttF2lwCaKK7QFR814PwEp708l6dm86pjWJAFr7BKyAGu27mRpYcghvCAUAucNdsCdw==}
