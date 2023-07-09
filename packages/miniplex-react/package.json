@@ -1,5 +1,5 @@
 {
-  "name": "@miniplex/react",
+  "name": "miniplex-react",
   "author": {
     "name": "Hendrik Mans",
     "email": "hendrik@mans.de",
@@ -38,7 +38,7 @@
     "react-merge-refs": "^1.1.0"
   },
   "peerDependencies": {
-    "@miniplex/core": "^2.0.0-beta.1",
+    "miniplex": "2.0.0-beta.4",
     "react": ">=16.8"
   }
 }

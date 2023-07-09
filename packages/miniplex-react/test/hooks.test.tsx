@@ -1,4 +1,4 @@
-import { World } from "@miniplex/core"
+import { World } from "miniplex"
 import { act, renderHook } from "@testing-library/react"
 import { useEntities, useOnEntityAdded, useOnEntityRemoved } from "../src"
 

@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -157,16 +157,6 @@ importers:
       '@miniplex/core':
         specifier: 2.0.0-beta.4
         version: link:../miniplex-core
-      '@miniplex/react':
-        specifier: 2.0.0-beta.4
-        version: link:../miniplex-react
-    devDependencies:
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.2.0(react@18.2.0)
 
   packages/miniplex-bucket:
     dependencies:
@@ -214,6 +204,9 @@ importers:
       '@hmans/use-rerender':
         specifier: ^0.0.2
         version: 0.0.2(react@18.2.0)
+      miniplex:
+        specifier: 2.0.0-beta.4
+        version: link:../miniplex
       react-merge-refs:
         specifier: ^1.1.0
         version: 1.1.0

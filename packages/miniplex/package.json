@@ -21,32 +21,17 @@
   "types": "dist/miniplex.cjs.d.ts",
   "preconstruct": {
     "entrypoints": [
-      "index.ts",
-      "react.ts"
+      "index.ts"
     ]
   },
   "files": [
-    "react/**",
     "dist/**",
     "LICENSE",
     "README.md"
   ],
   "license": "MIT",
-  "devDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
   "dependencies": {
     "@hmans/queue": "^0.0.1",
-    "@miniplex/core": "2.0.0-beta.4",
-    "@miniplex/react": "2.0.0-beta.4"
-  },
-  "peerDependencies": {
-    "react": ">=16.8"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    }
+    "@miniplex/core": "2.0.0-beta.4"
   }
 }
