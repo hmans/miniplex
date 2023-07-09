@@ -4,6 +4,7 @@ import { insideSphere } from "randomish"
 import { StrictMode, useLayoutEffect } from "react"
 import Boids, { spawnBoid } from "./Boids"
 import { ECS } from "./state"
+import RotateSystem from "./systems/RotateSystem"
 
 const useWorldSetup = () =>
   useLayoutEffect(() => {
@@ -39,6 +40,8 @@ export default function Demo() {
         <OrbitControls autoRotate autoRotateSpeed={0.3} />
 
         <Boids />
+
+        <RotateSystem />
       </StrictMode>
     </Canvas>
   )
