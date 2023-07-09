@@ -65,11 +65,11 @@ const enemy = world.add({
   health: { current: 100, max: 100 }
 })
 
-/* Create some archetype queries: */
-const archetypes = {
+/* Create some queries: */
+const queries = {
   moving: world.with("position", "velocity"),
   health: world.with("health"),
-  poisoned: archetypes.health.with("poisoned")
+  poisoned: queries.health.with("poisoned")
 }
 
 /* Create functions that perform actions on entities: */
@@ -83,28 +83,28 @@ function points(entity: With<Entity, "poison">) {
 
 /* Create a bunch of systems: */
 function moveSystem() {
-  for (const { position, velocity } of archetypes.moving) {
+  for (const { position, velocity } of queries.moving) {
     position.x += velocity.x
     position.y += velocity.y
   }
 }
 
 function poisonSystem() {
-  for (const { health, poisoned } of archetypes.poisoned) {
+  for (const { health, poisoned } of queries.poisoned) {
     health.current -= 1
   }
 }
 
 function healthSystem() {
-  for (const entity of archetypes.health) {
+  for (const entity of queries.health) {
     if (entity.health.current <= 0) {
       world.removeEntity(entity)
     }
   }
 }
 
-/* React to entities appearing/disappearing in archetypes: */
-archetypes.poisoned.onEntityAdded.subscribe((entity) => {
+/* React to entities appearing/disappearing in queries: */
+queries.poisoned.onEntityAdded.subscribe((entity) => {
   console.log("Poisoned:", entity)
 })
 ```
@@ -147,27 +147,27 @@ Systems are extremely straight-forward: just write simple functions that operate
 
 #### Archetypal Queries
 
-Entity queries are performed through **archetypes**, with individual archetypes representing a subset of your world's entities that have (or don't have) a specific set of components, and/or match a specific predicate.
+Entity queries are performed through **archetypal queries**, with individual queries indexing and holding a subset of your world's entities that have (or don't have) a specific set of components, and/or match a specific predicate.
 
 #### Focus on Object Identities over numerical IDs
 
-Most interactions with Miniplex are using **object identity** to identify entities or archetypes (instead of numerical IDs). Miniplex provides a lightweight mechanism to generate unique IDs for your entities, but it is entirely optional. In more complex projects that need stable entity IDs, the user is encouraged to implement their own ID generation and management.
+Most interactions with Miniplex are using **object identity** to identify entities (instead of numerical IDs). Miniplex provides a lightweight mechanism to generate unique IDs for your entities, but it is entirely optional. In more complex projects that need stable entity IDs, the user is encouraged to implement their own ID generation and management.
 
 ## Installation
-
-> **Warning** Since this is the documentation for the upcoming 2.0 version of Miniplex, we will be using the `next` tag for installation. If you'd rather use the stable release of the library, [please refer to the 1.0 documentation](https://github.com/hmans/miniplex/tree/miniplex%401.0.0).
 
 Add the `miniplex` package to your project using your favorite package manager:
 
 ```bash
-npm add miniplex@next
-yarn add miniplex@next
-pnpm add miniplex@next
+npm add miniplex
+yarn add miniplex
+pnpm add miniplex
 ```
 
 ## Basic Usage
 
-Miniplex can be used in any JavaScript or TypeScript project, regardless of which extra frameworks you might be using. Before we talk about using Miniplex in React, let's start with the basics!
+Miniplex can be used in any JavaScript or TypeScript project, regardless of which extra frameworks you might be using. This document focuses on how to use Miniplex without a framework, but please also check out the framework-specific documentation available:
+
+- [miniplex-react](https://github.com/hmans/miniplex/tree/main/packages/miniplex-react#readme)
 
 ### Creating a World
 
@@ -224,7 +224,7 @@ We're going to write some code that moves entities according to their velocity. 
 
 Fetching only the entities that a system is interested in is the most important part in all this, and it is done through something called **queries** that can be thought of as something akin to database indices.
 
-Since we're going to move entities, we're interested in entities that have both the `position` and `velocity` components, so let's create an archetype for that:
+Since we're going to move entities, we're interested in entities that have both the `position` and `velocity` components, so let's create a query for that:
 
 ```ts
 /* Get all entities with position and velocity */
@@ -245,7 +245,7 @@ const movingEntities = world.with("position", "velocity")
 
 ### Implementing Systems
 
-Now we can implement a system that operates on these entities! Miniplex doesn't have an opinion on how you implement systems – they can be as simple as a function. Here's a system that uses the `movingEntities` archetype we created in the previous step, iterates over all entities in it, and moves them according to their velocity:
+Now we can implement a system that operates on these entities! Miniplex doesn't have an opinion on how you implement systems – they can be as simple as a function. Here's a system that uses the `movingEntities` query we created in the previous step, iterates over all entities in it, and moves them according to their velocity:
 
 ```ts
 function movementSystem() {
@@ -286,10 +286,6 @@ This will immediately remove the entity from the Miniplex world and all existing
 **TODO**
 
 ### ID Generation
-
-**TODO**
-
-## Usage with React
 
 **TODO**
 
@@ -367,13 +363,9 @@ function movementSystem(world) {
 }
 ```
 
-### Use entity factories
-
-**TODO**
-
 ## Questions?
 
-Find me on [Twitter](https://twitter.com/hmans) or the [WebGameDev Discord](https://webgamedev.com/discord).
+If you have questions about Miniplex, you're invited to post it in our [Discussions section](https://github.com/hmans/miniplex/discussions) on GitHub.
 
 ## License
 
