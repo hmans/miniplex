@@ -4,12 +4,6 @@
 [![Downloads](https://img.shields.io/npm/dt/miniplex.svg?style=for-the-badge)](https://www.npmjs.com/package/miniplex)
 [![Bundle Size](https://img.shields.io/bundlephobia/min/miniplex?style=for-the-badge&label=bundle%20size)](https://bundlephobia.com/result?p=miniplex)
 
-> **Warning** You are looking at the work-in-progress documentation for the upcoming **version 2.0** of Miniplex and its companion libraries. If you're looking for 1.0 documentation, [please go here](https://github.com/hmans/miniplex/tree/miniplex%401.0.0).
-
-## Miniplex 2.0 Beta 1 now available!
-
-⚠️ **The first beta of this library's upcoming 2.0 release is out. Please check the [announcement post](https://github.com/hmans/miniplex/discussions/258) for details, including upgrade instructions.**
-
 ## Testimonials
 
 From [verekia](https://twitter.com/verekia):
