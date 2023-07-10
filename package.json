@@ -4,7 +4,7 @@
   "version": "0.2.0",
   "license": "MIT",
   "scripts": {
-    "benchmark": "pnpm -F @miniplex/core benchmark",
+    "benchmark": "pnpm -F miniplex benchmark",
     "postinstall": "preconstruct dev",
     "dev": "preconstruct dev",
     "demo:react": "pnpm dev && pnpm -F demo dev",

@@ -1,4 +1,0 @@
-{
-  "main": "dist/miniplex-react.cjs.js",
-  "module": "dist/miniplex-react.esm.js"
-}
