@@ -15,7 +15,7 @@
     "state-management"
   ],
   "sideEffects": false,
-  "version": "2.0.0-beta.4",
+  "version": "2.0.0-beta.5",
   "main": "dist/miniplex.cjs.js",
   "module": "dist/miniplex.esm.js",
   "types": "dist/miniplex.cjs.d.ts",

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0-beta.5
+
+### Patch Changes
+
+- 1671bb5: **Breaking Change:** Restructured the main entrypoint packages to what they were in Miniplex 1.0, with the `miniplex` package now only providing the vanilla, framework-agnostic ECS functionality, and `miniplex-react` adding the React glue (and using `miniplex` as a peer dependency.)
+
 ## 2.0.0-beta.4
 
 ### Patch Changes
