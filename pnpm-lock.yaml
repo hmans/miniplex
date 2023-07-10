@@ -117,9 +117,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.0.2
         version: 4.0.2(vite@4.4.2)
-      typescript:
-        specifier: ^5.1.6
-        version: 5.1.6
       vite:
         specifier: ^4.4.2
         version: 4.4.2
