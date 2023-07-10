@@ -7,12 +7,14 @@
     "miniplex": "2.0.0-beta.3",
     "@miniplex/bucket": "2.0.0-beta.3",
     "@miniplex/core": "2.0.0-beta.3",
-    "@miniplex/react": "2.0.0-beta.3"
+    "@miniplex/react": "2.0.0-beta.3",
+    "miniplex-react": "2.0.0-beta.4"
   },
   "changesets": [
     "2-0-beta-1",
     "2-0-beta-4",
     "chilly-moles-cheat",
+    "flat-rules-mate",
     "hungry-walls-worry",
     "khaki-ducks-doubt",
     "lemon-mice-smile",
