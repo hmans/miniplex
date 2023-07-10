@@ -1,6 +1,6 @@
-import { World } from "@miniplex/core"
 import "@testing-library/jest-dom"
 import { act, render, screen } from "@testing-library/react"
+import { World } from "miniplex"
 import React, { StrictMode } from "react"
 import createReactAPI from "../src"
 

@@ -1,12 +1,12 @@
-import { Bucket, World } from "@miniplex/core"
+import { Bucket, World } from "miniplex"
 import React, {
-  createContext,
   ForwardedRef,
-  forwardRef,
-  memo,
   PropsWithRef,
   ReactElement,
   ReactNode,
+  createContext,
+  forwardRef,
+  memo,
   useContext,
   useEffect,
   useImperativeHandle,
@@ -140,7 +140,7 @@ export const createReactAPI = <E extends {}>(world: World<E>) => {
     /* Handle updates to existing component */
     useIsomorphicLayoutEffect(() => {
       if (props.data === undefined) return
-      entity[props.name] = (props.data || ref.current) as typeof entity[P]
+      entity[props.name] = (props.data || ref.current) as (typeof entity)[P]
     }, [entity, props.name, props.data, ref.current])
 
     /* Handle setting of child value */

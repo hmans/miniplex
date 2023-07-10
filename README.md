@@ -1,1 +1,1 @@
-packages/miniplex/README.md
+packages/core/README.md

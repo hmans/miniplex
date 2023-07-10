@@ -1,5 +1,5 @@
 import { useRerender } from "@hmans/use-rerender"
-import { Bucket } from "@miniplex/core"
+import { Bucket } from "miniplex"
 import useIsomorphicLayoutEffect from "./isomorphicLayoutEffect"
 
 export function useEntities<T extends Bucket<any>>(bucket: T): T {

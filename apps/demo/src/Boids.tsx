@@ -1,5 +1,5 @@
 import { Instance, InstanceProps, Instances } from "@react-three/drei"
-import { useEntities } from "miniplex/react"
+import { useEntities } from "miniplex-react"
 import { ECS } from "./state"
 
 const boids = ECS.world.with("boid", "jsx")

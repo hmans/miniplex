@@ -19,27 +19,27 @@
   "main": "dist/miniplex.cjs.js",
   "module": "dist/miniplex.esm.js",
   "types": "dist/miniplex.cjs.d.ts",
-  "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "react.ts"
-    ]
-  },
   "files": [
-    "react/**",
     "dist/**",
     "LICENSE",
     "README.md"
   ],
   "license": "MIT",
+  "scripts": {
+    "benchmark": "tsx benchmark.ts",
+    "build": "preconstruct build"
+  },
   "devDependencies": {
+    "@types/node": "^20.4.1",
+    "chalk": "^5.3.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "tsx": "^3.12.7"
   },
   "dependencies": {
+    "@hmans/id": "^0.0.1",
     "@hmans/queue": "^0.0.1",
-    "@miniplex/core": "2.0.0-beta.4",
-    "@miniplex/react": "2.0.0-beta.4"
+    "@miniplex/bucket": "workspace:2.0.0-beta.4"
   },
   "peerDependencies": {
     "react": ">=16.8"
