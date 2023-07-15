@@ -1,11 +1,11 @@
 import { between } from "randomish"
-import { useLayoutEffect } from "react"
+import { useEffect } from "react"
 import { Vector3 } from "three"
 import { spawnBoid } from "./Boids"
 import { ECS } from "./state"
 
 const useWorldSetup = () =>
-  useLayoutEffect(() => {
+  useEffect(() => {
     console.log("Populating Miniplex world")
 
     for (let i = 0; i < 1000; i++) {
