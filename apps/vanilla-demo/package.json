@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@types/three": "^0.153.0",
-    "vite": "^4.4.2"
+    "@types/three": "^0.154.0",
+    "vite": "^4.4.4"
   },
   "dependencies": {
     "fp-ts": "^2.16.0",
