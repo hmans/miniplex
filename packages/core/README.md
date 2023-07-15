@@ -332,13 +332,22 @@ function damageEntity(entity: With<Entity, "health">, amount: number) {
 }
 ```
 
-### Queueing
-
-**TODO**
-
 ### ID Generation
 
-**TODO**
+When interacting with Miniplex, entities are typically identified using their _object identities_, which is one of the ways where Miniplex is different from typical ECS implementations, which usually make use of numerical IDs.
+
+Most Miniplex workloads can be implemented without the use of numerical IDs, but if you ever _do_ need such an identifier for your entities -- possibly because you're wiring them up to another non-Miniplex system that expects identifiers -- Miniplex worlds provide a lightweight mechanism to generate them:
+
+```ts
+const entity = world.add({ count: 10 })
+const id = world.id(entity)
+```
+
+You can later use this ID to look up the entity in the world:
+
+```ts
+const entity = world.entity(id)
+```
 
 ## Best Practices
 
