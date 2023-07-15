@@ -235,7 +235,7 @@ While the `<Entity>` component can be used to spawn (and later destroy) a new en
 
 For everything else, you should write imperative code that mutates the world, and design your React components to _react_ to these changes. Consider the following module, which co-locates both an `<Enemies>` component that renders the currently active enemies, and a `spawnEnemy` function that spawns a new one:
 
-```ts
+```tsx
 const enemies = ECS.world.with("enemy")
 
 export const Enemies = () => {
@@ -277,6 +277,38 @@ export const GameState = () => {
     }
   }, [])
 }
+```
+
+### Using the `children` prop on `<Entities>`
+
+You've already seen how the `<Entities>` component optionally accepts a render prop as its child; this can be used to defer the rendering of an entity to a separate function:
+
+```tsx
+const enemies = ECS.world.with("enemy")
+
+export const Enemies = () => <ECS.Entities in={enemies} children={Enemy} />
+
+export const Enemy = (entity) => (
+  <ECS.Entity entity={entity}>
+    <ECS.Component name="three">
+      <EnemyShipModel />
+    </ECS.Component>
+  </ECS.Entity>
+)
+```
+
+This is particularly useful if you want to provide a component that renders out a single entity of a specific type, and then want to re-use it when rendering a complete list of them. The `<Enemies>` component above is functionally equivalent to:
+
+```tsx
+export const Enemies = () => (
+  <ECS.Entities in={enemies}>{(entity) => <Enemy {...entity} />}</ECS.Entities>
+)
+```
+
+Or event this, since React components are just functions:
+
+```tsx
+export const Enemies = () => <ECS.Entities in={enemies}>{Enemy}</ECS.Entities>
 ```
 
 ## Questions?
