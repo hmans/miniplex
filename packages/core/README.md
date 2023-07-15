@@ -289,9 +289,48 @@ withHealth.onEntityAdded.subscribe((entity) => {
 })
 ```
 
-### Predicate Queries using `where`
+### Predicate Queries using `where` and explicitly updating entities using `update`
 
-**TODO**
+Typically, you'll want to build queries the check entities for the _presence_ of specific components; you have been using the `with` and `without` functions for this so far. But there may be the rare case where you want to query by _value_; for this, Miniplex provides the `where` function. It allows you to specify a predicate function that your entity will be checked against:
+
+```ts
+const damagedEntities = world
+  .with("health")
+  .where(({ health }) => health.current < health.max)
+
+const deadEntities = world.with("health").where(({ health }) => health <= 0)
+```
+
+It is _extremely_ important to note that queries that use `where` are in no way reactive; if the values within the entity change in a way that would change the result of your predicate function, Miniplex will _not_ pick this up automatically.
+
+Instead, once you know that you are using `where` to inspect component _values_, you are required to signal an updated entity by calling the `reindex` function:
+
+```ts
+function damageEntity(entity: With<Entity, "health">, amount: number) {
+  entity.health.current -= amount
+  world.reindex(entity)
+}
+```
+
+Depending on the total number of queries you've created, reindexing can be a relatively expensive operation, so it is recommended that you use this functionality with care. Most of the time, it is more efficient to model things using additional components. The above example could, for example, be rewritten like this:
+
+```ts
+const damagedEntities = world.with("health", "damaged")
+
+const deadEntities = world.with("health", "dead")
+
+function damageEntity(entity: With<Entity, "health">, amount: number) {
+  entity.health.current -= amount
+
+  if (entity.health.current < entity.health.max) {
+    world.addComponent(entity, "damaged")
+  }
+
+  if (entity.health.current <= 0) {
+    world.addComponent(entity, "dead")
+  }
+}
+```
 
 ### Queueing
 

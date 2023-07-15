@@ -187,7 +187,11 @@ export class World<E extends {} = any>
     })
   }
 
-  protected reindex(entity: E, future = entity) {
+  reindex(entity: E): void
+
+  reindex(entity: E, future: E): void
+
+  reindex(entity: E, future = entity) {
     /* Return early if this world doesn't know about the entity. */
     if (!this.has(entity)) return
 

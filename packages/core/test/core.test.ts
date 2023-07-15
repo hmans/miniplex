@@ -295,6 +295,28 @@ describe(World, () => {
       expect(startsWithJ.entities).toEqual([john])
     })
 
+    it("requires the use of reindex in order to react to changes", () => {
+      const world = new World<Entity>()
+
+      const john = world.add({ name: "John", age: 40 })
+      const paul = world.add({ name: "Paul", age: 29 })
+
+      const over30 = world.with("age").where(({ age }) => age >= 30)
+      expect(over30.entities).toEqual([john])
+
+      /* Mutate an entity to make it match the predicate */
+      paul.age++
+
+      /* The query is not updated automatically */
+      expect(over30.entities).toEqual([john])
+
+      /* Reindex the entity */
+      world.reindex(paul)
+
+      /* The query is updated */
+      expect(over30.entities).toEqual([john, paul])
+    })
+
     it("supports type narrowing", () => {
       type NamedPerson = { name: string }
 
