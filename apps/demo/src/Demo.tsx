@@ -26,9 +26,9 @@ export default function Demo() {
         <PerspectiveCamera makeDefault position={[0, 0, 50]} />
         <OrbitControls />
 
-        <WorldSetup />
-
         <Boids />
+
+        <WorldSetup />
 
         <SpatialHashingSystem />
         <IdentifyNeighborSystem maxDistance={3} />
