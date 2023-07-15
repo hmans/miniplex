@@ -269,7 +269,25 @@ This will immediately remove the entity from the Miniplex world and all existing
 
 ### Reacting to added/removed entities
 
-**TODO**
+Instances of `World` and `Query` provide the built-in `onEntityAdded` and `onEntityRemoved` events that you can subscribe to to be notified about entities appearing or disappearing.
+
+For example, in order to be notified about any entity being added to the world, you may do this:
+
+```ts
+world.onEntityAdded.subscribe((entity) => {
+  console.log("A new entity has been spawned:", entity)
+})
+```
+
+This is useful for running system-specific initialization code on entities that appear in specific queries:
+
+```ts
+const withHealth = world.with("health")
+
+withHealth.onEntityAdded.subscribe((entity) => {
+  entity.health.current = entity.health.max
+})
+```
 
 ### Predicate Queries using `where`
 
