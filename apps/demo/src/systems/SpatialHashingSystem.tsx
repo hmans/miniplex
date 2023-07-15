@@ -1,6 +1,5 @@
 import { useFrame } from "@react-three/fiber"
 import { ECS, Entity } from "../state"
-import { useEffect, useMemo } from "react"
 
 type Cell = Set<Entity>
 
