@@ -12,6 +12,8 @@ export default function ({ factor = 1 }: { factor?: number }) {
     } of entities) {
       separation.set(0, 0, 0)
 
+      if (neighbors.length === 0) continue
+
       for (const neighbor of neighbors) {
         const distance = transform.position.distanceTo(
           neighbor.transform.position

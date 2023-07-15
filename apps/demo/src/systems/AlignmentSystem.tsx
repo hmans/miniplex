@@ -11,6 +11,8 @@ export default function ({ factor = 1 }: { factor?: number }) {
     } of entities) {
       alignment.set(0, 0, 0)
 
+      if (neighbors.length === 0) continue
+
       for (const neighbor of neighbors) {
         alignment.add(neighbor.velocity)
       }

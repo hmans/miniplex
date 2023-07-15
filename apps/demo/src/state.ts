@@ -13,6 +13,7 @@ export type Entity = {
     coherence: Vector3
     separation: Vector3
     alignment: Vector3
+    avoidEdges: Vector3
   }
 
   transform?: Object3D

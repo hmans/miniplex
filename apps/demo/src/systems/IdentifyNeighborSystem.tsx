@@ -1,9 +1,9 @@
 import { useFrame } from "@react-three/fiber"
 import { ECS } from "../state"
 
-const entities = ECS.world.with("transform", "neighbors")
+const entities = ECS.world.with("transform", "neighbors", "velocity")
 
-export default function () {
+export default function ({ maxDistance = 5 }: { maxDistance?: number }) {
   useFrame((_, dt) => {
     for (const entity of entities) {
       /* Clear the neighbors list */
@@ -18,7 +18,7 @@ export default function () {
           otherEntity.transform.position
         )
 
-        if (distance < 5) {
+        if (distance <= maxDistance) {
           entity.neighbors.push(otherEntity)
         }
       }

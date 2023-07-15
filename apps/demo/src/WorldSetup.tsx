@@ -8,7 +8,7 @@ const useWorldSetup = () =>
   useLayoutEffect(() => {
     console.log("Populating Miniplex world")
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 300; i++) {
       const position = new Vector3()
         .randomDirection()
         .multiplyScalar(between(0, 10))

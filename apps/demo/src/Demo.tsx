@@ -9,6 +9,7 @@ import IdentifyNeighborSystem from "./systems/IdentifyNeighborSystem"
 import SeparationSystem from "./systems/SeparationSystem"
 import VelocitySystem from "./systems/VelocitySystem"
 import AlignmentSystem from "./systems/AlignmentSystem"
+import AvoidEdgesSystem from "./systems/AvoidEdgesSystem"
 
 export default function Demo() {
   return (
@@ -21,19 +22,20 @@ export default function Demo() {
       <StrictMode>
         <ambientLight intensity={0.2} />
         <directionalLight position={[1, 2, 3]} intensity={0.8} />
-        <PerspectiveCamera makeDefault position={[0, 0, 20]} />
+        <PerspectiveCamera makeDefault position={[0, 0, 50]} />
         <OrbitControls autoRotate autoRotateSpeed={0.3} />
 
         <WorldSetup />
 
         <Boids />
 
-        <IdentifyNeighborSystem />
-        <CoherenceSystem factor={0.1} />
-        <SeparationSystem factor={0.1} />
-        <AlignmentSystem factor={0.01} />
+        <IdentifyNeighborSystem maxDistance={3} />
+        <CoherenceSystem factor={2} />
+        <SeparationSystem factor={4} />
+        <AlignmentSystem factor={4} />
+        <AvoidEdgesSystem factor={5} maxDistance={20} />
         <ApplyForcesSystem />
-        <VelocitySystem />
+        <VelocitySystem maxVelocity={6} />
       </StrictMode>
     </Canvas>
   )
