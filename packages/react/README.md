@@ -1,4 +1,4 @@
-[![Tests](https://img.shields.io/github/workflow/status/hmans/miniplex/Tests?label=CI&style=for-the-badge)](https://github.com/hmans/miniplex/actions/workflows/tests.yml)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/hmans/miniplex/tests.yml?style=for-the-badge)
 [![Downloads](https://img.shields.io/npm/dt/miniplex-react.svg?style=for-the-badge)](https://www.npmjs.com/package/miniplex-react)
 [![Bundle Size](https://img.shields.io/bundlephobia/min/miniplex-react?style=for-the-badge&label=bundle%20size)](https://bundlephobia.com/result?p=miniplex-react)
 
