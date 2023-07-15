@@ -5,6 +5,9 @@ import Boids from "./Boids"
 import VelocitySystem from "./systems/VelocitySystem"
 import { useWorldSetup } from "./useWorldSetup"
 import IdentifyNeighborSystem from "./systems/IdentifyNeighborSystem"
+import CoherenceSystem from "./systems/CoherenceSystem"
+import ApplyForcesSystem from "./systems/ApplyForcesSystem"
+import SeparationSystem from "./systems/SeparationSystem"
 
 export default function Demo() {
   /* We've created a custom hook that will initialize the ECS world
@@ -27,6 +30,9 @@ export default function Demo() {
         <Boids />
 
         <IdentifyNeighborSystem />
+        <CoherenceSystem />
+        <SeparationSystem />
+        <ApplyForcesSystem />
         <VelocitySystem />
       </StrictMode>
     </Canvas>

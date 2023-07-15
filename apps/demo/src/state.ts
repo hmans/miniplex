@@ -9,6 +9,12 @@ export type Entity = {
   velocity?: Vector3
   neighbors?: With<Entity, "transform">[]
 
+  forces: {
+    coherence: Vector3
+    separation: Vector3
+    alignment: Vector3
+  }
+
   transform?: Object3D
   jsx?: ReactNode
 }

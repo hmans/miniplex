@@ -27,9 +27,13 @@ export const spawnBoid = ({
 }) => {
   ECS.world.add({
     boid: true,
-    position,
     velocity,
     neighbors: [],
+    forces: {
+      coherence: new Vector3(),
+      separation: new Vector3(),
+      alignment: new Vector3()
+    },
     jsx: (
       <ECS.Component name="transform">
         <Instance position={position} />
