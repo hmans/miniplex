@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0-beta.6
+
+### Patch Changes
+
+- aca22ff: Given the `miniplex-react` package's documentation an overhaul for the upcoming 2.0.0 release. [Do give it a read](https://github.com/hmans/miniplex/blob/main/packages/react/README.md), feedback welcome!
+
 ## 2.0.0-beta.5
 
 ### Patch Changes
