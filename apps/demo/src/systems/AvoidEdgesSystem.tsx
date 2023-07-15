@@ -10,7 +10,7 @@ export default function ({
   factor?: number
   maxDistance?: number
 }) {
-  useFrame((_, dt) => {
+  useFrame(function AvoidEdgesSystem() {
     for (const {
       forces: { avoidEdges },
       transform

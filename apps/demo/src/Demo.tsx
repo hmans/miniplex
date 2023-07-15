@@ -10,6 +10,7 @@ import SeparationSystem from "./systems/SeparationSystem"
 import VelocitySystem from "./systems/VelocitySystem"
 import AlignmentSystem from "./systems/AlignmentSystem"
 import AvoidEdgesSystem from "./systems/AvoidEdgesSystem"
+import SpatialHashingSystem from "./systems/SpatialHashingSystem"
 
 export default function Demo() {
   return (
@@ -29,7 +30,8 @@ export default function Demo() {
 
         <Boids />
 
-        <IdentifyNeighborSystem maxDistance={4} />
+        <SpatialHashingSystem />
+        <IdentifyNeighborSystem maxDistance={3} />
         <CoherenceSystem factor={3} />
         <SeparationSystem factor={8} />
         <AlignmentSystem factor={1} />

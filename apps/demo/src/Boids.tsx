@@ -3,6 +3,7 @@ import { useEntities } from "miniplex-react"
 import { Vector3 } from "three"
 import { ECS } from "./state"
 import { useFrame } from "@react-three/fiber"
+import { SpatialHashMap } from "./systems/SpatialHashingSystem"
 
 const boids = ECS.world.with("boid", "jsx")
 
@@ -17,6 +18,8 @@ export default function Boids() {
   )
 }
 
+const boidsSpatialHashMap = new SpatialHashMap(2)
+
 export const spawnBoid = ({
   position,
   velocity = new Vector3()
@@ -28,6 +31,7 @@ export const spawnBoid = ({
     boid: true,
     velocity,
     neighbors: [],
+    spatialHashMap: boidsSpatialHashMap,
     forces: {
       coherence: new Vector3(),
       separation: new Vector3(),

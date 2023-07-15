@@ -4,7 +4,7 @@ import { ECS } from "../state"
 const entities = ECS.world.with("forces", "velocity")
 
 export default function () {
-  useFrame((_, dt) => {
+  useFrame(function ApplyForcesSystem(_, dt) {
     for (const { forces, velocity } of entities) {
       velocity.addScaledVector(forces.coherence, dt)
       velocity.addScaledVector(forces.separation, dt)

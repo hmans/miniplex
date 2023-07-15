@@ -4,7 +4,7 @@ import { ECS } from "../state"
 const entities = ECS.world.with("transform", "velocity")
 
 export default function ({ maxVelocity = 1 }: { maxVelocity?: number }) {
-  useFrame((_, dt) => {
+  useFrame(function VelocitySystem(_, dt) {
     for (const { transform, velocity } of entities) {
       /* Dampen velocity */
       // velocity.multiplyScalar(0.999)

@@ -4,7 +4,7 @@ import { ECS } from "../state"
 const entities = ECS.world.with("transform", "neighbors", "forces")
 
 export default function ({ factor = 1 }: { factor?: number }) {
-  useFrame(() => {
+  useFrame(function SeparationSystem() {
     for (const {
       forces: { separation },
       neighbors,
