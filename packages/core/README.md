@@ -160,7 +160,7 @@ pnpm add miniplex
 
 Miniplex can be used in any JavaScript or TypeScript project, regardless of which extra frameworks you might be using. This document focuses on how to use Miniplex without a framework, but please also check out the framework-specific documentation available:
 
-- [miniplex-react](https://github.com/hmans/miniplex/tree/main/packages/react#readme)
+- [miniplex-react](https://github.com/hmans/miniplex/blob/main/packages/react/README.md)
 
 ### Creating a World
 

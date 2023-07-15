@@ -147,10 +147,11 @@ import { AsteroidModel } from "./models"
 const asterois = ECS.world.with("isAsteroid")
 
 const Asteroids = () => {
-  const { entities } = useEntities(asteroids)
+  /* This makes sure this component re-renders every time an asteroid entity is added or removed */
+  useEntities(asteroids)
 
   return (
-    <Entities in={entities}>
+    <Entities in={asteroids}>
       <ECS.Component name="three">
         <AsteroidModel />
       </ECS.Component>
@@ -169,13 +170,13 @@ import { ECS } from "./state"
 const movingEntities = ECS.world.with("position", "velocity")
 
 const MovementSystem = () => {
-  const { entities } = useEntities(movingEntities)
+  useEntities(movingEntities)
 
   /*
   In this example, We're using react-three-fiber's useFrame to mount a function that runs every frame. What you will use in your project depends on the framework you're using.
   */
   useFrame((_, dt) => {
-    for (const entity of entities) {
+    for (const entity of movingEntities) {
       entity.position.x += entity.velocity.x * dt
       entity.position.y += entity.velocity.y * dt
       entity.position.z += entity.velocity.z * dt
@@ -215,6 +216,7 @@ When you're composing entities from nested components, you may need to get the c
 
 ```tsx
 const Health = () => {
+  /* Retrieve the entity represented by the neares `<Entity>` component */
   const entity = ECS.useCurrentEntity()
 
   useEffect(() => {
@@ -229,7 +231,53 @@ const Health = () => {
 
 ### Write imperative code for mutating the world
 
-_TODO_
+While the `<Entity>` component can be used to spawn (and later destroy) a new entity, you will typically only use this for one-off entities (like the player, or some other entity that only exists once and is expected to be managed by a React component.)
+
+For everything else, you should write imperative code that mutates the world, and design your React components to _react_ to these changes. Consider the following module, which co-locates both an `<Enemies>` component that renders the currently active enemies, and a `spawnEnemy` function that spawns a new one:
+
+```ts
+const enemies = ECS.world.with("enemy")
+
+export const Enemies = () => {
+  useEntities(enemies)
+
+  return (
+    <ECS.Entities in={enemies}>
+      <ECS.Component name="three">
+        <EnemyShipModel />
+      </ECS.Component>
+    </ECS.Entities>
+  )
+}
+
+export const spawnEnemy = () =>
+  ECS.world.add({
+    position: { x: 0, y: 0, z: 0 },
+    velocity: { x: 0, y: 0, z: 0 },
+    health: 100,
+    enemy: true
+  })
+```
+
+In another React component that manages your game's state, you may now use this function to spawn an initial number of enemies:
+
+```tsx
+import { spawnEnemy } from "./enemies"
+
+export const GameState = () => {
+  useEffect(() => {
+    /* Initialize game state */
+    for (let i = 0; i < 10; i++) {
+      spawnEnemy()
+    }
+
+    /* When unmounting, reset game state */
+    return () => {
+      ECS.world.clear()
+    }
+  }, [])
+}
+```
 
 ### Consider using JSX components
 
@@ -244,6 +292,7 @@ If you have questions about this package, you're invited to post them in our [Di
 ## License
 
 ```
+
 Copyright (c) 2023 Hendrik Mans
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -264,4 +313,9 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+```
+
+```
+
 ```
