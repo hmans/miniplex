@@ -4,6 +4,14 @@
 [![Downloads](https://img.shields.io/npm/dt/miniplex.svg?style=for-the-badge)](https://www.npmjs.com/package/miniplex)
 [![Bundle Size](https://img.shields.io/bundlephobia/min/miniplex?style=for-the-badge&label=bundle%20size)](https://bundlephobia.com/result?p=miniplex)
 
+# Miniplex - the gentle game entity manager.
+
+- 🚀 Manages your game entities using the Entity Component System pattern.
+- 🍳 Focuses on ease of use and developer experience.
+- 🧩 Written in TypeScript, for TypeScript. (But works in plain JavaScript, too!)
+- ⚛️ [React bindings available](https://www.npmjs.com/package/miniplex-react). They're great! (But Miniplex works in any environment.)
+- 📦 Tiny package size and minimal dependencies.
+
 ## Testimonials
 
 From [verekia](https://twitter.com/verekia):
