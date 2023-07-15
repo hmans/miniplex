@@ -29,6 +29,7 @@ export const spawnBoid = ({
     boid: true,
     position,
     velocity,
+    neighbors: [],
     jsx: (
       <ECS.Component name="transform">
         <Instance position={position} />

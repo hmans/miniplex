@@ -4,6 +4,7 @@ import { StrictMode } from "react"
 import Boids from "./Boids"
 import VelocitySystem from "./systems/VelocitySystem"
 import { useWorldSetup } from "./useWorldSetup"
+import IdentifyNeighborSystem from "./systems/IdentifyNeighborSystem"
 
 export default function Demo() {
   /* We've created a custom hook that will initialize the ECS world
@@ -25,6 +26,7 @@ export default function Demo() {
 
         <Boids />
 
+        <IdentifyNeighborSystem />
         <VelocitySystem />
       </StrictMode>
     </Canvas>
