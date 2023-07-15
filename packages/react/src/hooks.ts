@@ -1,9 +1,7 @@
 import { useRerender } from "@hmans/use-rerender"
 import { Bucket } from "miniplex"
+import { useMemo } from "react"
 import useIsomorphicLayoutEffect from "./isomorphicLayoutEffect"
-import { useLayoutEffect, useMemo } from "react"
-
-function useInitialRerenderIfVersionChanged(bucket: Bucket<any>) {}
 
 export function useEntities<T extends Bucket<any>>(bucket: T): T {
   const rerender = useRerender()
@@ -12,16 +10,6 @@ export function useEntities<T extends Bucket<any>>(bucket: T): T {
   useOnEntityAdded(bucket, rerender)
   useOnEntityRemoved(bucket, rerender)
 
-  /* If the bucket version has changed since this component was initially rendered,
-  immediately force a re-render. (This may happen because other layout effects spawn
-  or destroy entities before the effects mounted above actually register their
-  subscriptions. */
-  const originalVersion = useMemo(() => bucket.version, [bucket])
-
-  useLayoutEffect(() => {
-    if (bucket.version !== originalVersion) rerender()
-  }, [bucket])
-
   return bucket
 }
 
@@ -29,6 +17,8 @@ export function useOnEntityAdded<E>(
   bucket: Bucket<E>,
   callback: (entity: E) => void
 ) {
+  useInitialRerenderIfVersionChanged(bucket)
+
   useIsomorphicLayoutEffect(
     () => bucket.onEntityAdded.subscribe(callback),
     [bucket, callback]
@@ -39,8 +29,24 @@ export function useOnEntityRemoved<E>(
   bucket: Bucket<E>,
   callback: (entity: E) => void
 ) {
+  useInitialRerenderIfVersionChanged(bucket)
+
   useIsomorphicLayoutEffect(
     () => bucket.onEntityRemoved.subscribe(callback),
     [bucket, callback]
   )
+}
+
+function useInitialRerenderIfVersionChanged(bucket: Bucket<any>) {
+  const rerender = useRerender()
+
+  /* If the bucket version has changed since this component was initially rendered,
+  immediately force a re-render. (This may happen because other layout effects spawn
+  or destroy entities before the effects mounted above actually register their
+  subscriptions. */
+  const originalVersion = useMemo(() => bucket.version, [bucket])
+
+  useIsomorphicLayoutEffect(() => {
+    if (bucket.version !== originalVersion) rerender()
+  }, [bucket])
 }
