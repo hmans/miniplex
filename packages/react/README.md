@@ -131,36 +131,48 @@ const RenderPlayer = ({ player }) => (
 
 When `<Entity>` is used to represent and enhance an existing entity, the entity will _not_ be destroyed once the component is unmounted.
 
-### `<Entities>` and `useEntities`
+### Rendering lists of entities using `<Entities>`
 
-Eventually you'll write a React component that needs to operate on entities of a specific type.
-
-In Miniplex, you create _queries_ that automatically get updated whenever entities matching their criteria are added or removed from the world. The `useEntities` hook provided by this package is a React hook that subscribes to a query and returns the list of entities matching it; it also makes sure that the component is re-rendered whenever entities are added to or removed from the query.
-
-A typical use case is a React component that renders JSX for every entity of a specific type:
+The `<Entities>` component will render a list of entities. It takes a `in` prop that can be either a Miniplex query, world, or just an array of entities. It is most commonly used together with a Miniplex query:
 
 ```tsx
-import { useEntities } from "miniplex-react"
 import { ECS } from "./state"
 import { AsteroidModel } from "./models"
 
 const asterois = ECS.world.with("isAsteroid")
 
-const Asteroids = () => {
-  /* This makes sure this component re-renders every time an asteroid entity is added or removed */
-  useEntities(asteroids)
-
-  return (
-    <Entities in={asteroids}>
-      <ECS.Component name="three">
-        <AsteroidModel />
-      </ECS.Component>
-    </Entities>
-  )
-}
+const Asteroids = () => (
+  <ECS.Entities in={asteroids}>
+    <ECS.Component name="three">
+      <AsteroidModel />
+    </ECS.Component>
+  </ECS.Entities>
+)
 ```
 
-You can also use this to write React components that implement systems this way:
+When used this way, it will automatically re-render every time the list of entities represented by the given query changes. If for some reason you do _not_ want it to re-render in those cases, you can just pass an array of entities instead:
+
+```tsx
+import { ECS } from "./state"
+import { AsteroidModel } from "./models"
+
+const asterois = ECS.world.with("isAsteroid")
+
+/* Note the .entities property! */
+const Asteroids = () => (
+  <ECS.Entities in={asteroids.entities}>
+    <ECS.Component name="three">
+      <AsteroidModel />
+    </ECS.Component>
+  </ECS.Entities>
+)
+```
+
+## Using `useEntities` to react to changes
+
+This package also provides the `useEntities` hook that will subscribe your React component to changes in a query or world and will automatically re-render it every time entities are added or removed.
+
+One common use case for this is to implement systems as React components:
 
 ```tsx
 import { useEntities } from "miniplex-react"
@@ -196,16 +208,19 @@ const enemies = ECS.world.with("enemy")
 
 const EnemyShips = () => (
   <ECS.Entities in={enemies}>
-    {(entity) => (
-      <ECS.Entity entity={entity}>
-        {/* Randomize the value of the health component */}
-        <ECS.Component name="health" data={Math.random() * 1000}>
+    {(entity) => {
+      const health = Math.random() * 1000
 
-        <ECS.Component name="three">
-          <EnemyShipModel />
-        </ECS.Component>
-      </ECS.Entity>
-    )}
+      return (
+        <ECS.Entity entity={entity}>
+          <ECS.Component name="health" data={health} />
+
+          <ECS.Component name="three">
+            <EnemyShipModel />
+          </ECS.Component>
+        </ECS.Entity>
+      )
+    }}
   </ECS.Entities>
 )
 ```
@@ -238,17 +253,13 @@ For everything else, you should write imperative code that mutates the world, an
 ```tsx
 const enemies = ECS.world.with("enemy")
 
-export const Enemies = () => {
-  useEntities(enemies)
-
-  return (
-    <ECS.Entities in={enemies}>
-      <ECS.Component name="three">
-        <EnemyShipModel />
-      </ECS.Component>
-    </ECS.Entities>
-  )
-}
+export const Enemies = () => (
+  <ECS.Entities in={enemies}>
+    <ECS.Component name="three">
+      <EnemyShipModel />
+    </ECS.Component>
+  </ECS.Entities>
+)
 
 export const spawnEnemy = () =>
   ECS.world.add({
