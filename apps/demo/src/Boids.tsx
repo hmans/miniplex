@@ -1,8 +1,6 @@
 import { Instance, Instances } from "@react-three/drei"
-import { useEntities } from "miniplex-react"
 import { Vector3 } from "three"
 import { ECS } from "./state"
-import { useFrame } from "@react-three/fiber"
 import { SpatialHashMap } from "./systems/SpatialHashingSystem"
 
 const boids = ECS.world.with("boid", "jsx")
