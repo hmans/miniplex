@@ -13,7 +13,7 @@ The headline changes in 2.0:
 - **Improved type support!** If you're using TypeScript, you will be happy to hear that type support has been significantly improved, with much better type narrowing for queries.
 - The **React API** has been significantly simplified, and some pretty big bugs have been squashed. (Turns out Miniplex 1.0's React API really didn't like React's `<StrictMode>`` much. Whoops!)
 
-### Core:
+Some more details on the changes:
 
 - `world.createEntity` has been renamed and simplified to just `world.add` (which now returns the correct type for the entity, too), and `world.destroyEntity` to `world.remove`.
 
