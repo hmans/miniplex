@@ -113,13 +113,13 @@ queries.poisoned.onEntityAdded.subscribe((entity) => {
 
 ## Overview
 
-**Miniplex is an entity management system for games and similarly demanding applications.** Instead of creating separate buckets for different types of entities (eg. asteroids, enemies, pickups, the player, etc.), you throw all of them into a single store, describe their properties through components, and then write code that performs updates on entities of specific types.
+**Miniplex is an entity management system for games and similarly demanding applications.** Instead of creating separate buckets for different types of entities (eg. asteroids, enemies, pickups, the player, etc.), you throw all of them into a single store, describe their properties through components, and then write code that performs updates on entities that have specific component configurations.
 
-If you're familiar with **Entity Component System** architecture, this will sound familiar to you -- and rightfully so, for Miniplex is, first and foremost, a very straight-forward ECS implementation!
+If you're familiar with **Entity Component System** architecture, this will sound familiar to you &ndash; and rightfully so, for Miniplex is, first and foremost, a very straight-forward implementation of this pattern!
 
-If you're hearing about this approach for the first time, maybe it will sound a little counter-intuitive -- but once you dive into it, you will understand how it can help you decouple concerns and keep your codebase well-structured and maintainable. [This post](https://community.amethyst.rs/t/archetypal-vs-grouped-ecs-architectures-my-take/1344) has a nice summary:
+If you're hearing about this approach for the first time, maybe it will sound a little counter-intuitive &ndash; but once you dive into it, you will understand how it can help you decouple concerns and keep your codebase well-structured and maintainable. A nice forum post that I can't link to because it's gone offline had a nice explanation:
 
-> An ECS library can essentially thought of as an API for performing a loop over a homogeneous set of entities, filtering them by some condition, and pulling out a subset of the data associated with each entity. The goal of the library is to provide a usable API for this, and to do it as fast as possible.
+> An ECS library can essentially be thought of as an API for performing a loop over a homogeneous set of entities, filtering them by some condition, and pulling out a subset of the data associated with each entity. The goal of the library is to provide a usable API for this, and to do it as fast as possible.
 
 For a more in-depth explanation, please also see Sander Mertens' wonderful [Entity Component System FAQ](https://github.com/SanderMertens/ecs-faq).
 
@@ -131,21 +131,21 @@ If you've used other Entity Component System libraries before, here's how Minipl
 
 Entities are just **plain JavaScript objects**, and components are just **properties on those objects**. Component data can be **anything** you need, from primitive values to entire class instances, or even [entire reactive stores](https://github.com/hmans/statery). Miniplex puts developer experience first, and the most important way it does this is by making its usage feel as natural as possible in a JavaScript environment.
 
-Miniplex does not expect you to programmatically declare component types before using them; if you're using TypeScript, you can provide a type describing your entities and Miniplex will provide full edit- and compile-time type hints and safety.
+Miniplex does not expect you to programmatically declare component types before using them; if you're using TypeScript, you can provide a type describing your entities and Miniplex will provide full edit- and compile-time type hints and safety. (Hint: you can even write some classes and use their instances as entities!)
 
 #### Miniplex does not have a built-in notion of systems
 
-Unlike the majority of ECS libraries, Miniplex does not have any built-in notion of systems, and does not perform any of its own scheduling. This is by design; your project will likely already have an opinion on how to schedule code execution, and instead of providing its own and potentially conflicting setup, Miniplex will neatly snuggle into the one you already have.
+Unlike the majority of ECS libraries, Miniplex does not have any built-in notion of systems, and does not perform any of its own scheduling. This is by design; your project will likely already have an opinion on how to schedule code execution, informed by whatever framework you are using; instead of providing its own and potentially conflicting setup, Miniplex will neatly snuggle into the one you already have.
 
 Systems are extremely straight-forward: just write simple functions that operate on the Miniplex world, and run them in whatever fashion fits best to your project (`setInterval`, `requestAnimationFrame`, `useFrame`, your custom ticker implementation, and so on.)
 
 #### Archetypal Queries
 
-Entity queries are performed through **archetypal queries**, with individual queries indexing and holding a subset of your world's entities that have (or don't have) a specific set of components, and/or match a specific predicate.
+Entity queries are performed through **archetypal queries**, with individual queries indexing and holding a subset of your world's entities that have (or don't have) a specific set of components.
 
 #### Focus on Object Identities over numerical IDs
 
-Most interactions with Miniplex are using **object identity** to identify entities (instead of numerical IDs). Miniplex provides a lightweight mechanism to generate unique IDs for your entities, but it is entirely optional. In more complex projects that need stable entity IDs, the user is encouraged to implement their own ID generation and management.
+Most interactions with Miniplex are using **object identity** to identify entities (instead of numerical IDs). Miniplex provides an optional lightweight mechanism to generate unique IDs for your entities if you need them. In more complex projects that need stable entity IDs, especially when synchronizing entities across the network, the user is encouraged to implement their own ID generation and management.
 
 ## Installation
 
@@ -165,7 +165,7 @@ Miniplex can be used in any JavaScript or TypeScript project, regardless of whic
 
 ### Creating a World
 
-Miniplex manages entities in **worlds**, which act as containers for entities as well as an API for interacting with them. You can have one big world in your project, or several smaller worlds handling separate concerns.
+Miniplex manages entities in **worlds**, which act as containers for entities as well as an API for interacting with them. You can have one big world in your project, or several smaller worlds handling separate sections of your game.
 
 ```ts
 import { World } from "miniplex"
@@ -200,7 +200,7 @@ const entity = world.add({ position: { x: 0, y: 0, z: 0 } })
 
 We've directly added a `position` component to the entity. If you're using TypeScript, the component values here will be type-checked against the type you provided to the `World` constructor.
 
-> **Note** Adding the entity will make it known to the world and all relevant queries, but it will not change the entity object itself in any way. In Miniplex, entities can _live in multiple worlds at the same time_!
+> **Note** Adding the entity will make it known to the world and all relevant queries, but it will not change the entity object itself in any way. In Miniplex, entities can _live in multiple worlds at the same time_! This allows you to split complex simulations into entirely separate worlds, each with their own queries, even though they might share some (or all) entities.
 
 ### Adding Components
 
@@ -214,11 +214,11 @@ Now the entity has two components: `position` and `velocity`.
 
 ### Querying Entities
 
-We're going to write some code that moves entities according to their velocity. You will typically implement this as something called a **system**, which, in Miniplex, are typically just normal functions that fetch the entities they are interested in, and then perform some operation on them.
+Let's write some code that moves entities, which have a `position`, according to their `velocity`. You will typically implement this as something called a **system**, which, in Miniplex, is typically just a normal function that fetches the entities it is interested in, and then performs some operation on them.
 
-Fetching only the entities that a system is interested in is the most important part in all this, and it is done through something called **queries** that can be thought of as something akin to database indices.
+Fetching only the entities that a system is interested in is the most important part in all this, and it is done through something called **queries** that can be thought of as something similar to database indices.
 
-Since we're going to move entities, we're interested in entities that have both the `position` and `velocity` components, so let's create a query for that:
+Since we're going to _move_ entities, we're interested in entities that have both the `position` and `velocity` components, so let's create a query for that:
 
 ```ts
 /* Get all entities with position and velocity */
@@ -253,6 +253,8 @@ function movementSystem() {
 
 **Note:** Since entities are just plain JavaScript objects, they can easily be destructured into their components, like we're doing above.
 
+Now all we need to do is make sure that this system is run on a regular basis. If you're writing a game, the framework you are using will already have a mechanism that allows you to execute code once per frame; just call the `movementSystem` function from there!
+
 ### Destroying Entities
 
 At some point we may want to remove an entity from the world (for example, an enemy spaceship that got destroyed by the player). We can do this through the world's `remove` function:
@@ -266,6 +268,8 @@ This will immediately remove the entity from the Miniplex world and all existing
 > **Note** While this will remove the entity object from the world, it will not destroy or otherwise change the object itself. In fact, you can just add it right back into the world if you want to!
 
 ## Advanced Usage
+
+We're about to dive into some advanced usage patterns. Please make sure you're familiar with the basics before continuing.
 
 ### Reacting to added/removed entities
 
