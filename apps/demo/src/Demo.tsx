@@ -8,6 +8,7 @@ import CoherenceSystem from "./systems/CoherenceSystem"
 import IdentifyNeighborSystem from "./systems/IdentifyNeighborSystem"
 import SeparationSystem from "./systems/SeparationSystem"
 import VelocitySystem from "./systems/VelocitySystem"
+import AlignmentSystem from "./systems/AlignmentSystem"
 
 export default function Demo() {
   return (
@@ -28,8 +29,9 @@ export default function Demo() {
         <Boids />
 
         <IdentifyNeighborSystem />
-        <CoherenceSystem />
-        <SeparationSystem />
+        <CoherenceSystem factor={0.1} />
+        <SeparationSystem factor={0.1} />
+        <AlignmentSystem factor={0.01} />
         <ApplyForcesSystem />
         <VelocitySystem />
       </StrictMode>

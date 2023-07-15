@@ -3,8 +3,8 @@ import { ECS } from "../state"
 
 const entities = ECS.world.with("transform", "neighbors", "forces")
 
-export default function () {
-  useFrame((_, dt) => {
+export default function ({ factor = 1 }: { factor?: number }) {
+  useFrame(() => {
     for (const {
       forces: { separation },
       neighbors,
@@ -24,7 +24,7 @@ export default function () {
       }
 
       separation.divideScalar(neighbors.length)
-      separation.multiplyScalar(0.1)
+      separation.multiplyScalar(factor)
     }
   })
 

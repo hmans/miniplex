@@ -4,20 +4,19 @@ import { ECS } from "../state"
 const entities = ECS.world.with("transform", "neighbors", "forces")
 
 export default function ({ factor = 1 }: { factor?: number }) {
-  useFrame(() => {
+  useFrame((_, dt) => {
     for (const {
-      forces: { coherence },
-      neighbors,
-      transform
+      forces: { alignment },
+      neighbors
     } of entities) {
-      coherence.set(0, 0, 0)
+      alignment.set(0, 0, 0)
 
       for (const neighbor of neighbors) {
-        coherence.add(neighbor.transform.position)
+        alignment.add(neighbor.velocity)
       }
 
-      coherence.divideScalar(neighbors.length)
-      coherence.sub(transform.position).multiplyScalar(factor)
+      alignment.divideScalar(neighbors.length)
+      alignment.multiplyScalar(factor)
     }
   })
 

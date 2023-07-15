@@ -7,7 +7,7 @@ export type Entity = {
   boid?: true
 
   velocity?: Vector3
-  neighbors?: With<Entity, "transform">[]
+  neighbors?: With<Entity, "transform" | "velocity">[]
 
   forces: {
     coherence: Vector3
