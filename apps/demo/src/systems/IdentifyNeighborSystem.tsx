@@ -1,40 +1,43 @@
 import { useFrame } from "@react-three/fiber"
 import { ECS, Entity } from "../state"
 
-const entities = ECS.world.with(
-  "transform",
-  "neighbors",
-  "velocity",
-  "spatialHashMap"
-)
+const entities = ECS.world.with("transform", "neighbors", "spatialHashMap")
 
 export default function ({ maxDistance = 5 }: { maxDistance?: number }) {
   useFrame(function IdentifyNeighborsSystem(_, dt) {
     for (const entity of entities) {
-      /* Clear the neighbors list */
-      entity.neighbors.length = 0
+      const { transform, neighbors, spatialHashMap } = entity
 
       /* Query the spatial hash map for nearby entities */
-      const nearbyEntities = entity.spatialHashMap.getNearbyEntities(
-        entity.transform.position.x,
-        entity.transform.position.y,
-        entity.transform.position.z,
-        maxDistance
+      spatialHashMap.getNearbyEntities(
+        transform.position.x,
+        transform.position.y,
+        transform.position.z,
+        maxDistance,
+        neighbors,
+        100
       )
 
-      for (const otherEntity of nearbyEntities) {
-        /* The entity can't be its own neighbor */
-        if (entity === otherEntity) continue
+      /* Remove entity itself from neighbors */
+      neighbors.splice(neighbors.indexOf(entity as any), 1)
 
-        /* Calculate distance */
-        const distance = entity.transform.position.distanceTo(
-          otherEntity.transform!.position
-        )
+      // for (const otherEntity of entity.neighbors) {
+      //   /* The entity can't be its own neighbor */
+      //   if (entity === otherEntity) {
+      //     /* remove */
+      //     entity.neighbors.splice(entity.neighbors.indexOf(otherEntity), 1)
+      //   }
 
-        if (distance <= maxDistance) {
-          entity.neighbors.push(otherEntity as any)
-        }
-      }
+      //   /* Calculate distance */
+      //   const distance = entity.transform.position.distanceTo(
+      //     otherEntity.transform!.position
+      //   )
+
+      //   if (distance >= maxDistance) {
+      //     /* remove */
+      //     entity.neighbors.splice(entity.neighbors.indexOf(otherEntity), 1)
+      //   }
+      // }
     }
   })
 

@@ -18,7 +18,7 @@ export default function Boids() {
   )
 }
 
-const boidsSpatialHashMap = new SpatialHashMap(2)
+const boidsSpatialHashMap = new SpatialHashMap(5)
 
 export const spawnBoid = ({
   position,

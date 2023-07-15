@@ -34,8 +34,16 @@ export class SpatialHashMap {
     this.entityToCell.delete(entity)
   }
 
-  getNearbyEntities(x: number, y: number, z: number, radius: number) {
-    const entities = new Set<Entity>()
+  getNearbyEntities(
+    x: number,
+    y: number,
+    z: number,
+    radius: number,
+    entities: Entity[] = [],
+    maxEntities = Infinity
+  ) {
+    let count = 0
+    entities.length = 0
 
     for (let dx = x - radius; dx <= x + radius; dx += this.cellSize) {
       for (let dy = y - radius; dy <= y + radius; dy += this.cellSize) {
@@ -43,7 +51,10 @@ export class SpatialHashMap {
           const cell = this.getCell(dx, dy, dz)
 
           for (const entity of cell) {
-            entities.add(entity)
+            entities.push(entity)
+            count++
+
+            if (count >= maxEntities) return entities
           }
         }
       }
