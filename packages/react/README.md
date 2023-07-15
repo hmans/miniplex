@@ -170,32 +170,26 @@ const Asteroids = () => (
 
 ## Using `useEntities` to react to changes
 
-This package also provides the `useEntities` hook that will subscribe your React component to changes in a query or world and will automatically re-render it every time entities are added or removed.
-
-One common use case for this is to implement systems as React components:
+This package also provides the `useEntities` hook that will subscribe your React component to changes in a query or world and will automatically re-render it every time entities are added or removed. This can be useful for implementing side effects that need to run for one-off entities:
 
 ```tsx
-import { useEntities } from "miniplex-react"
-import { useFrame } from "@react-three/fiber"
-import { ECS } from "./state"
+const cameraTargets = ECS.world.with("cameraTarget", "object3d")
 
-const movingEntities = ECS.world.with("position", "velocity")
+const MyCamera = () => {
+  const camera = useRef<PerspectiveCamera>()
 
-const MovementSystem = () => {
-  useEntities(movingEntities)
+  /* Grab the first entity that matches the query */
+  const [cameraTarget] = useEntities(cameraTargets)
 
-  /*
-  In this example, We're using react-three-fiber's useFrame to mount a function that runs every frame. What you will use in your project depends on the framework you're using.
-  */
-  useFrame((_, dt) => {
-    for (const entity of movingEntities) {
-      entity.position.x += entity.velocity.x * dt
-      entity.position.y += entity.velocity.y * dt
-      entity.position.z += entity.velocity.z * dt
-    }
-  })
+  /* Run a side effect when the camera target changes */
+  useEffect(() => {
+    if (!camera.current) return
+    if (!cameraTarget) return
 
-  return null
+    camera.current.lookAt(cameraTarget.object3d.position)
+  }, [cameraTarget])
+
+  return <PerspectiveCamera ref={camera} makeDefault />
 }
 ```
 
@@ -243,6 +237,32 @@ const Health = () => {
 ```
 
 ## Recommended Patterns and Best Practices
+
+### Implementing Systems
+
+Since Miniplex doesn't have any built-in notion of what a system is, their implementation is entirely left up to you. This is by design; while other ECS implementations often force their own system scheduler setup on you, Miniplex neatly snuggles into your existing codebase and lets you use it with whatever scheduling functionality the framework you're using provides.
+
+In a react-three-fiber application, for example, you would use the `useFrame` hook to execute a system function once per frame:
+
+```tsx
+import { useEntities } from "miniplex-react"
+import { useFrame } from "@react-three/fiber"
+import { ECS } from "./state"
+
+const movingEntities = ECS.world.with("position", "velocity")
+
+const MovementSystem = () => {
+  useFrame((_, dt) => {
+    for (const entity of movingEntities) {
+      entity.position.x += entity.velocity.x * dt
+      entity.position.y += entity.velocity.y * dt
+      entity.position.z += entity.velocity.z * dt
+    }
+  })
+
+  return null
+}
+```
 
 ### Write imperative code for mutating the world
 
