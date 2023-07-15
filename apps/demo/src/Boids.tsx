@@ -1,5 +1,6 @@
-import { Instance, InstanceProps, Instances } from "@react-three/drei"
+import { Instance, Instances } from "@react-three/drei"
 import { useEntities } from "miniplex-react"
+import { Vector3 } from "three"
 import { ECS } from "./state"
 
 const boids = ECS.world.with("boid", "jsx")
@@ -17,12 +18,21 @@ export default function Boids() {
   )
 }
 
-export const spawnBoid = (props: InstanceProps) =>
+export const spawnBoid = ({
+  position,
+  velocity = new Vector3()
+}: {
+  position: Vector3
+  velocity?: Vector3
+}) => {
   ECS.world.add({
     boid: true,
+    position,
+    velocity,
     jsx: (
-      <ECS.Component name="object3d">
-        <Instance {...props} />
+      <ECS.Component name="transform">
+        <Instance position={position} />
       </ECS.Component>
     )
   })
+}

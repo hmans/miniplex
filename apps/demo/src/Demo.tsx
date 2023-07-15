@@ -1,30 +1,13 @@
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
-import { insideSphere } from "randomish"
-import { StrictMode, useLayoutEffect } from "react"
-import Boids, { spawnBoid } from "./Boids"
-import { ECS } from "./state"
-import RotateSystem from "./systems/RotateSystem"
-
-const useWorldSetup = () =>
-  useLayoutEffect(() => {
-    console.log("Populating Miniplex world")
-
-    for (let i = 0; i < 100; i++) {
-      const position = insideSphere(10)
-
-      spawnBoid({
-        position: [position.x, position.y, position.z]
-      })
-    }
-
-    return () => {
-      console.log("Clearing Miniplex world")
-      ECS.world.clear()
-    }
-  }, [])
+import { StrictMode } from "react"
+import Boids from "./Boids"
+import VelocitySystem from "./systems/VelocitySystem"
+import { useWorldSetup } from "./useWorldSetup"
 
 export default function Demo() {
+  /* We've created a custom hook that will initialize the ECS world
+  on mount and clear it on unmount. */
   useWorldSetup()
 
   return (
@@ -32,6 +15,7 @@ export default function Demo() {
       {/*
       R3F unfortunately doesn't inherit <StrictMode> from outside
       its canvas, so we need to explicitly re-enable it if we want to make use of it.
+      We're doing this here mostly to prove that Miniplex 2.0 works with it :-)
       */}
       <StrictMode>
         <ambientLight intensity={0.2} />
@@ -41,7 +25,7 @@ export default function Demo() {
 
         <Boids />
 
-        <RotateSystem />
+        <VelocitySystem />
       </StrictMode>
     </Canvas>
   )
