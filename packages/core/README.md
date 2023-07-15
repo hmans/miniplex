@@ -425,7 +425,7 @@ function movementSystem(world) {
 
 ## Questions?
 
-If you have questions about Miniplex, you're invited to post it in our [Discussions section](https://github.com/hmans/miniplex/discussions) on GitHub.
+If you have questions about Miniplex, you're invited to post them in our [Discussions section](https://github.com/hmans/miniplex/discussions) on GitHub.
 
 ## License
 
