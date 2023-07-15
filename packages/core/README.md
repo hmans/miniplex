@@ -289,7 +289,7 @@ withHealth.onEntityAdded.subscribe((entity) => {
 })
 ```
 
-### Predicate Queries using `where` and explicitly updating entities using `update`
+### Predicate Queries using `where`
 
 Typically, you'll want to build queries the check entities for the _presence_ of specific components; you have been using the `with` and `without` functions for this so far. But there may be the rare case where you want to query by _value_; for this, Miniplex provides the `where` function. It allows you to specify a predicate function that your entity will be checked against:
 
