@@ -279,10 +279,6 @@ export const GameState = () => {
 }
 ```
 
-### Consider using JSX components
-
-_TODO_
-
 ## Questions?
 
 If you have questions about this package, you're invited to post them in our [Discussions section](https://github.com/hmans/miniplex/discussions) on GitHub.
