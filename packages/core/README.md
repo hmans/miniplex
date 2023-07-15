@@ -8,6 +8,7 @@
 
 - 🚀 Manages your game entities using the Entity Component System pattern.
 - 🍳 Focuses on ease of use and developer experience.
+- 💪 Can power your entire project, or just parts of it.
 - 🧩 Written in TypeScript, for TypeScript. (But works in plain JavaScript, too!)
 - ⚛️ [React bindings available](https://www.npmjs.com/package/miniplex-react). They're great! (But Miniplex works in any environment.)
 - 📦 Tiny package size and minimal dependencies.
@@ -121,14 +122,6 @@ If you're hearing about this approach for the first time, maybe it will sound a 
 > An ECS library can essentially thought of as an API for performing a loop over a homogeneous set of entities, filtering them by some condition, and pulling out a subset of the data associated with each entity. The goal of the library is to provide a usable API for this, and to do it as fast as possible.
 
 For a more in-depth explanation, please also see Sander Mertens' wonderful [Entity Component System FAQ](https://github.com/SanderMertens/ecs-faq).
-
-### Headline Features
-
-- A very strong focus on **developer experience**. Miniplex aims to be the most convenient to use ECS implementation while still providing great performance.
-- **[Tiny package size](https://bundlephobia.com/package/miniplex)** and **minimal dependencies**.
-- React glue available through [miniplex-react](https://www.npmjs.com/package/miniplex-react), maybe more in the future?
-- Can power your entire project or just parts of it.
-- Written in **TypeScript**, with full type checking for your entities.
 
 ### Differences from other ECS libraries
 
