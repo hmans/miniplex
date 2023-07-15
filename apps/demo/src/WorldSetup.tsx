@@ -1,10 +1,10 @@
-import { between, insideSphere, number } from "randomish"
+import { between } from "randomish"
 import { useLayoutEffect } from "react"
+import { Vector3 } from "three"
 import { spawnBoid } from "./Boids"
 import { ECS } from "./state"
-import { Vector3 } from "three"
 
-export const useWorldSetup = () =>
+const useWorldSetup = () =>
   useLayoutEffect(() => {
     console.log("Populating Miniplex world")
 
@@ -26,3 +26,9 @@ export const useWorldSetup = () =>
       ECS.world.clear()
     }
   }, [])
+
+export default function WorldSetup() {
+  useWorldSetup()
+
+  return null
+}

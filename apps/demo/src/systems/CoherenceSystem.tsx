@@ -4,7 +4,7 @@ import { ECS } from "../state"
 const entities = ECS.world.with("transform", "neighbors", "forces")
 
 export default function () {
-  useFrame((_, dt) => {
+  useFrame(() => {
     for (const {
       forces: { coherence },
       neighbors,

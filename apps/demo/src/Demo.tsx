@@ -2,18 +2,14 @@ import { OrbitControls, PerspectiveCamera } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 import { StrictMode } from "react"
 import Boids from "./Boids"
-import VelocitySystem from "./systems/VelocitySystem"
-import { useWorldSetup } from "./useWorldSetup"
-import IdentifyNeighborSystem from "./systems/IdentifyNeighborSystem"
-import CoherenceSystem from "./systems/CoherenceSystem"
+import WorldSetup from "./WorldSetup"
 import ApplyForcesSystem from "./systems/ApplyForcesSystem"
+import CoherenceSystem from "./systems/CoherenceSystem"
+import IdentifyNeighborSystem from "./systems/IdentifyNeighborSystem"
 import SeparationSystem from "./systems/SeparationSystem"
+import VelocitySystem from "./systems/VelocitySystem"
 
 export default function Demo() {
-  /* We've created a custom hook that will initialize the ECS world
-  on mount and clear it on unmount. */
-  useWorldSetup()
-
   return (
     <Canvas>
       {/*
@@ -26,6 +22,8 @@ export default function Demo() {
         <directionalLight position={[1, 2, 3]} intensity={0.8} />
         <PerspectiveCamera makeDefault position={[0, 0, 20]} />
         <OrbitControls autoRotate autoRotateSpeed={0.3} />
+
+        <WorldSetup />
 
         <Boids />
 
