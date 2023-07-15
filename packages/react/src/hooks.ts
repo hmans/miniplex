@@ -17,7 +17,7 @@ export function useOnEntityAdded<E>(
   bucket: Bucket<E>,
   callback: (entity: E) => void
 ) {
-  useInitialRerenderIfVersionChanged(bucket)
+  useOnceIfBucketVersionChanged(bucket, callback)
 
   useIsomorphicLayoutEffect(
     () => bucket.onEntityAdded.subscribe(callback),
@@ -29,7 +29,7 @@ export function useOnEntityRemoved<E>(
   bucket: Bucket<E>,
   callback: (entity: E) => void
 ) {
-  useInitialRerenderIfVersionChanged(bucket)
+  useOnceIfBucketVersionChanged(bucket, callback)
 
   useIsomorphicLayoutEffect(
     () => bucket.onEntityRemoved.subscribe(callback),
@@ -37,9 +37,10 @@ export function useOnEntityRemoved<E>(
   )
 }
 
-function useInitialRerenderIfVersionChanged(bucket: Bucket<any>) {
-  const rerender = useRerender()
-
+function useOnceIfBucketVersionChanged(
+  bucket: Bucket<any>,
+  callback: Function
+) {
   /* If the bucket version has changed since this component was initially rendered,
   immediately force a re-render. (This may happen because other layout effects spawn
   or destroy entities before the effects mounted above actually register their
@@ -47,6 +48,6 @@ function useInitialRerenderIfVersionChanged(bucket: Bucket<any>) {
   const originalVersion = useMemo(() => bucket.version, [bucket])
 
   useIsomorphicLayoutEffect(() => {
-    if (bucket.version !== originalVersion) rerender()
+    if (bucket.version !== originalVersion) callback()
   }, [bucket])
 }
