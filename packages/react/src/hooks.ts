@@ -42,9 +42,8 @@ function useOnceIfBucketVersionChanged(
   callback: Function
 ) {
   /* If the bucket version has changed since this component was initially rendered,
-  immediately force a re-render. (This may happen because other layout effects spawn
-  or destroy entities before the effects mounted above actually register their
-  subscriptions. */
+  immediately invoke the callback. This helps us avoid a bunch of problems around
+  execution order of useLayoutEffect callbacks.  */
   const originalVersion = useMemo(() => bucket.version, [bucket])
 
   useIsomorphicLayoutEffect(() => {
