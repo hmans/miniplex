@@ -23,16 +23,16 @@ export default function Demo() {
         <ambientLight intensity={0.2} />
         <directionalLight position={[1, 2, 3]} intensity={0.8} />
         <PerspectiveCamera makeDefault position={[0, 0, 50]} />
-        <OrbitControls autoRotate autoRotateSpeed={0.3} />
+        <OrbitControls />
 
         <WorldSetup />
 
         <Boids />
 
-        <IdentifyNeighborSystem maxDistance={3} />
-        <CoherenceSystem factor={2} />
-        <SeparationSystem factor={4} />
-        <AlignmentSystem factor={4} />
+        <IdentifyNeighborSystem maxDistance={4} />
+        <CoherenceSystem factor={3} />
+        <SeparationSystem factor={8} />
+        <AlignmentSystem factor={1} />
         <AvoidEdgesSystem factor={5} maxDistance={20} />
         <ApplyForcesSystem />
         <VelocitySystem maxVelocity={6} />
