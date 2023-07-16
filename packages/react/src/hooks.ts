@@ -3,6 +3,13 @@ import { Bucket } from "miniplex"
 import { useMemo } from "react"
 import useIsomorphicLayoutEffect from "./isomorphicLayoutEffect"
 
+/**
+ * Subscribes to changes in the specified bucket, and re-renders the component
+ * whenever entities are added to or removed from it.
+ *
+ * @param bucket The bucket to watch for changes
+ * @returns The bucket passed in, for convenience
+ */
 export function useEntities<T extends Bucket<any>>(bucket: T): T {
   const rerender = useRerender()
 
@@ -37,13 +44,23 @@ export function useOnEntityRemoved<E>(
   )
 }
 
+/**
+ * A utility function that will invoke the specified callback in a layout effect
+ * if the version of the specified bucket has changed since the component was
+ * initially rendered.
+ *
+ * This solves the problem of useEntities and similar callbacks registering their
+ * bucket change callbacks in a layout effect, which can sometimes cause them to
+ * miss entities being created or destroyed within the same render cycle (since
+ * this will often also happen in layout effects.)
+ *
+ * @param bucket The bucket to watch for changes
+ * @param callback The callback to invoke if the bucket version has changed
+ */
 function useOnceIfBucketVersionChanged(
   bucket: Bucket<any>,
   callback: Function
 ) {
-  /* If the bucket version has changed since this component was initially rendered,
-  immediately invoke the callback. This helps us avoid a bunch of problems around
-  execution order of useLayoutEffect callbacks.  */
   const originalVersion = useMemo(() => bucket.version, [bucket])
 
   useIsomorphicLayoutEffect(() => {
