@@ -2,15 +2,15 @@ import { OrbitControls, PerspectiveCamera } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 import { StrictMode } from "react"
 import Boids from "./Boids"
-import WorldSetup from "./WorldSetup"
+import AlignmentSystem from "./systems/AlignmentSystem"
 import ApplyForcesSystem from "./systems/ApplyForcesSystem"
+import AvoidEdgesSystem from "./systems/AvoidEdgesSystem"
 import CoherenceSystem from "./systems/CoherenceSystem"
 import IdentifyNeighborSystem from "./systems/IdentifyNeighborSystem"
 import SeparationSystem from "./systems/SeparationSystem"
-import VelocitySystem from "./systems/VelocitySystem"
-import AlignmentSystem from "./systems/AlignmentSystem"
-import AvoidEdgesSystem from "./systems/AvoidEdgesSystem"
 import SpatialHashingSystem from "./systems/SpatialHashingSystem"
+import VelocitySystem from "./systems/VelocitySystem"
+import WorldSetupSystem from "./systems/WorldSetupSystem"
 
 export default function Demo() {
   return (
@@ -26,10 +26,9 @@ export default function Demo() {
         <PerspectiveCamera makeDefault position={[0, 0, 50]} />
         <OrbitControls />
 
-        <WorldSetup />
-
         <Boids />
 
+        <WorldSetupSystem />
         <SpatialHashingSystem />
         <IdentifyNeighborSystem maxDistance={3} />
         <CoherenceSystem factor={3} />
