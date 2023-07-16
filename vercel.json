@@ -1,7 +1,0 @@
-{
-  "cleanUrls": true,
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
-  "github": {
-    "silent": true
-  }
-}
