@@ -17,6 +17,11 @@ export class Bucket<E> implements Iterable<E> {
     return this._version
   }
 
+  /**
+   * An array of all entities within the bucket. Please note that for iterating
+   * over the entities in this bucket, it is recommended that you use the
+   * `for (const entity of bucket)` iterator form.
+   */
   get entities() {
     return this._entities
   }
