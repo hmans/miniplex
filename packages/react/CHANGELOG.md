@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1
+
+### Patch Changes
+
+- 2303870: Bump minimum version of `miniplex` peer dependency.
+
 ## 2.0.0
 
 ### Major Changes

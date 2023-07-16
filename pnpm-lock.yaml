@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -88,7 +88,7 @@ importers:
         specifier: workspace:2.0.0
         version: link:../../packages/core
       miniplex-react:
-        specifier: workspace:2.0.0
+        specifier: workspace:2.0.1
         version: link:../../packages/react
       postprocessing:
         specifier: ^6.32.2
