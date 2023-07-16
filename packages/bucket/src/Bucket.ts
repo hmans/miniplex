@@ -26,7 +26,7 @@ export class Bucket<E> implements Iterable<E> {
   /**
    * Bumps the version of the bucket.
    */
-  bumpVersion() {
+  protected bumpVersion() {
     this._version++
     this.onVersionChanged.emit(this._version)
   }
