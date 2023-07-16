@@ -54,5 +54,8 @@
   },
   "stackblitz": {
     "startCommand": "pnpm demo:react"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.2"
   }
 }

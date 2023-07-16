@@ -30,9 +30,5 @@
   },
   "dependencies": {
     "eventery": "^0.0.4"
-  },
-  "devDependencies": {
-    "@types/node": "^20.4.2",
-    "ts-node": "^10.9.1"
   }
 }
