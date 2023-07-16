@@ -12,6 +12,13 @@ describe(Bucket, () => {
     expect(bucket.size).toBe(3)
   })
 
+  it("has a version number", () => {
+    const bucket = new Bucket()
+    expect(bucket.version).toBe(0)
+    bucket.add({})
+    expect(bucket.version).toBe(1)
+  })
+
   describe("add", () => {
     it("adds the entity to the bucket", () => {
       const bucket = new Bucket()
@@ -50,6 +57,16 @@ describe(Bucket, () => {
 
       expect(listener).toHaveBeenCalledWith(entity)
     })
+
+    it("increases the bucket's version number", () => {
+      const bucket = new Bucket()
+      expect(bucket.version).toBe(0)
+
+      bucket.add({})
+      bucket.add({})
+
+      expect(bucket.version).toBe(2)
+    })
   })
 
   describe("remove", () => {
@@ -81,6 +98,16 @@ describe(Bucket, () => {
       bucket.remove(entity)
 
       expect(listener).toHaveBeenCalledWith(entity)
+    })
+
+    it("increases the bucket's version number", () => {
+      const bucket = new Bucket([1, 2])
+      expect(bucket.version).toBe(0)
+
+      bucket.remove(1)
+      bucket.remove(2)
+
+      expect(bucket.version).toBe(2)
     })
   })
 
