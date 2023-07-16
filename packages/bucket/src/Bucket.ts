@@ -6,10 +6,29 @@ import { Event } from "eventery"
  * for when entities are added or removed.
  */
 export class Bucket<E> implements Iterable<E> {
+  /* VERSIONING */
+
   protected _version = 0
 
+  /**
+   * The current version of the bucket. Increases every time an entity is
+   * added or removed.
+   */
   get version() {
     return this._version
+  }
+
+  /**
+   * An event that fires every time the version of the bucket changes.
+   */
+  onVersionChanged = new Event<[version: number]>()
+
+  /**
+   * Bumps the version of the bucket.
+   */
+  bumpVersion() {
+    this._version++
+    this.onVersionChanged.emit(this._version)
   }
 
   get entities() {
@@ -96,7 +115,7 @@ export class Bucket<E> implements Iterable<E> {
       this.entityPositions.set(entity, this.entities.length - 1)
 
       /* Increase version */
-      this._version++
+      this.bumpVersion()
 
       /* Emit our own onEntityAdded event */
       this.onEntityAdded.emit(entity)
@@ -115,9 +134,6 @@ export class Bucket<E> implements Iterable<E> {
   remove(entity: E) {
     /* TODO: Return early if entity is not in bucket. */
     if (this.has(entity)) {
-      /* Bump version */
-      this._version++
-
       /* Emit our own onEntityRemoved event. */
       this.onEntityRemoved.emit(entity)
 
@@ -134,6 +150,9 @@ export class Bucket<E> implements Iterable<E> {
 
       /* Remove the entity from the entities array. */
       this.entities.pop()
+
+      /* Bump version */
+      this.bumpVersion()
     }
 
     return entity
