@@ -37,7 +37,7 @@
     "@hmans/use-rerender": "^0.0.2"
   },
   "peerDependencies": {
-    "miniplex": "^2.0.0-beta.4",
+    "miniplex": "^2.0.0",
     "react": ">=16.8"
   }
 }
