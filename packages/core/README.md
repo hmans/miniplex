@@ -1,5 +1,5 @@
 ![Miniplex](https://user-images.githubusercontent.com/1061/193760498-fb6b4d42-f48b-48b4-b7c1-b5b5674df55c.jpg)  
-[![Version](https://img.shields.io/npm/v/miniplex-react?style=for-the-badge)](https://www.npmjs.com/package/miniplex-react)
+[![Version](https://img.shields.io/npm/v/miniplex?style=for-the-badge)](https://www.npmjs.com/package/miniplex)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/hmans/miniplex/tests.yml?style=for-the-badge)
 [![Downloads](https://img.shields.io/npm/dt/miniplex.svg?style=for-the-badge)](https://www.npmjs.com/package/miniplex)
 [![Bundle Size](https://img.shields.io/bundlephobia/min/miniplex?style=for-the-badge&label=bundle%20size)](https://bundlephobia.com/result?p=miniplex)
