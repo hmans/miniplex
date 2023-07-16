@@ -20,18 +20,6 @@ export function useEntities<T extends Bucket<any>>(bucket: T): T {
   return bucket
 }
 
-export function useOnBucketVersionChanged(
-  bucket: Bucket<any>,
-  callback: (version: number) => void
-) {
-  useOnceIfBucketVersionChanged(bucket, callback)
-
-  useIsomorphicLayoutEffect(
-    () => bucket.onVersionChanged.subscribe(callback),
-    [bucket, callback]
-  )
-}
-
 export function useOnEntityAdded<E>(
   bucket: Bucket<E>,
   callback: (entity: E) => void

@@ -7,7 +7,6 @@ import { Event } from "eventery"
  */
 export class Bucket<E> implements Iterable<E> {
   /* VERSIONING */
-
   protected _version = 0
 
   /**
@@ -16,19 +15,6 @@ export class Bucket<E> implements Iterable<E> {
    */
   get version() {
     return this._version
-  }
-
-  /**
-   * An event that fires every time the version of the bucket changes.
-   */
-  onVersionChanged = new Event<[version: number]>()
-
-  /**
-   * Bumps the version of the bucket.
-   */
-  protected bumpVersion() {
-    this._version++
-    this.onVersionChanged.emit(this._version)
   }
 
   get entities() {
@@ -115,7 +101,7 @@ export class Bucket<E> implements Iterable<E> {
       this.entityPositions.set(entity, this.entities.length - 1)
 
       /* Increase version */
-      this.bumpVersion()
+      this._version++
 
       /* Emit our own onEntityAdded event */
       this.onEntityAdded.emit(entity)
@@ -152,7 +138,7 @@ export class Bucket<E> implements Iterable<E> {
       this.entities.pop()
 
       /* Bump version */
-      this.bumpVersion()
+      this._version++
     }
 
     return entity

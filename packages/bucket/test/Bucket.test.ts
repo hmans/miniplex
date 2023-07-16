@@ -67,17 +67,6 @@ describe(Bucket, () => {
 
       expect(bucket.version).toBe(2)
     })
-
-    it("fires the onVersionChanged event", () => {
-      const bucket = new Bucket()
-      const listener = jest.fn()
-
-      bucket.onVersionChanged.subscribe(listener)
-      bucket.add({})
-      bucket.add({})
-
-      expect(listener).toHaveBeenCalledWith(2)
-    })
   })
 
   describe("remove", () => {
@@ -119,17 +108,6 @@ describe(Bucket, () => {
       bucket.remove(2)
 
       expect(bucket.version).toBe(2)
-    })
-
-    it("fires the onVersionChanged event", () => {
-      const bucket = new Bucket([1, 2])
-      const listener = jest.fn()
-
-      bucket.onVersionChanged.subscribe(listener)
-      bucket.remove(1)
-      bucket.remove(2)
-
-      expect(listener).toHaveBeenCalledWith(2)
     })
   })
 
