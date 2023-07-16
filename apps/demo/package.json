@@ -11,8 +11,8 @@
   "dependencies": {
     "@react-three/drei": "^9.78.2",
     "@react-three/fiber": "^8.13.5",
-    "miniplex": "workspace:2.0.0-beta.6",
-    "miniplex-react": "workspace:2.0.0-beta.6",
+    "miniplex": "workspace:2.0.0",
+    "miniplex-react": "workspace:2.0.0",
     "postprocessing": "^6.32.2",
     "r3f-perf": "^7.1.2",
     "randomish": "^0.1.6",

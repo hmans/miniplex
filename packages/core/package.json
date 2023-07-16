@@ -15,7 +15,7 @@
     "state-management"
   ],
   "sideEffects": false,
-  "version": "2.0.0-beta.6",
+  "version": "2.0.0",
   "main": "dist/miniplex.cjs.js",
   "module": "dist/miniplex.esm.js",
   "types": "dist/miniplex.cjs.d.ts",
@@ -36,6 +36,6 @@
   "dependencies": {
     "@hmans/id": "^0.0.1",
     "@hmans/queue": "^0.0.1",
-    "@miniplex/bucket": "workspace:2.0.0-beta.4"
+    "@miniplex/bucket": "workspace:2.0.0"
   }
 }
