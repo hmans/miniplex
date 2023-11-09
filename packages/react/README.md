@@ -139,7 +139,7 @@ The `<Entities>` component will render a list of entities. It takes a `in` prop 
 import { ECS } from "./state"
 import { AsteroidModel } from "./models"
 
-const asterois = ECS.world.with("isAsteroid")
+const asteroids = ECS.world.with("isAsteroid")
 
 const Asteroids = () => (
   <ECS.Entities in={asteroids}>
@@ -156,7 +156,7 @@ When used this way, it will automatically re-render every time the list of entit
 import { ECS } from "./state"
 import { AsteroidModel } from "./models"
 
-const asterois = ECS.world.with("isAsteroid")
+const asteroids = ECS.world.with("isAsteroid")
 
 /* Note the .entities property! */
 const Asteroids = () => (
