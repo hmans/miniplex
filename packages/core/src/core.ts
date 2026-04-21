@@ -11,7 +11,7 @@ export type Predicate<E, D extends E> =
  */
 export type With<E, P extends keyof E> = E & Required<Pick<E, P>>
 
-export type Without<E, P extends keyof E> = Omit<E, P>
+export type Without<E, P extends keyof E> = Omit<E, P> & Partial<Pick<E, P>>
 
 /**
  * A utility type that removes all optional properties.
