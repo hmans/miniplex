@@ -146,7 +146,7 @@ export class World<E extends {} = any>
    * @param entity The entity to modify.
    * @param component The name of the component to remove.
    */
-  removeComponent(entity: E, component: keyof E) {
+  removeComponent<C extends keyof E>(entity: E, component: C) {
     /* Return early if the entity doesn't even have the component. */
     if (entity[component] === undefined) return
 
@@ -158,8 +158,10 @@ export class World<E extends {} = any>
       this.reindex(entity, future)
     }
 
-    /* Remove the component. */
-    delete entity[component]
+    /* Assign `undefined` rather than `delete`: queries treat both as absent, but
+       this keeps the object shape stable and works with proxied property access
+       (e.g. Colyseus schemas). */
+    entity[component] = undefined as E[C]
   }
 
   /* QUERIES */

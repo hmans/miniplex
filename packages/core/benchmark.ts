@@ -160,6 +160,73 @@ profile("clear (with archetypes)", () => {
   }
 })
 
+heading("Component Removal")
+
+profile("removeComponent", () => {
+  const world = new World<Entity>()
+
+  for (let i = 0; i < entityCount; i++)
+    world.add({
+      position: { x: 0, y: i, z: 0 },
+      velocity: { x: 0, y: 0, z: 0 }
+    })
+
+  return () => {
+    for (const entity of world.entities) {
+      world.removeComponent(entity, "velocity")
+    }
+
+    return () => world.entities.every((e) => e.velocity === undefined)
+  }
+})
+
+profile("removeComponent (with archetypes)", () => {
+  const world = new World<Entity>()
+  const withVelocity = world.with("velocity").connect()
+
+  for (let i = 0; i < entityCount; i++)
+    world.add({
+      position: { x: 0, y: i, z: 0 },
+      velocity: { x: 0, y: 0, z: 0 }
+    })
+
+  return () => {
+    for (const entity of world.entities) {
+      world.removeComponent(entity, "velocity")
+    }
+
+    return () => withVelocity.size === 0
+  }
+})
+
+/* Iterate entities after a component was removed, surfacing any object-shape
+   deoptimization from the removal. */
+profile("simulate after removeComponent", () => {
+  const world = new World<Entity>()
+
+  for (let i = 0; i < entityCount; i++)
+    world.add({
+      position: { x: Math.random() * 200 - 100, y: i, z: 0 },
+      velocity: { x: 1, y: 2, z: 3 }
+    })
+
+  for (const entity of world.entities) {
+    world.removeComponent(entity, "velocity")
+  }
+
+  return () => {
+    let i = 0
+    for (const { position } of world.entities) {
+      i++
+      position.x += 1
+      position.y += 1
+      position.z += 1
+    }
+
+    return () => i === entityCount
+  }
+})
+
 heading("Iteration")
 
 profile("simulate (iterator, world)", () => {

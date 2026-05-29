@@ -375,6 +375,14 @@ describe(World, () => {
       expect(entity).toEqual({ name: "John" })
     })
 
+    it("sets the component to `undefined` instead of `delete`-ing the property", () => {
+      const world = new World<Entity>()
+      const entity = world.add({ name: "John", age: 30 })
+      world.removeComponent(entity, "age")
+      expect(entity.age).toBeUndefined()
+      expect("age" in entity).toBe(true)
+    })
+
     it("removes the entity from any relevant archetypes", () => {
       const world = new World<Entity>()
       const query = world.with("age").without("height")
